@@ -1,6 +1,6 @@
 # Generalized Additive Models; a data-driven approach to estimating regression models
 
-## Physalia-Courses 
+### Physalia-Courses 
 
 https://www.physalia-courses.org/
 
@@ -43,18 +43,18 @@ Sessions from 14:00 to 20:00 (Monday to Thursday), 14:00 to 19:00 on Friday (Ber
 
 We’ll dig under the hood a bit to understand how GAMs work at a practical level and how to use the mgcv and gratia packages to estimate GAMs and visualise them.
 
-## Wednesday
+### Wednesday
 
 * Model checking, selection, and visualisation.
 * How do we do inference with GAMs?
 * Go beyond simple GAMs to include smooth interactions and models with multiples smooths.
 
-## Thursday
+### Thursday
 
 * Hierarchical GAMs; introducing random smooths and how to model data with both group and individual smooth effects.
 * Doing more with your models; introducing posterior simulation.
 
-## Friday
+### Friday
 
 * Fitting GAMs with brms
 * Going beyond the mean; fitting distributional models and quantile GAMs
