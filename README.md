@@ -31,6 +31,8 @@ Sessions from 14:00 to 20:00 (Monday to Thursday), 14:00 to 19:00 on Friday (Ber
 
 ### Monday
 
+[Slides](https://gavinsimpson.github.io/physalia-gam-course/index.html)
+
 * Brief overview of R and the Tidyverse packages we’ll encounter throughout the course
 * Recap generalised linear models
 * Fitting your first GAM
