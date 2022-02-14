@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Generalized Additive Models</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Gavin Simpson" />
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="slides.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: inverse, middle, left, my-title-slide, title-slide
+
+# Generalized Additive Models
+## a data-driven approach to estimating regression models
+### Gavin Simpson
+### Department of Animal Science · Aarhus University
+### 1400–2000 CET (1300–1900 UTC) Monday 14th, 2022
+
+---
+
+class: inverse middle center big-subsection
+
+
+
+# Welcome
+
+???
+
+---
+
+# Logistics
+
+## Slides
+
+Slidedeck: [bit.ly/gam-webinar](https://bit.ly/gam-webinar)
+Sources: [bit.ly/physalia-gam](https://bit.ly/physalia-gam)
+
+Direct download a ZIP of everything: [bit.ly/physalia-gam-zip](https://bit.ly/physalia-gam-zip)
+
+Unpack the zip &amp; remember where you put it
+
+---
+
+# Today's topics
+
+* Brief overview of R and the Tidyverse packages we’ll encounter throughout the course
+
+* Recap generalised linear models
+
+* Fitting your first GAM
+
+---
+class: inverse middle center subsection
+
+# GLMs
+
+---
+
+# Generalized linear models
+
+Generalised linear models (GLMs) are an extension of linear regression plus Poisson, logistic and other regression models
+
+GLMs extend the types of data and error distributions that can be modelled beyond the Gaussian data of linear regression
+
+With GLMs we can model count data, binary/presence absence data, and concentration data where the response variable is not continuous.
+
+Such data have different mean-variance relationships and we would not expect errors to be Gaussian.
+
+---
+
+# Generalized linear models
+
+Typical uses of GLMs in ecology are
+
+- Poisson GLM for count data
+- Logistic GLM for presence absence data
+- Gamma GLM for non-negative or positive continuous data
+
+GLMs can handle many problems that appear non-linear
+
+Not necessary to transform data as this is handled as part of the GLM process
+
+---
+
+# Binomial distribution
+
+* For a fixed number of trials (*n*),
+* fixed probability of “success” (*p*), &amp;
+* two outcomes per trial (heads or tails)
+
+Flip a coin 10 times with *p* = 0.7, the probability of 7 heads is `\(\sim Bin(n = 10, p = 0.7)\)`, ~ 0.27
+
+
+```r
+## Binomial Probability mass function
+s &lt;- seq(0, 40, by = 1)
+n &lt;- rep(c(20,20,40), each = length(s))
+binom.pmf &lt;- data.frame(x = rep(s, 3),
+                        n = rep(c(20,20,40), each = length(s)),
+                        p = rep(c(0.5, 0.7, 0.5), each = length(s)))
+binom.pmf &lt;- transform(binom.pmf,
+                       pmf = dbinom(x, size = n, prob = p),
+                       params = paste("n=", n, "; p=", p, sep = ""))
+
+plt.binom &lt;- ggplot(binom.pmf, aes(x = x, y = pmf, colour = params)) +
+    geom_point() + labs(y = "Probability Mass", x = "No. of Successes")
+plt.binom
+```
+
+![](index_files/figure-html/binomial-pdf-1.svg)&lt;!-- --&gt;
+
+---
+
+# Poisson distribution
+
+The Poisson gives the distribution of the number of “things” (individuals, events, counts) in a given sampling interval/effort if each event is \alert{independent}.
+
+Has a single parameter `\(\lambda\)` the average density or arrival rate
+
+
+```r
+s &lt;- seq(0, 20, by = 1)
+poisson.pmf &lt;- data.frame(x = rep(s, 3),
+                          lambda = rep(c(1,4,10), each = length(s)))
+poisson.pmf &lt;- transform(poisson.pmf,
+                         pmf = dpois(x, lambda = lambda),
+                         params = paste("lambda=", lambda, sep = ""))
+
+plt.poisson &lt;- ggplot(poisson.pmf, aes(x = x, y = pmf, colour = params)) +
+    geom_point() + labs(y = "Probability Mass", x = "Count")
+plt.poisson
+```
+
+![](index_files/figure-html/poisson-pdf-1.svg)&lt;!-- --&gt;
+
+---
+
+# The structure of a GLM
+
+A GLM consists of three components, chosen/specified by the user
+
+1. A random component, specifying the conditional distribution of of the response `\(Y_i\)` given the values of the explanatory data. \alert{Error Function}
+2. A \alert{Linear Predictor} `\(\eta\)` &amp;mdash; the linear function of regressors
+    `$$\eta_i = \alpha + \beta_1 X_{i1} + \beta_2 X_{i2} + \cdots + \beta_k X_{ik}$$`
+	The `\(X_{ij}\)` are prescribed functions of the explanatory variables and can be transformed variables, dummy variables, polynomial terms, interactions etc.
+3. A smooth and invertible \alert{Link Function} `\(g(\cdot)\)`, which transforms the expectation of the response `\(\mu_i \equiv E(Y_i)\)` to the linear predictor
+    `$$g(\mu_i) = \eta_i = \alpha + \beta_1 X_{i1} + \beta_2 X_{i2} + \cdots + \beta_k X_{ik}$$`
+    As `\(g(\cdot)\)` is invertible, we can write
+    `$$\mu_i = g^{-1}(\eta_i) = g^{-1}(\alpha + \beta_1 X_{i1} + \beta_2 X_{i2} + \cdots + \beta_k X_{ik})$$`
+
+---
+
+# Conditional distribution of `\(y_i\)`
+
+Originally GLMs were specified for error distribution functions belonging to the *exponential family* of probability distributions
+
+- Continuous probability distributions
+    - Gaussian (or normal distribution; used in linear regression)
+	- Gamma (data with constant coefficient of variation)
+	- Exponential (time to death, survival analysis)
+	- Chi-square
+	- Inverse-Gaussian
+- Discrete probability distributions
+    - Poisson (count data)
+	- Binomial (0/1 data, counts from a total)
+	- Multinomial
+
+Choice depends on range of `\(y_i\)` and on the relationship between the variance and the expectation of `\(y_i\)` &amp;mdash; *mean-variance relationship*
+
+---
+
+# Conditional distribution of `\(y_i\)`
+
+Characteristics of common GLM probability distributions
+
+                 | Canonical Link | Range of `\(Y_i\)`               | Variance function
+-----------------|----------------|------------------------------|------------------
+Gaussian         | Identity       | `\((-\infty, +\infty)\)`         | `\(\phi\)`
+Poisson          | Log            | `\(0,1,2,\ldots,\infty\)`        | `\(\mu_i\)`
+Binomial         | Logit          | `\(\frac{0,1,\ldots,n_i}{n_i}\)` | `\(\frac{\mu_i(1 - \mu_i)}{n_i}\)`
+Gamma            | Inverse        | `\((0, \infty)\)`                | `\(\phi \mu_i^2\)`
+Inverse-Gaussian | Inverse-square | `\((0, \infty)\)`                | `\(\phi \mu_i^3\)`
+
+`\(\phi\)` is the dispersion parameter; `\(\mu_i\)` is the expectation of `\(Y_i\)`. In the binomial family, `\(n_i\)` is the number of trials
+
+---
+
+# Ecologically-relevant probability distributions
+
+Gaussian distribution is rarely adequate in (palaoe)ecology; GLMs offer ecologically meaningful alternatives
+
+- \alert{Poisson} &amp;mdash; counts; integers, non-negative, variance increases with mean
+- \alert{Binomial} &amp;mdash; observed proportions from a total; integers, non-negative, bounded at 0 and 1, variance largest at `\(\pi = 0.5\)`
+- \alert{Binomial} &amp;mdash; presence absence data; discrete values, 0 and 1, models probability of success
+- \alert{Gamma} &amp;mdash; concentrations; non-negative (strictly positive with log link) real values, variance increases with mean, many zero values and some high values
+
+---
+
+# Old notation
+
+Wrote linear model as
+
+`$$y_i = \alpha + \beta_1 x_{1i} + \beta_2 x_{2i} + \cdots + \beta_j x_{ij} + \varepsilon_i$$`
+
+And assumed
+
+$$ \varepsilon \sim \text{Normal}(0, \sigma^2) $$
+
+This doesn't work out the same for GLMs &amp;mdash; we don't have residuals in the linear predictor
+
+Sampling variation comes from the response distribution
+
+---
+
+# New notation
+
+Rewrite linear model as
+
+`\begin{align*}
+y_i &amp; \sim \text{Normal}(\mu_i, \sigma^2) \\
+\eta_i &amp; = \alpha + \beta_1 x_{1i} + \beta_2 x_{2i} + \cdots + \beta_j x_{ij}
+\end{align*}`
+
+This now matches the general form for the GLM
+
+`\begin{align*}
+y_i &amp; \sim \text{EF}(\mu_i, \boldsymbol{\theta}) \\
+g(\mu_i) &amp; = \alpha + \beta_1 x_{1i} + \beta_2 x_{2i} + \cdots + \beta_j x_{ij}
+\end{align*}`
+
+---
+
+# New notation
+
+Binomial GLM
+
+`\begin{align*}
+y_i &amp; \sim \text{Binomial}(n, p_i) \\
+\text{logit}(p_i) &amp; = \alpha + \beta_1 x_{1i} + \beta_2 x_{2i} + \cdots + \beta_j x_{ij}
+\end{align*}`
+
+Poisson GLM
+
+`\begin{align*}
+y_i &amp; \sim \text{Poisson}(\lambda_i) \\
+\log(\lambda_i) &amp; = \alpha + \beta_1 x_{1i} + \beta_2 x_{2i} + \cdots + \beta_j x_{ij}
+\end{align*}`
+
+---
+class: inverse middle center subsection
+
+# Examples
+
+---
+
+# Logistic regression &amp;mdash; *Darlingtonia*
+
+Timed censuses at 42 randomly-chosen leaves of the cobra lily (*Darlingtonia californica*)
+
+* Recorded number of wasp visits at 10 of the 42 leaves
+* Test hypothesis that the probability of visitation is related to leaf height
+* Response is dichotomous variable (0/1)
+* A suitable model is the logistic model
+    `$$\pi = \frac{e^{\beta_0 + \beta_i X}}{1 + e^{\beta_0 + \beta_1 X_i}}$$`
+* The logit transformation produces
+    `$$\log_e \left( \frac{\pi}{1-\pi} \right) = \beta_0 + \beta_1 X_i$$`
+* This is the logistic regression and it is a special case of the GLM, with a binomial error distribution and the logit link function
+
+## Logistic regression &amp;mdash; *Darlingtonia*
+
+`$$\log_e \left( \frac{\pi}{1-\pi} \right) = \beta_0 + \beta_1 X_i$$`
+
+* `\(\beta_0\)` is a type of intercept; determines the probability of success ($Y_i = 1$) `\(\pi\)` where X = 0
+* If `\(\beta_0 = 0\)` then `\(\pi = 0.5\)`
+*  `\(\beta_1\)` is similar to the slope and determines how steeply the fitted logistic curve rises to the maximum value of `\(\pi = 1\)`
+* Together, `\(\beta_0\)` and `\(\beta_1\)` specify the range of the `\(X\)` variable over which most of the rise occurs and determine how quickly the probability rises from 0 to 1
+* Estimate the model parameters using \alert{Maximum Likelihood}; find parameter values that make the observed data most probable
+
+---
+
+# Logistic regression &amp;mdash; *Darlingtonia*
+
+
+```r
+wasp &lt;- read_csv(here("data", "darlingtonia.csv"), comment = "#",
+                 col_types = "dl")
+```
+
+---
+
+# Logistic regression &amp;mdash; *Darlingtonia*
+
+
+```r
+m &lt;- glm(visited ~ leafHeight, data = wasp, family = binomial)
+m
+```
+
+```
+## 
+## Call:  glm(formula = visited ~ leafHeight, family = binomial, data = wasp)
+## 
+## Coefficients:
+## (Intercept)   leafHeight  
+##     -7.2930       0.1154  
+## 
+## Degrees of Freedom: 41 Total (i.e. Null);  40 Residual
+## Null Deviance:	    46.11 
+## Residual Deviance: 26.96 	AIC: 30.96
+```
+
+---
+
+# Logistic regression &amp;mdash; *Darlingtonia*
+
+
+```r
+summary(m)
+```
+
+```
+## 
+## Call:
+## glm(formula = visited ~ leafHeight, family = binomial, data = wasp)
+## 
+## Deviance Residuals: 
+##      Min        1Q    Median        3Q       Max  
+## -2.18274  -0.46820  -0.23897  -0.08519   1.90573  
+## 
+## Coefficients:
+##             Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept) -7.29295    2.16081  -3.375 0.000738 ***
+## leafHeight   0.11540    0.03655   3.158 0.001591 ** 
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 46.105  on 41  degrees of freedom
+## Residual deviance: 26.963  on 40  degrees of freedom
+## AIC: 30.963
+## 
+## Number of Fisher Scoring iterations: 6
+```
+
+---
+
+# Logistic regression &amp;mdash; *Darlingtonia*
+
+
+```r
+pdat &lt;- with(wasp, tibble(leafHeight = seq(min(leafHeight), max(leafHeight),
+                          length = 100)))
+pred &lt;- predict(m, pdat, type = "link", se.fit = TRUE)
+ilink &lt;- family(m)$linkinv
+pdat &lt;- pdat %&gt;% 
+  bind_cols(data.frame(pred)) %&gt;%
+  mutate(fitted = ilink(fit),
+         upper = ilink(fit + (2 * se.fit)),
+         lower = ilink(fit - (2 * se.fit)))
+```
+
+---
+
+# Logistic regression &amp;mdash; *Darlingtonia*
+
+
+```r
+ggplot(wasp, aes(x = leafHeight, y = as.numeric(visited))) +
+    geom_point() +
+    geom_ribbon(aes(ymin = lower, ymax = upper, x = leafHeight), data = pdat,
+                inherit.aes = FALSE, alpha = 0.2) +
+    geom_line(data = pdat, aes(y = fitted)) +
+    labs(x = "Leaf Height [cm]", y = "Probability of visitation")
+```
+
+![](index_files/figure-html/plot-darlingtonia-1.svg)&lt;!-- --&gt;
+
+---
+
+# Wald statistics
+
+`\(z\)` values are Wald statistics, which under the null hypothesis are *asymptotically* standard normal
+
+
+               Estimate   Std. Error   z value   Pr(&gt;|z|)
+------------  ---------  -----------  --------  ---------
+(Intercept)     -7.2930       2.1608   -3.3751     0.0007
+leafHeight       0.1154       0.0365    3.1575     0.0016
+
+Tests the null hypothesis that `\(\beta_i = 0\)`
+`$$z = \hat{\beta}_i / \mathrm{SE}(\hat{\beta}_i)$$`
+
+---
+
+# Deviance
+
+* In least squares we have the residual sum of squares as the measure of lack of fitted
+* In GLMs, \alert{deviance} plays the same role
+* Deviance is defined as twice the log likelihood of the observed data under the current model
+* Deviance is defined relative to an arbitrary constant &amp;mdash; only \alert{differences} of deviances have any meaning
+* Differences in deviances are also known as ratios of likelihoods
+* An alternative to the Wald tests are deviance ratio or likelihood ratio tests
+    `$$F = \frac{(D_a - D_b) / (\mathsf{df}_a - \mathsf{df}_b)}{D_b / \mathsf{df}_b}$$`
+* `\(D_j\)` deviance of model, where we test if model A is a significant improvement over model B; `\(\mathsf{df}_k\)` are the degrees of freedom of the respective model
+
+---
+
+# A Gamma GLM &amp;mdash; simple age-depth modelling
+
+Radiocarbon age estimates from depths within a peat bog (Brew &amp; Maddy, 1995, QRA Technical Guide 5)
+
+Estimate accumulation rate; assumption here is linear accumulation
+
+Uncertainty or error is greater at depth; mean variance relationship
+
+Fit mid-depth &amp; mid-calibrated age points
+
+---
+
+# A Gamma GLM &amp;mdash; simple age-depth modelling
+
+# A tibble: 6 × 9
+  Sample  upperDepth lowerDepth ageBP ageError calUpper calLower midDepth calMid
+  &lt;chr&gt;        &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;
+1 SRR-45…         20       22     355       35      509      307     19     408 
+2 SRR-45…         26       28     465       35      542      480     25     511 
+3 SRR-45…         32       34     635       35      671      545     31     608 
+4 SRR-45…         38       40     740       35      732      666     37     699 
+5 SRR-45…         44       46     865       35      916      691     43     804.
+6 SRR-45…         50       52.5   870       35      918      692     48.8   805 
+
+---
+
+# A Gamma GLM &amp;mdash; simple age-depth modelling
+
+
+```r
+ggplot(maddy, aes(x = midDepth, y = calMid)) + geom_point() +
+    labs(y = "Calibrated Age", x = "Depth")
+```
+
+![](index_files/figure-html/plot-maddy-1.svg)&lt;!-- --&gt;
+
+---
+
+# A Gamma GLM &amp;mdash; simple age-depth modelling
+
+
+```r
+m_gamma &lt;- glm(calMid ~ midDepth, data = maddy, family = Gamma(link = "identity"))
+summary(m_gamma)
+```
+
+```
+## 
+## Call:
+## glm(formula = calMid ~ midDepth, family = Gamma(link = "identity"), 
+##     data = maddy)
+## 
+## Deviance Residuals: 
+##       Min         1Q     Median         3Q        Max  
+## -0.161184  -0.016734  -0.002595   0.048033   0.085943  
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) 197.2909    22.5603   8.745 5.35e-06 ***
+## midDepth     12.5799     0.4543  27.693 8.74e-11 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## (Dispersion parameter for Gamma family taken to be 0.004612561)
+## 
+##     Null deviance: 10.439047  on 11  degrees of freedom
+## Residual deviance:  0.048316  on 10  degrees of freedom
+## AIC: 145.57
+## 
+## Number of Fisher Scoring iterations: 4
+```
+
+---
+
+# A Gamma GLM &amp;mdash; simple age-depth modelling
+
+
+
+---
+
+
+```r
+p1 &lt;- ggplot(maddy, aes(x = midDepth, y = calMid)) +
+    geom_ribbon(aes(ymin = lower, ymax = upper, x = midDepth), data = p_gamma,
+                inherit.aes = FALSE, alpha = 0.2) +
+    geom_line(data = p_gamma, aes(y = fitted)) +
+    geom_point() +
+    labs(y = "Calibrated Age", x = "Depth", title = "Gamma GLM")
+```
+
+---
+
+
+```r
+m_gaus &lt;- glm(calMid ~ midDepth, data = maddy, family = gaussian)
+p_gaus &lt;- predict(m_gaus, pdat, type = "link", se.fit = TRUE)
+ilink &lt;- family(m_gaus)$linkinv
+p_gaus &lt;- pdat %&gt;%
+  bind_cols(data.frame(p_gaus)) %&gt;%
+  mutate(fitted = ilink(fit), upper = ilink(fit + (2 * se.fit)),
+         lower = ilink(fit - (2 * se.fit)))
+```
+
+---
+
+
+```r
+p2 &lt;- ggplot(maddy, aes(x = midDepth, y = calMid)) +
+    geom_ribbon(aes(ymin = lower, ymax = upper, x = midDepth), data = p_gaus,
+                inherit.aes = FALSE, alpha = 0.2) +
+    geom_line(data = p_gaus, aes(y = fitted)) +
+    geom_point() +
+    labs(y = "Calibrated Age", x = "Depth", title = "Linear Model")
+
+p1 + p2
+```
+
+![](index_files/figure-html/unnamed-chunk-3-1.svg)&lt;!-- --&gt;
+
+---
+class: inverse middle center subsection
+
+# Motivating example
+
+---
+class: inverse middle center subsection
+
+# Motivating example
+
+---
+
+# HadCRUT4 time series
+
+![](index_files/figure-html/hadcrut-temp-example-1.svg)&lt;!-- --&gt;
+
+???
+
+Hadley Centre NH temperature record ensemble
+
+How would you model the trend in these data?
+
+---
+
+# (Generalized) Linear Models
+
+`$$y_i \sim \mathcal{N}(\mu_i, \sigma^2)$$`
+
+`$$\mu_i = \beta_0 + \beta_1 \mathtt{year}_{i} + \beta_2 \mathtt{year}^2_{1i} + \cdots + \beta_j \mathtt{year}^j_{i}$$`
+
+Assumptions
+
+1. linear effects of covariates are good approximation of the true effects
+2. conditional on the values of covariates, `\(y_i | \mathbf{X} \sim \mathcal{N}(0, \sigma^2)\)`
+3. this implies all observations have the same *variance*
+4. `\(y_i | \mathbf{X}\)` are *independent*
+
+An **additive** model address the first of these
+
+---
+class: inverse center middle subsection
+
+# Why bother with anything more complex?
+
+---
+
+# Is this linear?
+
+![](index_files/figure-html/hadcrut-temp-example-1.svg)&lt;!-- --&gt;
+
+---
+
+# Polynomials perhaps&amp;hellip;
+
+![](index_files/figure-html/hadcrut-temp-polynomial-1.svg)&lt;!-- --&gt;
+
+---
+
+# Polynomials perhaps&amp;hellip;
+
+We can keep on adding ever more powers of `\(\boldsymbol{x}\)` to the model &amp;mdash; model selection problem
+
+**Runge phenomenon** &amp;mdash; oscillations at the edges of an interval &amp;mdash; means simply moving to higher-order polynomials doesn't always improve accuracy
+
+---
+class: inverse middle center subsection
+
+# GAMs offer a solution
+
+---
+
+# HadCRUT data set
+
+
+```r
+library('readr')
+library('dplyr')
+URL &lt;-  "https://bit.ly/hadcrutv4"
+gtemp &lt;- read_table(URL, col_types = 'nnnnnnnnnnnn', col_names = FALSE) %&gt;%
+    select(num_range('X', 1:2)) %&gt;% setNames(nm = c('Year', 'Temperature'))
+```
+
+[File format](https://www.metoffice.gov.uk/hadobs/hadcrut4/data/current/series_format.html)
+
+---
+
+# HadCRUT data set
+
+
+```r
+gtemp
+```
+
+```
+## # A tibble: 172 × 2
+##     Year Temperature
+##    &lt;dbl&gt;       &lt;dbl&gt;
+##  1  1850          NA
+##  2  1851          NA
+##  3  1852          NA
+##  4  1853          NA
+##  5  1854          NA
+##  6  1855          NA
+##  7  1856          NA
+##  8  1857          NA
+##  9  1858          NA
+## 10  1859          NA
+## # … with 162 more rows
+```
+
+---
+
+# Fitting a GAM
+
+
+```r
+library('mgcv')
+m &lt;- gam(Temperature ~ s(Year), data = gtemp, method = 'REML')
+summary(m)
+```
+
+.smaller[
+
+```
+## 
+## Family: gaussian 
+## Link function: identity 
+## 
+## Formula:
+## Temperature ~ s(Year)
+## 
+## Parametric coefficients:
+##              Estimate Std. Error t value Pr(&gt;|t|)  
+## (Intercept) -0.020477   0.009731  -2.104   0.0369 *
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Approximate significance of smooth terms:
+##           edf Ref.df     F p-value    
+## s(Year) 7.837   8.65 145.1  &lt;2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## R-sq.(adj) =   0.88   Deviance explained = 88.6%
+## -REML = -91.237  Scale est. = 0.016287  n = 172
+```
+]
+
+---
+
+# Fitted GAM
+
+![](index_files/figure-html/hadcrtemp-plot-gam-1.svg)&lt;!-- --&gt;
+
+---
+class: inverse middle center big-subsection
+
+# GAMs
+
+---
+
+# Generalized Additive Models
+
+&lt;br /&gt;
+
+![](resources/tradeoff-slider.png)
+
+.references[Source: [GAMs in R by Noam Ross](https://noamross.github.io/gams-in-r-course/)]
+
+???
+
+GAMs are an intermediate-complexity model
+
+* can learn from data without needing to be informed by the user
+* remain interpretable because we can visualize the fitted features
+
+---
+
+# How is a GAM different?
+
+`$$\begin{align*}
+y_i &amp;\sim \mathcal{D}(\mu_i, \theta) \\ 
+\mathbb{E}(y_i) &amp;= \mu_i = g(\eta_i)^{-1}
+\end{align*}$$`
+
+We model the mean of data as a sum of linear terms:
+
+`$$\eta_i = \beta_0 +\sum_j \color{red}{ \beta_j x_{ji}} +\epsilon_i$$`
+
+A GAM is a sum of _smooth functions_ or _smooths_
+
+`$$\eta_i = \beta_0 + \sum_j \color{red}{f_j(x_{ji})} + \epsilon_i$$`
+
+Call `\(\boldsymbol{\eta}\)` the **linear predictor**
+
+---
+
+# How did `gam()` *know*?
+
+![](index_files/figure-html/hadcrtemp-plot-gam-1.svg)&lt;!-- --&gt;
+
+---
+class: inverse
+background-image: url('./resources/rob-potter-398564.jpg')
+background-size: contain
+
+# What magic is this?
+
+.footnote[
+&lt;a style="background-color:black;color:white;text-decoration:none;padding:4px 6px;font-family:-apple-system, BlinkMacSystemFont, &amp;quot;San Francisco&amp;quot;, &amp;quot;Helvetica Neue&amp;quot;, Helvetica, Ubuntu, Roboto, Noto, &amp;quot;Segoe UI&amp;quot;, Arial, sans-serif;font-size:12px;font-weight:bold;line-height:1.2;display:inline-block;border-radius:3px;" href="https://unsplash.com/@robpotter?utm_medium=referral&amp;amp;utm_campaign=photographer-credit&amp;amp;utm_content=creditBadge" target="_blank" rel="noopener noreferrer" title="Download free do whatever you want high-resolution photos from Rob Potter"&gt;&lt;span style="display:inline-block;padding:2px 3px;"&gt;&lt;svg xmlns="http://www.w3.org/2000/svg" style="height:12px;width:auto;position:relative;vertical-align:middle;top:-1px;fill:white;" viewBox="0 0 32 32"&gt;&lt;title&gt;&lt;/title&gt;&lt;path d="M20.8 18.1c0 2.7-2.2 4.8-4.8 4.8s-4.8-2.1-4.8-4.8c0-2.7 2.2-4.8 4.8-4.8 2.7.1 4.8 2.2 4.8 4.8zm11.2-7.4v14.9c0 2.3-1.9 4.3-4.3 4.3h-23.4c-2.4 0-4.3-1.9-4.3-4.3v-15c0-2.3 1.9-4.3 4.3-4.3h3.7l.8-2.3c.4-1.1 1.7-2 2.9-2h8.6c1.2 0 2.5.9 2.9 2l.8 2.4h3.7c2.4 0 4.3 1.9 4.3 4.3zm-8.6 7.5c0-4.1-3.3-7.5-7.5-7.5-4.1 0-7.5 3.4-7.5 7.5s3.3 7.5 7.5 7.5c4.2-.1 7.5-3.4 7.5-7.5z"&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/span&gt;&lt;span style="display:inline-block;padding:2px 3px;"&gt;Rob Potter&lt;/span&gt;&lt;/a&gt;
+]
+
+---
+class: inverse
+background-image: url('resources/wiggly-things.png')
+background-size: contain
+
+???
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script src="macros.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
