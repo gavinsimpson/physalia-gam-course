@@ -117,7 +117,7 @@ Not necessary to transform data as this is handled as part of the GLM process
 
 Flip a coin 10 times with *p* = 0.7, the probability of 7 heads is $\sim Bin(n = 10, p = 0.7)$, ~ 0.27
 
-```{r binomial-pdf}
+```{r binomial-pdf, echo = FALSE}
 ## Binomial Probability mass function
 s <- seq(0, 40, by = 1)
 n <- rep(c(20,20,40), each = length(s))
@@ -141,7 +141,7 @@ The Poisson gives the distribution of the number of “things” (individuals, e
 
 Has a single parameter $\lambda$ the average density or arrival rate
 
-```{r poisson-pdf}
+```{r poisson-pdf, echo = FALSE}
 s <- seq(0, 20, by = 1)
 poisson.pmf <- data.frame(x = rep(s, 3),
                           lambda = rep(c(1,4,10), each = length(s)))

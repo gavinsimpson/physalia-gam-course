@@ -93,23 +93,6 @@ Not necessary to transform data as this is handled as part of the GLM process
 
 Flip a coin 10 times with *p* = 0.7, the probability of 7 heads is `\(\sim Bin(n = 10, p = 0.7)\)`, ~ 0.27
 
-
-```r
-## Binomial Probability mass function
-s &lt;- seq(0, 40, by = 1)
-n &lt;- rep(c(20,20,40), each = length(s))
-binom.pmf &lt;- data.frame(x = rep(s, 3),
-                        n = rep(c(20,20,40), each = length(s)),
-                        p = rep(c(0.5, 0.7, 0.5), each = length(s)))
-binom.pmf &lt;- transform(binom.pmf,
-                       pmf = dbinom(x, size = n, prob = p),
-                       params = paste("n=", n, "; p=", p, sep = ""))
-
-plt.binom &lt;- ggplot(binom.pmf, aes(x = x, y = pmf, colour = params)) +
-    geom_point() + labs(y = "Probability Mass", x = "No. of Successes")
-plt.binom
-```
-
 ![](index_files/figure-html/binomial-pdf-1.svg)&lt;!-- --&gt;
 
 ---
@@ -119,20 +102,6 @@ plt.binom
 The Poisson gives the distribution of the number of “things” (individuals, events, counts) in a given sampling interval/effort if each event is \alert{independent}.
 
 Has a single parameter `\(\lambda\)` the average density or arrival rate
-
-
-```r
-s &lt;- seq(0, 20, by = 1)
-poisson.pmf &lt;- data.frame(x = rep(s, 3),
-                          lambda = rep(c(1,4,10), each = length(s)))
-poisson.pmf &lt;- transform(poisson.pmf,
-                         pmf = dpois(x, lambda = lambda),
-                         params = paste("lambda=", lambda, sep = ""))
-
-plt.poisson &lt;- ggplot(poisson.pmf, aes(x = x, y = pmf, colour = params)) +
-    geom_point() + labs(y = "Probability Mass", x = "Count")
-plt.poisson
-```
 
 ![](index_files/figure-html/poisson-pdf-1.svg)&lt;!-- --&gt;
 
