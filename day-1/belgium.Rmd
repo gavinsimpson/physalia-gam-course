@@ -1,0 +1,72 @@
+---
+title: "Belgium AIDS epidemic"
+author: "Gavin Simpson"
+date: "14/02/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Description
+
+The data set `belgium.csv` contains the number of cases (`cases`) of AIDS recorded between 1981 and 1993 (`year`) in Belgium
+
+## Packages
+
+Load the following packages
+
+```{r load-packages}
+pkgs <- c("readr", "dplyr", "ggplot2")
+vapply(pkgs, library, logical(1L), character.only = TRUE, logical.return = TRUE)
+```
+
+## Data
+
+The data are contained in `data/belgium.csv`, and consist of three variables
+
+1. `year`, the year of each observation
+2. `cases`, the number of AIDS cases per year
+
+Load the data into R
+
+```{r load-data}
+belgium <- read_csv(here("data", "belgium.csv"), col_types = "dd")
+belgium
+```
+
+## Data wrangling
+
+Create a variables `t` (for time) in the `belgium` data frame, which contains the time point of observation by subtracting `1980` from each `year`:
+
+```{r wrangling}
+belgium <- belgium %>%
+  mutate(t = year - 1980)
+```
+
+## Task
+
+1. Produce a plot of the number of AIDS cases over time
+
+2. Fit a poisson GLM (log link) using the `glm()` to model the number of AIDS cases. Use `t` as the predictor variable
+
+3. Produce the model summary using `summary()`
+
+4. Calculate a quick goodness of fit test for the model using the information provided on the residual deviance
+
+5. Plot the model diagnostics
+
+6. Add fitted values of the model as a line on to the plot you created earlier. Add a confidence interval to the fitted value line.
+
+7. Looking at the model diagnostics and the plot of the fitted values versus the data, identify a problem with this model. Describe the problem in a few words.
+
+8. Modify your model to account for the identified problem
+
+    Hint: use ploynomials of `t`
+
+9. Look at the model summary, model diagnostic plots, and perform the goodness of fit test on the residual deviance. Are there any problems with this model?
+
+10. Compare the two models using AIC and a generalized likelihood ratio test (GLRT). Which model is to be preferred?
+
+    Hint: the `anova()` function is used to do the GLRT

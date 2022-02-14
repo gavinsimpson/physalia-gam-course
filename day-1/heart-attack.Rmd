@@ -1,0 +1,84 @@
+---
+title: "Heart attacks & creatinine kinase"
+author: "Gavin Simpson"
+date: "14/02/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Description
+
+Patients who experience a heart attack tend to do better if the condition is diagnosed early. Smith (1967) describes a study that looked into using the levels of the enzyme *creatinine kinase* (`ck`) in patients' blood. The creatinine kinase level was measured in the blood of 360 patients suspected of suffering a heart attack. Whether each patient had suffered a heart attack was determined later with traditional medical care and tests.
+
+## Packages
+
+Load the following packages
+
+```{r load-packages}
+pkgs <- c("readr", "dplyr", "ggplot2")
+vapply(pkgs, library, logical(1L), character.only = TRUE, logical.return = TRUE)
+```
+
+## Data
+
+The data are contained in `data/heart-attack.csv`, and consist of three variables
+
+1. `ck`, the creatinine kinase level for each patient. The original paper binned patients into groups of CK levels. Here we use the mid points of the bins,
+2. `attack`, the number of patients who experienced a heart attack
+3. `ok`, the number of patients who did not experience a heart attack
+
+Load the data into R
+
+```{r load-data}
+ck <- read_csv(here("data", "heart-attack.csv"), col_types = "ddd")
+ck
+```
+
+## Data wrangling
+
+Create a variables in `ck` for:
+
+1. `total` --- the total number of patients in each `ck` bin, and
+2. `proportion` --- the proportion of the total number of patients that suffered a heart attack
+
+```{r wrangling}
+ck <- ck %>%
+  mutate(total = attack + ok,
+         proportion = attack / total)
+```
+
+## Task
+
+1. Produce a plot of the proportion of patients who suffered a heart attack vs the creatinine kinase level in the patient's blood
+
+2. Fit a binomial GLM (logit link) using the `glm()` to model the proportion of patients who suffered a heart attack as a function of the creatinine kinase level in the patient's blood
+
+    Hint: If you're not sure how to specify the response for the GLM, read the *Details* section of `?glm`. You can use either the
+
+        * two-column matrix version or,
+        * the proportion as response but specify total counts via the `weights` argument
+
+3. Produce the model summary using `summary()`
+
+    Is the effect of `ck` on the proportion of patients with heart attacks statistically significant?
+
+4. Calculate a quick goodness of fit test for the model using the information provided on the residual deviance
+
+5. Plot the model diagnostics
+
+6. Add fitted values of the model as a line on to the plot you created earlier
+
+7. Looking at the model diagnostics and the plot of the fitted values versus the data, identify a problem with this model. Describe the problem in a few words.
+
+8. Modify your model to account for the identified problem
+
+    Hint: use ploynomials of `ck`
+
+9. Look at the model summary, model diagnostic plots, and perform the goodness of fit test on the residual deviance. Are there any problems with this model?
+
+10. Compare the two models using AIC and a generalized likelihood ratio test (GLRT). Which model is to be preferred?
+
+    Hint: the `anova()` function is used to do the GLRT

@@ -116,6 +116,12 @@ b, strong {
     color: var(--yellow-color);
 }
 
+.my-title-slide h2 {
+    margin-left: 1em;
+    margin-bottom: 0.5em;
+    margin-top: 0.1em;
+}
+
 .my-title-slide .remark-slide-number {
   display: none;
 }

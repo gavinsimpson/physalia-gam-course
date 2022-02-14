@@ -28,7 +28,11 @@ anim_dev <- 'png'
 anim_res <- 200
 
 
-## ----binomial-pdf-------------------------------------------------------------
+## -----------------------------------------------------------------------------
+dbinom(x = 7, size = 10, prob = 0.7)
+
+
+## ----binomial-pdf, echo = FALSE-----------------------------------------------
 ## Binomial Probability mass function
 s <- seq(0, 40, by = 1)
 n <- rep(c(20,20,40), each = length(s))
@@ -44,7 +48,7 @@ plt.binom <- ggplot(binom.pmf, aes(x = x, y = pmf, colour = params)) +
 plt.binom
 
 
-## ----poisson-pdf--------------------------------------------------------------
+## ----poisson-pdf, echo = FALSE------------------------------------------------
 s <- seq(0, 20, by = 1)
 poisson.pmf <- data.frame(x = rep(s, 3),
                           lambda = rep(c(1,4,10), each = length(s)))
@@ -71,40 +75,78 @@ m
 summary(m)
 
 
-## ----predict-darlingtonia, echo = TRUE----------------------------------------
-pdat <- with(wasp, tibble(leafHeight = seq(min(leafHeight), max(leafHeight),
-                          length = 100)))
+## ----predict-darlingtonia, echo = TRUE, eval = FALSE--------------------------
+## # data to predict at
+## pdat <- with(wasp,
+##              tibble(leafHeight = seq(min(leafHeight),
+##                                      max(leafHeight),
+##                                      length = 100)))
+## # predict
+## pred <- predict(m, pdat, type = "link", se.fit = TRUE)
+## ilink <- family(m)$linkinv # g-1()
+## pdat <- pdat %>%
+##   bind_cols(data.frame(pred)) %>%
+##   mutate(fitted = ilink(fit),
+##          upper = ilink(fit + (2 * se.fit)),
+##          lower = ilink(fit - (2 * se.fit)))
+## # plot
+## ggplot(wasp, aes(x = leafHeight,
+##                  y = as.numeric(visited))) +
+##     geom_point() +
+##     geom_ribbon(aes(ymin = lower, ymax = upper,
+##                     x = leafHeight), data = pdat,
+##                 inherit.aes = FALSE, alpha = 0.2) +
+##     geom_line(data = pdat, aes(y = fitted)) +
+##     labs(x = "Leaf Height [cm]",
+##          y = "Probability of visitation")
+
+
+## ----predict-darlingtonia, eval = TRUE, echo = FALSE, fig.height = 6, fig.width = 6----
+# data to predict at
+pdat <- with(wasp,
+             tibble(leafHeight = seq(min(leafHeight),
+                                     max(leafHeight),
+                                     length = 100)))
+# predict
 pred <- predict(m, pdat, type = "link", se.fit = TRUE)
-ilink <- family(m)$linkinv
-pdat <- pdat %>% 
+ilink <- family(m)$linkinv # g-1()
+pdat <- pdat %>%
   bind_cols(data.frame(pred)) %>%
   mutate(fitted = ilink(fit),
          upper = ilink(fit + (2 * se.fit)),
          lower = ilink(fit - (2 * se.fit)))
-
-
-## ----plot-darlingtonia, echo = TRUE-------------------------------------------
-ggplot(wasp, aes(x = leafHeight, y = as.numeric(visited))) +
+# plot
+ggplot(wasp, aes(x = leafHeight,
+                 y = as.numeric(visited))) +
     geom_point() +
-    geom_ribbon(aes(ymin = lower, ymax = upper, x = leafHeight), data = pdat,
+    geom_ribbon(aes(ymin = lower, ymax = upper,
+                    x = leafHeight), data = pdat,
                 inherit.aes = FALSE, alpha = 0.2) +
     geom_line(data = pdat, aes(y = fitted)) +
-    labs(x = "Leaf Height [cm]", y = "Probability of visitation")
+    labs(x = "Leaf Height [cm]",
+         y = "Probability of visitation")
 
 
 ## ----coeftab-darlingtonia, results = "asis", echo = FALSE---------------------
-knitr::kable(round(summary(m)$coefficients, 4), format = "pandoc")
+knitr::kable(round(summary(m)$coefficients, 4), format = "pipe")
 
 
-## ----load-maddy, echo = FALSE, results="asis"---------------------------------
+## ----load-maddy, echo = TRUE--------------------------------------------------
 maddy <- read_csv(here("data", "maddy-peat.csv"), col_types = "cdddddd")
 maddy <- mutate(maddy, midDepth = upperDepth - (0.5 * abs(upperDepth - lowerDepth)),
                 calMid = calUpper - (0.5 * abs(calUpper - calLower)))
-head(maddy)
+maddy
 
 
-## ----plot-maddy, echo = TRUE--------------------------------------------------
-ggplot(maddy, aes(x = midDepth, y = calMid)) + geom_point() +
+## ----plot-maddy, echo = TRUE, eval = FALSE------------------------------------
+## ggplot(maddy, aes(x = midDepth, y = calMid)) +
+##     geom_point() +
+##     labs(y = "Calibrated Age", x = "Depth")
+
+
+## ----plot-maddy, echo = FALSE, eval = TRUE, fig.height = 6, fig.width = 6-----
+ggplot(maddy, aes(x = midDepth, y = calMid)) +
+    geom_point() +
     labs(y = "Calibrated Age", x = "Depth")
 
 
@@ -113,43 +155,118 @@ m_gamma <- glm(calMid ~ midDepth, data = maddy, family = Gamma(link = "identity"
 summary(m_gamma)
 
 
-## ----plot-maddy-fitted, echo=FALSE--------------------------------------------
-pdat <- with(maddy, tibble(midDepth = seq(min(midDepth), max(midDepth), length = 100)))
-p_gamma <- predict(m_gamma, pdat, type = "link", se.fit = TRUE)
+## ----plot-maddy-fitted-gamma, eval=FALSE--------------------------------------
+## # data to predict at
+## pdat <- with(maddy,
+##              tibble(midDepth = seq(min(midDepth),
+##                                    max(midDepth),
+##                                    length = 100)))
+## # predict
+## p_gamma <- predict(m_gamma, pdat, type = "link",
+##                    se.fit = TRUE)
+## ilink <- family(m_gamma)$linkinv
+## # confidence interval
+## p_gamma <- pdat %>%
+##   bind_cols(data.frame(p_gamma)) %>%
+##   mutate(fitted = ilink(fit),
+##          upper = ilink(fit + (2 * se.fit)),
+##          lower = ilink(fit - (2 * se.fit)))
+## # plot
+## p1 <- ggplot(maddy, aes(x = midDepth, y = calMid)) +
+##     geom_ribbon(aes(ymin = lower, ymax = upper,
+##                     x = midDepth), data = p_gamma,
+##                 inherit.aes = FALSE, alpha = 0.2) +
+##     geom_line(data = p_gamma, aes(y = fitted)) +
+##     geom_point() +
+##     labs(y = "Calibrated Age", x = "Depth",
+##          title = "Gamma GLM")
+## p1
+
+
+## ----plot-maddy-fitted-gamma, echo = FALSE, eval = TRUE, fig.height = 6, fig.width = 6----
+# data to predict at
+pdat <- with(maddy,
+             tibble(midDepth = seq(min(midDepth),
+                                   max(midDepth),
+                                   length = 100)))
+# predict
+p_gamma <- predict(m_gamma, pdat, type = "link",
+                   se.fit = TRUE)
 ilink <- family(m_gamma)$linkinv
+# confidence interval
 p_gamma <- pdat %>%
   bind_cols(data.frame(p_gamma)) %>%
-  mutate(fitted = ilink(fit), upper = ilink(fit + (2 * se.fit)),
+  mutate(fitted = ilink(fit),
+         upper = ilink(fit + (2 * se.fit)),
          lower = ilink(fit - (2 * se.fit)))
-
-
-## -----------------------------------------------------------------------------
+# plot
 p1 <- ggplot(maddy, aes(x = midDepth, y = calMid)) +
-    geom_ribbon(aes(ymin = lower, ymax = upper, x = midDepth), data = p_gamma,
+    geom_ribbon(aes(ymin = lower, ymax = upper,
+                    x = midDepth), data = p_gamma,
                 inherit.aes = FALSE, alpha = 0.2) +
     geom_line(data = p_gamma, aes(y = fitted)) +
     geom_point() +
-    labs(y = "Calibrated Age", x = "Depth", title = "Gamma GLM")
+    labs(y = "Calibrated Age", x = "Depth",
+         title = "Gamma GLM")
+p1
 
 
-## -----------------------------------------------------------------------------
-m_gaus <- glm(calMid ~ midDepth, data = maddy, family = gaussian)
-p_gaus <- predict(m_gaus, pdat, type = "link", se.fit = TRUE)
+## ----plot-maddy-fitted-gaussian, eval = FALSE---------------------------------
+## # fit gaussian GLM
+## m_gaus <- glm(calMid ~ midDepth, data = maddy,
+##               family = gaussian)
+## # predict
+## p_gaus <- predict(m_gaus, pdat, type = "link",
+##                   se.fit = TRUE)
+## ilink <- family(m_gaus)$linkinv
+## # prep confidence interval
+## p_gaus <- pdat %>%
+##   bind_cols(data.frame(p_gaus)) %>%
+##   mutate(fitted = ilink(fit),
+##          upper = ilink(fit + (2 * se.fit)),
+##          lower = ilink(fit - (2 * se.fit)))
+## # plot
+## p2 <- ggplot(maddy, aes(x = midDepth, y = calMid)) +
+##     geom_ribbon(aes(ymin = lower, ymax = upper,
+##                     x = midDepth), data = p_gaus,
+##                 inherit.aes = FALSE, alpha = 0.2) +
+##     geom_line(data = p_gaus, aes(y = fitted)) +
+##     geom_point() +
+##     labs(y = "Calibrated Age",
+##          x = "Depth",
+##          title = "Linear Model")
+## p2
+
+
+## ----plot-maddy-fitted-gaussian, echo = FALSE, eval = TRUE, fig.height = 6, fig.width = 6----
+# fit gaussian GLM
+m_gaus <- glm(calMid ~ midDepth, data = maddy,
+              family = gaussian)
+# predict
+p_gaus <- predict(m_gaus, pdat, type = "link",
+                  se.fit = TRUE)
 ilink <- family(m_gaus)$linkinv
+# prep confidence interval
 p_gaus <- pdat %>%
   bind_cols(data.frame(p_gaus)) %>%
-  mutate(fitted = ilink(fit), upper = ilink(fit + (2 * se.fit)),
+  mutate(fitted = ilink(fit),
+         upper = ilink(fit + (2 * se.fit)),
          lower = ilink(fit - (2 * se.fit)))
-
-
-## -----------------------------------------------------------------------------
+# plot
 p2 <- ggplot(maddy, aes(x = midDepth, y = calMid)) +
-    geom_ribbon(aes(ymin = lower, ymax = upper, x = midDepth), data = p_gaus,
+    geom_ribbon(aes(ymin = lower, ymax = upper,
+                    x = midDepth), data = p_gaus,
                 inherit.aes = FALSE, alpha = 0.2) +
     geom_line(data = p_gaus, aes(y = fitted)) +
     geom_point() +
-    labs(y = "Calibrated Age", x = "Depth", title = "Linear Model")
+    labs(y = "Calibrated Age",
+         x = "Depth",
+         title = "Linear Model")
+p2
 
+
+## -----------------------------------------------------------------------------
+library("patchwork")
 p1 + p2
 
 

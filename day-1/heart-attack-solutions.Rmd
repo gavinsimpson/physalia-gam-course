@@ -1,0 +1,192 @@
+---
+title: "Heart attacks & creatinine kinase: solutions"
+author: "Gavin Simpson"
+date: "14/02/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Description
+
+Patients who experience a heart attack tend to do better if the condition is diagnosed early. Smith (1967) describes a study that looked into using the levels of the enzyme *creatinine kinase* (`ck`) in patients' blood. The creatinine kinase level was measured in the blood of 360 patients suspected of suffering a heart attack. Whether each patient had suffered a heart attack was determined later with traditional medical care and tests.
+
+## Packages
+
+Load the following packages
+
+```{r load-packages}
+pkgs <- c("readr", "dplyr", "ggplot2")
+vapply(pkgs, library, logical(1L), character.only = TRUE, logical.return = TRUE)
+```
+
+## Data
+
+The data are contained in `data/heart-attack.csv`, and consist of three variables
+
+1. `ck`, the creatinine kinase level for each patient. The original paper binned patients into groups of CK levels. Here we use the mid points of the bins,
+2. `attack`, the number of patients who experienced a heart attack
+3. `ok`, the number of patients who did not experience a heart attack
+
+Load the data into R
+
+```{r load-data}
+ck <- read_csv(here("data", "heart-attack.csv"), col_types = "ddd")
+ck
+```
+
+## Data wrangling
+
+Create a variables in `ck` for:
+
+1. `total` --- the total number of patients in each `ck` bin, and
+2. `proportion` --- the proportion of the total number of patients that suffered a heart attack
+
+```{r wrangling}
+ck <- ck %>%
+  mutate(total = attack + ok,
+         proportion = attack / total)
+```
+
+## Task
+
+1. Produce a plot of the proportion of patients who suffered a heart attack vs the creatinine kinase level in the patient's blood. Use *ggplot2* and add a smoother to the plot
+
+```{r plot-ck}
+ggplot(ck, aes(x = ck, y = proportion)) +
+  geom_point() +
+  geom_smooth(method = "loess") +
+  labs(x = "Creatinine kinase level", y = "Proportion Heart Attack")
+```
+
+2. Fit a binomial GLM (logit link) using the `glm()` to model the proportion of patients who suffered a heart attack as a function of the creatinine kinase level in the patient's blood
+
+    Hint: If you're not sure how to specify the response for the GLM, read the *Details* section of `?glm`. You can use either the
+
+        * two-column matrix version or,
+        * the proportion as response but specify total counts via the `weights` argument
+
+**Option 1**
+```{r fit-model}
+m_ck_1 <- glm(cbind(attack, ok) ~ ck, data = ck,
+              family = binomial(link = "logit"))
+```
+
+or **Option 2**
+```{r fit-model}
+m_ck_2 <- glm(proportion ~ ck, data = ck,
+              family = binomial(link = "logit"),
+              weights = total)
+```
+
+3. Produce the model summary using `summary()`
+
+```{r model-summary}
+summary(m_ck_1)
+```
+
+Is the effect of `ck` on the proportion of patients with heart attacks statistically significant?
+
+**Yes** (at any realistic confidence level)
+
+What is the proportion of deviance explained?
+
+```{r deviance explained}
+summ <- summary(m_ck_1)
+null_dev <- summ$null.deviance
+(null_dev - deviance(m_ck_1)) / null_dev
+```
+
+4. Calculate a quick goodness of fit test for the model using the information provided on the residual deviance
+
+```{r gof-test}
+pchisq(deviance(m_ck_1), df.residual(m_ck_1), lower.tail = FALSE)
+```
+
+5. Plot the model diagnostics
+
+```{r model-1-diagnostics}
+op <- par(mfrow = c(2,2))
+plot(m_ck_1)
+par(op)
+```
+
+6. Add fitted values of the model as a line on to the plot you created earlier
+
+```{r plot-ck}
+ck <- ck %>%
+  mutate(fitted_1 = fitted(m_ck_1))
+ggplot(ck, aes(x = ck, y = proportion)) +
+  geom_point() +
+  geom_line(aes(y = fitted_1)) +
+  labs(x = "Creatinine kinase level", y = "Proportion Heart Attack")
+```
+
+You could also have done something along the lines of the slides to get a confidence interval also
+
+```{r predict-ck-m-1}
+pdat <- with(ck, tibble(ck = seq(min(ck), max(ck), length = 100)))
+pred <- predict(m_ck_1, newdata = pdat, type = "link", se.fit = TRUE)
+ilink <- family(m_ck_1)$linkinv
+pdat <- pdat %>%
+  bind_cols(data.frame(pred)) %>%
+  mutate(fitted = ilink(fit),
+         upper = ilink(fit + (1.96 * se.fit)),
+         lower = ilink(fit - (1.96 * se.fit)))
+
+ggplot(ck, aes(x = ck, y = proportion)) +
+  geom_ribbon(data = pdat,
+              aes(ymin = lower, ymax = upper, x = ck),
+              alpha = 0.2, inherit.aes = FALSE) +
+  geom_point() +
+  geom_line(data = pdat, aes(y = fitted, x = ck)) +
+  labs(x = "Creatinine kinase level", y = "Proportion Heart Attack")
+```
+
+7. Looking at the model diagnostics and the plot of the fitted values versus the data, identify a problem with this model. Describe the problem in a few words.
+
+While this is a small data set, the model doesn't seem to fit the data very well (from the GOF test), and there is systematic deviation from randomness in the plot of residuals vs linear predictor plot, with runs of residuals above and below the 0 line. This suggests that the fitted model isn't flexible enough to model the relationship between `ck` and `proportion`
+
+8. Modify your model to account for the identified problem
+
+    Hint: use ploynomials of `ck`
+
+```{r ck-model-2}
+m_ck_poly <- glm(cbind(attack, ok) ~ poly(ck, 3), data = ck,
+                 family = binomial(link = "logit"))
+```
+
+You could also do
+
+```{r ck-model-2}
+m_ck_poly_alt <- glm(cbind(attack, ok) ~ ck + I(ck^2) + I(ck^3), data = ck,
+                     family = binomial(link = "logit"))
+```
+
+but this is not so nice to write out and isn't as numerically stable as the model that uses `poly()`, which returns orthogonal polynomials
+
+9. Look at the model summary, model diagnostic plots, and perform the goodness of fit test on the residual deviance. Are there any problems with this model?
+
+```{r question-9}
+summ <- summary(m_ck_poly)
+null_dev <- summ$null.deviance
+(null_dev - deviance(m_ck_poly)) / null_dev
+
+op <- par(mfrow = c(2,2))
+plot(m_ck_poly)
+par(op)
+
+pchisq(deviance(m_ck_poly), df.residual(m_ck_poly), lower.tail = FALSE)
+```
+
+10. Compare the two models using AIC and a generalized likelihood ratio test (GLRT). Which model is to be preferred?
+
+    Hint: the `anova()` function is used to do the GLRT
+
+```{r compare-models}
+AIC(m_ck_1, m_ck_poly)
+
+anova(m_ck_1, m_ck_poly, test = "LRT")
+```

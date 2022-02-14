@@ -117,6 +117,14 @@ Not necessary to transform data as this is handled as part of the GLM process
 
 Flip a coin 10 times with *p* = 0.7, the probability of 7 heads is $\sim Bin(n = 10, p = 0.7)$, ~ 0.27
 
+```{r}
+dbinom(x = 7, size = 10, prob = 0.7)
+```
+
+---
+
+# Binomial distribution
+
 ```{r binomial-pdf, echo = FALSE}
 ## Binomial Probability mass function
 s <- seq(0, 40, by = 1)
@@ -137,9 +145,13 @@ plt.binom
 
 # Poisson distribution
 
-The Poisson gives the distribution of the number of “things” (individuals, events, counts) in a given sampling interval/effort if each event is \alert{independent}.
+The Poisson gives the distribution of the number of “things” (individuals, events, counts) in a given sampling interval/effort if each event is **independent**.
 
 Has a single parameter $\lambda$ the average density or arrival rate
+
+---
+
+# Poisson distribution
 
 ```{r poisson-pdf, echo = FALSE}
 s <- seq(0, 20, by = 1)
@@ -160,14 +172,16 @@ plt.poisson
 
 A GLM consists of three components, chosen/specified by the user
 
-1. A random component, specifying the conditional distribution of of the response $Y_i$ given the values of the explanatory data. \alert{Error Function}
-2. A \alert{Linear Predictor} $\eta$ &mdash; the linear function of regressors
-    $$\eta_i = \alpha + \beta_1 X_{i1} + \beta_2 X_{i2} + \cdots + \beta_k X_{ik}$$
-	The $X_{ij}$ are prescribed functions of the explanatory variables and can be transformed variables, dummy variables, polynomial terms, interactions etc.
-3. A smooth and invertible \alert{Link Function} $g(\cdot)$, which transforms the expectation of the response $\mu_i \equiv E(Y_i)$ to the linear predictor
-    $$g(\mu_i) = \eta_i = \alpha + \beta_1 X_{i1} + \beta_2 X_{i2} + \cdots + \beta_k X_{ik}$$
+.small[
+1. A **Random component**, specifying the conditional distribution of of the response $y_i$ given the values of the explanatory data
+2. A **Linear Predictor** $\eta$ &mdash; the linear function of regressors
+    $$\eta_i = \alpha + \beta_1 x_{i1} + \beta_2 x_{i2} + \cdots + \beta_k x_{ik}$$
+	The $x_{ij}$ are prescribed functions of the explanatory variables and can be transformed variables, dummy variables, polynomial terms, interactions etc.
+3. A smooth and invertible **Link Function** $g(\cdot)$, which transforms the expectation of the response $\mu_i \equiv \mathbb{E}(y_i)$ to the linear predictor
+    $$g(\mu_i) = \eta_i = \alpha + \beta_1 x_{i1} + \beta_2 x_{i2} + \cdots + \beta_k x_{ik}$$
     As $g(\cdot)$ is invertible, we can write
-    $$\mu_i = g^{-1}(\eta_i) = g^{-1}(\alpha + \beta_1 X_{i1} + \beta_2 X_{i2} + \cdots + \beta_k X_{ik})$$
+    $$\mu_i = g^{-1}(\eta_i) = g^{-1}(\alpha + \beta_1 x_{i1} + \beta_2 x_{i2} + \cdots + \beta_k x_{ik})$$
+]
 
 ---
 
@@ -194,26 +208,33 @@ Choice depends on range of $y_i$ and on the relationship between the variance an
 
 Characteristics of common GLM probability distributions
 
-                 | Canonical Link | Range of $Y_i$               | Variance function
------------------|----------------|------------------------------|------------------
-Gaussian         | Identity       | $(-\infty, +\infty)$         | $\phi$
-Poisson          | Log            | $0,1,2,\ldots,\infty$        | $\mu_i$
-Binomial         | Logit          | $\frac{0,1,\ldots,n_i}{n_i}$ | $\frac{\mu_i(1 - \mu_i)}{n_i}$
-Gamma            | Inverse        | $(0, \infty)$                | $\phi \mu_i^2$
-Inverse-Gaussian | Inverse-square | $(0, \infty)$                | $\phi \mu_i^3$
 
-$\phi$ is the dispersion parameter; $\mu_i$ is the expectation of $Y_i$. In the binomial family, $n_i$ is the number of trials
+|                  | Canonical Link | Range of $Y_i$               | Variance function              |
+|------------------|----------------|------------------------------|--------------------------------|
+| Gaussian         | Identity       | $(-\infty, +\infty)$         | $\phi$                         |
+| Poisson          | Log            | $0,1,2,\ldots,\infty$        | $\mu_i$                        |
+| Binomial         | Logit          | $\frac{0,1,\ldots,n_i}{n_i}$ | $\frac{\mu_i(1 - \mu_i)}{n_i}$ |
+| Gamma            | Inverse        | $(0, \infty)$                | $\phi \mu_i^2$                 |
+| Inverse-Gaussian | Inverse-square | $(0, \infty)$                | $\phi \mu_i^3$                 |
+
+
+$\phi$ is the dispersion parameter; $\mu_i$ is the expectation of $y_i$. In the binomial family, $n_i$ is the number of trials
 
 ---
 
 # Ecologically-relevant probability distributions
 
-Gaussian distribution is rarely adequate in (palaoe)ecology; GLMs offer ecologically meaningful alternatives
+Gaussian distribution is rarely adequate in ecology; GLMs offer ecologically meaningful alternatives
 
-- \alert{Poisson} &mdash; counts; integers, non-negative, variance increases with mean
-- \alert{Binomial} &mdash; observed proportions from a total; integers, non-negative, bounded at 0 and 1, variance largest at $\pi = 0.5$
-- \alert{Binomial} &mdash; presence absence data; discrete values, 0 and 1, models probability of success
-- \alert{Gamma} &mdash; concentrations; non-negative (strictly positive with log link) real values, variance increases with mean, many zero values and some high values
+.small[
+- **Poisson** &mdash; counts; integers, non-negative, variance increases with mean
+
+- **Binomial** &mdash; observed proportions from a total; integers, non-negative, bounded at 0 and 1, variance largest at $\pi = 0.5$
+
+- **Binomial** &mdash; presence absence data; discrete values, 0 and 1, models probability of success
+
+- **Gamma** &mdash; concentrations; non-negative (strictly positive with log link) real values, variance increases with mean, many zero values and some high values
+]
 
 ---
 
@@ -225,7 +246,7 @@ $$y_i = \alpha + \beta_1 x_{1i} + \beta_2 x_{2i} + \cdots + \beta_j x_{ij} + \va
 
 And assumed
 
-$$ \varepsilon \sim \text{Normal}(0, \sigma^2) $$
+$$ \varepsilon_i \sim \text{Normal}(0, \sigma^2) $$
 
 This doesn't work out the same for GLMs &mdash; we don't have residuals in the linear predictor
 
@@ -276,8 +297,9 @@ class: inverse middle center subsection
 
 # Logistic regression &mdash; *Darlingtonia*
 
-Timed censuses at 42 randomly-chosen leaves of the cobra lily (*Darlingtonia californica*)
+Timed censuses at 42 randomly-chosen leaves of the cobra lily
 
+.small[
 * Recorded number of wasp visits at 10 of the 42 leaves
 * Test hypothesis that the probability of visitation is related to leaf height
 * Response is dichotomous variable (0/1)
@@ -285,17 +307,22 @@ Timed censuses at 42 randomly-chosen leaves of the cobra lily (*Darlingtonia cal
     $$\pi = \frac{e^{\beta_0 + \beta_i X}}{1 + e^{\beta_0 + \beta_1 X_i}}$$
 * The logit transformation produces
     $$\log_e \left( \frac{\pi}{1-\pi} \right) = \beta_0 + \beta_1 X_i$$
-* This is the logistic regression and it is a special case of the GLM, with a binomial error distribution and the logit link function
+* This is the logistic regression and it is a special case of the GLM, with a binomial random component and the logit link function
+]
 
-## Logistic regression &mdash; *Darlingtonia*
+---
+
+# Logistic regression &mdash; *Darlingtonia*
 
 $$\log_e \left( \frac{\pi}{1-\pi} \right) = \beta_0 + \beta_1 X_i$$
 
-* $\beta_0$ is a type of intercept; determines the probability of success ($Y_i = 1$) $\pi$ where X = 0
+.small[
+* $\beta_0$ is a type of intercept; determines the probability of success ( $y_i = 1$ ) $\pi$ where X = 0
 * If $\beta_0 = 0$ then $\pi = 0.5$
 *  $\beta_1$ is similar to the slope and determines how steeply the fitted logistic curve rises to the maximum value of $\pi = 1$
 * Together, $\beta_0$ and $\beta_1$ specify the range of the $X$ variable over which most of the rise occurs and determine how quickly the probability rises from 0 to 1
-* Estimate the model parameters using \alert{Maximum Likelihood}; find parameter values that make the observed data most probable
+* Estimate the model parameters using **Maximum Likelihood**; find parameter values that make the observed data most probable
+]
 
 ---
 
@@ -319,38 +346,53 @@ m
 
 # Logistic regression &mdash; *Darlingtonia*
 
+.smaller[
 ```{r summary-darlingtonia, echo = TRUE}
 summary(m)
 ```
+]
 
 ---
 
 # Logistic regression &mdash; *Darlingtonia*
 
-```{r predict-darlingtonia, echo = TRUE}
-pdat <- with(wasp, tibble(leafHeight = seq(min(leafHeight), max(leafHeight),
-                          length = 100)))
+.row[
+.col-6[
+.smaller[
+```{r predict-darlingtonia, echo = TRUE, eval = FALSE}
+# data to predict at
+pdat <- with(wasp,
+             tibble(leafHeight = seq(min(leafHeight),
+                                     max(leafHeight),
+                                     length = 100)))
+# predict
 pred <- predict(m, pdat, type = "link", se.fit = TRUE)
-ilink <- family(m)$linkinv
-pdat <- pdat %>% 
+ilink <- family(m)$linkinv # g-1()
+pdat <- pdat %>%
   bind_cols(data.frame(pred)) %>%
   mutate(fitted = ilink(fit),
          upper = ilink(fit + (2 * se.fit)),
          lower = ilink(fit - (2 * se.fit)))
-```
-
----
-
-# Logistic regression &mdash; *Darlingtonia*
-
-```{r plot-darlingtonia, echo = TRUE}
-ggplot(wasp, aes(x = leafHeight, y = as.numeric(visited))) +
+# plot
+ggplot(wasp, aes(x = leafHeight,
+                 y = as.numeric(visited))) +
     geom_point() +
-    geom_ribbon(aes(ymin = lower, ymax = upper, x = leafHeight), data = pdat,
+    geom_ribbon(aes(ymin = lower, ymax = upper,
+                    x = leafHeight), data = pdat,
                 inherit.aes = FALSE, alpha = 0.2) +
     geom_line(data = pdat, aes(y = fitted)) +
-    labs(x = "Leaf Height [cm]", y = "Probability of visitation")
+    labs(x = "Leaf Height [cm]",
+         y = "Probability of visitation")
 ```
+]
+]
+
+.col-6[
+```{r predict-darlingtonia, eval = TRUE, echo = FALSE, fig.height = 6, fig.width = 6}
+```
+]
+
+]
 
 ---
 
@@ -359,9 +401,10 @@ ggplot(wasp, aes(x = leafHeight, y = as.numeric(visited))) +
 $z$ values are Wald statistics, which under the null hypothesis are *asymptotically* standard normal
 
 ```{r coeftab-darlingtonia, results = "asis", echo = FALSE}
-knitr::kable(round(summary(m)$coefficients, 4), format = "pandoc")
+knitr::kable(round(summary(m)$coefficients, 4), format = "pipe")
 ```
 
+<br />
 Tests the null hypothesis that $\beta_i = 0$
 $$z = \hat{\beta}_i / \mathrm{SE}(\hat{\beta}_i)$$
 
@@ -369,14 +412,16 @@ $$z = \hat{\beta}_i / \mathrm{SE}(\hat{\beta}_i)$$
 
 # Deviance
 
+.small[
 * In least squares we have the residual sum of squares as the measure of lack of fitted
-* In GLMs, \alert{deviance} plays the same role
+* In GLMs, **deviance** plays the same role
 * Deviance is defined as twice the log likelihood of the observed data under the current model
-* Deviance is defined relative to an arbitrary constant &mdash; only \alert{differences} of deviances have any meaning
+* Deviance is defined relative to an arbitrary constant &mdash; only **differences** of deviances have any meaning
 * Differences in deviances are also known as ratios of likelihoods
 * An alternative to the Wald tests are deviance ratio or likelihood ratio tests
     $$F = \frac{(D_a - D_b) / (\mathsf{df}_a - \mathsf{df}_b)}{D_b / \mathsf{df}_b}$$
 * $D_j$ deviance of model, where we test if model A is a significant improvement over model B; $\mathsf{df}_k$ are the degrees of freedom of the respective model
+]
 
 ---
 
@@ -394,85 +439,146 @@ Fit mid-depth & mid-calibrated age points
 
 # A Gamma GLM &mdash; simple age-depth modelling
 
-```{r load-maddy, echo = FALSE, results="asis"}
+```{r load-maddy, echo = TRUE}
 maddy <- read_csv(here("data", "maddy-peat.csv"), col_types = "cdddddd")
 maddy <- mutate(maddy, midDepth = upperDepth - (0.5 * abs(upperDepth - lowerDepth)),
                 calMid = calUpper - (0.5 * abs(calUpper - calLower)))
-head(maddy)
+maddy
 ```
 
 ---
 
 # A Gamma GLM &mdash; simple age-depth modelling
 
-```{r plot-maddy, echo = TRUE}
-ggplot(maddy, aes(x = midDepth, y = calMid)) + geom_point() +
+.row[
+
+.col-6[
+```{r plot-maddy, echo = TRUE, eval = FALSE}
+ggplot(maddy, aes(x = midDepth, y = calMid)) +
+    geom_point() +
     labs(y = "Calibrated Age", x = "Depth")
 ```
 
+]
+
+.col-6[
+```{r plot-maddy, echo = FALSE, eval = TRUE, fig.height = 6, fig.width = 6}
+```
+]
+]
+
 ---
 
-# A Gamma GLM &mdash; simple age-depth modelling
+# A Gamma GLM
 
+.smaller[
 ```{r peat-model, echo = TRUE}
 m_gamma <- glm(calMid ~ midDepth, data = maddy, family = Gamma(link = "identity"))
 summary(m_gamma)
 ```
+]
 
 ---
 
-# A Gamma GLM &mdash; simple age-depth modelling
+# A Gamma GLM
 
-```{r plot-maddy-fitted, echo=FALSE}
-pdat <- with(maddy, tibble(midDepth = seq(min(midDepth), max(midDepth), length = 100)))
-p_gamma <- predict(m_gamma, pdat, type = "link", se.fit = TRUE)
+.row[
+
+.col-6[
+.smaller[
+```{r plot-maddy-fitted-gamma, eval=FALSE}
+# data to predict at
+pdat <- with(maddy,
+             tibble(midDepth = seq(min(midDepth),
+                                   max(midDepth),
+                                   length = 100)))
+# predict
+p_gamma <- predict(m_gamma, pdat, type = "link",
+                   se.fit = TRUE)
 ilink <- family(m_gamma)$linkinv
+# confidence interval
 p_gamma <- pdat %>%
   bind_cols(data.frame(p_gamma)) %>%
-  mutate(fitted = ilink(fit), upper = ilink(fit + (2 * se.fit)),
+  mutate(fitted = ilink(fit),
+         upper = ilink(fit + (2 * se.fit)),
          lower = ilink(fit - (2 * se.fit)))
-```
-
----
-
-```{r}
+# plot
 p1 <- ggplot(maddy, aes(x = midDepth, y = calMid)) +
-    geom_ribbon(aes(ymin = lower, ymax = upper, x = midDepth), data = p_gamma,
+    geom_ribbon(aes(ymin = lower, ymax = upper,
+                    x = midDepth), data = p_gamma,
                 inherit.aes = FALSE, alpha = 0.2) +
     geom_line(data = p_gamma, aes(y = fitted)) +
     geom_point() +
-    labs(y = "Calibrated Age", x = "Depth", title = "Gamma GLM")
+    labs(y = "Calibrated Age", x = "Depth",
+         title = "Gamma GLM")
+p1
 ```
+]
+]
+
+.col-6[
+```{r plot-maddy-fitted-gamma, echo = FALSE, eval = TRUE, fig.height = 6, fig.width = 6}
+```
+
+]
+]
 
 ---
 
-```{r}
-m_gaus <- glm(calMid ~ midDepth, data = maddy, family = gaussian)
-p_gaus <- predict(m_gaus, pdat, type = "link", se.fit = TRUE)
+# A Gaussian GLM
+
+.row[
+
+.col-6[
+.smaller[
+```{r plot-maddy-fitted-gaussian, eval = FALSE}
+# fit gaussian GLM
+m_gaus <- glm(calMid ~ midDepth, data = maddy,
+              family = gaussian)
+# predict
+p_gaus <- predict(m_gaus, pdat, type = "link",
+                  se.fit = TRUE)
 ilink <- family(m_gaus)$linkinv
+# prep confidence interval
 p_gaus <- pdat %>%
   bind_cols(data.frame(p_gaus)) %>%
-  mutate(fitted = ilink(fit), upper = ilink(fit + (2 * se.fit)),
+  mutate(fitted = ilink(fit),
+         upper = ilink(fit + (2 * se.fit)),
          lower = ilink(fit - (2 * se.fit)))
-```
-
----
-
-```{r}
+# plot
 p2 <- ggplot(maddy, aes(x = midDepth, y = calMid)) +
-    geom_ribbon(aes(ymin = lower, ymax = upper, x = midDepth), data = p_gaus,
+    geom_ribbon(aes(ymin = lower, ymax = upper,
+                    x = midDepth), data = p_gaus,
                 inherit.aes = FALSE, alpha = 0.2) +
     geom_line(data = p_gaus, aes(y = fitted)) +
     geom_point() +
-    labs(y = "Calibrated Age", x = "Depth", title = "Linear Model")
+    labs(y = "Calibrated Age",
+         x = "Depth",
+         title = "Linear Model")
+p2
+```
 
+]
+]
+
+.col-6[
+```{r plot-maddy-fitted-gaussian, echo = FALSE, eval = TRUE, fig.height = 6, fig.width = 6}
+```
+
+]
+]
+
+---
+
+```{r}
+library("patchwork")
 p1 + p2
 ```
 
 ---
-class: inverse middle center subsection
+class: inverse middle center huge-subsection
 
-# Motivating example
+# GAMs
 
 ---
 class: inverse middle center subsection
@@ -667,8 +773,6 @@ A GAM is a sum of _smooth functions_ or _smooths_
 
 $$\eta_i = \beta_0 + \sum_j \color{red}{f_j(x_{ji})} + \epsilon_i$$
 
-Call $\boldsymbol{\eta}$ the **linear predictor**
-
 ---
 
 # How did `gam()` *know*?
@@ -691,5 +795,3 @@ background-size: contain
 class: inverse
 background-image: url('resources/wiggly-things.png')
 background-size: contain
-
-???
