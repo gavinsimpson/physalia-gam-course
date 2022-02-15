@@ -190,3 +190,58 @@ AIC(m_ck_1, m_ck_poly)
 
 anova(m_ck_1, m_ck_poly, test = "LRT")
 ```
+
+```{r predict-ck-m-poly}
+pdat <- with(ck, tibble(ck = seq(min(ck), max(ck), length = 100)))
+pred <- predict(m_ck_poly, newdata = pdat, type = "link", se.fit = TRUE)
+ilink <- family(m_ck_poly)$linkinv
+pdat <- pdat %>%
+  bind_cols(data.frame(pred)) %>%
+  mutate(fitted = ilink(fit),
+         upper = ilink(fit + (1.96 * se.fit)),
+         lower = ilink(fit - (1.96 * se.fit)))
+
+ggplot(ck, aes(x = ck, y = proportion)) +
+  geom_ribbon(data = pdat,
+              aes(ymin = lower, ymax = upper, x = ck),
+              alpha = 0.2, inherit.aes = FALSE) +
+  geom_point() +
+  geom_line(data = pdat, aes(y = fitted, x = ck)) +
+  labs(x = "Creatinine kinase level", y = "Proportion Heart Attack")
+```
+
+## GAM
+
+```{r}
+# fit models using ML with gam() to be sure we get exactly the same loglik
+m_gam0 <- gam(proportion ~ poly(ck, 3), data = ck, weights = total,
+              family = binomial(link = "logit"), method = "ML")
+m_gam1 <- gam(proportion ~ s(ck), data = ck, weights = total,
+              family = binomial(link = "logit"), method = "ML")
+
+# model summary for the GAM
+summary(m_gam1)
+
+# is GAM an improvement over the GLM? Yes, but no
+anova(m_gam1, m_gam0, test = "Chisq")
+AIC(m_gam0, m_gam1)
+model_edf(m_gam0, m_gam1)
+## differences in reported EDFs due to smoothness selection correction
+
+## refit to use REML
+m_gam2 <- update(m_gam1, . ~ ., method = "REML")
+
+## plot the estimated smooth
+draw(m_gam2, residuals = TRUE)
+
+new_df <- tibble(ck = seq(min(ck), max(ck), length = 100))
+
+pred_gam <- fitted_values(m_gam2, data = new_df, scale = "response")
+
+plt <- pred_gam %>%
+  ggplot(aes(x = ck, y = fitted)) +
+    geom_ribbon(aes(ymin = lower, ymax = upper), alpha = 0.2) +
+    geom_line() +
+    geom_point(data = ck, aes(x = ck, y = proportion))
+plt
+```
