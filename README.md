@@ -39,6 +39,8 @@ Sessions from 14:00 to 20:00 (Monday to Thursday), 14:00 to 19:00 on Friday (Ber
 
 ### Tuesday
 
+[Slides](https://gavinsimpson.github.io/physalia-gam-course/day-2/index.html)
+
 * How do GAMs work?
 * What are splines?
 * How do GAMs learn from data without overfitting?
