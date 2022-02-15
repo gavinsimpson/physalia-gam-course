@@ -1,0 +1,215 @@
+---
+title: "Belgium AIDS epidemic: solutions"
+author: "Gavin Simpson"
+date: "14/02/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Description
+
+The data set `belgium.csv` contains the number of cases (`cases`) of AIDS recorded between 1981 and 1993 (`year`) in Belgium
+
+## Packages
+
+Load the following packages
+
+```{r load-packages}
+pkgs <- c("readr", "dplyr", "ggplot2")
+vapply(pkgs, library, logical(1L), character.only = TRUE, logical.return = TRUE)
+```
+
+## Data
+
+The data are contained in `data/belgium.csv`, and consist of three variables
+
+1. `year`, the year of each observation
+2. `cases`, the number of AIDS cases per year
+
+Load the data into R
+
+```{r load-data}
+belgium <- read_csv(here("data", "belgium-aids.csv"), col_types = "dd")
+belgium
+```
+
+## Data wrangling
+
+Create a variables `t` (for time) in the `belgium` data frame, which contains the time point of observation by subtracting `1980` from each `year`:
+
+```{r wrangling}
+belgium <- belgium %>%
+  mutate(t = year - 1980)
+```
+
+## Task
+
+1. Produce a plot of the number of AIDS cases over time
+
+```{r}
+belgium %>%
+  ggplot(aes(x = year, y = cases)) +
+    geom_point()
+```
+
+2. Fit a poisson GLM (log link) using the `glm()` to model the number of AIDS cases. Use `t` as the predictor variable
+
+```{r}
+m1 <- glm(cases ~ t, data = belgium, family = poisson(link = "log"))
+```
+
+3. Produce the model summary using `summary()`
+
+```{r}
+summary(m1)
+```
+
+4. Calculate a quick goodness of fit test for the model using the information provided on the residual deviance
+
+```{r}
+pchisq(deviance(m1), df.residual(m1), lower.tail = FALSE)
+```
+
+5. Plot the model diagnostics
+
+```{r}
+layout(matrix(1:4, ncol = 2, byrow = TRUE))
+plot(m1)
+layout(1)
+```
+
+6. Add fitted values of the model as a line on to the plot you created earlier. Add a confidence interval to the fitted value line.
+
+```{r predict-m-1}
+pdat <- with(belgium, tibble(t = seq(min(t), max(t),
+                                           length = 100)))
+## want year for each t; remember to add 1980
+pdat <- pdat %>%
+  mutate(year = 1980 + t)
+pred <- predict(m1, newdata = pdat, type = "link", se.fit = TRUE)
+ilink <- family(m1)$linkinv
+pdat <- pdat %>%
+  bind_cols(data.frame(pred)) %>%
+  mutate(fitted = ilink(fit),
+         upper = ilink(fit + (1.96 * se.fit)),
+         lower = ilink(fit - (1.96 * se.fit)))
+
+belgium %>%
+ggplot(aes(x = year, y = cases)) +
+  geom_ribbon(data = pdat,
+              aes(ymin = lower, ymax = upper, x = year),
+              alpha = 0.2, inherit.aes = FALSE) +
+  geom_point() +
+  geom_line(data = pdat, aes(y = fitted, x = year)) +
+  labs(x = "Creatinine kinase level", y = "Proportion Heart Attack")
+```
+
+7. Looking at the model diagnostics and the plot of the fitted values versus the data, identify a problem with this model. Describe the problem in a few words.
+
+8. Modify your model to account for the identified problem
+
+    Hint: use ploynomials of `t`
+
+```{r}
+m2 <- glm(cases ~ poly(t, 2), data = belgium, family = poisson(link = "log"))
+
+## or
+m2a <- update(m1, . ~ . - t + poly(t, 2))
+```
+
+9. Look at the model summary, model diagnostic plots, and perform the goodness of fit test on the residual deviance. Are there any problems with this model?
+
+```{r}
+# model summary
+summary(m2)
+# quick GOF test
+pchisq(deviance(m2), df.residual(m2), lower.tail = FALSE)
+# model diagnostics
+layout(matrix(1:4, ncol = 2, byrow = TRUE))
+plot(m2)
+layout(1)
+
+# plots
+pred <- predict(m2, newdata = pdat, type = "link", se.fit = TRUE)
+ilink <- family(m2)$linkinv
+pdat2 <- pdat %>%
+  select(-c(fit, se.fit, residual.scale)) %>% # remove m1 link scale fit & std err
+  bind_cols(data.frame(pred)) %>%
+  mutate(fitted = ilink(fit),
+         upper = ilink(fit + (1.96 * se.fit)),
+         lower = ilink(fit - (1.96 * se.fit))) %>%
+  bind_rows(pdat) %>%
+  mutate(model = rep(c("x^2","x"), each = 100))
+
+belgium %>%
+ggplot(aes(x = year, y = cases)) +
+  geom_ribbon(data = pdat2,
+              aes(ymin = lower, ymax = upper, x = year, fill = model),
+              alpha = 0.2, inherit.aes = FALSE) +
+  geom_point() +
+  geom_line(data = pdat2, aes(y = fitted, x = year, colour = model)) +
+  labs(x = "Creatinine kinase level", y = "Proportion Heart Attack") +
+  scale_fill_discrete(labels = parse_format()) +
+  scale_colour_discrete(labels = parse_format())
+```
+
+10. Compare the two models using AIC and a generalized likelihood ratio test (GLRT). Which model is to be preferred?
+
+    Hint: the `anova()` function is used to do the GLRT
+
+```{r}
+anova(m1, m2, test = "Chisq")
+
+anova(m1, m2, test = "LRT")
+
+pchisq(71.446, df = 1, lower.tail = FALSE)
+
+deviance(m1)
+
+deviance(m2)
+
+deviance(m1) - deviance(m2)
+```
+
+## GAM
+
+```{r}
+# fit models using ML with gam() to be sure we get exactly the same loglik
+m_gam0 <- gam(cases ~ poly(t, 2), data = belgium,
+              family = poisson(link = "log"), method = "ML")
+m_gam1 <- gam(cases ~ s(t), data = belgium, family = poisson(link = "log"),
+              method = "ML")
+
+# model summary for the GAM
+summary(m_gam1)
+
+# is GAM an improvement over the GLM? Yes, but no
+anova(m_gam0, m_gam1, test = "Chisq")
+AIC(m_gam0, m_gam1)
+model_edf(m_gam0, m_gam1)
+## differences in reported EDFs due to smoothness selection correction
+
+## refit to use REML
+m_gam2 <- update(m_gam1, . ~ ., method = "REML")
+
+## plot the estimated smooth
+draw(m_gam2, residuals = TRUE)
+
+new_df <- tibble(year = seq(1981, 1993, length = 100)) %>%
+  mutate(t = year - 1980)
+
+pred_gam <- fitted_values(m_gam2, data = new_df, scale = "response")
+
+plt <- pred_gam %>%
+  ggplot(aes(x = year, y = fitted)) +
+    geom_ribbon(aes(ymin = lower, ymax = upper), alpha = 0.2) +
+    geom_line() +
+    geom_point(data = belgium, aes(x = year, y = cases))
+plt
+
+# compare with the GLM fits
+plt + geom_line(data = pdat2, aes(colour = model))
+```
