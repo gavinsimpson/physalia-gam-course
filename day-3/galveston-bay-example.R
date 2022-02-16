@@ -85,7 +85,7 @@ ggplot(pred, aes(x = LONGITUDE, y = LATITUDE)) +
     theme(legend.position = "right")
 
 # predict temperature time series at a particular location for 4 different
-# perdios of the year
+# periods of the year
 pdata <- with(galveston,
               expand.grid(ToD = 12,
                           DoY = c(1, 90, 180, 270),
