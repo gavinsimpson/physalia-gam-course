@@ -49,6 +49,8 @@ We’ll dig under the hood a bit to understand how GAMs work at a practical leve
 
 ### Wednesday
 
+[Slides](https://gavinsimpson.github.io/physalia-gam-course/day-3/index.html)
+
 * Model checking, selection, and visualisation.
 * How do we do inference with GAMs?
 * Go beyond simple GAMs to include smooth interactions and models with multiples smooths.
