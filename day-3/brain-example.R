@@ -6,13 +6,11 @@ vapply(pkgs, library, logical(1L), logical.return = TRUE,
 URL <- "https://bit.ly/gamair-brain"
 
 brain <- read_csv(URL, col_types = "ddddd")
-brani
 brain
 
 # filter two outliers
 brain <- brain %>%
   filter(medFPQ > 5e-3)
-
 
 # plot
 brain %>%
@@ -36,7 +34,7 @@ m_gamma <- gam(medFPQ ~ s(Y, X, k = 100), data = brain, method = "REML",
 draw(m_gamma, dist = 0.03)
 
 # model diagnostics
-appraise(m_gamma)
+appraise(m_gamma, method = "simulate")
 
 # Would an additive model be better?
 m_add <- gam(medFPQ ~ s(Y, k = 30) + s(X, k = 30),
@@ -58,7 +56,7 @@ m_gamma_te <- gam(medFPQ ~ te(Y, X, k = 10), data = brain, method = "REML",
 
 # compare
 m_gamma_te_ml <- update(m_gamma_te, . ~ ., method = "ML")
-AIC(m_gamma, m_gamma_te)
+AIC(m_gamma_ml, m_gamma_te_ml)
 
 # ANOVA-like decomposition
 m_gamma_ti <- gam(medFPQ ~ s(Y, k = 10, bs = "cr") + s(X, k = 10, bs = "cr") +
@@ -124,7 +122,15 @@ anova(m_diff)
 
 draw(m_diff, dist = 0.03)
 
-# model both samples separatelt with a factor by smooth
+brain_comb <- brain_comb %>%
+  mutate(sample_o = ordered(sample))
+
+m_diff2 <- gam(medFPQ ~ sample_o + s(Y, X, k = 100) +
+                s(Y, X, by = sample_o, k = 100),
+              data = brain_comb,
+              method = "REML", family = Gamma(link = "log"))
+
+# model both samples separately with a factor by smooth
 m_fac_by <- gam(medFPQ ~ sample + s(Y, X, k = 100, by = sample),
               data = brain_comb,
               method = "REML",

@@ -18,7 +18,7 @@ The data set `belgium.csv` contains the number of cases (`cases`) of AIDS record
 Load the following packages
 
 ```{r load-packages}
-pkgs <- c("readr", "dplyr", "ggplot2")
+pkgs <- c("readr", "dplyr", "ggplot2", "here", "mgcv", "gratia")
 vapply(pkgs, library, logical(1L), character.only = TRUE, logical.return = TRUE)
 ```
 
@@ -142,7 +142,7 @@ pdat2 <- pdat %>%
          upper = ilink(fit + (1.96 * se.fit)),
          lower = ilink(fit - (1.96 * se.fit))) %>%
   bind_rows(pdat) %>%
-  mutate(model = rep(c("x^2","x"), each = 100))
+  mutate(model = rep(c("t^2","t"), each = 100))
 
 belgium %>%
 ggplot(aes(x = year, y = cases)) +
@@ -152,8 +152,8 @@ ggplot(aes(x = year, y = cases)) +
   geom_point() +
   geom_line(data = pdat2, aes(y = fitted, x = year, colour = model)) +
   labs(x = "Creatinine kinase level", y = "Proportion Heart Attack") +
-  scale_fill_discrete(labels = parse_format()) +
-  scale_colour_discrete(labels = parse_format())
+  scale_fill_discrete(labels = scales::parse_format()) +
+  scale_colour_discrete(labels = scales::parse_format())
 ```
 
 10. Compare the two models using AIC and a generalized likelihood ratio test (GLRT). Which model is to be preferred?
