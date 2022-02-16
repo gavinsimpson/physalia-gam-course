@@ -43,7 +43,6 @@ m_zinb <- gam(yZINB ~ s(x), data = df,
 appraise(m_pois, method = "simulate")
 appraise(m_nb, method = "simulate")
 appraise(m_zinb, method = "simulate")
-appraise(m_ziplss, method = "simulate")
 
 rg_pois <- rootogram(m_pois, max_count = 20)
 draw(rg_pois) +
@@ -59,6 +58,9 @@ draw(rg_zinb) +
 
 m_nb_nb <- gam(yNegBin ~ s(x), data = df,
                family = nb(), method = "REML")
+
+
+appraise(m_nb_nb, method = "simulate")
 
 rg_nb_nb <- rootogram(m_nb_nb, max_count = 20)
 draw(rg_nb_nb) +
