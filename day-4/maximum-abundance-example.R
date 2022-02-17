@@ -1,9 +1,9 @@
 # Analyse the simulated species abundance data
 
 # load packages
+pkgs <- c("mgcv", "ggplot2", "readr", "dplyr", "gratia")
 vapply(pkgs, library, logical(1), character.only = TRUE, logical.return = TRUE,
        quietly = TRUE)
-pkgs <- c("mgcv", "ggplot2", "readr", "dplyr", "gratia")
 
 # load the data
 spp_url <- "https://bit.ly/spp-gradient"
