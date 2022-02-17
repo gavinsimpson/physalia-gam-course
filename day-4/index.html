@@ -1567,6 +1567,25 @@ Tasks
 
 ---
 
+# Addendum
+
+We used a *Gaussian approximation* to the model posterior distribution
+
+This works well for many models but it's an approximation and can fail when the posterior is far from Gaussian
+
+Other options include
+
+1. using integrated nested Laplace approximation `mgcv::ginla()`
+2. using a Metropolis Hastings sampler `mgcv::gam.mh()`
+
+See `?mgcv::gam.mh` for an example where Gaussian approximation fails badly
+
+--
+
+`fitted_samples()`, `smooth_samples()` etc only do Gaussian approximation *currently*
+
+---
+
 # Next steps
 
 Read Simon Wood's book!
