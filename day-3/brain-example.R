@@ -122,14 +122,6 @@ anova(m_diff)
 
 draw(m_diff, dist = 0.03)
 
-brain_comb <- brain_comb %>%
-  mutate(sample_o = ordered(sample))
-
-m_diff2 <- gam(medFPQ ~ sample_o + s(Y, X, k = 100) +
-                s(Y, X, by = sample_o, k = 100),
-              data = brain_comb,
-              method = "REML", family = Gamma(link = "log"))
-
 # model both samples separately with a factor by smooth
 m_fac_by <- gam(medFPQ ~ sample + s(Y, X, k = 100, by = sample),
               data = brain_comb,
@@ -146,3 +138,15 @@ diffs
 
 # plot the difference
 draw(diffs)
+
+# ordered factor provides another way to do this
+# first smooth is for the reference level of the factor and the
+# by factor smooth(s) are smooth difference between another level
+# reference level
+brain_comb <- brain_comb %>%
+  mutate(sample_o = ordered(sample))
+
+m_diff2 <- gam(medFPQ ~ sample_o + s(Y, X, k = 100) +
+                s(Y, X, by = sample_o, k = 100),
+              data = brain_comb,
+              method = "REML", family = Gamma(link = "log"))
