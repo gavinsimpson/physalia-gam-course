@@ -1,0 +1,1693 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Generalized Additive Models</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Gavin Simpson" />
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/tile-view/tile-view.css" rel="stylesheet" />
+    <script src="libs/tile-view/tile-view.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="slides.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: inverse, middle, left, my-title-slide, title-slide
+
+# Generalized Additive Models
+## a data-driven approach to estimating regression models
+### Gavin Simpson
+### Department of Animal Science · Aarhus University
+### 1400–2000 CET (1300–1900 UTC) Thursday 17th, 2022
+
+---
+
+class: inverse middle center big-subsection
+
+
+
+
+
+# Day 4
+
+???
+
+---
+
+# Logistics
+
+## Slides
+
+Slidedeck: [bit.ly/physalia-gam-3](https://bit.ly/physalia-gam-3)
+
+Sources: [bit.ly/physalia-gam](https://bit.ly/physalia-gam)
+
+Direct download a ZIP of everything: [bit.ly/physalia-gam-zip](https://bit.ly/physalia-gam-zip)
+
+Unpack the zip &amp; remember where you put it
+
+---
+
+# Matters arising
+
+1. Credible intervals for smooths
+
+2. *p* values for smooths
+
+3. AIC
+
+---
+class: inverse center middle subsection
+
+# Credible intervals for smooths
+
+---
+
+# Credible intervals for smooths
+
+`plot.gam()` produces approximate 95% intervals (at +/- 2 SEs)
+
+What do these intervals represent?
+
+Nychka (1988) showed that standard Wahba/Silverman type Bayesian confidence intervals on smooths had good **across-the-function** frequentist coverage properties
+
+When *averaged* over the range of covariate, 1 - &amp;alpha; coverage is approximately 1 - &amp;alpha;
+
+---
+
+# Credible intervals for smooths
+
+.center[
+&lt;img src="/home/au690221/work/teaching/physalia/gam-course/course/day-3/resources/miller-bayesian-gam-interpretation-fig.svg" width="90%" /&gt;
+]
+
+.smaller[
+Miller (2021) Bayesian Views of Generalized Additive Modelling. [*arXiv*:1902.01330v3](http://arxiv.org/abs/1902.01330v3)
+]
+
+---
+
+# Credible intervals for smooths
+
+Marra &amp; Wood (2012) extended this theory to the generalised case and explain where the coverage properties failed:
+
+*Mustn't over-smooth too much, which happens when `\(\lambda_j\)` are over-estimated*
+
+Two situations where this might occur
+
+1. where true effect is almost in the penalty null space, `\(\hat{\lambda}_j \rightarrow \infty\)`
+	- ie. close to a linear function
+2. where `\(\hat{\lambda}_j\)` difficult to estimate due to highly correlated covariates
+	- if 2 correlated covariates have different amounts of wiggliness, estimated effects can have degree of smoothness *reversed*
+
+---
+
+# Don't over-smooth
+
+&gt; In summary, we have shown that Bayesian componentwise variable width intervals... for the smooth components of an additive model **should achieve close to nominal *across-the-function* coverage probability**&amp;hellip;
+
+Basically
+
+1. Don't over smooth, and
+
+2. Effect of uncertainty due to estimating smoothness parameter is small
+
+---
+
+# Confidence intervals for smooths
+
+Marra &amp; Wood (2012) suggested a solution to situation 1., namely true functions close to the penalty null space.
+
+Smooths are normally subject to *identifiability* constraints (centred), which leads to zero variance where the estimated function crosses the zero line.
+
+Instead, compute intervals for `\(j\)` th smooth as if it alone had the intercept; identifiability constraints go on the other smooth terms.
+
+Use
+
+* `seWithMean = TRUE` in call to `plot.gam()`
+* `overall_uncertainty = TRUE` in call to `gratia::draw()`
+
+---
+
+# Example
+
+![](index_files/figure-html/setup-confint-example-1.svg)&lt;!-- --&gt;
+
+---
+
+# closer&amp;hellip;
+
+![](index_files/figure-html/draw-coverage-bands-closup-1.svg)&lt;!-- --&gt;
+---
+
+# closer&amp;hellip;
+
+![](index_files/figure-html/draw-coverage-bands-closup-x3-1.svg)&lt;!-- --&gt;
+
+---
+
+# Confidence intervals for smooths
+
+Bands are a bayesian 95% credible interval on the smooth
+
+`plot.gam()` draws the band at &amp;plusmn; **2** std. err.
+
+`gratia::draw()` draws them at `\((1 - \alpha) / 2\)` upper tail probability quantile of `\(\mathcal{N}(0,1)\)`
+
+`gratia::draw()` draws them at ~ &amp;plusmn;**1.96** std. err. &amp; user can change `\(\alpha\)` via argument `ci_level`
+
+--
+
+So `gratia::draw()` draws them at ~ &amp;plusmn;**2** st.d err
+
+---
+
+# Across the function intervals
+
+The *frequentist* coverage of the intervals is not pointwise &amp;mdash; instead these credible intervals have approximately 95% coverage when *averaged* over the whole function
+
+Some places will have more than 95% coverage, other places less
+
+--
+
+Assumptions yielding this result can fail, where estimated smooth is a straight line
+
+--
+
+Correct this with `seWithMean = TRUE` in `plot.gam()` or `overall_uncertainty = TRUE` in `gratia::draw()`
+
+This essentially includes the uncertainty in the intercept in the uncertainty band
+
+---
+
+# Correcting for smoothness selection
+
+The defaults assume that the smoothness parameter(s) `\(\lambda_j\)` are *known* and *fixed*
+
+--
+
+But we estimated them
+
+--
+
+Can apply a correction for this extra uncertainty via argument `unconditional = TRUE` in both `plot.gam()` and `gratia::draw()`
+
+---
+class: inverse center middle subsection
+
+# *p* values for smooths
+
+---
+
+# Example
+
+
+
+.row[
+.col-5[
+
+Data has a known unrelated effect &amp; 2 spurious effects
+
+.smaller[
+
+```r
+m &lt;- gam(y ~ s(x0) + s(x1) + s(x2) + s(x3) +
+           s(x4) + s(x5),
+         data = dat,
+         method = "REML",
+         select = TRUE)
+
+summary(m) # ==&gt;
+```
+]
+]
+
+.col-7[
+.smaller[
+
+```
+## 
+## Family: gaussian 
+## Link function: identity 
+## 
+## Formula:
+## y ~ s(x0) + s(x1) + s(x2) + s(x3) + s(x4) + s(x5)
+## 
+## Parametric coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)   3.9300     0.1612   24.39   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Approximate significance of smooth terms:
+##             edf Ref.df      F p-value    
+## s(x0) 1.6560081      9  0.472  0.0672 .  
+## s(x1) 2.0835207      9  5.460  &lt;2e-16 ***
+## s(x2) 6.5243648      9 14.644  &lt;2e-16 ***
+## s(x3) 0.0002582      9  0.000  0.6232    
+## s(x4) 0.0002072      9  0.000  0.4775    
+## s(x5) 0.4008276      9  0.074  0.1965    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## R-sq.(adj) =  0.506   Deviance explained = 53.3%
+## -REML = 466.73  Scale est. = 5.1944    n = 200
+```
+]
+]
+]
+
+---
+
+# *p* values for smooths
+
+*p* values for smooths are approximate:
+
+1. they don't account for the estimation of `\(\lambda_j\)` &amp;mdash; treated as known, hence *p* values are biased low
+
+2. rely on asymptotic behaviour &amp;mdash; they tend towards being right as sample size tends to `\(\infty\)`
+
+---
+
+# *p* values for smooths
+
+...are a test of **zero-effect** of a smooth term
+
+Default *p* values rely on theory of Nychka (1988) and Marra &amp; Wood (2012) for confidence interval coverage
+
+If the Bayesian CI have good across-the-function properties, Wood (2013a) showed that the *p* values have
+
+- almost the correct null distribution
+
+- reasonable power
+
+Test statistic is a form of `\(\chi^2\)` statistic, but with complicated degrees of freedom
+
+---
+
+# *p* values for fully penalized smooths
+
+The results of Nychka (1988) and Marra &amp; Wood (2012) break down if smooth terms have no unpenalized terms
+
+This include i.i.d. Gaussian random effects, (e.g. `bs = "re"`)
+
+Wood (2013b) proposed instead a test based on a likelihood ratio statistic:
+
+- the reference distribution used is appropriate for testing a `\(\mathrm{H}_0\)` on the boundary of the allowed parameter space...
+
+- ...in other words, it corrects for a `\(\mathrm{H}_0\)` that a variance term is zero
+
+---
+
+# *p* values for smooths
+
+Have the best behaviour when smoothness selection is done using **ML**, then **REML**.
+
+Neither of these are the default, so remember to use `method = "ML"` or `method = "REML"` as appropriate
+
+---
+
+# AIC for GAMs
+
+- Comparison of GAMs by a form of AIC is an alternative frequentist approach to model selection
+
+- Rather than using the marginal likelihood, the likelihood of the `\(\mathbf{\beta}_j\)` *conditional* upon `\(\lambda_j\)` is used, with the EDF replacing `\(k\)`, the number of model parameters
+
+- This *conditional* AIC tends to select complex models, especially those with random effects, as the EDF ignores that `\(\lambda_j\)` are estimated
+
+- Wood et al (2016) suggests a correction that accounts for uncertainty in `\(\lambda_j\)`
+
+`$$AIC = -2\mathcal{L}(\hat{\beta}) + 2\mathrm{tr}(\widehat{\mathcal{I}}V^{'}_{\beta})$$`
+
+---
+
+# AIC for GAMs
+
+
+```r
+b0 &lt;- gam(y ~ s(x0) + s(x1) + s(x2),
+          data = dat, family = poisson, method = 'REML')
+b1 &lt;- gam(y ~ s(x0) + s(x1) + s(x2) + s(x3) + s(x4) + s(x5),
+          data = dat, family = poisson, method = 'REML',
+          select = TRUE)
+b2 &lt;- gam(y ~ s(x0) + s(x1) + s(x2) + s(x3) + s(x4) + s(x5),
+          data = dat, family = poisson, method = 'REML')
+```
+
+---
+
+# AIC
+
+In this example, `\(x_3\)`, `\(x_4\)`, and `\(x_5\)` have no effects on `\(y\)`
+
+
+```r
+AIC(b0, b1, b2)
+```
+
+```
+##          df      AIC
+## b0 14.14062 841.5697
+## b1 13.44682 840.2129
+## b2 26.64659 835.0421
+```
+
+When there is *no difference* in compared models, accepts larger model ~16% of the time: consistent with probability AIC chooses a model with 1 extra spurious parameter `\(Pr(\chi^2_1 &gt; 2)\)`
+
+
+```r
+pchisq(2, 1, lower.tail = FALSE)
+```
+
+```
+## [1] 0.1572992
+```
+
+---
+
+# Today's topics
+
+* Hierarchical GAMs (HGAMs)
+
+    Introducing random smooths and how to model data with both group and individual smooth effects.
+
+* Doing more with your models; introducing posterior simulation.
+
+---
+
+# Factor smooth interactions
+
+Two ways for factor smooth interactions
+
+1. `by` variable smooths
+    * entirely separate smooth function for each level of the factor
+	* each has it's own smoothness parameter
+	* centred (no group means) so include factor as a fixed effect
+	* `y ~ f + s(x, by = f)`
+2. `bs = 'fs'` basis
+    * smooth function for each level of the function
+	* share a common smoothness parameter
+	* fully penalized; include group means
+	* closer to random effects
+	* `y ~ s(x, f, bs = 'fs')`
+
+---
+
+# Random effects
+
+When fitted with REML or ML, smooths can be viewed as just fancy random effects
+
+Inverse is true too; random effects can be viewed as smooths
+
+If you have simple random effects you can fit those in `gam()` and `bam()` without needing the more complex GAMM functions `gamm()` or `gamm4::gamm4()`
+
+These two models are equivalent
+
+
+```r
+m_nlme &lt;- lme(travel ~ 1, data = Rail, ~ 1 | Rail, method = "REML")
+
+m_gam  &lt;- gam(travel ~ s(Rail, bs = "re"), data = Rail, method = "REML")
+```
+
+---
+
+# Random effects &amp;mdash; Rails
+
+Evaluation of Stress in Railway Rails. Data from Devore (2000) citing data on a study of travel time for a certain type of wave that results from longitudinal stress of rails used for railroad track.
+
+
+```r
+head(Rail)
+```
+
+```
+## Grouped Data: travel ~ 1 | Rail
+##   Rail travel
+## 1    1     55
+## 2    1     53
+## 3    1     54
+## 4    2     26
+## 5    2     37
+## 6    2     32
+```
+
+.small[
+Devore (2000) Probability and Statistics for Engineering and the Sciences (5th ed)
+]
+
+---
+
+# Random effects &amp;mdash; Rails
+
+
+```r
+m_nlme &lt;- lme(travel ~ 1, data = Rail, ~ 1 | Rail, method = "REML")
+
+m_gam  &lt;- gam(travel ~ s(Rail, bs = "re", k = 2), data = Rail, method = "REML")
+
+unlist(c(fixef(m_nlme), ranef(m_nlme)))
+```
+
+```
+##  (Intercept) (Intercept)1 (Intercept)2 (Intercept)3 (Intercept)4 (Intercept)5 
+##     66.50000    -34.53091    -16.35675    -12.39148     16.02631     18.00894 
+## (Intercept)6 
+##     29.24388
+```
+
+```r
+coef(m_gam)
+```
+
+```
+## (Intercept)   s(Rail).1   s(Rail).2   s(Rail).3   s(Rail).4   s(Rail).5 
+##    66.50000   -34.53091   -16.35675   -12.39148    16.02631    18.00894 
+##   s(Rail).6 
+##    29.24388
+```
+
+---
+
+# Variance components of smooths
+
+.row[
+
+.col-6[
+
+```r
+m_nlme
+```
+
+```
+## Linear mixed-effects model fit by REML
+##   Data: Rail 
+##   Log-restricted-likelihood: -61.0885
+##   Fixed: travel ~ 1 
+## (Intercept) 
+##        66.5 
+## 
+## Random effects:
+##  Formula: ~1 | Rail
+##         (Intercept) Residual
+## StdDev:    24.80547 4.020779
+## 
+## Number of Observations: 18
+## Number of Groups: 6
+```
+]
+
+.col-6[
+
+```r
+variance_comp(m_gam)
+```
+
+```
+## # A tibble: 2 × 5
+##   component variance std_dev lower_ci upper_ci
+##   &lt;chr&gt;        &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+## 1 s(Rail)      615.    24.8     13.3     46.4 
+## 2 scale         16.2    4.02     2.70     6.00
+```
+]
+]
+
+---
+
+# Penalty matrix for a random effect
+
+.row[
+
+.col-7[
+
+```r
+pm &lt;- penalty(m_gam, smooth = "s(Rail)")
+draw(pm)
+```
+
+An identity matrix (1s on the diagonal)
+
+Penalty shrinks estimated coefs towards 0, the overal mean of `\(\mathbf{y}\)`
+
+Just like shrinkage in mixed effects model
+]
+
+.col-5[
+&lt;img src="index_files/figure-html/re-basis-1.png" style="display: block; margin: auto;" /&gt;
+]
+]
+
+---
+
+# Random effects
+
+The random effect basis `bs = 're'` is not as computationally efficient as *nlme* or *lme4* for fitting
+
+* complex random effects terms, or
+* random effects with many levels
+
+Instead see `gamm()` and `gamm4::gamm4()`
+
+* `gamm()` fits using `lme()`
+* `gamm4::gamm4()` fits using `lmer()` or `glmer()`
+
+For non Gaussian models use `gamm4::gamm4()`
+
+---
+class: inverse center middle subsection
+
+# Example
+
+---
+
+# Rat hormone experiment
+
+https://bit.ly/rat-hormone
+
+Study on the effects of testosterone on the growth of rats (Molenberghs and Verbeke, 2000)
+
+50 rats randomly assigned to 1 of 3 groups:
+
+1. a control group
+2. a group receiving low doses of Decapeptyl
+3. a high Decapeptyl dose group
+
+Decapeptyl inhibits the preoduction of testosterone
+
+Experiment started (day 1) when rats were 45 days old and from day 50 the size of each rat's head was measured via an x-ray image
+
+
+```
+## # A tibble: 7 × 2
+##       n n_rats
+##   &lt;int&gt;  &lt;int&gt;
+## 1     1      4
+## 2     2      3
+## 3     3      5
+## 4     4      9
+## 5     5      5
+## 6     6      2
+## 7     7     22
+```
+
+???
+
+By way of an example, I'm going to use a data set from a study on the effects of testosterone on the growth of rats from Molenberghs and Verbeke (2000), which was analysed in Fahrmeir et al. (2013), from were I also obtained the data. In the experiment, 50 rats were randomly assigned to one of three groups; a control group or a group receiving low or high doses of Decapeptyl, which inhibits testosterone production. The experiment started when the rats were 45 days old and starting with the 50th day, the size of the rat's head was measured via an X-ray image. You can download the data.
+
+---
+
+# Rat hormone experiment
+
+![](index_files/figure-html/plot-rat-data-1.svg)&lt;!-- --&gt;
+
+---
+
+# Rat hormone experiment
+
+To linearise the `time` variable, a transformation was applied
+
+`$$\mathtt{transf_time} = \log (1 + (\mathtt{time} - 45) / 10)$$`
+
+The number of observations per rat is very variable
+
+
+```
+## # A tibble: 7 × 2
+##       n n_rats
+##   &lt;int&gt;  &lt;int&gt;
+## 1     1      4
+## 2     2      3
+## 3     3      5
+## 4     4      9
+## 5     5      5
+## 6     6      2
+## 7     7     22
+```
+
+Only 22 of the 50 rats have the complete 7 measurements by day 110
+
+---
+
+# Rat hormone experiment
+
+The model fitted in Fahrmeir *et al* (2013) is
+
+`$$y_{ij} = \alpha + \gamma_{0i} + \beta_1 L_i \cdot t_{ij} + \beta_2 H_i \cdot t_{ij} + \beta_3 C_i \cdot t_{ij} + \gamma_{1i} \cdot t_{ij} + \varepsilon_{ij}$$`
+
+where
+
+* `\(\alpha\)` is the population mean of the response at the start of the treatment
+* `\(L_i\)`, `\(H_i\)`, `\(C_i\)` are dummy variables coding for each treatment group
+* `\(\gamma_{0i}\)` is the rat-specific mean (random intercept)
+* `\(\gamma_{qi} \cdot t_{ij}\)` is the rat-specific effect of `transf_time` (random slope)
+
+Code to fit this model in `lmer()` and `gam()` is in `day-4/rat-hormone-example.R`
+
+???
+
+If this isn't very clear --- it took me a little while to grok what this meant and translate it to R speak --- note that each of `\(\beta_1\)`, `\(\beta_2\)`, and `\(\beta_3\)` are associated with an interaction between the dummy variable coding for the treatment and the time variable. So we have a model with an intercept and three interaction terms with no "main" effects.
+
+---
+class: inverse center middle subsection
+
+# HGAMs
+
+---
+
+# Hierarchical models
+
+The general term encompassing
+
+* Random effects
+* Mixed effects
+* Mixed models
+* &amp;hellip;
+
+Models are *hierarchical* because we have effects on the response at different scales
+
+Data are grouped in some way
+
+---
+
+# Hierarchical GAMs
+
+Hierarchical GAMs or HGAMs are what we (Pedersen et al 2019 *PeerJ*) called the marriage of
+
+1. Hierarchical GLMs (aka GLMMs, aka Hierarchical models)
+2. GAMs
+
+Call them HGAMs if you want but these are really just *hierarchical models*
+
+There's nothing special HGAMs once we've created the basis functions
+
+---
+
+# Hierarchical GAMs
+
+Pedersen et al (2019) *PeerJ* described 6 models
+
+&lt;img src="/home/au690221/work/teaching/physalia/gam-course/course/day-4/resources/lawton-et-al-hgam-locust-paper-fig.svg" width="95%" style="display: block; margin: auto;" /&gt;
+
+.small[Source: [Lawton *et al* (2022) *Ecography*](http://doi.org/10.1111/ecog.05763) modified from [Pedersen *et al* (2019) *PeerJ*](http://doi.org/10.7717/peerj.6876)]
+
+---
+
+# Global effects
+
+What we called *global effects* or *global trends* are a bit like population-level effects in mixed-model speak
+
+They aren't quite, but they are pretty close to the average smooth effect over all the data
+
+Really these are *group-level effects* or *group-level effects* where data has multiple levels
+
+1. "population", top level grouping (i.e. everything)
+2. treatment level,
+3. etc
+
+---
+
+# Subject-specific effects
+
+Within these groups we have *subject-specific effects* &amp;mdash; which could be smooth
+
+Repeated observations on a set of subjects over time say
+
+Those subjects may be within groups (treatment groups say)
+
+We may or may not have group-level (*global*; treatment) effects
+
+---
+
+# Hierarchical GAMs
+
+These models are just different ways to decompose the data
+
+If there are common (non-linear) effects that explain variation for all subjects in a group it may be more parsimonious to
+
+* model those common effects plus subject-specific differences, instead of
+
+* modelling each subject-specific response individually
+
+---
+class: inverse center middle subsection
+
+# Posterior prediction
+
+---
+
+# 🐡🐠🐟🦐 Species richness &amp; 🦐 biomass
+
+The example comes from trawl data from off the coast of Newfoundland and Labrador, Canada
+
+* Counts of species richness at each trawl location
+* Shrimp biomass at each trawl location
+* Annual trawls 2005&amp;ndash;2014
+
+---
+
+# 🐡🐠🐟🦐 Species richness
+
+.row[
+.col-6[
+
+```r
+shrimp &lt;- read.csv(here("data", "trawl_nl.csv"))
+```
+
+
+```r
+m_rich &lt;- gam(richness ~ s(year),
+              family = poisson,
+              method = "REML",
+              data = shrimp)
+```
+]
+.col-6[
+![](index_files/figure-html/richness-violin-1.svg)&lt;!-- --&gt;
+]
+]
+
+---
+
+# 🐡🐠🐟🦐 Species richness
+
+
+```r
+draw(m_rich)
+```
+
+&lt;img src="index_files/figure-html/draw-richness-gam-1.svg" width="90%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Spatio-temporal data
+
+🦐 biomass at each trawl
+
+![](index_files/figure-html/biom-space-time-plot-1.png)&lt;!-- --&gt;
+---
+
+# Spatio-temporal model
+
+
+```r
+m_spt &lt;- gam(shrimp ~ te(x, y, year, d = c(2,1),
+                         bs = c('tp', 'cr'), k = c(20, 5)),
+             data = shrimp,
+             family = tw(),
+             method = "REML")
+```
+
+---
+
+# Predicting with `predict()`
+
+`plot.gam()` and `gratia::draw()` show the component functions of the model on the link scale
+
+Prediction allows us to evaluate the model at known values of covariates on the response scale
+
+Use the standard function `predict()`
+
+Provide `newdata` with a data frame of values of covariates
+
+---
+
+# `predict()`
+
+
+```r
+new_year &lt;- with(shrimp, tibble(year = seq(min(year), max(year), length.out = 100)))
+pred &lt;- predict(m_rich, newdata = new_year, se.fit = TRUE, type = 'link')
+pred &lt;- bind_cols(new_year, as_tibble(as.data.frame(pred)))
+pred
+```
+
+```
+## # A tibble: 100 × 3
+##     year   fit  se.fit
+##    &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;
+##  1 2005   3.05 0.0100 
+##  2 2005.  3.05 0.00901
+##  3 2005.  3.06 0.00830
+##  4 2005.  3.06 0.00792
+##  5 2005.  3.06 0.00786
+##  6 2005.  3.06 0.00807
+##  7 2006.  3.07 0.00844
+##  8 2006.  3.07 0.00887
+##  9 2006.  3.07 0.00926
+## 10 2006.  3.08 0.00955
+## # … with 90 more rows
+```
+
+---
+
+# `predict()` &amp;rarr; response scale
+
+
+```r
+ilink &lt;- inv_link(m_rich)                         # inverse link function
+crit &lt;- qnorm((1 - 0.89) / 2, lower.tail = FALSE) # or just `crit &lt;- 2`
+pred &lt;- mutate(pred, richness = ilink(fit),
+               lwr = ilink(fit - (crit * se.fit)), # lower...
+               upr = ilink(fit + (crit * se.fit))) # upper credible interval
+pred
+```
+
+```
+## # A tibble: 100 × 6
+##     year   fit  se.fit richness   lwr   upr
+##    &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1 2005   3.05 0.0100      21.1  20.8  21.4
+##  2 2005.  3.05 0.00901     21.2  20.9  21.5
+##  3 2005.  3.06 0.00830     21.2  20.9  21.5
+##  4 2005.  3.06 0.00792     21.3  21.0  21.6
+##  5 2005.  3.06 0.00786     21.4  21.1  21.6
+##  6 2005.  3.06 0.00807     21.4  21.1  21.7
+##  7 2006.  3.07 0.00844     21.5  21.2  21.8
+##  8 2006.  3.07 0.00887     21.6  21.3  21.9
+##  9 2006.  3.07 0.00926     21.6  21.3  22.0
+## 10 2006.  3.08 0.00955     21.7  21.4  22.0
+## # … with 90 more rows
+```
+
+---
+
+# `predict()` &amp;rarr; plot
+
+Tidy objects like this are easy to plot with `ggplot()`
+
+
+```r
+ggplot(pred, aes(x = year)) +
+    geom_ribbon(aes(ymin = lwr, ymax = upr), alpha = 0.2) +
+    geom_line(aes(y = richness)) + labs(y = "Species richness", x = NULL)
+```
+
+![](index_files/figure-html/plot-predictions-richness-1.svg)&lt;!-- --&gt;
+
+---
+
+# `predict()` for space and time
+
+This idea is very general;  spatiotemporal model needs a grid of x,y coordinates for each year
+
+
+```r
+sp_new &lt;- with(shrimp, expand.grid(x = seq_min_max(x, n = 100), y = seq_min_max(y, n = 100),
+                                   year = unique(year)))
+sp_pred &lt;- predict(m_spt, newdata = sp_new, se.fit = TRUE) # link scale is default
+sp_pred &lt;- bind_cols(as_tibble(sp_new), as_tibble(as.data.frame(sp_pred)))
+sp_pred
+```
+
+```
+## # A tibble: 100,000 × 5
+##          x        y  year   fit se.fit
+##      &lt;dbl&gt;    &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt;  &lt;dbl&gt;
+##  1 428238. 5078244.  2005  3.34  1.06 
+##  2 436886. 5078244.  2005  3.32  1.06 
+##  3 445535. 5078244.  2005  3.31  1.05 
+##  4 454183. 5078244.  2005  3.29  1.04 
+##  5 462831. 5078244.  2005  3.26  1.03 
+##  6 471479. 5078244.  2005  3.24  1.02 
+##  7 480127. 5078244.  2005  3.21  1.01 
+##  8 488775. 5078244.  2005  3.18  1.00 
+##  9 497423. 5078244.  2005  3.15  0.994
+## 10 506071. 5078244.  2005  3.12  0.985
+## # … with 99,990 more rows
+```
+
+---
+
+# `predict()` &amp;rarr; response scale
+
+
+```r
+ilink &lt;- inv_link(m_spt)
+too_far &lt;- exclude.too.far(sp_pred$x, sp_pred$y, shrimp$x, shrimp$y, dist = 0.1)
+sp_pred &lt;- sp_pred %&gt;% mutate(biomass = ilink(fit),
+                              biomass = case_when(too_far ~ NA_real_,
+                                                  TRUE ~ biomass))
+sp_pred
+```
+
+```
+## # A tibble: 100,000 × 6
+##          x        y  year   fit se.fit biomass
+##      &lt;dbl&gt;    &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;
+##  1 428238. 5078244.  2005  3.34  1.06       NA
+##  2 436886. 5078244.  2005  3.32  1.06       NA
+##  3 445535. 5078244.  2005  3.31  1.05       NA
+##  4 454183. 5078244.  2005  3.29  1.04       NA
+##  5 462831. 5078244.  2005  3.26  1.03       NA
+##  6 471479. 5078244.  2005  3.24  1.02       NA
+##  7 480127. 5078244.  2005  3.21  1.01       NA
+##  8 488775. 5078244.  2005  3.18  1.00       NA
+##  9 497423. 5078244.  2005  3.15  0.994      NA
+## 10 506071. 5078244.  2005  3.12  0.985      NA
+## # … with 99,990 more rows
+```
+
+---
+
+# `predict()` &amp;rarr; plot
+
+
+```r
+ggplot(sp_pred, aes(x = x, y = y, fill = biomass)) + geom_raster() +
+    scale_fill_viridis_c(option = "plasma") + facet_wrap(~ year, ncol = 5) + coord_equal()
+```
+
+![](index_files/figure-html/spt-example-plot-1.png)&lt;!-- --&gt;
+
+---
+
+# Visualizing the trend?
+
+We have this model
+
+.smaller[
+
+```r
+m_spt
+```
+
+```
+## 
+## Family: Tweedie(p=1.686) 
+## Link function: log 
+## 
+## Formula:
+## shrimp ~ te(x, y, year, d = c(2, 1), bs = c("tp", "cr"), k = c(20, 
+##     5))
+## 
+## Estimated degrees of freedom:
+## 70.4  total = 71.38 
+## 
+## REML score: 19102.91
+```
+]
+
+How would you visualize the average change in biomass over time?
+
+---
+
+# Welcome back old friend
+
+One way is to  decompose the spatio-temporal function in main effects plus interaction
+
+
+```r
+m_ti &lt;- gam(shrimp ~ ti(x, y, year, d = c(2, 1), bs = c("tp", "cr"), k = c(20, 5)) +
+                s(x, y, bs = "tp", k = 20) +
+                s(year, bs = "cr", k = 5),
+            data = shrimp, family = tw, method = "REML")
+```
+
+and predict from the model using only the marginal effect of `s(year)`
+
+---
+
+# `predict()` with `exclude`
+
+.row[
+.col-6[
+We can exclude the spatial &amp; spatiotemporal terms from predictions using `exclude`
+
+**Step 1** run `gratia::smooths()` on model &amp; note the names of the smooth you *don't* want &amp;rarr;
+]
+.col-6[
+.smaller[
+
+```r
+smooths(m_ti)
+```
+
+```
+## [1] "ti(x,y,year)" "s(x,y)"       "s(year)"
+```
+]
+]
+]
+
+---
+
+# `predict()` with `exclude` &amp;mdash; Step 2 *predict*
+
+Prediction data only need dummy values for `x` and `y`
+
+
+```r
+ti_new &lt;- with(shrimp, expand.grid(x = mean(x), y = mean(y), year = seq_min_max(year, n = 100)))
+
+ti_pred &lt;- predict(m_ti, newdata = ti_new, se.fit = TRUE,
+*                  exclude = c("ti(x,y,year)", "s(x,y)"))
+
+ti_pred &lt;- bind_cols(as_tibble(ti_new), as_tibble(as.data.frame(ti_pred))) %&gt;%
+    mutate(biomass = ilink(fit),
+           lwr = ilink(fit - (crit * se.fit)),
+           upr = ilink(fit + (crit * se.fit)))
+```
+
+`exclude` takes a character vector of terms to exclude &amp;mdash; `predict()` sets the contributions of those terms to 0
+
+Could also use `terms = "s(year)"` to select only the named smooths
+
+
+```r
+predict(m_ti, newdata = ti_new, se.fit = TRUE, terms = "s(year)")
+```
+
+---
+
+# `predict()` with `exclude`&amp;mdash; Step 3 *plot it!*
+
+
+```r
+ggplot(ti_pred, aes(x = year)) + geom_ribbon(aes(ymin = lwr, ymax = upr), alpha = 0.3) +
+    geom_line(aes(y = biomass)) + labs(y = "Biomass", x = NULL)
+```
+
+![](index_files/figure-html/plot-ti-marginal-trend-1.svg)&lt;!-- --&gt;
+
+---
+
+# Using `fitted_values()`
+
+
+```r
+ti_pred2 &lt;- fitted_values(m_ti, data = ti_new,
+                          scale = "response",
+*                         exclude = c("ti(x,y,year)", "s(x,y)"))
+
+ggplot(ti_pred2, aes(x = year)) + geom_ribbon(aes(ymin = lower, ymax = upper), alpha = 0.3) +
+  geom_line(aes(y = fitted)) + labs(y = "Biomass", x = NULL)
+```
+
+&lt;img src="index_files/figure-html/predict-via-fitted-values-1.svg" width="70%" style="display: block; margin: auto;" /&gt;
+
+---
+class: inverse middle center subsection
+
+# Posterior simulation
+
+---
+
+# Remember this?
+
+.center[
+&lt;img src="/home/au690221/work/teaching/physalia/gam-course/course/day-3/resources/miller-bayesian-gam-interpretation-fig.svg" width="80%" /&gt;
+]
+
+.smaller[
+Miller (2021) Bayesian Views of Generalized Additive Modelling. [*arXiv*:1902.01330v3](http://arxiv.org/abs/1902.01330v3)
+]
+
+--
+
+Where did the faint grey lines come from?
+
+---
+
+# Posterior distributions
+
+Each line is a draw from the *posterior distribution* of the smooth
+
+Remember the coefficients for each basis function?: `\(\beta_j\)`
+
+Together they are distributed *multivariate normal* with
+
+* mean vector given by `\(\hat{\beta}_j\)`
+* covariance matrix `\(\boldsymbol{\hat{V}}_{\beta}\)`
+
+`$$\text{MVN}(\boldsymbol{\hat{\beta}}, \boldsymbol{\hat{V}}_{\beta})$$`
+
+--
+
+The model as a whole has a posterior distribution too
+
+--
+
+We can simulate data from the model by taking draws from the posterior distribution
+
+---
+
+# Posterior simulation for a smooth
+
+Sounds fancy but it's only just slightly more complicated than using `rnorm()`
+
+To do this we need a few things:
+
+1. The vector of model parameters for the smooth, `\(\boldsymbol{\hat{\beta}}\)`
+2. The covariance matrix of those parameters, `\(\boldsymbol{\hat{V}}_{\beta}\)`
+3. A matrix `\(\boldsymbol{X}_p\)` that maps parameters to the linear predictor for the smooth
+
+`$$\boldsymbol{\hat{\eta}}_p = \boldsymbol{X}_p \boldsymbol{\hat{\beta}}$$`
+
+--
+
+Let's do this for `m_rich`
+
+---
+
+# Posterior sim for a smooth &amp;mdash; step 1
+
+The vector of model parameters for the smooth, `\(\boldsymbol{\hat{\beta}}\)`
+
+
+```r
+sm_year &lt;- get_smooth(m_rich, "s(year)") # extract the smooth object from model
+idx &lt;- gratia:::smooth_coefs(sm_year)    # indices of the coefs for this smooth
+idx
+```
+
+```
+## [1]  2  3  4  5  6  7  8  9 10
+```
+
+```r
+beta &lt;- coef(m_rich)                     # vector of model parameters
+beta[idx]                                # coefs for this smooth
+```
+
+```
+##   s(year).1   s(year).2   s(year).3   s(year).4   s(year).5   s(year).6 
+## -0.17559264  1.13222927 -0.46532056  5.90630566  0.18400060 -1.09147043 
+##   s(year).7   s(year).8   s(year).9 
+## -0.20021520 -0.44434784 -0.02398653
+```
+
+---
+
+# Posterior sim for a smooth &amp;mdash; step 2
+
+The covariance matrix of the model parameters, `\(\boldsymbol{\hat{V}}_{\beta}\)`
+
+
+```r
+Vb &lt;- vcov(m_rich) # default is the bayesian covariance matrix
+Vb
+```
+
+.small[
+
+```
+##               (Intercept)     s(year).1     s(year).2     s(year).3     s(year).4     s(year).5     s(year).6     s(year).7     s(year).8     s(year).9
+## (Intercept)  1.027059e-05  1.578864e-06 -9.032418e-06 -1.307231e-06 -4.622411e-05 -9.668346e-06  1.481563e-05  8.523791e-07  4.057120e-06  7.715888e-08
+## s(year).1    1.578864e-06  4.766242e-02 -1.705627e-01  1.280727e-01 -1.447873e-01  2.579066e-02 -7.928522e-02  1.444655e-02  3.437523e-02  6.254985e-03
+## s(year).2   -9.032418e-06 -1.705627e-01  7.441849e-01 -6.341764e-01  9.230513e-01 -3.008818e-01  5.476052e-01 -1.972615e-01 -1.370834e-01 -2.260069e-02
+## s(year).3   -1.307231e-06  1.280727e-01 -6.341764e-01  1.756373e+00 -1.488830e+00  8.995848e-01  2.440806e-02 -2.444633e-01  6.839307e-03 -2.921669e-03
+## s(year).4   -4.622411e-05 -1.447873e-01  9.230513e-01 -1.488830e+00  2.743191e+00 -2.018595e+00  1.612778e+00 -5.371137e-01 -1.362334e-01 -1.741728e-02
+## s(year).5   -9.668346e-06  2.579066e-02 -3.008818e-01  8.995848e-01 -2.018595e+00  2.276558e+00 -1.671047e+00  5.120318e-01  3.881950e-02 -4.407525e-03
+## s(year).6    1.481563e-05 -7.928522e-02  5.476052e-01  2.440806e-02  1.612778e+00 -1.671047e+00  2.357642e+00 -1.045468e+00 -1.807873e-01 -1.797243e-02
+## s(year).7    8.523791e-07  1.444655e-02 -1.972615e-01 -2.444633e-01 -5.371137e-01  5.120318e-01 -1.045468e+00  5.391215e-01  8.494867e-02  8.167830e-03
+## s(year).8    4.057120e-06  3.437523e-02 -1.370834e-01  6.839307e-03 -1.362334e-01  3.881950e-02 -1.807873e-01  8.494867e-02  3.836358e-02  6.579738e-03
+## s(year).9    7.715888e-08  6.254985e-03 -2.260069e-02 -2.921669e-03 -1.741728e-02 -4.407525e-03 -1.797243e-02  8.167830e-03  6.579738e-03  1.683112e-03
+```
+]
+
+---
+
+# Posterior sim for a smooth &amp;mdash; step 3
+
+A matrix `\(\boldsymbol{X}_p\)` that maps parameters to the linear predictor for the smooth
+
+We get `\(\boldsymbol{X}_p\)` using the `predict()` method with `type = "lpmatrix"`
+
+
+```r
+new_year &lt;- with(shrimp, tibble(year = seq_min_max(year, n = 100)))
+Xp &lt;- predict(m_rich, newdata = new_year, type = 'lpmatrix')
+dim(Xp)
+```
+
+```
+## [1] 100  10
+```
+
+---
+
+# Posterior sim for a smooth &amp;mdash; step 4
+
+Take only the columns of `\(\boldsymbol{X}_p\)` that are involved in the smooth of `year`
+
+
+```r
+Xp &lt;- Xp[, idx, drop = FALSE]
+dim(Xp)
+```
+
+```
+## [1] 100   9
+```
+
+---
+
+# Posterior sim for a smooth &amp;mdash; step 5
+
+Simulate parameters from the posterior distribution of the smooth of `year`
+
+
+```r
+set.seed(42)
+beta_sim &lt;- rmvn(n = 20, beta[idx], Vb[idx, idx, drop = FALSE])
+dim(beta_sim)
+```
+
+```
+## [1] 20  9
+```
+
+Simulating many sets (20) of new model parameters from the estimated parameters and their uncertainty (covariance)
+
+Result is a matrix where each row is a set of new model parameters, each consistent with the fitted smooth
+
+---
+
+# Posterior sim for a smooth &amp;mdash; step 6
+
+.row[
+.col-6[
+Form `\(\boldsymbol{\hat{\eta}}_p\)`, the posterior draws for the smooth
+
+
+```r
+sm_draws &lt;- Xp %*% t(beta_sim)
+dim(sm_draws)
+```
+
+```
+## [1] 100  20
+```
+
+```r
+matplot(sm_draws, type = 'l')
+```
+
+A bit of rearranging is needed to plot with `ggplot()`
+]
+
+.col-6[
+![](index_files/figure-html/richness-posterior-draws-1.svg)&lt;!-- --&gt;
+]
+
+]
+
+--
+
+Or use `smooth_samples()`
+
+---
+
+# Posterior sim for a smooth &amp;mdash; steps 1&amp;ndash;6
+
+
+```r
+sm_post &lt;- smooth_samples(m_rich, 's(year)', n = 20, seed = 42)
+draw(sm_post)
+```
+
+![](index_files/figure-html/plot-posterior-smooths-1.svg)&lt;!-- --&gt;
+
+---
+
+# Posterior simulation from the model
+
+Simulating from the posterior distribution of the model requires 1 modification of the recipe for a smooth and one extra step
+
+We want to simulate new values for all the parameters in the model, not just the ones involved in a particular smooth
+
+--
+
+Additionally, we could simulate *new response data* from the model and the simulated parameters (**not shown** below)
+
+---
+
+# Posterior simulation from the model
+
+
+```r
+beta &lt;- coef(m_rich)   # vector of model parameters
+Vb &lt;- vcov(m_rich)     # default is the bayesian covariance matrix
+Xp &lt;- predict(m_rich, type = 'lpmatrix')
+set.seed(42)
+beta_sim &lt;- rmvn(n = 1000, beta, Vb) # simulate parameters
+eta_p &lt;- Xp %*% t(beta_sim)        # form linear predictor values
+mu_p &lt;- inv_link(m_rich)(eta_p)    # apply inverse link function
+
+mean(mu_p[1, ]) # mean of posterior for the first observation in the data
+```
+
+```
+## [1] 21.10123
+```
+
+```r
+quantile(mu_p[1, ], probs = c(0.025, 0.975))
+```
+
+```
+##     2.5%    97.5% 
+## 20.70134 21.49528
+```
+
+---
+
+# Posterior simulation from the model
+
+
+```r
+ggplot(tibble(richness = mu_p[587, ]), aes(x = richness)) +
+    geom_histogram() + labs(title = "Posterior richness for obs #587")
+```
+
+![](index_files/figure-html/posterior-sim-model-hist-1.svg)&lt;!-- --&gt;
+
+---
+
+# Posterior simulation from the model
+
+Or easier using `fitted_samples()`
+
+
+```r
+rich_post &lt;- fitted_samples(m_rich, n = 1000, newdata = shrimp, seed = 42)
+ggplot(filter(rich_post, row == 587), aes(x = fitted)) +
+    geom_histogram() + labs(title = "Posterior richness for obs #587", x = "Richness")
+```
+
+![](index_files/figure-html/richness-fitted-samples-1.svg)&lt;!-- --&gt;
+
+---
+
+# Why is this of interest?
+
+Say you wanted to get an estimate for the total biomass of shrimp over the entire region of the trawl survey for 2007
+
+You could predict for the spatial grid for `year == 2007` using code shown previously and sum the predicted biomass values over all the grid cells
+
+--
+
+**Easy**
+
+--
+
+But what if you also wanted the uncertainty in that estimate?
+
+--
+
+**Hard**
+
+--
+
+**Math** 😱😱 "something, something, delta method, something" 😱😱
+
+---
+
+# Posterior simulation makes this easy
+
+1. Take a draw from the posterior distribution of the model
+2. Use the posterior draw to predict biomass for each grid cell
+3. Sum the predicted biomass values over all grid cells
+4. Store the total biomass value
+5. Repeat 1&amp;ndash;4 a lot of times to get posterior distribution for total biomass
+6. Summarize the total biomass posterior
+    * Estimated total biomass is the mean of the total biomass posterior
+	* Uncertainty is some lower/upper tail probability quantiles of the posterior
+
+---
+
+# Let's do it
+
+
+```r
+sp_new &lt;- with(shrimp, expand.grid(x = seq_min_max(x, n = 100), y = seq_min_max(y, n = 100),
+                                   year = 2007))
+Xp &lt;- predict(m_spt, newdata = sp_new, type = "lpmatrix")
+
+## work out now which points are too far now
+too_far &lt;- exclude.too.far(sp_new$x, sp_new$y, shrimp$x, shrimp$y, dist = 0.1)
+
+beta &lt;- coef(m_spt)                  # vector of model parameters
+Vb &lt;- vcov(m_spt)                    # default is the bayesian covariance matrix
+set.seed(42)
+beta_sim &lt;- rmvn(n = 1000, beta, Vb) # simulate parameters
+eta_p &lt;- Xp %*% t(beta_sim)          # form linear predictor values
+mu_p &lt;- inv_link(m_spt)(eta_p)       # apply inverse link function
+```
+
+Columns of `mu_p` contain the expected or mean biomass for each grid cell per area trawled
+
+Sum the columns of `mu_p` and summarize
+
+---
+
+# Summarize the expected biomass
+
+
+```r
+mu_copy &lt;- mu_p              # copy mu_p
+mu_copy[too_far, ] &lt;- NA     # set cells too far from data to be NA
+total_biomass &lt;- colSums(mu_copy, na.rm = TRUE)  # total biomass over the region
+
+mean(total_biomass)
+```
+
+```
+## [1] 1561014
+```
+
+```r
+quantile(total_biomass, probs = c(0.025, 0.975))
+```
+
+```
+##    2.5%   97.5% 
+## 1403512 1753195
+```
+
+---
+
+# Summarize the expected biomass
+
+![](index_files/figure-html/total-biomass-histogram-1.svg)&lt;!-- --&gt;
+
+---
+
+# With `fitted_samples()`
+
+.row[
+
+.col-7[
+
+```r
+bio_post &lt;- fitted_samples(m_spt, n = 1000,
+                           newdata = sp_new[!too_far, ],
+                           seed = 42) %&gt;%
+    group_by(draw) %&gt;%
+    summarise(total = sum(fitted),
+              .groups = "drop_last")
+
+with(bio_post, mean(total))
+```
+
+```
+## [1] 1561014
+```
+
+```r
+with(bio_post, quantile(total, probs = c(0.025, 0.975)))
+```
+
+```
+##    2.5%   97.5% 
+## 1403512 1753195
+```
+]
+
+.col-5[
+
+```r
+ggplot(bio_post, aes(x = total)) +
+    geom_histogram() +
+    labs(x = "Total biomass")
+```
+
+![](index_files/figure-html/biomass-fitted-samples-plot-1.svg)&lt;!-- --&gt;
+
+]
+
+]
+
+---
+class: inverse middle center subsection
+
+# Example
+
+---
+
+# Next steps
+
+Read Simon Wood's book!
+
+Lots more material on our ESA GAM Workshop site
+
+[https://noamross.github.io/mgcv-esa-workshop/]()
+
+Noam Ross' free GAM Course &lt;https://noamross.github.io/gams-in-r-course/&gt;
+
+Noam also maintains a list of [GAM Resources](https://github.com/noamross/gam-resources)
+
+A couple of papers:
+
+.smaller[
+1. Simpson, G.L., 2018. Modelling Palaeoecological Time Series Using Generalised Additive Models. Frontiers in Ecology and Evolution 6, 149. https://doi.org/10.3389/fevo.2018.00149
+2. Pedersen, E.J., Miller, D.L., Simpson, G.L., Ross, N., 2019. Hierarchical generalized additive models in ecology: an introduction with mgcv. PeerJ 7, e6876. https://doi.org/10.7717/peerj.6876
+]
+
+Also see my blog: [fromthebottomoftheheap.net](http://fromthebottomoftheheap.net)
+
+---
+
+# Reuse
+
+* HTML Slide deck [bit.ly/physalia-gam-4](https://bit.ly/physalia-gam-4) &amp;copy; Simpson (2020-2022) [![Creative Commons Licence](https://i.creativecommons.org/l/by/4.0/88x31.png)](http://creativecommons.org/licenses/by/4.0/)
+* RMarkdown [Source](https://bit.ly/physalia-gam)
+
+---
+
+# References
+
+- [Marra &amp; Wood (2011) *Computational Statistics and Data Analysis* **55** 2372&amp;ndash;2387.](http://doi.org/10.1016/j.csda.2011.02.004)
+- [Marra &amp; Wood (2012) *Scandinavian Journal of Statistics, Theory and Applications* **39**(1), 53&amp;ndash;74.](http://doi.org/10.1111/j.1467-9469.2011.00760.x.)
+- [Nychka (1988) *Journal of the American Statistical Association* **83**(404) 1134&amp;ndash;1143.](http://doi.org/10.1080/01621459.1988.10478711)
+- Wood (2017) *Generalized Additive Models: An Introduction with R*. Chapman and Hall/CRC. (2nd Edition)
+- [Wood (2013a) *Biometrika* **100**(1) 221&amp;ndash;228.](http://doi.org/10.1093/biomet/ass048)
+- [Wood (2013b) *Biometrika* **100**(4) 1005&amp;ndash;1010.](http://doi.org/10.1093/biomet/ast038)
+- [Wood et al (2016) *JASA* **111** 1548&amp;ndash;1563](https://doi.org/10.1080/01621459.2016.1180986)
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script src="macros.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
