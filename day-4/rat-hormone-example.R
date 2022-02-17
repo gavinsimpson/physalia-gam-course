@@ -3,10 +3,11 @@
 pkgs <- c("mgcv", "lme4", "ggplot2", "readr", "dplyr", "forcats", "tidyr",
           "gratia")
 
-# load data
+# load packages
 vapply(pkgs, library, logical(1), character.only = TRUE, logical.return = TRUE,
        quietly = TRUE)
 
+# load data
 rats_url <- "https://bit.ly/rat-hormone"
 rats <- read_table(rats_url, col_types = "dddddddddddd-")
 # ignore the warning - it"s due to trailing white space at the ends of each

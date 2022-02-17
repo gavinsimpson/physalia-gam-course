@@ -1532,10 +1532,27 @@ class: inverse middle center subsection
 We have measurements of the abundance of a particular species along an environmental gradient
 
 
-
 ```r
 spp_url &lt;- "https://bit.ly/spp-gradient"
-gradient &lt;- read_csv(spp_url)
+gradient &lt;- read_csv(spp_url, col_types = "dd")
+gradient
+```
+
+```
+## # A tibble: 100 × 2
+##    abundance environment
+##        &lt;dbl&gt;       &lt;dbl&gt;
+##  1         0           1
+##  2         1           2
+##  3         3           3
+##  4         8           4
+##  5         4           5
+##  6        12           6
+##  7        15           7
+##  8        13           8
+##  9        11           9
+## 10        15          10
+## # … with 90 more rows
 ```
 
 ---
@@ -1546,7 +1563,7 @@ Tasks
 
 1. fit a suitable GAM (the data are counts)
 
-2. use posterior simulation
+2. estimate the value of the environmental gradient where the species reaches its maximal abundance and use *posterior simulation* to provide an uncertainty estimate for this value
 
 ---
 

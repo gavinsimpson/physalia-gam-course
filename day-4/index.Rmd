@@ -1345,10 +1345,10 @@ class: inverse middle center subsection
 
 We have measurements of the abundance of a particular species along an environmental gradient
 
-
 ```{r}
 spp_url <- "https://bit.ly/spp-gradient"
-gradient <- read_csv(spp_url)
+gradient <- read_csv(spp_url, col_types = "dd")
+gradient
 ```
 
 ---
@@ -1359,7 +1359,7 @@ Tasks
 
 1. fit a suitable GAM (the data are counts)
 
-2. use posterior simulation
+2. estimate the value of the environmental gradient where the species reaches its maximal abundance and use *posterior simulation* to provide an uncertainty estimate for this value
 
 ---
 

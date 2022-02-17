@@ -494,5 +494,6 @@ ggplot(bio_post, aes(x = total)) +
 
 ## -----------------------------------------------------------------------------
 spp_url <- "https://bit.ly/spp-gradient"
-gradient <- read_csv(spp_url)
+gradient <- read_csv(spp_url, col_types = "dd")
+gradient
 
