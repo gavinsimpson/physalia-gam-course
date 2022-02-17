@@ -13,10 +13,10 @@ rats <- read_table(rats_url, col_types = "dddddddddddd-")
 #   row in the file
 
 rats <- rats %>%
-    mutate(treatment = fct_recode(factor(group, levels = c(2,1,3)),
+    mutate(treatment = fct_recode(factor(group, levels = c(3,2,1)),
+                                  Control = "3",
                                   Low = "1",
-                                  High = "3",
-                                  Control = "2"),
+                                  High = "2"),
            subject = factor(subject))
 
 rats %>%
@@ -36,38 +36,47 @@ ggplot(rats, aes(x = time, y = response,
 
 K <- 7
 
+## This is Model G
 m1_hgam <- gam(response ~ s(time, k = K) +
                   s(subject, bs = "re"),
                data = rats, method = "REML")
 
+## this is Model S at the treatment level
 m2_hgam <- gam(response ~ s(time, treatment, bs = "fs", k = K) +
                   s(subject, bs = "re"),
                data = rats, method = "REML")
 
+## this is Model I at the treatment level
 m3_hgam <- gam(response ~ treatment +
                  s(time, by = treatment, k = K) +
+                 s(subject, bs = "re"),
+               data = rats, method = "REML")
+
+## this is Model GI at the treatment level
+m4_hgam <- gam(response ~ treatment + s(time, k = K) +
+                  s(time, by = treatment, k = K, m = 1) +
                   s(subject, bs = "re"),
                data = rats, method = "REML")
 
-m4_hgam <- gam(response ~ s(time, k = K) +
-                  s(time, by = treatment, k = K) +
-                  s(subject, bs = "re"),
-               data = rats, method = "REML")
-
+## this is Model GS at the treatment level
 m5_hgam <- gam(response ~ s(time, k = K) +
                   s(time, treatment, bs = "fs", k = K) +
                   s(subject, bs = "re"),
                data = rats, method = "REML")
 
+## This is Model GS as the rat/subject level (GSS if you will)
 m6_hgam <- gam(response ~ s(time, k = K) +
                   s(time, treatment, bs = "fs", k = K) +
                   s(time, subject, bs = "fs", k = 4), # not enough data for more
                data = rats, method = "REML")
 
+## This is Model GS at the subject/rat level (SGS if you will)
+## no top level common smooth effect
 m7_hgam <- gam(response ~ s(time, treatment, bs = "fs", k = K) +
                   s(time, subject, bs = "fs", k = 4), # not enough data for more
                data = rats, method = "REML")
 
+## This is Model S smooths only at the lowest subject level
 m8_hgam <- gam(response ~ s(time, subject, bs = "fs", k = 5), # not enough data for more
                data = rats, method = "REML")
 
