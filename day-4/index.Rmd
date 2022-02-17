@@ -1341,6 +1341,28 @@ class: inverse middle center subsection
 
 ---
 
+# Max species abundance
+
+We have measurements of the abundance of a particular species along an environmental gradient
+
+
+```{r}
+spp_url <- "https://bit.ly/spp-gradient"
+gradient <- read_csv(spp_url)
+```
+
+---
+
+# Max species abundance
+
+Tasks
+
+1. fit a suitable GAM (the data are counts)
+
+2. use posterior simulation
+
+---
+
 # Next steps
 
 Read Simon Wood's book!

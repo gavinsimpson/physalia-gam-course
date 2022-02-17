@@ -491,3 +491,8 @@ ggplot(bio_post, aes(x = total)) +
     geom_histogram() +
     labs(x = "Total biomass")
 
+
+## -----------------------------------------------------------------------------
+spp_url <- "https://bit.ly/spp-gradient"
+gradient <- read_csv(spp_url)
+

@@ -57,6 +57,8 @@ We’ll dig under the hood a bit to understand how GAMs work at a practical leve
 
 ### Thursday
 
+[Slides](https://gavinsimpson.github.io/physalia-gam-course/day-4/index.html)
+
 * Hierarchical GAMs; introducing random smooths and how to model data with both group and individual smooth effects.
 * Doing more with your models; introducing posterior simulation.
 
