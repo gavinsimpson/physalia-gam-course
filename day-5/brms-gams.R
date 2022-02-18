@@ -1,5 +1,4 @@
-# Analyse the Rat hormone data from Fahrmeir et al (2013) Regression: Models,
-#  Methods and Applications. Springer
+# Analyse the Global temperature anaomaly record with BRMS
 pkgs <- c("mgcv", "brms", "ggplot2", "readr", "dplyr", "tidyr", "gratia")
 vapply(pkgs, library, logical(1), character.only = TRUE, logical.return = TRUE,
        quietly = TRUE)
@@ -22,7 +21,7 @@ gtemp_plt
 
 # fit the model, default everything; adjust cores to reflect the number of
 #   phsyical cores on your machine
-m <- brm(bf(Temperature ~ s(Year)), # <== formula wrapped in bf() 
+m <- brm(bf(Temperature ~ s(Year)), # <== formula wrapped in bf()
             data = gtemp,
             family = gaussian(),
             cores = 4, # <== adjust me
