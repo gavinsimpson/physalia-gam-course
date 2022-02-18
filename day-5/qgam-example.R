@@ -28,19 +28,16 @@ appraise(m_q)
 new_df <- with(mcycle,
                tibble(times = seq(round(min(times)), round(max(times)),
                                   length.out = 200)))
-pred <- predict(m_q, newdata = new_df, se.fit = TRUE) %>%
-  as.data.frame() %>%
-  as_tibble() %>%
-  setNames(c("est", "se")) %>%
-  add_confint() %>%
-  bind_cols(new_df)
+
+## for a single QGAM the fits work just fine with fitted_values too
+fv <- fitted_values(m_q, data = new_df)
 
 ## plot
-pred %>%
+fv %>%
   ggplot(aes(x = times)) +
     geom_point(data = mcycle, aes(x = times, y = accel)) +
-    geom_ribbon(aes(ymin = lower_ci, ymax = upper_ci), alpha = 0.2) +
-    geom_line(aes(y = est))
+    geom_ribbon(aes(ymin = lower, ymax = upper), alpha = 0.2) +
+    geom_line(aes(y = fitted))
 
 ## Repeat the exercise but for a lower quantile, say the 0.2 probability
 ##   quantile
