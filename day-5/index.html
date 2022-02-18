@@ -1317,6 +1317,57 @@ Our prior is that that basis function's coefficient is close to zero
 
 ---
 
+# Bayesian GAMs
+
+REML and ML methods are *empirical Bayes* methods
+
+Treating smooths as random effects implies the (improper) Gaussian priors on `\(\boldsymbol{\beta}\)`
+
+We fit by maximising the likelihood given this implied prior
+
+*empirical* because we do not have priors for the $\boldsymbol{\lambda}
+
+---
+
+# Priors
+
+It can be very hard to come up with good priors for smoothing parameters themselves
+
+* the true value may be `\(\infty\)` for a linear effect
+* making an informed decision (guess) is hard because the `\(\boldsymbol{\lambda}\)` are not directly interpretable in terms of something a user is familiar with
+
+Fully Bayesian approach would use
+
+* a vague gamma prior on the each element of `\(\boldsymbol{\lambda}\)`, or
+* uniform priors on each element of `\(\log(\boldsymbol{\lambda})\)`
+
+---
+
+# Obtaining posteriors
+
+In the fully Bayesian approach we attach priors to the `\(\boldsymbol{\lambda}\)` and `\(\boldsymbol{\beta}\)`
+
+Then use MCMC to obtain posterior draws for all the parameters and the response data
+
+* `mgcv:::jagam()` writes out a *JAGS* code/model file for a specified GAM, edit it, then do the sampling in `JAGS`
+* `brms::brm()` takes a formula using {mgcv} notation (`t2()` &amp; `s()` only) for smooths and fits the model using `Stan`
+* `BayesX` is a specialised software for fitting Bayesian GAMs. R interface via `BayesX` 📦
+* `bamlss::bamlss()` fits GAMs with {mgcv} notation &amp; smooths via a range of *engines* (`JAGS`, `BayesX`,  internal code, &amp;hellip;)
+
+---
+
+# Obtaining posteriors
+
+In the empirical Bayes world we set priors (implied or otherwise) on the `\(\boldsymbol{\beta}\)` but not the `\(\boldsymbol{\lambda}\)` &amp;mdash; posterior for `\(\boldsymbol{\beta}\)` is conditional on `\(\boldsymbol{\lambda}\)`
+
+---
+class: inverse center middle subsection
+
+# Example
+
+
+---
+
 # Next steps
 
 Read Simon Wood's book!

@@ -1,4 +1,6 @@
-# Analyse the Global temperature anaomaly record with BRMS
+# Analyse the Global temperature anomaly record with BRMS
+
+# packages
 pkgs <- c("mgcv", "brms", "ggplot2", "readr", "dplyr", "tidyr", "gratia")
 vapply(pkgs, library, logical(1), character.only = TRUE, logical.return = TRUE,
        quietly = TRUE)
@@ -38,11 +40,11 @@ c_sm <- conditional_smooths(m)
 #   the posterior?
 pp_check(m) # density plot
 
-pp_check(m, type = "ecdf_overlay") # epirical cummulative density function
+pp_check(m, type = "ecdf_overlay") # empirical cumulative density function
 
 ## What about priors?
 
-# use `get_prior()` with the formula to get info on the defualt priors that will
+# use `get_prior()` with the formula to get info on the default priors that will
 #   be used by brms
 get_prior(bf(Temperature ~ s(Year)),
           data = gtemp, family = gaussian())
@@ -86,7 +88,7 @@ m_prior1 <- brm(bf(Temperature ~ s(Year)),
 ##   of draw.gam but sampling coefficients for the smooths from the prior only,
 ##   no data fitting), then we can grab the prior draws for the smooth only with
 ##   (confusingly!!) `posterior_smooths()`:
-p_year <- posterior_smooths(m_prior1, smooth = "s(Year)")
+p_year1 <- posterior_smooths(m_prior1, smooth = "s(Year)")
 
 ## then we need to massage into something we can plot as `p_year` is just a
 ##   matrix of draws, 1 row per draw, 1 column per data/observations
@@ -105,7 +107,7 @@ pr_draws1
 ## Plot a sample of the draws
 n_take <- 50                                       # how many draws to plot?
 n <- nrow(gtemp)                                   # how many data?
-set.seed(3)                                        # repeatible
+set.seed(3)                                        # repeatable
 pr_draws1 %>%
   filter(draw %in% sample(seq_len(n), n_take)) %>% # sample draws
   ggplot(aes(x = Year, y = value, group = draw)) + # plot
@@ -269,3 +271,30 @@ m_distr <- gam(list(
 ## Read ?bf for help or take a look at:
 ## https://paul-buerkner.github.io/brms/articles/brms_distreg.html
 ## for examples
+
+## A hierarchical GAM example
+## data load and prep
+data(CO2, package = "datasets")
+CO2 <- transform(CO2, Plant_uo = factor(Plant, ordered = FALSE))
+
+m_co2_1 <- brm(bf(log(uptake) ~ s(log(conc), k = 5, bs = "tp") +
+                    (1 | Plant_uo)),
+               data = CO2, family = gaussian(),
+               cores = 4,
+               seed = 21,
+               control = list(adapt_delta = 0.95))
+
+m_co2_2 <- brm(bf(log(uptake) ~ s(log(conc), k = 5, m = 2) +
+                    s(log(conc), Plant_uo, k = 5,  bs = "fs", m = 2)),
+               data = CO2, family = gaussian(),
+               cores = 4,
+               seed = 21,
+               control = list(adapt_delta = 0.95))
+
+m_co2_2 <- brm(bf(log(uptake) ~ s(log(conc), k = 5, m = 2, bs = "tp") +
+                    s(log(conc), by = Plant_uo, k = 5, m = 1, bs = "tp") +
+                    (1 | Plant_uo)),
+               data = CO2, family = gaussian(),
+               cores = 4,
+               seed = 21,
+               control = list(adapt_delta = 0.95))
