@@ -69,7 +69,7 @@ xaringanExtra::use_tile_view()
 
 ## Slides
 
-Slidedeck: [bit.ly/physalia-gam-3](https://bit.ly/physalia-gam-3)
+Slidedeck: [bit.ly/physalia-gam-4](https://bit.ly/physalia-gam-4)
 
 Sources: [bit.ly/physalia-gam](https://bit.ly/physalia-gam)
 
