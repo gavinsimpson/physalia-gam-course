@@ -1,4 +1,4 @@
-# Analyse the Global temperature anaomaly record with BRMS
+# Analyse the Global temperature anomaly record with BRMS
 pkgs <- c("mgcv", "ggplot2", "readr", "dplyr", "gratia")
 vapply(pkgs, library, logical(1), character.only = TRUE, logical.return = TRUE,
        quietly = TRUE)
@@ -19,7 +19,7 @@ gtemp_plt <- ggplot(gtemp, aes(x = Year, y = Temperature)) +
     labs(x = 'Year', y = expression(Temeprature ~ degree * C))
 gtemp_plt
 
-# model the global temperature anaomaly as a smooth plus AR(1) residuals
+# model the global temperature anomaly as a smooth plus AR(1) residuals
 m_ar1 <- gamm(Temperature ~ s(Year, k = 20),
               data = gtemp,
               method = "REML",
