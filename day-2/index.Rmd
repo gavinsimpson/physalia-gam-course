@@ -939,7 +939,6 @@ Simon Wood & colleagues (2016) have extended the *mgcv* methods to some non-expo
 * `gevlss()`
 * `gamals()`
 * `ocat()`
-* `twlss()`
 * `shash()`
 * `gumbls()`
 ]

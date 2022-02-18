@@ -1,0 +1,1215 @@
+---
+title: "Generalized Additive Models"
+subtitle: "a data-driven approach to estimating regression models"
+institute: "Department of Animal Science · Aarhus University"
+author: "Gavin Simpson"
+date: "1400&ndash;2000 CET (1300&ndash;1900 UTC) Thursday 17th, 2022"
+output:
+  xaringan::moon_reader:
+    css: ['default', 'https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css', 'slides.css']
+    lib_dir: libs
+    nature:
+      titleSlideClass: ['inverse','middle','left',my-title-slide]
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      beforeInit: "macros.js"
+      ratio: '16:9'
+---
+class: inverse middle center big-subsection
+
+```{r setup, include=FALSE, cache=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(cache = TRUE, dev = 'svg', echo = TRUE, message = FALSE,
+                      warning = FALSE,
+                      fig.height = 6, fig.width = 1.777777 * 6)
+
+library("gridGraphics")
+library('here')
+library('mgcv')
+library('qgam')
+library('gratia')
+library('ggplot2')
+library('forcats')
+library('purrr')
+library('mvnfast')
+library("tibble")
+library('patchwork')
+library('tidyr')
+library("knitr")
+library("viridis")
+library('readr')
+library('dplyr')
+library('sf')
+
+## plot defaults
+theme_set(theme_bw(base_size = 16, base_family = 'Fira Sans'))
+
+```
+
+```{r xaringan-tile-view, echo = FALSE, eval = TRUE}
+# If you don't have xaringanExtra or can't get it installed, just change
+#   eval = TRUE above to eval = FALSE, you don't need it to use the slidedeck
+#
+# To install it, you ned the remotes pkg installed then run the next line
+#   to install xaringanExtra from GitHUb
+#
+# remotes::install_github("gadenbuie/xaringanExtra")
+#
+# then this code chunk will work
+xaringanExtra::use_tile_view()
+```
+
+# Day 5
+
+???
+
+---
+
+# Logistics
+
+## Slides
+
+Slidedeck: [bit.ly/physalia-gam-5](https://bit.ly/physalia-gam-5)
+
+Sources: [bit.ly/physalia-gam](https://bit.ly/physalia-gam)
+
+Direct download a ZIP of everything: [bit.ly/physalia-gam-zip](https://bit.ly/physalia-gam-zip)
+
+Unpack the zip & remember where you put it
+
+---
+class: inverse center middle subsection
+
+# Posterior prediction
+
+---
+
+# 🐡🐠🐟🦐 Species richness & 🦐 biomass
+
+The example comes from trawl data from off the coast of Newfoundland and Labrador, Canada
+
+* Counts of species richness at each trawl location
+* Shrimp biomass at each trawl location
+* Annual trawls 2005&ndash;2014
+
+---
+
+# 🐡🐠🐟🦐 Species richness
+
+.row[
+.col-6[
+```{r load-shrimp}
+shrimp <- read.csv(here("data", "trawl_nl.csv"))
+```
+
+```{r shrimp-richness}
+m_rich <- gam(richness ~ s(year),
+              family = poisson,
+              method = "REML",
+              data = shrimp)
+```
+]
+.col-6[
+```{r richness-violin, fig.height=5, fig.width=5, echo=FALSE}
+ggplot(shrimp) +
+  geom_violin(aes(x = richness, y = factor(year))) +
+    labs(x = "Number of species", y = "Year")
+```
+]
+]
+
+---
+
+# 🐡🐠🐟🦐 Species richness
+
+```{r draw-richness-gam, out.width = "90%", fig.align = "center"}
+draw(m_rich)
+```
+
+---
+
+# Spatio-temporal data
+
+🦐 biomass at each trawl
+
+```{r biom-space-time-plot, fig.height=8, fig.width=15, echo=FALSE, dev="png", dpi = 300}
+coast <- read_sf(here("data", "nl_coast.shp"))
+ggplot(shrimp) +
+  geom_point(aes(x = long, y = lat, size = shrimp), alpha = 0.5) +
+  geom_sf(data = coast) +
+  facet_wrap(~year, ncol = 5)
+```
+---
+
+# Spatio-temporal model
+
+```{r fit-shrimp-space-time}
+m_spt <- gam(shrimp ~ te(x, y, year, d = c(2,1),
+                         bs = c('tp', 'cr'), k = c(20, 5)),
+             data = shrimp,
+             family = tw(),
+             method = "REML")
+```
+
+---
+
+# Predicting with `predict()`
+
+`plot.gam()` and `gratia::draw()` show the component functions of the model on the link scale
+
+Prediction allows us to evaluate the model at known values of covariates on the response scale
+
+Use the standard function `predict()`
+
+Provide `newdata` with a data frame of values of covariates
+
+---
+
+# `predict()`
+
+```{r predict-newdata}
+new_year <- with(shrimp, tibble(year = seq(min(year), max(year), length.out = 100)))
+pred <- predict(m_rich, newdata = new_year, se.fit = TRUE, type = 'link')
+pred <- bind_cols(new_year, as_tibble(as.data.frame(pred)))
+pred
+```
+
+---
+
+# `predict()` &rarr; response scale
+
+```{r predict-newdata-resp}
+ilink <- inv_link(m_rich)                         # inverse link function
+crit <- qnorm((1 - 0.89) / 2, lower.tail = FALSE) # or just `crit <- 2`
+pred <- mutate(pred, richness = ilink(fit),
+               lwr = ilink(fit - (crit * se.fit)), # lower...
+               upr = ilink(fit + (crit * se.fit))) # upper credible interval
+pred
+```
+
+---
+
+# `predict()` &rarr; plot
+
+Tidy objects like this are easy to plot with `ggplot()`
+
+```{r plot-predictions-richness, fig.height = 4}
+ggplot(pred, aes(x = year)) +
+    geom_ribbon(aes(ymin = lwr, ymax = upr), alpha = 0.2) +
+    geom_line(aes(y = richness)) + labs(y = "Species richness", x = NULL)
+```
+
+---
+
+# `predict()` for space and time
+
+This idea is very general;  spatiotemporal model needs a grid of x,y coordinates for each year
+
+```{r spt-example-predict}
+sp_new <- with(shrimp, expand.grid(x = seq_min_max(x, n = 100), y = seq_min_max(y, n = 100),
+                                   year = unique(year)))
+sp_pred <- predict(m_spt, newdata = sp_new, se.fit = TRUE) # link scale is default
+sp_pred <- bind_cols(as_tibble(sp_new), as_tibble(as.data.frame(sp_pred)))
+sp_pred
+```
+
+---
+
+# `predict()` &rarr; response scale
+
+```{r spt-example-response-scale}
+ilink <- inv_link(m_spt)
+too_far <- exclude.too.far(sp_pred$x, sp_pred$y, shrimp$x, shrimp$y, dist = 0.1)
+sp_pred <- sp_pred %>% mutate(biomass = ilink(fit),
+                              biomass = case_when(too_far ~ NA_real_,
+                                                  TRUE ~ biomass))
+sp_pred
+```
+
+---
+
+# `predict()` &rarr; plot
+
+```{r spt-example-plot, fig.height = 5.5, dev="png", dpi = 300}
+ggplot(sp_pred, aes(x = x, y = y, fill = biomass)) + geom_raster() +
+    scale_fill_viridis_c(option = "plasma") + facet_wrap(~ year, ncol = 5) + coord_equal()
+```
+
+---
+
+# Visualizing the trend?
+
+We have this model
+
+.smaller[
+```{r show-m-spt}
+m_spt
+```
+]
+
+How would you visualize the average change in biomass over time?
+
+---
+
+# Welcome back old friend
+
+One way is to  decompose the spatio-temporal function in main effects plus interaction
+
+```{r shrimp-ti-model}
+m_ti <- gam(shrimp ~ ti(x, y, year, d = c(2, 1), bs = c("tp", "cr"), k = c(20, 5)) +
+                s(x, y, bs = "tp", k = 20) +
+                s(year, bs = "cr", k = 5),
+            data = shrimp, family = tw, method = "REML")
+```
+
+and predict from the model using only the marginal effect of `s(year)`
+
+---
+
+# `predict()` with `exclude`
+
+.row[
+.col-6[
+We can exclude the spatial & spatiotemporal terms from predictions using `exclude`
+
+**Step 1** run `gratia::smooths()` on model & note the names of the smooth you *don't* want &rarr;
+]
+.col-6[
+.smaller[
+```{r summary-spt-ti}
+smooths(m_ti)
+```
+]
+]
+]
+
+---
+
+# `predict()` with `exclude` &mdash; Step 2 *predict*
+
+Prediction data only need dummy values for `x` and `y`
+
+```{r pred-data-ti-model}
+ti_new <- with(shrimp, expand.grid(x = mean(x), y = mean(y), year = seq_min_max(year, n = 100)))
+
+ti_pred <- predict(m_ti, newdata = ti_new, se.fit = TRUE,
+                   exclude = c("ti(x,y,year)", "s(x,y)")) #<<
+
+ti_pred <- bind_cols(as_tibble(ti_new), as_tibble(as.data.frame(ti_pred))) %>%
+    mutate(biomass = ilink(fit),
+           lwr = ilink(fit - (crit * se.fit)),
+           upr = ilink(fit + (crit * se.fit)))
+```
+
+`exclude` takes a character vector of terms to exclude &mdash; `predict()` sets the contributions of those terms to 0
+
+Could also use `terms = "s(year)"` to select only the named smooths
+
+```{r pred-data-ti-model-terms, results = "hide"}
+predict(m_ti, newdata = ti_new, se.fit = TRUE, terms = "s(year)")
+```
+
+---
+
+# `predict()` with `exclude`&mdash; Step 3 *plot it!*
+
+```{r plot-ti-marginal-trend, fig.height = 5}
+ggplot(ti_pred, aes(x = year)) + geom_ribbon(aes(ymin = lwr, ymax = upr), alpha = 0.3) +
+    geom_line(aes(y = biomass)) + labs(y = "Biomass", x = NULL)
+```
+
+---
+
+# Using `fitted_values()`
+
+```{r predict-via-fitted-values, out.width = "70%", fig.align = "center"}
+ti_pred2 <- fitted_values(m_ti, data = ti_new,
+                          scale = "response",
+                          exclude = c("ti(x,y,year)", "s(x,y)")) #<<
+
+ggplot(ti_pred2, aes(x = year)) + geom_ribbon(aes(ymin = lower, ymax = upper), alpha = 0.3) +
+  geom_line(aes(y = fitted)) + labs(y = "Biomass", x = NULL)
+```
+
+---
+class: inverse middle center subsection
+
+# Posterior simulation
+
+---
+
+# Remember this?
+
+.center[
+```{r echo = FALSE, out.width = "80%"}
+knitr::include_graphics(here("day-3/resources",
+                             "miller-bayesian-gam-interpretation-fig.svg"))
+```
+]
+
+.smaller[
+Miller (2021) Bayesian Views of Generalized Additive Modelling. [*arXiv*:1902.01330v3](http://arxiv.org/abs/1902.01330v3)
+]
+
+--
+
+Where did the faint grey lines come from?
+
+---
+
+# Posterior distributions
+
+Each line is a draw from the *posterior distribution* of the smooth
+
+Remember the coefficients for each basis function?: $\beta_j$
+
+Together they are distributed *multivariate normal* with
+
+* mean vector given by $\hat{\beta}_j$
+* covariance matrix $\boldsymbol{\hat{V}}_{\beta}$
+
+$$\text{MVN}(\boldsymbol{\hat{\beta}}, \boldsymbol{\hat{V}}_{\beta})$$
+
+--
+
+The model as a whole has a posterior distribution too
+
+--
+
+We can simulate data from the model by taking draws from the posterior distribution
+
+---
+
+# Posterior simulation for a smooth
+
+Sounds fancy but it's only just slightly more complicated than using `rnorm()`
+
+To do this we need a few things:
+
+1. The vector of model parameters for the smooth, $\boldsymbol{\hat{\beta}}$
+2. The covariance matrix of those parameters, $\boldsymbol{\hat{V}}_{\beta}$
+3. A matrix $\boldsymbol{X}_p$ that maps parameters to the linear predictor for the smooth
+
+$$\boldsymbol{\hat{\eta}}_p = \boldsymbol{X}_p \boldsymbol{\hat{\beta}}$$
+
+--
+
+Let's do this for `m_rich`
+
+---
+
+# Posterior sim for a smooth &mdash; step 1
+
+The vector of model parameters for the smooth, $\boldsymbol{\hat{\beta}}$
+
+```{r richness-coefs}
+sm_year <- get_smooth(m_rich, "s(year)") # extract the smooth object from model
+idx <- gratia:::smooth_coefs(sm_year)    # indices of the coefs for this smooth
+idx
+
+beta <- coef(m_rich)                     # vector of model parameters
+beta[idx]                                # coefs for this smooth
+```
+
+---
+
+# Posterior sim for a smooth &mdash; step 2
+
+The covariance matrix of the model parameters, $\boldsymbol{\hat{V}}_{\beta}$
+
+```{r richness-vcov, results = "hide"}
+Vb <- vcov(m_rich) # default is the bayesian covariance matrix
+Vb
+```
+
+.small[
+```{r richness-vcov-print, echo = FALSE}
+op <- options(width = 170)
+Vb
+options(op)
+```
+]
+
+---
+
+# Posterior sim for a smooth &mdash; step 3
+
+A matrix $\boldsymbol{X}_p$ that maps parameters to the linear predictor for the smooth
+
+We get $\boldsymbol{X}_p$ using the `predict()` method with `type = "lpmatrix"`
+
+```{r richness-xp-matrix}
+new_year <- with(shrimp, tibble(year = seq_min_max(year, n = 100)))
+Xp <- predict(m_rich, newdata = new_year, type = 'lpmatrix')
+dim(Xp)
+```
+
+---
+
+# Posterior sim for a smooth &mdash; step 4
+
+Take only the columns of $\boldsymbol{X}_p$ that are involved in the smooth of `year`
+
+```{r richness-reduce-xp}
+Xp <- Xp[, idx, drop = FALSE]
+dim(Xp)
+```
+
+---
+
+# Posterior sim for a smooth &mdash; step 5
+
+Simulate parameters from the posterior distribution of the smooth of `year`
+
+```{r richness-simulate-params}
+set.seed(42)
+beta_sim <- rmvn(n = 20, beta[idx], Vb[idx, idx, drop = FALSE])
+dim(beta_sim)
+```
+
+Simulating many sets (20) of new model parameters from the estimated parameters and their uncertainty (covariance)
+
+Result is a matrix where each row is a set of new model parameters, each consistent with the fitted smooth
+
+---
+
+# Posterior sim for a smooth &mdash; step 6
+
+.row[
+.col-6[
+Form $\boldsymbol{\hat{\eta}}_p$, the posterior draws for the smooth
+
+```{r richness-posterior-draws, fig.height = 5, fig.show = 'hide'}
+sm_draws <- Xp %*% t(beta_sim)
+dim(sm_draws)
+matplot(sm_draws, type = 'l')
+```
+
+A bit of rearranging is needed to plot with `ggplot()`
+]
+
+.col-6[
+```{r richness-posterior-draws, fig.height = 5, fig.width = 5, echo = FALSE, results = 'hide'}
+```
+]
+
+]
+
+--
+
+Or use `smooth_samples()`
+
+---
+
+# Posterior sim for a smooth &mdash; steps 1&ndash;6
+
+```{r plot-posterior-smooths, fig.height = 5}
+sm_post <- smooth_samples(m_rich, 's(year)', n = 20, seed = 42)
+draw(sm_post)
+```
+
+---
+
+# Posterior simulation from the model
+
+Simulating from the posterior distribution of the model requires 1 modification of the recipe for a smooth and one extra step
+
+We want to simulate new values for all the parameters in the model, not just the ones involved in a particular smooth
+
+--
+
+Additionally, we could simulate *new response data* from the model and the simulated parameters (**not shown** below)
+
+---
+
+# Posterior simulation from the model
+
+```{r posterior-sim-model}
+beta <- coef(m_rich)   # vector of model parameters
+Vb <- vcov(m_rich)     # default is the bayesian covariance matrix
+Xp <- predict(m_rich, type = 'lpmatrix')
+set.seed(42)
+beta_sim <- rmvn(n = 1000, beta, Vb) # simulate parameters
+eta_p <- Xp %*% t(beta_sim)        # form linear predictor values
+mu_p <- inv_link(m_rich)(eta_p)    # apply inverse link function
+
+mean(mu_p[1, ]) # mean of posterior for the first observation in the data
+quantile(mu_p[1, ], probs = c(0.025, 0.975))
+```
+
+---
+
+# Posterior simulation from the model
+
+```{r posterior-sim-model-hist, fig.height = 5}
+ggplot(tibble(richness = mu_p[587, ]), aes(x = richness)) +
+    geom_histogram() + labs(title = "Posterior richness for obs #587")
+```
+
+---
+
+# Posterior simulation from the model
+
+Or easier using `fitted_samples()`
+
+```{r richness-fitted-samples, fig.height = 4.5}
+rich_post <- fitted_samples(m_rich, n = 1000, newdata = shrimp, seed = 42)
+ggplot(filter(rich_post, row == 587), aes(x = fitted)) +
+    geom_histogram() + labs(title = "Posterior richness for obs #587", x = "Richness")
+```
+
+---
+
+# Why is this of interest?
+
+Say you wanted to get an estimate for the total biomass of shrimp over the entire region of the trawl survey for 2007
+
+You could predict for the spatial grid for `year == 2007` using code shown previously and sum the predicted biomass values over all the grid cells
+
+--
+
+**Easy**
+
+--
+
+But what if you also wanted the uncertainty in that estimate?
+
+--
+
+**Hard**
+
+--
+
+**Math** 😱😱 "something, something, delta method, something" 😱😱
+
+---
+
+# Posterior simulation makes this easy
+
+1. Take a draw from the posterior distribution of the model
+2. Use the posterior draw to predict biomass for each grid cell
+3. Sum the predicted biomass values over all grid cells
+4. Store the total biomass value
+5. Repeat 1&ndash;4 a lot of times to get posterior distribution for total biomass
+6. Summarize the total biomass posterior
+    * Estimated total biomass is the mean of the total biomass posterior
+	* Uncertainty is some lower/upper tail probability quantiles of the posterior
+
+---
+
+# Let's do it
+
+```{r total-biomass-posterior-1}
+sp_new <- with(shrimp, expand.grid(x = seq_min_max(x, n = 100), y = seq_min_max(y, n = 100),
+                                   year = 2007))
+Xp <- predict(m_spt, newdata = sp_new, type = "lpmatrix")
+
+## work out now which points are too far now
+too_far <- exclude.too.far(sp_new$x, sp_new$y, shrimp$x, shrimp$y, dist = 0.1)
+
+beta <- coef(m_spt)                  # vector of model parameters
+Vb <- vcov(m_spt)                    # default is the bayesian covariance matrix
+set.seed(42)
+beta_sim <- rmvn(n = 1000, beta, Vb) # simulate parameters
+eta_p <- Xp %*% t(beta_sim)          # form linear predictor values
+mu_p <- inv_link(m_spt)(eta_p)       # apply inverse link function
+```
+
+Columns of `mu_p` contain the expected or mean biomass for each grid cell per area trawled
+
+Sum the columns of `mu_p` and summarize
+
+---
+
+# Summarize the expected biomass
+
+```{r total-biomass-posterior-2, dependson = -1}
+mu_copy <- mu_p              # copy mu_p
+mu_copy[too_far, ] <- NA     # set cells too far from data to be NA
+total_biomass <- colSums(mu_copy, na.rm = TRUE)  # total biomass over the region
+
+mean(total_biomass)
+quantile(total_biomass, probs = c(0.025, 0.975))
+```
+
+---
+
+# Summarize the expected biomass
+
+```{r total-biomass-histogram, echo = FALSE}
+ggplot(tibble(biomass = total_biomass), aes(x = biomass)) +
+    geom_histogram()
+```
+
+---
+
+# With `fitted_samples()`
+
+.row[
+
+.col-7[
+```{r biomass-fitted-samples-example}
+bio_post <- fitted_samples(m_spt, n = 1000,
+                           newdata = sp_new[!too_far, ],
+                           seed = 42) %>%
+    group_by(draw) %>%
+    summarise(total = sum(fitted),
+              .groups = "drop_last")
+
+with(bio_post, mean(total))
+with(bio_post, quantile(total, probs = c(0.025, 0.975)))
+```
+]
+
+.col-5[
+```{r biomass-fitted-samples-plot, fig.width = 5, fig.height = 5}
+ggplot(bio_post, aes(x = total)) +
+    geom_histogram() +
+    labs(x = "Total biomass")
+```
+
+]
+
+]
+
+---
+class: inverse middle center subsection
+
+# Example
+
+---
+
+# Max species abundance
+
+We have measurements of the abundance of a particular species along an environmental gradient
+
+```{r}
+spp_url <- "https://bit.ly/spp-gradient"
+gradient <- read_csv(spp_url, col_types = "dd")
+gradient
+```
+
+---
+
+# Max species abundance
+
+Tasks
+
+1. fit a suitable GAM (the data are counts)
+
+2. estimate the value of the environmental gradient where the species reaches its maximal abundance and use *posterior simulation* to provide an uncertainty estimate for this value
+
+---
+
+# Addendum
+
+We used a *Gaussian approximation* to the model posterior distribution
+
+This works well for many models but it's an approximation and can fail when the posterior is far from Gaussian
+
+Other options include
+
+1. using integrated nested Laplace approximation `mgcv::ginla()`
+2. using a Metropolis Hastings sampler `mgcv::gam.mh()`
+
+See `?mgcv::gam.mh` for an example where Gaussian approximation fails badly
+
+--
+
+`fitted_samples()`, `smooth_samples()` etc only do Gaussian approximation *currently*
+
+---
+class: inverse center middle subsection
+
+# Time series
+
+---
+
+# Smoothing autocorrelated data
+
+Smoothing temporally autocorrelated data can `-->` over fitting
+
+.row[
+
+.col-6[
+
+$y$ is contaminated with AR(1) noise
+
+.smaller[
+```{r correlated-data-eg, fig.show = "hide"}
+set.seed(321)
+n <- 100
+time <- 1:n
+xt <- time/n
+Y <- (1280 * xt^4) * (1- xt)^4
+y <- as.numeric(Y + arima.sim(list(ar = 0.3713),
+                              n = n))
+df <- tibble(y = y, time = time, f = Y)
+
+# plot
+plt <- ggplot(df, aes(x = time, y = y)) +
+  geom_point() +
+  geom_line(aes(y = f),
+            col = "steelblue", lwd = 2)
+plt
+```
+]
+]
+
+.col-6[
+```{r correlated-data-eg, echo = FALSE, fig.width = 6, fig.height = 6}
+```
+]
+]
+
+---
+
+# Smoothing autocorrelated data
+
+.row[
+
+.col-6[
+.smaller[
+```{r fit-correlated-data-eg, fig.show = "hide"}
+# standard fit
+m_reml <- gam(y ~ s(time, k = 20), data = df,
+              method = "REML")
+# use GCV
+m_gcv <- gam(y ~ s(time, k = 20), data = df)
+
+# fitted values
+fv_reml <- fitted_values(m_reml)
+fv_gcv <- fitted_values(m_gcv)
+
+# plot
+plt + geom_line(data = fv_reml,
+               aes(x = time, y = fitted),
+               col = "red") +
+  geom_line(data = fv_gcv,
+            aes(x = time, y = fitted),
+            col = "darkgreen")
+```
+]
+]
+
+.col-6[
+
+```{r fit-correlated-data-eg, echo = FALSE, fig.width = 6, fig.height = 6}
+```
+]
+]
+
+---
+
+# Smoothing autocorrelated data
+
+What about smoothing where $x$ is time? Is this still a problem?
+
+--
+
+Yes *and* No
+
+--
+
+Depends on how you want to decompose *time* again
+
+---
+
+# Temporal dependence
+
+Temporal dependence really means that observations that are close together in time tend to be similar to one another than observations well separated in time
+
+How similar depends on the memory length of the system
+
+--
+
+Strong dependence &mdash; high autocorrelatation &,dash; long memory
+
+Weak dependence &mdash; low autocorrelatation &,dash; short memory
+
+---
+
+# Temporal dependence
+
+What does a GAM say about our data?
+
+--
+
+It says that observations near to one another (in covariate space) are more similar than observations further apart
+
+---
+
+# Temporal dependence & GAMs
+
+From this perspective then
+
+Wiggly smooths = Strong dependence
+
+Smooth (!) smooths = Weak dependence
+
+---
+
+# Temporal dependence & GAMs
+
+If you don't like your trend to be that wiggly, what to do?
+
+--
+
+You could decompose the temporal effect into a smooth trend *plus* an autocorrelated process in the $\varepsilon$
+
+--
+
+That process could be ARMA(*p*, *q*) or a continuous time AR(1)
+
+--
+
+Fit with `gamm()` using `correlation` argument
+
+---
+
+# Smoothing autocorrelated data
+
+.row[
+
+.col-6[
+.smaller[
+```{r fit-correlated-data-gamm, fig.show = "hide"}
+# standard fit
+m_ar1 <- gamm(y ~ s(time, k = 20), data = df,
+              correlation = corAR1(form = ~ 1),
+              method = "REML")
+
+# fitted values
+fv_ar1 <- fitted_values(m_ar1$gam)
+
+# plot
+plt +
+  geom_ribbon(data = fv_ar1,
+              aes(ymin = lower, ymax = upper,
+                  y = NULL),
+              alpha = 0.2, fill = "hotpink") +
+  geom_line(data = fv_ar1,
+            aes(x = time, y = fitted),
+            col = "hotpink", lwd = 1.5)
+```
+]
+]
+
+.col-6[
+
+```{r fit-correlated-data-gamm, echo = FALSE, fig.width = 6, fig.height = 6}
+```
+]
+]
+
+---
+
+# But&hellip;
+
+This can only work if the trend and the autocorrelation process are separately identifiable from the data
+
+Or you are willing to impose constraints on one of
+
+* the smooth of time (using a low `k`), or
+
+* specify the parameters of the autocorrelation process
+
+See [Simpson (2018)](https://doi.org/10.3389/fevo.2018.00149) for a brief discussion on this plus examples & the cited references therein
+
+---
+class: inverse center middle subsection
+
+# Example
+
+---
+class: inverse center middle subsection
+
+# Distributional models
+
+---
+
+# Distributional models
+
+So far we have modelled the mean or $\mathbb{E}(\boldsymbol{y})$
+
+We either assumed the variance was constant (Gaussian) or followed a prescribed form implied by the family / random component used (GLMs / GAMs)
+
+What if the data don't follow these assumptions?
+
+--
+
+We could model all the parameters of the distribution
+
+---
+
+# Parameters beyond the mean
+
+```{r gaussian-distributions-plt, echo = FALSE}
+x <- seq(8, -8, length = 500)
+df <- data.frame(density = c(dnorm(x, 0, 1), dnorm(x, 0, 2), dnorm(x, 2, 1), dnorm(x, -2, 1)),
+                 x = rep(x, 4),
+                 distribution = factor(rep(c("mean = 0; var = 1", "mean = 0; var = 4",
+                                             "mean = 2; var = 1", "mean = -2; var = 1"), each = 500),
+                                       levels = c("mean = 0; var = 1", "mean = 0; var = 4",
+                                                  "mean = 2; var = 1", "mean = -2; var = 1")))
+plt1 <- ggplot(subset(df, distribution %in% c("mean = 0; var = 1", "mean = 0; var = 4")),
+               aes(x = x, y = density, colour = distribution)) +
+    geom_line(size = 1) + theme(legend.position = "top") +
+    guides(col = guide_legend(title = "Distribution", nrow = 2, title.position = "left")) +
+    labs(x = 'x', y = "Probability density")
+
+plt2 <- ggplot(subset(df, distribution %in% c("mean = 2; var = 1", "mean = -2; var = 1")),
+               aes(x = x, y = density, colour = distribution)) +
+    geom_line(size = 1) + theme(legend.position = "top") +
+    guides(col = guide_legend(title = "Distribution", nrow = 2, title.position = "left")) +
+    labs(x = 'x', y = "Probability density")
+
+plt <- plt1 + plt2
+plt
+```
+
+???
+
+To do this we'll need models for the variance of a data set
+
+If we think of the Gaussian distribution that distribution has two parameters, the mean and the variance
+
+In linear regression we model the mean of the response at different values of the covariates, and assume the variance is constant at a value estimated from the residuals
+
+In the left panel I'm showing how the Gaussian distribution changes as we alter the mean while keeping the variance fixed, while in the right panel I keep the mean fixed but vary the variance &mdash; the parameters are independent
+
+---
+
+# Distributional models
+
+.medium[
+$$y_{i} | \boldsymbol{x}_i \sim \mathcal{D}(\vartheta_{1}(\boldsymbol{x}_i), \ldots, \vartheta_{K}(\boldsymbol{x}_i))$$
+]
+
+For the Gaussian distribution
+
+* $\vartheta_{1}(\boldsymbol{x}_i) = \mu(\boldsymbol{x}_i)$
+
+* $\vartheta_{1}(\boldsymbol{x}_i) = \sigma(\boldsymbol{x}_i)$
+
+???
+
+Instead of treating the variance as a nuisance parameter, we could model both the variance **and** the mean as functions of the covariates
+
+This is done using what is called a *distributional model*
+
+In this model we say that the response values y_i, given the values of one or more covariates x_i follow some distribution with parameters theta, which are themselves functions of one or more covariates
+
+For the Gaussian distribution theta 1 would be the mean and theta 2 the variance (or standard deviation)
+
+We do not need to restrict ourselves to the Gaussian distribution however
+
+---
+
+# Pseudonyms
+
+These models in GAM form were originally termed GAMLSS
+
+GAMs for *L*ocation *S*cale *S*hape ([Rigby & Stasinopoulos, 2005](http://doi.org/10.1111/j.1467-9876.2005.00510.x)) in the {gamlss} 📦
+
+But the name *Distributional* model is more general
+
+---
+
+# Distributional models
+
+In {mgcv} 📦 special `family` functions are provided for some distributions which allow all parameters of the distribution to be modelled
+
+
+.row[
+.col-5[
+* `gaulss()` Gaussian
+* `ziplss()` ZI Poisson
+* `twlss()` Tweedie
+* `gevlss()` GEV
+]
+.col-7[
+* `gamals()` Gamma
+* `shash()` 4 parameter Sinh-arcsinh
+* `gumbls()` Gumble
+]
+]
+
+---
+
+# Distributional models
+
+Provide a list of formulas, 1 per linear predictor
+
+```{r eval = FALSE}
+gam(list(accel ~ s(times, k = 20, bs = "ad"),
+               ~ s(times, k = 10)),
+         data = mcycle,
+         method = "REML", # <== IIRC REML is only option for these LSS
+         family = gaulss())
+```
+
+And you need to really understand how these models are parameterised internally and what they are actually fitting and returning
+
+--
+
+**Read the relevant manual page**
+
+---
+class: inverse center middle subsection
+
+# Example
+
+
+---
+class: inverse center middle subsection
+
+# Quantile GAMs
+
+---
+
+# Quantile GAMs
+
+Briefly, estimating the entire conditional distribution of $\mathbf{y}$ may not be necessary
+
+--
+
+Or even wasteful
+
+--
+
+Instead, if our focus is on a particular part (**quantile**) of the distribution may be better to try to estimate that instead of the whole distribution
+
+--
+
+Quantile regression methods do this
+
+---
+
+# Quantile GAMs
+
+Smoothers for quantile regression models have been available for a long time in the {quantreg} 📦
+
+These models are estimated using the *pinball loss*
+
+This is suboptimal for model fitting especially with smoothness selection and the ideas implemented in {mgcv} 📦
+
+Instead, [Fasiolo *et al* (2020)](https://doi.org/10.1080/01621459.2020.1725521) ([arXiv version](https://arxiv.org/abs/1707.03307)) developed a well-calibrated way of estimating QGAMs with smoothness selection, good inference properties, etc, using a Bayesian belief updating technique
+
+Implemented in the {qgam} 📦 that builds upon {mgcv} so stuff just works
+
+---
+
+# Quantile GAMs
+
+```{r qgam-example, results = "hide"}
+## Load the mcycle data
+data(mcycle, package = "MASS")
+
+## Fit QGAM using an adaptive smoother
+m_q <- qgam(accel ~ s(times, k = 20, bs = "ad"),
+            data = mcycle, # <== no family either
+            qu = 0.8) #<<
+```
+
+```{r qgam-example-plt, echo = FALSE, out.width = "70%", fig.align = "center"}
+## predict to visualise the estimated quantile
+## new data to predict at
+new_df <- with(mcycle,
+               tibble(times = seq(round(min(times)), round(max(times)),
+                                  length.out = 200)))
+pred <- predict(m_q, newdata = new_df, se.fit = TRUE) %>%
+  as.data.frame() %>%
+  as_tibble() %>%
+  setNames(c("est", "se")) %>%
+  add_confint() %>%
+  bind_cols(new_df)
+
+## plot
+pred %>%
+  ggplot(aes(x = times)) +
+    geom_point(data = mcycle, aes(x = times, y = accel)) +
+    geom_ribbon(aes(ymin = lower_ci, ymax = upper_ci), alpha = 0.2) +
+    geom_line(aes(y = est))
+```
+
+---
+class: inverse center middle subsection
+
+# Example
+
+---
+class: inverse center middle subsection
+
+# Bayesian GAMs
+
+---
+
+# Bayesian GAMs
+
+Briefly (see [Miller 2021](http://arxiv.org/abs/1902.01330) & Wood 2017 for the gory details)&hellip;
+
+$$\mathcal{L}_{p}(\boldsymbol{\beta}, \boldsymbol{\lambda}) = \mathcal{L}(\boldsymbol{\beta})\exp(-\boldsymbol{\beta}^{\mathsf{T}}\boldsymbol{S}_{\boldsymbol{\lambda}}\boldsymbol{\beta})$$
+
+The exponential term is porportional to a mean zero MVN with prior precision matrix $\boldsymbol{S}_{\boldsymbol{\lambda}}$
+
+This implies
+
+$$\boldsymbol{\beta} \sim \mathcal{N}(\boldsymbol{0}, \boldsymbol{S}_{\boldsymbol{\lambda}}^{-})$$
+
+where $\boldsymbol{S}_{\boldsymbol{\lambda}}^{-}$ is a (pseudo)inverse of $\boldsymbol{S}_{\boldsymbol{\lambda}}$
+
+---
+
+# Baysian GAMs
+
+Large entries in $\boldsymbol{S}$ correspond to more wiggly basis functions
+
+We want to penalize these wiggly functions more strongly as we think smoother functions are more likely than wiggly functions
+
+When we invert $\boldsymbol{S}$, these large values turn into small variances
+
+Our prior is that that basis function's coefficient is close to zero
+
+---
+
+# Next steps
+
+Read Simon Wood's book!
+
+Lots more material on our ESA GAM Workshop site
+
+[https://noamross.github.io/mgcv-esa-workshop/]()
+
+Noam Ross' free GAM Course <https://noamross.github.io/gams-in-r-course/>
+
+Noam also maintains a list of [GAM Resources](https://github.com/noamross/gam-resources)
+
+A couple of papers:
+
+.smaller[
+1. Simpson, G.L., 2018. Modelling Palaeoecological Time Series Using Generalised Additive Models. Frontiers in Ecology and Evolution 6, 149. https://doi.org/10.3389/fevo.2018.00149
+2. Pedersen, E.J., Miller, D.L., Simpson, G.L., Ross, N., 2019. Hierarchical generalized additive models in ecology: an introduction with mgcv. PeerJ 7, e6876. https://doi.org/10.7717/peerj.6876
+]
+
+Also see my blog: [fromthebottomoftheheap.net](http://fromthebottomoftheheap.net)
+
+---
+
+# Reuse
+
+* HTML Slide deck [bit.ly/physalia-gam-5](https://bit.ly/physalia-gam-5) &copy; Simpson (2020-2022) [![Creative Commons Licence](https://i.creativecommons.org/l/by/4.0/88x31.png)](http://creativecommons.org/licenses/by/4.0/)
+* RMarkdown [Source](https://bit.ly/physalia-gam)
+
+---
+
+# References
+
+- [Marra & Wood (2011) *Computational Statistics and Data Analysis* **55** 2372&ndash;2387.](http://doi.org/10.1016/j.csda.2011.02.004)
+- [Marra & Wood (2012) *Scandinavian Journal of Statistics, Theory and Applications* **39**(1), 53&ndash;74.](http://doi.org/10.1111/j.1467-9469.2011.00760.x.)
+- [Nychka (1988) *Journal of the American Statistical Association* **83**(404) 1134&ndash;1143.](http://doi.org/10.1080/01621459.1988.10478711)
+- Wood (2017) *Generalized Additive Models: An Introduction with R*. Chapman and Hall/CRC. (2nd Edition)
+- [Wood (2013a) *Biometrika* **100**(1) 221&ndash;228.](http://doi.org/10.1093/biomet/ass048)
+- [Wood (2013b) *Biometrika* **100**(4) 1005&ndash;1010.](http://doi.org/10.1093/biomet/ast038)
+- [Wood et al (2016) *JASA* **111** 1548&ndash;1563](https://doi.org/10.1080/01621459.2016.1180986)
