@@ -16,7 +16,7 @@ gtemp <- read_table(URL, col_types = "nnnnnnnnnnnn",
 
 # Plot
 gtemp_plt <- ggplot(gtemp, aes(x = Year, y = Temperature)) +
-    geom_line() + 
+    geom_line() +
     geom_point() +
     labs(x = "Year", y = expression(Temeprature ~ degree * C))
 gtemp_plt
@@ -199,7 +199,7 @@ pr_draws_y <- predict(m_prior2, summary + FALSE)
 ## Y.
 
 ## Task: alter the priors above to give prior draws that are more like the data
-## 
+##
 ## * copy the code for pr below
 pr2 <-                                              # <== your prior code here
 
