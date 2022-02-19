@@ -9,16 +9,16 @@ vapply(pkgs, library, logical(1), character.only = TRUE, logical.return = TRUE,
 URL <- "https://bit.ly/hadcrutv4"
 # data are year, median of ensemble runs, certain quantiles in remaining cols
 # take only cols 1 and 2
-gtemp <- read_table(URL, col_types = 'nnnnnnnnnnnn',
+gtemp <- read_table(URL, col_types = "nnnnnnnnnnnn",
                     col_names = FALSE) %>%
-    select(num_range('X', 1:2)) %>%
-    setNames(nm = c('Year', 'Temperature'))
+    select(num_range("X", 1:2)) %>%
+    setNames(nm = c("Year", "Temperature"))
 
 # Plot
 gtemp_plt <- ggplot(gtemp, aes(x = Year, y = Temperature)) +
     geom_line() + 
     geom_point() +
-    labs(x = 'Year', y = expression(Temeprature ~ degree * C))
+    labs(x = "Year", y = expression(Temeprature ~ degree * C))
 gtemp_plt
 
 # fit the model, default everything; adjust cores to reflect the number of

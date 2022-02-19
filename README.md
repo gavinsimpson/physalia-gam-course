@@ -64,6 +64,8 @@ We’ll dig under the hood a bit to understand how GAMs work at a practical leve
 
 ### Friday
 
-* Fitting GAMs with brms
+[Slides](https://gavinsimpson.github.io/physalia-gam-course/day-5/index.html)
+
 * Going beyond the mean; fitting distributional models and quantile GAMs
+* Fitting GAMs with brms
 

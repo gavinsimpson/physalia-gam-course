@@ -385,67 +385,6 @@ summary(b)
 draw(b, scales = 'fixed')
 
 
-## ----echo = FALSE, out.width = "90%"------------------------------------------
-knitr::include_graphics(here("day-3/resources",
-                             "miller-bayesian-gam-interpretation-fig.svg"))
-
-
-## ----setup-confint-example, fig = TRUE, fig.width = 11, fig.height = 5.5, results = "hide", echo = FALSE----
-library(mgcv)
-set.seed(0)
-## fake some data...
-f1 <- function(x) {exp(2 * x)}
-f2 <- function(x) { 
-  0.2*x^11*(10*(1-x))^6+10*(10*x)^3*(1-x)^10 
-}
-f3 <- function(x) {x*0}
-
-n<-200
-sig2 <- 12
-x0 <- rep(1:4,50)
-x1 <- runif(n, 0, 1)
-x2 <- runif(n, 0, 1)
-x3 <- runif(n, 0, 1)
-e <- rnorm(n, 0, sqrt(sig2))
-y <- 2*x0 + f1(x1) + f2(x2) + f3(x3) + e
-x0 <- factor(x0)
-
-## fit and plot...
-b <- gam(y ~ x0 + s(x1) + s(x2) + s(x3))
-
-op <- par(mar = c(4,4,1,1) + 0.1)
-layout(matrix(1:9, ncol = 3, byrow = TRUE))
-curve(f1)
-curve(f2)
-curve(f3)
-plot(b, shade=TRUE)
-plot(b, shade = TRUE, seWithMean = TRUE) ## better coverage intervals
-layout(1)
-par(op)
-
-
-## ----shrinkage-example-summary------------------------------------------------
-summary(b)
-
-
-## ----aic-models---------------------------------------------------------------
-b0 <- gam(y ~ s(x0) + s(x1) + s(x2),
-          data = dat, family = poisson, method = 'REML')
-b1 <- gam(y ~ s(x0) + s(x1) + s(x2) + s(x3) + s(x4) + s(x5),
-          data = dat, family = poisson, method = 'REML',
-          select = TRUE)
-b2 <- gam(y ~ s(x0) + s(x1) + s(x2) + s(x3) + s(x4) + s(x5),
-          data = dat, family = poisson, method = 'REML')
-
-
-## ----aic-example, echo = TRUE-------------------------------------------------
-AIC(b0, b1, b2)
-
-
-## ----aic-chisq, echo = TRUE---------------------------------------------------
-pchisq(2, 1, lower.tail = FALSE)
-
-
 ## ----cross-validated, echo = FALSE--------------------------------------------
 knitr::include_graphics(here('day-3/resources', 'cross-validated.png'))
 

@@ -6,44 +6,44 @@ author: "Gavin Simpson"
 date: "1400&ndash;2000 CET (1300&ndash;1900 UTC) Friday 18th, 2022"
 output:
   xaringan::moon_reader:
-    css: ['default', 'https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css', 'slides.css']
+    css: ["default", "https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css", "slides.css"]
     lib_dir: libs
     nature:
-      titleSlideClass: ['inverse','middle','left',my-title-slide]
+      titleSlideClass: ["inverse","middle","left",my-title-slide]
       highlightStyle: github
       highlightLines: true
       countIncrementalSlides: false
       beforeInit: "macros.js"
-      ratio: '16:9'
+      ratio: "16:9"
 ---
 class: inverse middle center big-subsection
 
 ```{r setup, include=FALSE, cache=FALSE}
 options(htmltools.dir.version = FALSE)
-knitr::opts_chunk$set(cache = TRUE, dev = 'svg', echo = TRUE, message = FALSE,
+knitr::opts_chunk$set(cache = TRUE, dev = "svg", echo = TRUE, message = FALSE,
                       warning = FALSE,
                       fig.height = 6, fig.width = 1.777777 * 6)
 
 library("gridGraphics")
-library('here')
-library('mgcv')
-library('qgam')
-library('gratia')
-library('ggplot2')
-library('forcats')
-library('purrr')
-library('mvnfast')
+library("here")
+library("mgcv")
+library("qgam")
+library("gratia")
+library("ggplot2")
+library("forcats")
+library("purrr")
+library("mvnfast")
 library("tibble")
-library('patchwork')
-library('tidyr')
+library("patchwork")
+library("tidyr")
 library("knitr")
 library("viridis")
-library('readr')
-library('dplyr')
-library('sf')
+library("readr")
+library("dplyr")
+library("sf")
 
 ## plot defaults
-theme_set(theme_bw(base_size = 16, base_family = 'Fira Sans'))
+theme_set(theme_bw(base_size = 16, base_family = "Fira Sans"))
 
 ```
 
@@ -146,7 +146,7 @@ ggplot(shrimp) +
 
 ```{r fit-shrimp-space-time}
 m_spt <- gam(shrimp ~ te(x, y, year, d = c(2,1),
-                         bs = c('tp', 'cr'), k = c(20, 5)),
+                         bs = c("tp", "cr"), k = c(20, 5)),
              data = shrimp,
              family = tw(),
              method = "REML")
@@ -170,7 +170,7 @@ Provide `newdata` with a data frame of values of covariates
 
 ```{r predict-newdata}
 new_year <- with(shrimp, tibble(year = seq(min(year), max(year), length.out = 100)))
-pred <- predict(m_rich, newdata = new_year, se.fit = TRUE, type = 'link')
+pred <- predict(m_rich, newdata = new_year, se.fit = TRUE, type = "link")
 pred <- bind_cols(new_year, as_tibble(as.data.frame(pred)))
 pred
 ```
@@ -441,7 +441,7 @@ We get $\boldsymbol{X}_p$ using the `predict()` method with `type = "lpmatrix"`
 
 ```{r richness-xp-matrix}
 new_year <- with(shrimp, tibble(year = seq_min_max(year, n = 100)))
-Xp <- predict(m_rich, newdata = new_year, type = 'lpmatrix')
+Xp <- predict(m_rich, newdata = new_year, type = "lpmatrix")
 dim(Xp)
 ```
 
@@ -480,17 +480,17 @@ Result is a matrix where each row is a set of new model parameters, each consist
 .col-6[
 Form $\boldsymbol{\hat{\eta}}_p$, the posterior draws for the smooth
 
-```{r richness-posterior-draws, fig.height = 5, fig.show = 'hide'}
+```{r richness-posterior-draws, fig.height = 5, fig.show = "hide"}
 sm_draws <- Xp %*% t(beta_sim)
 dim(sm_draws)
-matplot(sm_draws, type = 'l')
+matplot(sm_draws, type = "l")
 ```
 
 A bit of rearranging is needed to plot with `ggplot()`
 ]
 
 .col-6[
-```{r richness-posterior-draws, fig.height = 5, fig.width = 5, echo = FALSE, results = 'hide'}
+```{r richness-posterior-draws, fig.height = 5, fig.width = 5, echo = FALSE, results = "hide"}
 ```
 ]
 
@@ -505,7 +505,7 @@ Or use `smooth_samples()`
 # Posterior sim for a smooth &mdash; steps 1&ndash;6
 
 ```{r plot-posterior-smooths, fig.height = 5}
-sm_post <- smooth_samples(m_rich, 's(year)', n = 20, seed = 42)
+sm_post <- smooth_samples(m_rich, "s(year)", n = 20, seed = 42)
 draw(sm_post)
 ```
 
@@ -528,7 +528,7 @@ Additionally, we could simulate *new response data* from the model and the simul
 ```{r posterior-sim-model}
 beta <- coef(m_rich)   # vector of model parameters
 Vb <- vcov(m_rich)     # default is the bayesian covariance matrix
-Xp <- predict(m_rich, type = 'lpmatrix')
+Xp <- predict(m_rich, type = "lpmatrix")
 set.seed(42)
 beta_sim <- rmvn(n = 1000, beta, Vb) # simulate parameters
 eta_p <- Xp %*% t(beta_sim)        # form linear predictor values
@@ -957,13 +957,13 @@ plt1 <- ggplot(subset(df, distribution %in% c("mean = 0; var = 1", "mean = 0; va
                aes(x = x, y = density, colour = distribution)) +
     geom_line(size = 1) + theme(legend.position = "top") +
     guides(col = guide_legend(title = "Distribution", nrow = 2, title.position = "left")) +
-    labs(x = 'x', y = "Probability density")
+    labs(x = "x", y = "Probability density")
 
 plt2 <- ggplot(subset(df, distribution %in% c("mean = 2; var = 1", "mean = -2; var = 1")),
                aes(x = x, y = density, colour = distribution)) +
     geom_line(size = 1) + theme(legend.position = "top") +
     guides(col = guide_legend(title = "Distribution", nrow = 2, title.position = "left")) +
-    labs(x = 'x', y = "Probability density")
+    labs(x = "x", y = "Probability density")
 
 plt <- plt1 + plt2
 plt

@@ -110,7 +110,7 @@ draw(m_rich)
 
 ```r
 m_spt &lt;- gam(shrimp ~ te(x, y, year, d = c(2,1),
-                         bs = c('tp', 'cr'), k = c(20, 5)),
+                         bs = c("tp", "cr"), k = c(20, 5)),
              data = shrimp,
              family = tw(),
              method = "REML")
@@ -135,7 +135,7 @@ Provide `newdata` with a data frame of values of covariates
 
 ```r
 new_year &lt;- with(shrimp, tibble(year = seq(min(year), max(year), length.out = 100)))
-pred &lt;- predict(m_rich, newdata = new_year, se.fit = TRUE, type = 'link')
+pred &lt;- predict(m_rich, newdata = new_year, se.fit = TRUE, type = "link")
 pred &lt;- bind_cols(new_year, as_tibble(as.data.frame(pred)))
 pred
 ```
@@ -535,7 +535,7 @@ We get `\(\boldsymbol{X}_p\)` using the `predict()` method with `type = "lpmatri
 
 ```r
 new_year &lt;- with(shrimp, tibble(year = seq_min_max(year, n = 100)))
-Xp &lt;- predict(m_rich, newdata = new_year, type = 'lpmatrix')
+Xp &lt;- predict(m_rich, newdata = new_year, type = "lpmatrix")
 dim(Xp)
 ```
 
@@ -599,7 +599,7 @@ dim(sm_draws)
 ```
 
 ```r
-matplot(sm_draws, type = 'l')
+matplot(sm_draws, type = "l")
 ```
 
 A bit of rearranging is needed to plot with `ggplot()`
@@ -621,7 +621,7 @@ Or use `smooth_samples()`
 
 
 ```r
-sm_post &lt;- smooth_samples(m_rich, 's(year)', n = 20, seed = 42)
+sm_post &lt;- smooth_samples(m_rich, "s(year)", n = 20, seed = 42)
 draw(sm_post)
 ```
 
@@ -647,7 +647,7 @@ Additionally, we could simulate *new response data* from the model and the simul
 ```r
 beta &lt;- coef(m_rich)   # vector of model parameters
 Vb &lt;- vcov(m_rich)     # default is the bayesian covariance matrix
-Xp &lt;- predict(m_rich, type = 'lpmatrix')
+Xp &lt;- predict(m_rich, type = "lpmatrix")
 set.seed(42)
 beta_sim &lt;- rmvn(n = 1000, beta, Vb) # simulate parameters
 eta_p &lt;- Xp %*% t(beta_sim)        # form linear predictor values

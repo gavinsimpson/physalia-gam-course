@@ -1,29 +1,29 @@
 ## ----setup, include=FALSE, cache=FALSE----------------------------------------
 options(htmltools.dir.version = FALSE)
-knitr::opts_chunk$set(cache = TRUE, dev = 'svg', echo = TRUE, message = FALSE,
+knitr::opts_chunk$set(cache = TRUE, dev = "svg", echo = TRUE, message = FALSE,
                       warning = FALSE,
                       fig.height = 6, fig.width = 1.777777 * 6)
 
 library("gridGraphics")
-library('here')
-library('mgcv')
-library('qgam')
-library('gratia')
-library('ggplot2')
-library('forcats')
-library('purrr')
-library('mvnfast')
+library("here")
+library("mgcv")
+library("qgam")
+library("gratia")
+library("ggplot2")
+library("forcats")
+library("purrr")
+library("mvnfast")
 library("tibble")
-library('patchwork')
-library('tidyr')
+library("patchwork")
+library("tidyr")
 library("knitr")
 library("viridis")
-library('readr')
-library('dplyr')
-library('sf')
+library("readr")
+library("dplyr")
+library("sf")
 
 ## plot defaults
-theme_set(theme_bw(base_size = 16, base_family = 'Fira Sans'))
+theme_set(theme_bw(base_size = 16, base_family = "Fira Sans"))
 
 
 
@@ -71,7 +71,7 @@ ggplot(shrimp) +
 
 ## ----fit-shrimp-space-time----------------------------------------------------
 m_spt <- gam(shrimp ~ te(x, y, year, d = c(2,1),
-                         bs = c('tp', 'cr'), k = c(20, 5)),
+                         bs = c("tp", "cr"), k = c(20, 5)),
              data = shrimp,
              family = tw(),
              method = "REML")
@@ -79,7 +79,7 @@ m_spt <- gam(shrimp ~ te(x, y, year, d = c(2,1),
 
 ## ----predict-newdata----------------------------------------------------------
 new_year <- with(shrimp, tibble(year = seq(min(year), max(year), length.out = 100)))
-pred <- predict(m_rich, newdata = new_year, se.fit = TRUE, type = 'link')
+pred <- predict(m_rich, newdata = new_year, se.fit = TRUE, type = "link")
 pred <- bind_cols(new_year, as_tibble(as.data.frame(pred)))
 pred
 
@@ -193,7 +193,7 @@ options(op)
 
 ## ----richness-xp-matrix-------------------------------------------------------
 new_year <- with(shrimp, tibble(year = seq_min_max(year, n = 100)))
-Xp <- predict(m_rich, newdata = new_year, type = 'lpmatrix')
+Xp <- predict(m_rich, newdata = new_year, type = "lpmatrix")
 dim(Xp)
 
 
@@ -208,27 +208,27 @@ beta_sim <- rmvn(n = 20, beta[idx], Vb[idx, idx, drop = FALSE])
 dim(beta_sim)
 
 
-## ----richness-posterior-draws, fig.height = 5, fig.show = 'hide'--------------
+## ----richness-posterior-draws, fig.height = 5, fig.show = "hide"--------------
 sm_draws <- Xp %*% t(beta_sim)
 dim(sm_draws)
-matplot(sm_draws, type = 'l')
+matplot(sm_draws, type = "l")
 
 
-## ----richness-posterior-draws, fig.height = 5, fig.width = 5, echo = FALSE, results = 'hide'----
+## ----richness-posterior-draws, fig.height = 5, fig.width = 5, echo = FALSE, results = "hide"----
 sm_draws <- Xp %*% t(beta_sim)
 dim(sm_draws)
-matplot(sm_draws, type = 'l')
+matplot(sm_draws, type = "l")
 
 
 ## ----plot-posterior-smooths, fig.height = 5-----------------------------------
-sm_post <- smooth_samples(m_rich, 's(year)', n = 20, seed = 42)
+sm_post <- smooth_samples(m_rich, "s(year)", n = 20, seed = 42)
 draw(sm_post)
 
 
 ## ----posterior-sim-model------------------------------------------------------
 beta <- coef(m_rich)   # vector of model parameters
 Vb <- vcov(m_rich)     # default is the bayesian covariance matrix
-Xp <- predict(m_rich, type = 'lpmatrix')
+Xp <- predict(m_rich, type = "lpmatrix")
 set.seed(42)
 beta_sim <- rmvn(n = 1000, beta, Vb) # simulate parameters
 eta_p <- Xp %*% t(beta_sim)        # form linear predictor values
@@ -431,13 +431,13 @@ plt1 <- ggplot(subset(df, distribution %in% c("mean = 0; var = 1", "mean = 0; va
                aes(x = x, y = density, colour = distribution)) +
     geom_line(size = 1) + theme(legend.position = "top") +
     guides(col = guide_legend(title = "Distribution", nrow = 2, title.position = "left")) +
-    labs(x = 'x', y = "Probability density")
+    labs(x = "x", y = "Probability density")
 
 plt2 <- ggplot(subset(df, distribution %in% c("mean = 2; var = 1", "mean = -2; var = 1")),
                aes(x = x, y = density, colour = distribution)) +
     geom_line(size = 1) + theme(legend.position = "top") +
     guides(col = guide_legend(title = "Distribution", nrow = 2, title.position = "left")) +
-    labs(x = 'x', y = "Probability density")
+    labs(x = "x", y = "Probability density")
 
 plt <- plt1 + plt2
 plt
