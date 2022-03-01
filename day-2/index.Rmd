@@ -1073,11 +1073,13 @@ The intervals are defined by knots
 
 The individual cubic polynomials join at the knots so that resulting curve is continuous up to the second derivative
 
+In {mgcv} the knot location are at evenly-spaced *quantiles* of the covariate &mdash; not evenly through the data
+
 ---
 
 # Cubic regression splines
 
-```{r}
+```{r, out.width = "90%", fig.align = "center"}
 bfun <- basis(s(times, bs = "cr"), data = new_df)
 draw(bfun) + facet_wrap(~ bf)
 ```
@@ -1086,7 +1088,7 @@ draw(bfun) + facet_wrap(~ bf)
 
 # Cubic regression splines
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, out.width = "95%", fig.align = "center"}
 K <- 7
 knots <- with(mcycle, list(times = seq_min_max(times, n = K)))
 bfun <- basis(s(times, bs = "cr", k = K), data = new_df, knots = knots)

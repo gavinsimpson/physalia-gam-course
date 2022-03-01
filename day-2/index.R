@@ -458,12 +458,12 @@ draw(bfun)
 draw(bfun) + facet_wrap(~ bf)
 
 
-## -----------------------------------------------------------------------------
+## ---- out.width = "90%", fig.align = "center"---------------------------------
 bfun <- basis(s(times, bs = "cr"), data = new_df)
 draw(bfun) + facet_wrap(~ bf)
 
 
-## ---- echo = FALSE------------------------------------------------------------
+## ---- echo = FALSE, out.width = "95%", fig.align = "center"-------------------
 K <- 7
 knots <- with(mcycle, list(times = seq_min_max(times, n = K)))
 bfun <- basis(s(times, bs = "cr", k = K), data = new_df, knots = knots)
