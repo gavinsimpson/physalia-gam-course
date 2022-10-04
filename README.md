@@ -27,7 +27,7 @@ Participants should be familiar with RStudio and have some fluency in programmin
 
 ## Pre-course preparation
 
-Please be sure to have at least version 4.1 &mdash' *and preferably version 4.2* &mdash; of R installed (the version of my gratia package we will be using depends on you having at least version 4.1 installed and some slides might contain code that requires version 4.2). Note that R and RStudio are two different things: it is not sufficient to just update RStudio, you also need to update R by installing new versions as they are release.
+Please be sure to have at least version 4.1 &mdash; *and preferably version 4.2* &mdash; of R installed (the version of my gratia package we will be using depends on you having at least version 4.1 installed and some slides might contain code that requires version 4.2). Note that R and RStudio are two different things: it is not sufficient to just update RStudio, you also need to update R by installing new versions as they are release.
 
 To download R go to the [CRAN Download](https://cran.r-project.org/) page and follow the links to download R for your operating system:
 
