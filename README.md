@@ -6,7 +6,7 @@ https://www.physalia-courses.org/
 
 ### Gavin Simpson
 
-#### 14&ndash;18th February, 2022
+#### 10&ndash;14th November, 2022
 
 ## Overview
 
@@ -14,7 +14,7 @@ Most of the statistical methods you are likely to have encountered will have spe
 
 ## Target audience and assumed background
 
-The course is aimed at at graduate students and researchers with limited statistical knowledge; ideally you’d know something about generalised linear models. But we’ll recap what GLMs are so if you’re a little rusty or not everything mentioned in the GLM course makes sense, we have you covered.
+The course is aimed at graduate students and researchers with limited statistical knowledge; ideally you’d know something about generalised linear models. But we’ll recap what GLMs are so if you’re a little rusty or not everything mentioned in the GLM course makes sense, we have you covered. From running the course previously, knowing the difference between "fixed" and "random" effects, and what the terms "random intercepts" and "random slopes" are, will be helpful for the Hierarchical GAM topic, but we don't expect you to be an expert in mixed effects or hierarchical models to take this course.
 
 Participants should be familiar with RStudio and have some fluency in programming R code, including being able to import, manipulate (e.g. modify variables) and visualise data. There will be a mix of lectures, in-class discussion, and hands-on practical exercises along the course.
 
@@ -24,6 +24,50 @@ Participants should be familiar with RStudio and have some fluency in programmin
  2. Be able to fit GAMs in R using the mgcv and brms packages
  3. Know the differences between the types of splines and when to use them in your models
  4. Know how to visualise fitted GAMs and to check the assumptions of the model
+
+## Pre-course preparation
+
+Please be sure to have at least version 4.1 &mdash' *and preferably version 4.2* &mdash; of R installed (the version of my gratia package we will be using depends on you having at least version 4.1 installed and some slides might contain code that requires version 4.2). Note that R and RStudio are two different things: it is not sufficient to just update RStudio, you also need to update R by installing new versions as they are release.
+
+To download R go to the [CRAN Download](https://cran.r-project.org/) page and follow the links to download R for your operating system:
+
+* [Windows](https://cran.r-project.org/bin/windows/)
+* [MacOS X](https://cran.r-project.org/bin/macosx/)
+* [Linux](https://cran.r-project.org/bin/linux/)
+
+To check what version of R you have installed, you can run
+
+```r
+version
+```
+
+in R and look at the `version.string` entry (or the `major` and `minor` entries).
+
+We will make use of several R packages that you'll need to have installed. Prior to the start of the course, please run the following code to update your installed packages and then install the required packages:
+
+```r
+# update any installed R packages
+update.packages(ask = FALSE, checkBuilt = TRUE)
+
+# packages to install
+pkgs <- c("mgcv",  "brms", "qgam", "gamm4", "tidyverse", "readxl", "rstan", "mgcViz")
+
+# install those packages
+install.packages(pkgs, Ncpus = 4) # set Ncpus to # of CPU cores you have
+```
+
+Finally, we will make use of the development version of the gratia package as it is not quite ready for CRAN. You can install this package using the binaries provided by the [rOpenSci](https://ropensci.org/) build service [R-Universe](https://r-universe.dev). To install from my R-Universe, you need to make a *temporary* configuration change to tell R to also install packages from my R-Universe package repo:
+
+```r
+####### **temporary** configuration to install gratia from my R-Universe #######
+# Enable repository from gavinsimpson
+options(repos = c(
+  gavinsimpson = "https://gavinsimpson.r-universe.dev",
+  CRAN = "https://cloud.r-project.org"))
+
+# Download and install gratia
+install.packages("gratia")
+```
 
 ## Programme
 
@@ -68,4 +112,3 @@ We’ll dig under the hood a bit to understand how GAMs work at a practical leve
 
 * Going beyond the mean; fitting distributional models and quantile GAMs
 * Fitting GAMs with brms
-
