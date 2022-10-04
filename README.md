@@ -50,7 +50,8 @@ We will make use of several R packages that you'll need to have installed. Prior
 update.packages(ask = FALSE, checkBuilt = TRUE)
 
 # packages to install
-pkgs <- c("mgcv",  "brms", "qgam", "gamm4", "tidyverse", "readxl", "rstan", "mgcViz")
+pkgs <- c("mgcv",  "brms", "qgam", "gamm4", "tidyverse", "readxl",
+          "rstan", "mgcViz", "DHARMa")
 
 # install those packages
 install.packages(pkgs, Ncpus = 4) # set Ncpus to # of CPU cores you have
