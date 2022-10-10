@@ -1,7 +1,7 @@
 ---
 title: "Belgium AIDS epidemic: solutions"
 author: "Gavin Simpson"
-date: "14/02/2022"
+date: "10/10/2022"
 output: html_document
 ---
 
@@ -24,7 +24,7 @@ vapply(pkgs, library, logical(1L), character.only = TRUE, logical.return = TRUE)
 
 ## Data
 
-The data are contained in `data/belgium.csv`, and consist of three variables
+The data are contained in `data/belgium-aids.csv`, and consist of three variables
 
 1. `year`, the year of each observation
 2. `cases`, the number of AIDS cases per year
