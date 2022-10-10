@@ -48,7 +48,7 @@ ggplot(wasp, aes(x = leafHeight,
 # compare m with a model without leafHeight
 m0 <- update(m, . ~ . - leafHeight)
 
-# GLRT
+# (Generalized) Likelihood Ratio Test (GLRT)
 anova(m0, m, test = "LRT")
 
 # what about polynomials of leafHeight?
