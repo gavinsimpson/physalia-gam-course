@@ -1,9 +1,9 @@
 ---
 title: "Generalized Additive Models"
 subtitle: "a data-driven approach to estimating regression models"
-institute: "Department of Animal Science · Aarhus University"
+institute: "Department of Animal & Veterinary Sciences · Aarhus University"
 author: "Gavin Simpson"
-date: "1400&ndash;2000 CET (1300&ndash;1900 UTC) Monday 14th, 2022"
+date: "1400&ndash;2000 CET (1300&ndash;1900 UTC) Monday 10th, 2022"
 output:
   xaringan::moon_reader:
     css: ['default', 'https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css', 'slides.css']
