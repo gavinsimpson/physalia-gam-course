@@ -760,6 +760,24 @@ Predict the next 36 months
 ```r
 new_df &lt;- with(south, tibble(c.month = 1:(nrow(south) + 36)))
 fv &lt;- fitted_values(m_co2, data = new_df, scale = "response")
+fv
+```
+
+```
+## # A tibble: 543 × 5
+##    c.month fitted     se lower upper
+##      &lt;int&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1       1   312. 0.290   311.  313.
+##  2       2   312. 0.247   312.  313.
+##  3       3   312. 0.205   312.  313.
+##  4       4   313. 0.164   312.  313.
+##  5       5   313. 0.125   313.  313.
+##  6       6   313. 0.0901  313.  313.
+##  7       7   313. 0.0677  313.  314.
+##  8       8   314. 0.0662  314.  314.
+##  9       9   314. 0.0759  314.  314.
+## 10      10   314. 0.0807  314.  314.
+## # … with 533 more rows
 ```
 
 ---
@@ -839,6 +857,24 @@ new_df &lt;- with(south,
                tibble(c.month = 1:(nr + 36),
                       month = rep(seq_len(12), length = nr + 36)))
 fv2 &lt;- fitted_values(m2_co2, data = new_df, scale = "response")
+fv2
+```
+
+```
+## # A tibble: 543 × 6
+##    c.month month fitted     se lower upper
+##      &lt;int&gt; &lt;int&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1       1     1   313. 0.296   312.  314.
+##  2       2     2   313. 0.255   312.  313.
+##  3       3     3   313. 0.214   312.  313.
+##  4       4     4   313. 0.176   312.  313.
+##  5       5     5   313. 0.137   313.  313.
+##  6       6     6   313. 0.103   313.  313.
+##  7       7     7   313. 0.0827  313.  314.
+##  8       8     8   314. 0.0747  314.  314.
+##  9       9     9   314. 0.0785  314.  314.
+## 10      10    10   314. 0.0845  314.  314.
+## # … with 533 more rows
 ```
 
 ---

@@ -387,6 +387,7 @@ summary(m_co2)
 ## ----co2-example-4, echo = TRUE-----------------------------------------------
 new_df <- with(south, tibble(c.month = 1:(nrow(south) + 36)))
 fv <- fitted_values(m_co2, data = new_df, scale = "response")
+fv
 
 
 ## ----co2-example-5, echo = TRUE, fig.height = 5-------------------------------
@@ -412,6 +413,7 @@ new_df <- with(south,
                tibble(c.month = 1:(nr + 36),
                       month = rep(seq_len(12), length = nr + 36)))
 fv2 <- fitted_values(m2_co2, data = new_df, scale = "response")
+fv2
 
 
 ## ----co2-example-9, echo = TRUE, fig.height = 5-------------------------------
