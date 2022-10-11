@@ -18,7 +18,7 @@ Patients who experience a heart attack tend to do better if the condition is dia
 Load the following packages
 
 ```{r load-packages}
-pkgs <- c("readr", "dplyr", "ggplot2")
+pkgs <- c("readr", "dplyr", "ggplot2", "here")
 vapply(pkgs, library, logical(1L), character.only = TRUE, logical.return = TRUE)
 ```
 

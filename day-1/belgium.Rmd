@@ -18,7 +18,7 @@ The data set `belgium.csv` contains the number of cases (`cases`) of AIDS record
 Load the following packages
 
 ```{r load-packages}
-pkgs <- c("readr", "dplyr", "ggplot2")
+pkgs <- c("readr", "dplyr", "ggplot2", "here")
 vapply(pkgs, library, logical(1L), character.only = TRUE, logical.return = TRUE)
 ```
 
