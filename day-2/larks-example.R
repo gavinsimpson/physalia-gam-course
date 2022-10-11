@@ -97,3 +97,5 @@ appraise(crest2, method = "simulate")
 draw(crest, n = 75, rug = FALSE) +
     draw(crest3, n = 75, rug = FALSE) +
     plot_layout(ncol = 2)
+
+# Repeat the modelling using the linnet data
