@@ -370,11 +370,12 @@ ggplot(tibble(Fitted = fitted(crest2),
 
 
 ## ----co2-example-1, echo = TRUE-----------------------------------------------
+library("gratia")
 south <- read_csv(here("data", "south_pole.csv"), col_types = "ddd")
 south
 
 
-## ----co2-example-2, echo = TRUE-----------------------------------------------
+## ----co2-example-2, echo = TRUE, fig.align = "center", out.width = "95%"------
 ggplot(south, aes(x = c.month, y = co2)) + geom_line()
 
 

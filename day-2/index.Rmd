@@ -815,6 +815,7 @@ class: inverse middle center subsection
 # Atmospheric CO<sub>2</sub>
 
 ```{r co2-example-1, echo = TRUE}
+library("gratia")
 south <- read_csv(here("data", "south_pole.csv"), col_types = "ddd")
 south
 ```
@@ -823,7 +824,7 @@ south
 
 # Atmospheric CO<sub>2</sub>
 
-```{r co2-example-2, echo = TRUE}
+```{r co2-example-2, echo = TRUE, fig.align = "center", out.width = "95%"}
 ggplot(south, aes(x = c.month, y = co2)) + geom_line()
 ```
 

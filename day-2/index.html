@@ -681,6 +681,7 @@ class: inverse middle center subsection
 
 
 ```r
+library("gratia")
 south &lt;- read_csv(here("data", "south_pole.csv"), col_types = "ddd")
 south
 ```
@@ -711,7 +712,7 @@ south
 ggplot(south, aes(x = c.month, y = co2)) + geom_line()
 ```
 
-![](index_files/figure-html/co2-example-2-1.svg)&lt;!-- --&gt;
+&lt;img src="index_files/figure-html/co2-example-2-1.svg" width="95%" style="display: block; margin: auto;" /&gt;
 
 ---
 
