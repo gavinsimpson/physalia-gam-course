@@ -1014,6 +1014,7 @@ Fit the GAM with those new basis functions
 A data frame giving a series of measurements of head acceleration in a simulated motorcycle accident, used to test crash helmets
 
 ```{r}
+library("dplyr")
 data(mcycle, package = "MASS")
 mcycle <- as_tibble(mcycle)
 mcycle

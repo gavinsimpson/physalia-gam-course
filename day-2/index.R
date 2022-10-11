@@ -424,6 +424,7 @@ ggplot(fv2, aes(x = c.month, y = fitted)) +
 
 
 ## -----------------------------------------------------------------------------
+library("dplyr")
 data(mcycle, package = "MASS")
 mcycle <- as_tibble(mcycle)
 mcycle
