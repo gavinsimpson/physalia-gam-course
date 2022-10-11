@@ -64,6 +64,8 @@ ck <- ck %>%
 3. Produce the model summary using `summary()`
 
     Is the effect of `ck` on the proportion of patients with heart attacks statistically significant?
+    
+    What is the proportion of deviance explained?
 
 4. Calculate a quick goodness of fit test for the model using the information provided on the residual deviance
 
