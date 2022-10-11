@@ -327,7 +327,7 @@ gtemp <- read_table(URL, col_types = 'nnnnnnnnnnnn', col_names = FALSE) %>%
     select(num_range('X', 1:2)) %>% setNames(nm = c('Year', 'Temperature'))
 
 
-## ----show-hadcrut, echo = TRUE------------------------------------------------
+## ----show-hadcrut, echo = TRUE, dependson = -1--------------------------------
 gtemp
 
 
