@@ -445,16 +445,24 @@ plt
 
 
 ## -----------------------------------------------------------------------------
-new_df <- with(mcycle, tibble(times = seq_min_max(times, n = 100)))
+new_df <- with(mcycle, tibble(times = evenly(times, n = 100)))
 bfun <- basis(s(times), data = new_df)
 bfun
 
 
-## -----------------------------------------------------------------------------
+## ----draw-tprs-basis, fig.show = "hide"---------------------------------------
 draw(bfun)
 
 
-## -----------------------------------------------------------------------------
+## ----draw-tprs-basis, out.width = "95%", echo = FALSE-------------------------
+draw(bfun)
+
+
+## ----draw-tprs-basis-facetted, fig.show = "hide"------------------------------
+draw(bfun) + facet_wrap(~ bf)
+
+
+## ----draw-tprs-basis-facetted, out.width = "90%", echo = FALSE----------------
 draw(bfun) + facet_wrap(~ bf)
 
 
@@ -465,7 +473,7 @@ draw(bfun) + facet_wrap(~ bf)
 
 ## ---- echo = FALSE, out.width = "95%", fig.align = "center"-------------------
 K <- 7
-knots <- with(mcycle, list(times = seq_min_max(times, n = K)))
+knots <- with(mcycle, list(times = evenly(times, n = K)))
 bfun <- basis(s(times, bs = "cr", k = K), data = new_df, knots = knots)
 draw(bfun) + facet_wrap(~ bf) +
   geom_rug(data = as.data.frame(knots), aes(x = times), sides = "b", inherit.aes = FALSE) +
@@ -478,7 +486,7 @@ K <- 7
 
 ## create the knots list
 knots <- with(mcycle,
-              list(times = seq_min_max(times, n = K)))
+              list(times = evenly(times, n = K)))
 
 ## provide `knots` to functions
 bfun <- basis(s(times, bs = "cr", k = K), data = new_df, knots = knots)
@@ -489,11 +497,11 @@ model <- gam(accel ~ s(times, bs = "cr", k = K),
 
 
 ## ----cc-basis-default, results = FALSE----------------------------------------
-month_df <- with(south, tibble(month = seq_min_max(month, n = 100)))
+month_df <- with(south, tibble(month = evenly(month, n = 100)))
 bfun <- basis(s(month, bs = "cc"), data = month_df)
 
 
-## -----------------------------------------------------------------------------
+## ----draw-crs-basis-facetted, fig.align = "center", out.width = "95%"---------
 draw(bfun) + facet_wrap(~ bf)
 
 
@@ -509,8 +517,8 @@ bfun <- basis(s(month, bs = "cc"), data = month_df, knots = knots)
 draw(bfun) + facet_wrap(~ bf)
 
 
-## ---- out.width = "80%"-------------------------------------------------------
-new_df <- with(mcycle, tibble(times = seq_min_max(times, n = 100)))
+## ---- out.width = "85%", fig.align = "center"---------------------------------
+new_df <- with(mcycle, tibble(times = evenly(times, n = 100)))
 bfun <- basis(s(times), data = new_df, constraints = TRUE)
 draw(bfun) + facet_wrap(~ bf)
 
@@ -525,7 +533,7 @@ S
 library("patchwork")
 p1 <- draw(bfun) + facet_wrap(~ bf)
 p2 <- draw(S)
-p1 + p2
+p1 + p2 + plot_layout(ncol = 2)
 
 
 ## -----------------------------------------------------------------------------
@@ -539,15 +547,10 @@ library("patchwork")
 bfun_cc <- basis(s(times, bs = "cr"), data = new_df, constraints = TRUE)
 p1 <- draw(bfun_cc) + facet_wrap(~ bf)
 p2 <- draw(S)
-p1 + p2
+p1 + p2 + plot_layout(ncol = 2)
 
 
-## ----draw-mcycle, fig.show = "hide"-------------------------------------------
-m <- gam(accel ~ s(times), data = mcycle, method = "REML")
-draw(m)
-
-
-## ----draw-mcycle, echo = FALSE, out.width = "85%"-----------------------------
+## ----draw-mcycle, out.width = "90%", fig.align = "center"---------------------
 m <- gam(accel ~ s(times), data = mcycle, method = "REML")
 draw(m)
 
@@ -560,7 +563,7 @@ m_sim <- gam(y ~ s(x0) + s(x1) + s(x2) + s(x3),
 draw(m_sim)
 
 
-## ----draw-four-fun-sim-plot, echo = FALSE, out.width = "85%"------------------
+## ----draw-four-fun-sim-plot, echo = FALSE, out.width = "95%"------------------
 draw(m_sim)
 
 
@@ -572,7 +575,7 @@ draw(m_sim,
      rug = FALSE)                # turn off rug plot
 
 
-## ----draw-mcycle-options-plot, out.width = "85%", echo = FALSE----------------
+## ----draw-mcycle-options-plot, out.width = "95%", echo = FALSE----------------
 draw(m_sim, residuals = TRUE, overall_uncertainty = TRUE,
      unconditional = TRUE, rug = FALSE)
 
