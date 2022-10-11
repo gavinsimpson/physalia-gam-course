@@ -693,7 +693,7 @@ gtemp <- read_table(URL, col_types = 'nnnnnnnnnnnn', col_names = FALSE) %>%
 
 # HadCRUT data set
 
-```{r show-hadcrut, echo = TRUE}
+```{r show-hadcrut, echo = TRUE, dependson = -1}
 gtemp
 ```
 
