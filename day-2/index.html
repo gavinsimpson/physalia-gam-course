@@ -12,11 +12,21 @@
     <textarea id="source">
 class: inverse, middle, left, my-title-slide, title-slide
 
+.title[
 # Generalized Additive Models
+]
+.subtitle[
 ## a data-driven approach to estimating regression models
+]
+.author[
 ### Gavin Simpson
-### Department of Animal Science · Aarhus University
-### 1400–2000 CET (1300–1900 UTC) Tuesday 15th, 2022
+]
+.institute[
+### Department of Animal &amp; Veterinary Sciences · Aarhus University
+]
+.date[
+### 1400–2000 CET (1300–1900 UTC) Tuesday 11th October, 2022
+]
 
 ---
 
@@ -472,20 +482,20 @@ EDF &lt; `\(k\)`
 
 `\(k\)` must be *large enough*, the `\(\lambda\)` penalty does the rest
 
-*Large enough* &amp;mdash; space of functions representable by the basis includes the true function or a close approximation to the tru function
+*Large enough* &amp;mdash; space of functions representable by the basis includes the true function or a close approximation to the true function
 
 Bigger `\(k\)` increases computational cost
 
 In **mgcv**, default `\(k\)` values are arbitrary &amp;mdash; after choosing the model terms, this is the key user choice
 
-**Must be checked!** &amp;mdash; `gam.check()`
+**Must be checked!** &amp;mdash; `k.check()`
 
 
 ---
 
 # GAM summary so far
 
-1. GAMs give us a framework to model  flexible nonlinear relationships
+1. GAMs give us a framework to model flexible nonlinear relationships
 
 2. Use little functions (**basis functions**) to make big functions (**smooths**)
 
@@ -997,25 +1007,25 @@ plt
 
 
 ```r
-new_df &lt;- with(mcycle, tibble(times = seq_min_max(times, n = 100)))
+new_df &lt;- with(mcycle, tibble(times = evenly(times, n = 100)))
 bfun &lt;- basis(s(times), data = new_df)
 bfun
 ```
 
 ```
 ## # A tibble: 1,000 × 5
-##    smooth   by_variable bf    value times
-##    &lt;chr&gt;    &lt;chr&gt;       &lt;fct&gt; &lt;dbl&gt; &lt;dbl&gt;
-##  1 s(times) &lt;NA&gt;        1     -1.64  2.4 
-##  2 s(times) &lt;NA&gt;        1     -1.60  2.96
-##  3 s(times) &lt;NA&gt;        1     -1.57  3.52
-##  4 s(times) &lt;NA&gt;        1     -1.54  4.07
-##  5 s(times) &lt;NA&gt;        1     -1.51  4.63
-##  6 s(times) &lt;NA&gt;        1     -1.47  5.19
-##  7 s(times) &lt;NA&gt;        1     -1.44  5.75
-##  8 s(times) &lt;NA&gt;        1     -1.41  6.30
-##  9 s(times) &lt;NA&gt;        1     -1.38  6.86
-## 10 s(times) &lt;NA&gt;        1     -1.34  7.42
+##    smooth   by_variable bf     value times
+##    &lt;chr&gt;    &lt;chr&gt;       &lt;fct&gt;  &lt;dbl&gt; &lt;dbl&gt;
+##  1 s(times) &lt;NA&gt;        1     -1.64    2.4
+##  2 s(times) &lt;NA&gt;        2     -0.769   2.4
+##  3 s(times) &lt;NA&gt;        3     -1.81    2.4
+##  4 s(times) &lt;NA&gt;        4     -1.04    2.4
+##  5 s(times) &lt;NA&gt;        5     -1.95    2.4
+##  6 s(times) &lt;NA&gt;        6     -1.15    2.4
+##  7 s(times) &lt;NA&gt;        7      2.02    2.4
+##  8 s(times) &lt;NA&gt;        8     -1.22    2.4
+##  9 s(times) &lt;NA&gt;        9      1       2.4
+## 10 s(times) &lt;NA&gt;        10    -1.71    2.4
 ## # … with 990 more rows
 ```
 
@@ -1027,8 +1037,9 @@ bfun
 ```r
 draw(bfun)
 ```
-
-![](index_files/figure-html/unnamed-chunk-3-1.svg)&lt;!-- --&gt;
+.center[
+&lt;img src="index_files/figure-html/draw-tprs-basis-1.svg" width="95%" /&gt;
+]
 
 ---
 
@@ -1038,8 +1049,9 @@ draw(bfun)
 ```r
 draw(bfun) + facet_wrap(~ bf)
 ```
-
-![](index_files/figure-html/unnamed-chunk-4-1.svg)&lt;!-- --&gt;
+.center[
+&lt;img src="index_files/figure-html/draw-tprs-basis-facetted-1.svg" width="90%" /&gt;
+]
 
 ---
 
@@ -1063,13 +1075,13 @@ bfun &lt;- basis(s(times, bs = "cr"), data = new_df)
 draw(bfun) + facet_wrap(~ bf)
 ```
 
-&lt;img src="index_files/figure-html/unnamed-chunk-5-1.svg" width="90%" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/unnamed-chunk-3-1.svg" width="90%" style="display: block; margin: auto;" /&gt;
 
 ---
 
 # Cubic regression splines
 
-&lt;img src="index_files/figure-html/unnamed-chunk-6-1.svg" width="95%" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/unnamed-chunk-4-1.svg" width="95%" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -1086,7 +1098,7 @@ K &lt;- 7
 
 ## create the knots list
 knots &lt;- with(mcycle,
-              list(times = seq_min_max(times, n = K)))
+              list(times = evenly(times, n = K)))
 
 ## provide `knots` to functions
 bfun &lt;- basis(s(times, bs = "cr", k = K), data = new_df, knots = knots)
@@ -1106,7 +1118,7 @@ Specify the basis with `bs = "cc"`
 
 
 ```r
-month_df &lt;- with(south, tibble(month = seq_min_max(month, n = 100)))
+month_df &lt;- with(south, tibble(month = evenly(month, n = 100)))
 bfun &lt;- basis(s(month, bs = "cc"), data = month_df)
 ```
 
@@ -1119,7 +1131,7 @@ bfun &lt;- basis(s(month, bs = "cc"), data = month_df)
 draw(bfun) + facet_wrap(~ bf)
 ```
 
-![](index_files/figure-html/unnamed-chunk-8-1.svg)&lt;!-- --&gt;
+&lt;img src="index_files/figure-html/draw-crs-basis-facetted-1.svg" width="95%" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -1167,12 +1179,12 @@ As long as we can write `\(\mathbf{S}\)` so that it measures the complexity of s
 
 
 ```r
-new_df &lt;- with(mcycle, tibble(times = seq_min_max(times, n = 100)))
+new_df &lt;- with(mcycle, tibble(times = evenly(times, n = 100)))
 bfun &lt;- basis(s(times), data = new_df, constraints = TRUE)
 draw(bfun) + facet_wrap(~ bf)
 ```
 
-&lt;img src="index_files/figure-html/unnamed-chunk-9-1.svg" width="80%" /&gt;
+&lt;img src="index_files/figure-html/unnamed-chunk-6-1.svg" width="85%" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -1207,7 +1219,7 @@ S
 # TPRS basis &amp; penalty
 
 .center[
-&lt;img src="index_files/figure-html/unnamed-chunk-11-1.png" width="100%" /&gt;
+&lt;img src="index_files/figure-html/unnamed-chunk-8-1.png" width="100%" /&gt;
 ]
 ---
 
@@ -1225,7 +1237,7 @@ S &lt;- penalty(m, smooth = "s(times)")
 # CRS basis &amp; penalty
 
 .center[
-&lt;img src="index_files/figure-html/unnamed-chunk-13-1.png" width="100%" /&gt;
+&lt;img src="index_files/figure-html/unnamed-chunk-10-1.png" width="100%" /&gt;
 ]
 
 ---
@@ -1267,13 +1279,8 @@ m &lt;- gam(accel ~ s(times), data = mcycle, method = "REML")
 draw(m)
 ```
 
----
+&lt;img src="index_files/figure-html/draw-mcycle-1.svg" width="90%" style="display: block; margin: auto;" /&gt;
 
-# Plotting smooths
-
-.center[
-&lt;img src="index_files/figure-html/draw-mcycle-1.svg" width="85%" /&gt;
-]
 
 ---
 
@@ -1313,7 +1320,7 @@ draw(m_sim)
 # Plotting smooths
 
 .center[
-&lt;img src="index_files/figure-html/draw-four-fun-sim-plot-1.svg" width="85%" /&gt;
+&lt;img src="index_files/figure-html/draw-four-fun-sim-plot-1.svg" width="95%" /&gt;
 ]
 
 ---
@@ -1334,7 +1341,7 @@ draw(m_sim,
 # Plotting smooths
 
 .center[
-&lt;img src="index_files/figure-html/draw-mcycle-options-plot-1.svg" width="85%" /&gt;
+&lt;img src="index_files/figure-html/draw-mcycle-options-plot-1.svg" width="95%" /&gt;
 ]
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
@@ -1385,6 +1392,19 @@ if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
     deleted = true;
   });
 })();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
 (function() {
   "use strict"
   // Replace <script> tags in slides area to make them executable

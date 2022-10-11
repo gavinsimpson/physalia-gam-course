@@ -1,9 +1,9 @@
 ---
 title: "Generalized Additive Models"
 subtitle: "a data-driven approach to estimating regression models"
-institute: "Department of Animal Science · Aarhus University"
+institute: "Department of Animal & Veterinary Sciences · Aarhus University"
 author: "Gavin Simpson"
-date: "1400&ndash;2000 CET (1300&ndash;1900 UTC) Tuesday 15th, 2022"
+date: "1400&ndash;2000 CET (1300&ndash;1900 UTC) Tuesday 11th October, 2022"
 output:
   xaringan::moon_reader:
     css: ['default', 'https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css', 'slides.css']
@@ -661,20 +661,20 @@ EDF < $k$
 
 $k$ must be *large enough*, the $\lambda$ penalty does the rest
 
-*Large enough* &mdash; space of functions representable by the basis includes the true function or a close approximation to the tru function
+*Large enough* &mdash; space of functions representable by the basis includes the true function or a close approximation to the true function
 
 Bigger $k$ increases computational cost
 
 In **mgcv**, default $k$ values are arbitrary &mdash; after choosing the model terms, this is the key user choice
 
-**Must be checked!** &mdash; `gam.check()`
+**Must be checked!** &mdash; `k.check()`
 
 
 ---
 
 # GAM summary so far
 
-1. GAMs give us a framework to model  flexible nonlinear relationships
+1. GAMs give us a framework to model flexible nonlinear relationships
 
 2. Use little functions (**basis functions**) to make big functions (**smooths**)
 
@@ -1042,7 +1042,7 @@ plt
 # TPRS basis
 
 ```{r}
-new_df <- with(mcycle, tibble(times = seq_min_max(times, n = 100)))
+new_df <- with(mcycle, tibble(times = evenly(times, n = 100)))
 bfun <- basis(s(times), data = new_df)
 bfun
 ```
@@ -1051,17 +1051,25 @@ bfun
 
 # TPRS basis
 
-```{r}
+```{r draw-tprs-basis, fig.show = "hide"}
 draw(bfun)
 ```
+.center[
+```{r draw-tprs-basis, out.width = "95%", echo = FALSE}
+```
+]
 
 ---
 
 # TPRS basis
 
-```{r}
+```{r draw-tprs-basis-facetted, fig.show = "hide"}
 draw(bfun) + facet_wrap(~ bf)
 ```
+.center[
+```{r draw-tprs-basis-facetted, out.width = "90%", echo = FALSE}
+```
+]
 
 ---
 
@@ -1090,7 +1098,7 @@ draw(bfun) + facet_wrap(~ bf)
 
 ```{r, echo = FALSE, out.width = "95%", fig.align = "center"}
 K <- 7
-knots <- with(mcycle, list(times = seq_min_max(times, n = K)))
+knots <- with(mcycle, list(times = evenly(times, n = K)))
 bfun <- basis(s(times, bs = "cr", k = K), data = new_df, knots = knots)
 draw(bfun) + facet_wrap(~ bf) +
   geom_rug(data = as.data.frame(knots), aes(x = times), sides = "b", inherit.aes = FALSE) +
@@ -1111,7 +1119,7 @@ K <- 7
 
 ## create the knots list
 knots <- with(mcycle,
-              list(times = seq_min_max(times, n = K)))
+              list(times = evenly(times, n = K)))
 
 ## provide `knots` to functions
 bfun <- basis(s(times, bs = "cr", k = K), data = new_df, knots = knots)
@@ -1130,7 +1138,7 @@ Cyclic cubic regression splines are CRS but with the additional constraint that 
 Specify the basis with `bs = "cc"`
 
 ```{r cc-basis-default, results = FALSE}
-month_df <- with(south, tibble(month = seq_min_max(month, n = 100)))
+month_df <- with(south, tibble(month = evenly(month, n = 100)))
 bfun <- basis(s(month, bs = "cc"), data = month_df)
 ```
 
@@ -1138,7 +1146,7 @@ bfun <- basis(s(month, bs = "cc"), data = month_df)
 
 # Cyclic cubic regression splines
 
-```{r}
+```{r draw-crs-basis-facetted, fig.align = "center", out.width = "95%"}
 draw(bfun) + facet_wrap(~ bf)
 ```
 
@@ -1186,8 +1194,8 @@ As long as we can write $\mathbf{S}$ so that it measures the complexity of smoot
 
 # TPRS basis
 
-```{r, out.width = "80%"}
-new_df <- with(mcycle, tibble(times = seq_min_max(times, n = 100)))
+```{r, out.width = "85%", fig.align = "center"}
+new_df <- with(mcycle, tibble(times = evenly(times, n = 100)))
 bfun <- basis(s(times), data = new_df, constraints = TRUE)
 draw(bfun) + facet_wrap(~ bf)
 ```
@@ -1211,7 +1219,7 @@ S
 library("patchwork")
 p1 <- draw(bfun) + facet_wrap(~ bf)
 p2 <- draw(S)
-p1 + p2
+p1 + p2 + plot_layout(ncol = 2)
 ```
 ]
 ---
@@ -1234,7 +1242,7 @@ library("patchwork")
 bfun_cc <- basis(s(times, bs = "cr"), data = new_df, constraints = TRUE)
 p1 <- draw(bfun_cc) + facet_wrap(~ bf)
 p2 <- draw(S)
-p1 + p2
+p1 + p2 + plot_layout(ncol = 2)
 ```
 ]
 
@@ -1271,19 +1279,11 @@ Has methods for many of the function outputs in {gratia} and for models
 
 # Plotting smooths
 
-```{r draw-mcycle, fig.show = "hide"}
+```{r draw-mcycle, out.width = "90%", fig.align = "center"}
 m <- gam(accel ~ s(times), data = mcycle, method = "REML")
 draw(m)
 ```
 
----
-
-# Plotting smooths
-
-.center[
-```{r draw-mcycle, echo = FALSE, out.width = "85%"}
-```
-]
 
 ---
 
@@ -1302,7 +1302,7 @@ draw(m_sim)
 # Plotting smooths
 
 .center[
-```{r draw-four-fun-sim-plot, echo = FALSE, out.width = "85%"}
+```{r draw-four-fun-sim-plot, echo = FALSE, out.width = "95%"}
 draw(m_sim)
 ```
 ]
@@ -1324,7 +1324,7 @@ draw(m_sim,
 # Plotting smooths
 
 .center[
-```{r draw-mcycle-options-plot, out.width = "85%", echo = FALSE}
+```{r draw-mcycle-options-plot, out.width = "95%", echo = FALSE}
 draw(m_sim, residuals = TRUE, overall_uncertainty = TRUE,
      unconditional = TRUE, rug = FALSE)
 ```
