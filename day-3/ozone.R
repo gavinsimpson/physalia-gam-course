@@ -1,4 +1,4 @@
-# Anaylze the Ozone data set from LA
+# Analyze the Ozone data set from LA
 
 #' Ozone in LA in 1976
 #'
