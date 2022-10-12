@@ -1,9 +1,9 @@
 ---
 title: "Generalized Additive Models"
 subtitle: "a data-driven approach to estimating regression models"
-institute: "Department of Animal Science · Aarhus University"
+institute: "Department of Animal & Veterinary Sciences · Aarhus University"
 author: "Gavin Simpson"
-date: "1400&ndash;2000 CET (1300&ndash;1900 UTC) Wednesday 16th, 2022"
+date: "1400&ndash;2000 CET (1300&ndash;1900 UTC) Wednesday 13th, 2022"
 output:
   xaringan::moon_reader:
     css: ['default', 'https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css', 'slides.css']
@@ -138,7 +138,7 @@ Panels 1&ndash;15 are the basis functions
 
 .center[
 ```{r include-simons-tprs-2d-image, out.width = "45%", echo = FALSE}
-knitr::include_graphics(here("day-3/resources/wood-2ed-fig-5-12-2-d-tprs-basis-funs.png"))
+knitr::include_graphics("resources/wood-2ed-fig-5-12-2-d-tprs-basis-funs.png")
 ```
 ]
 
@@ -150,16 +150,25 @@ Source: Wood SN (2017)
 
 # Beyond linearity
 
+How do we test is we need something more than a linear effect?
+
 .row[
 
 .col-6[
+
+Include a linear parametric term but remove it from the null space of the spline
+
+`m = c(2, 0)` implies 2<sup>nd</sup> derivative penalty but zero null space
+
+Null space is the set of functions in the basis that the penalty doesn't affect
+
 ```{r beyond-linearity}
 n <- 100
 set.seed(2)
 df <- tibble(x = runif(n),
              y = x + x^2 * 0.2 + rnorm(n) * 0.1)
 
-model <- gam(y ~ x + s(x, m = c(2,0)),
+model <- gam(y ~ x + s(x, m = c(2, 0)),
              data = df, method = "REML")
 ```
 ]
@@ -176,14 +185,15 @@ summary(model)
 
 # Beyond linearity
 
-```{r beyond-linearity-plot, fig.show = "hide"}
+```{r beyond-linearity-plot, out.width = "95%", fig.align = "center"}
 draw(model, parametric = TRUE)
 ```
 
-.center[
-```{r beyond-linearity-plot, out.width = "95%", echo = FALSE}
-```
-]
+---
+
+# Derivatives of smooths
+
+Derivatives of smooths 
 
 ---
 
@@ -857,7 +867,7 @@ Cross Validated question
 
 .center[
 ```{r cross-validated, echo = FALSE}
-knitr::include_graphics(here('day-3/resources', 'cross-validated.png'))
+knitr::include_graphics("resources/cross-validated.png")
 ```
 ]
 
@@ -868,8 +878,8 @@ knitr::include_graphics(here('day-3/resources', 'cross-validated.png'))
 
 # Galveston Bay
 
-```{r load-galveston}
-galveston <- read_csv(here('data', 'galveston.csv')) %>%
+```{r load-galveston, class.output = "small"}
+galveston <- read_csv("https://bit.ly/gam-galveston") %>%
     mutate(datetime = as.POSIXct(paste(DATE, TIME),
                                  format = '%m/%d/%y %H:%M', tz = "CDT"),
            STATION_ID = factor(STATION_ID),
@@ -968,18 +978,18 @@ whilst the remaining tensor product smooths model smooth interactions between th
 knots <- list(DoY = c(0.5, 366.5))
 m <- bam(MEASUREMENT ~
              s(ToD, k = 10) +
-             s(DoY, k = 12, bs = 'cc') +
+             s(DoY, k = 12, bs = "cc") +
              s(YEAR, k = 30) +
-             s(LONGITUDE, LATITUDE, k = 100, bs = 'ds', m = c(1, 0.5)) +
-             ti(DoY, YEAR, bs = c('cc', 'tp'), k = c(12, 15)) +
-             ti(LONGITUDE, LATITUDE, ToD, d = c(2,1), bs = c('ds','tp'),
+             s(LONGITUDE, LATITUDE, k = 100, bs = "ds", m = c(1, 0.5)) +
+             ti(DoY, YEAR, bs = c("cc", "tp"), k = c(12, 15)) +
+             ti(LONGITUDE, LATITUDE, ToD, d = c(2,1), bs = c("ds", "tp"),
                 m = list(c(1, 0.5), NA), k = c(20, 10)) +
-             ti(LONGITUDE, LATITUDE, DoY, d = c(2,1), bs = c('ds','cc'),
+             ti(LONGITUDE, LATITUDE, DoY, d = c(2,1), bs = c("ds", "cc"),
                 m = list(c(1, 0.5), NA), k = c(25, 12)) +
-             ti(LONGITUDE, LATITUDE, YEAR, d = c(2,1), bs = c('ds','tp'),
+             ti(LONGITUDE, LATITUDE, YEAR, d = c(2,1), bs = c("ds", "tp"),
                 m = list(c(1, 0.5), NA), k = c(25, 15)),
-         data = galveston, method = 'fREML', knots = knots,
-         nthreads = c(4, 1), discrete = TRUE)
+         data = galveston, method = "fREML", knots = knots,
+         nthreads = c(6, 1), discrete = FALSE)
 ```
 
 ---
@@ -989,11 +999,11 @@ m <- bam(MEASUREMENT ~
 ```{r galveston-simple-model}
 m.sub <- bam(MEASUREMENT ~
              s(ToD, k = 10) +
-             s(DoY, k = 12, bs = 'cc') +
+             s(DoY, k = 12, bs = "cc") +
              s(YEAR, k = 30) +
-             s(LONGITUDE, LATITUDE, k = 100, bs = 'ds', m = c(1, 0.5)) +
-             ti(DoY, YEAR, bs = c('cc', 'tp'), k = c(12, 15)),
-         data = galveston, method = 'fREML', knots = knots,
+             s(LONGITUDE, LATITUDE, k = 100, bs = "ds", m = c(1, 0.5)) +
+             ti(DoY, YEAR, bs = c("cc", "tp"), k = c(12, 15)),
+         data = galveston, method = "fREML", knots = knots,
          nthreads = c(4, 1), discrete = TRUE)
 ```
 
@@ -1010,7 +1020,7 @@ AIC(m, m.sub)
 
 .smaller[
 ```{r galveston-compare-models-anova}
-anova(m, m.sub, test = 'F')
+anova(m, m.sub, test = "F")
 ```
 ]
 
@@ -1037,7 +1047,8 @@ plot(m, pages = 1, scheme = 2, shade = TRUE)
 # Galveston Bay &mdash; full model plot
 
 ```{r galveston-full-model-draw}
-draw(m, scales = 'free')
+draw(m, scales = "free", rug = FALSE, n = 50) +  plot_layout(widths = 1) &
+  theme(strip.text.x = element_text(size = 8))
 ```
 
 ---
@@ -1045,17 +1056,16 @@ draw(m, scales = 'free')
 # Galveston Bay &mdash; predict
 
 ```{r galveston-full-predict}
-pdata <- with(galveston,
-              expand.grid(ToD = 12,
-                          DoY = 180,
-                          YEAR = seq(min(YEAR), max(YEAR), by = 1),
-                          LONGITUDE = seq_min_max(LONGITUDE, n = 100),
-                          LATITUDE  = seq_min_max(LATITUDE, n = 100)))
-fit <- predict(m, pdata)
-ind <- exclude.too.far(pdata$LONGITUDE, pdata$LATITUDE,
-                       galveston$LONGITUDE, galveston$LATITUDE, dist = 0.1)
-fit[ind] <- NA
-pred <- cbind(pdata, Fitted = fit)
+pdata <- data_slice(m, ToD = 12, DoY = 180,
+                    YEAR = evenly(YEAR, by = 1),
+                    LONGITUDE = evenly(LONGITUDE, n = 50),
+                    LATITUDE  = evenly(LATITUDE, n = 50))
+fv <- fitted_values(m, data = pdata)
+# set fitted values to NA for grid points that are too far from the data
+ind <- too_far(pdata$LONGITUDE, pdata$LATITUDE,
+               galveston$LONGITUDE, galveston$LATITUDE, dist = 0.1)
+fv <- fv %>%
+  mutate(fitted = if_else(ind, NA_real_, fitted))
 ```
 
 ---
@@ -1063,11 +1073,14 @@ pred <- cbind(pdata, Fitted = fit)
 # Galveston Bay &mdash; plot
 
 ```{r galveston-full-predict-plot, fig.show = 'hide'}
-plt <- ggplot(pred, aes(x = LONGITUDE, y = LATITUDE)) +
-    geom_raster(aes(fill = Fitted)) + facet_wrap(~ YEAR, ncol = 12) +
-    scale_fill_viridis(name = expression(degree*C), option = 'plasma', na.value = 'transparent') +
+plt <- ggplot(fv, aes(x = LONGITUDE, y = LATITUDE)) +
+    geom_raster(aes(fill = fitted)) + facet_wrap(~ YEAR, ncol = 12) +
+    scale_fill_viridis(name = expression(degree*C), option = "plasma",
+      na.value = "transparent") +
     coord_quickmap() +
-    theme(legend.position = 'right')
+    scale_x_continuous(guide = guide_axis(n.dodge = 2,
+                                          check.overlap = TRUE)) +
+    theme(legend.position = "top")
 plt
 ```
 
@@ -1083,16 +1096,16 @@ plt
 # Galveston Bay &mdash;
 
 ```{r galveston-animation, echo = FALSE, results = 'hide'}
-p <- ggplot(pred, aes(x = LONGITUDE, y = LATITUDE, frame = YEAR)) +
-    geom_raster(aes(fill = Fitted)) +
-    scale_fill_viridis(name = expression(degree*C), option = 'plasma',
-                       na.value = 'transparent') +
+p <- ggplot(fv, aes(x = LONGITUDE, y = LATITUDE, frame = YEAR)) +
+    geom_raster(aes(fill = fitted)) +
+    scale_fill_viridis(name = expression(degree*C), option = "plasma",
+                       na.value = "transparent") +
     coord_quickmap() +
-    theme(legend.position = 'right')+
-    labs(x = 'Longitude', y = 'Latitude')
+    theme(legend.position = "right") +
+    labs(x = "Longitude", y = "Latitude")
 
 anim <- p + transition_time(YEAR) +
-    ggtitle('Year {round(frame_time, 0)}')
+    ggtitle("Year {round(frame_time, 0)}")
 
 anim <- animate(anim,
                 nframes = 200, height = anim_height, width = anim_width,
@@ -1107,21 +1120,15 @@ anim_save('./resources/galveston-animation.gif', anim)
 
 # Galveston Bay &mdash; plot trends
 
-```{r galveston-trends-by-month, fig.show = 'hide'}
-pdata <- with(galveston,
-              expand.grid(ToD = 12,
-                          DoY = c(1, 90, 180, 270),
-                          YEAR = seq(min(YEAR), max(YEAR), length = 500),
-                          LONGITUDE = -94.8751,
-                          LATITUDE  = 29.50866))
+```{r galveston-trends-by-month, fig.show = "hide"}
+ds <- data_slice(m, ToD = 12, DoY = c(1, 90, 180, 270),
+  YEAR = evenly(YEAR, n = 250),
+  LONGITUDE = -94.8751, LATITUDE  = 29.50866)
+fv <- fitted_values(m, data = ds, scale = "response")
 
-fit <- data.frame(predict(m, newdata = pdata, se.fit = TRUE))
-fit <- transform(fit, upper = fit + (2 * se.fit), lower = fit - (2 * se.fit))
-pred <- cbind(pdata, fit)
-
-plt2 <- ggplot(pred, aes(x = YEAR, y = fit, group = factor(DoY))) +
-    geom_ribbon(aes(ymin = lower, ymax = upper), fill = 'grey', alpha = 0.5) +
-    geom_line() + facet_wrap(~ DoY, scales = 'free_y') +
+plt2 <- ggplot(fv, aes(x = YEAR, y = fitted, group = factor(DoY))) +
+    geom_ribbon(aes(ymin = lower, ymax = upper), fill = "black", alpha = 0.2) +
+    geom_line() + facet_wrap(~ DoY, scales = "free_y") +
     labs(x = NULL, y = expression(Temperature ~ (degree * C)))
 plt2
 ```
