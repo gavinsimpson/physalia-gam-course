@@ -1,5 +1,5 @@
 # packages
-pkgs <- c("ggplot2", "here", "readr", "mgcv", "gratia", "dplyr", "patchwork")
+pkgs <- c("ggplot2", "readr", "mgcv", "gratia", "dplyr", "patchwork")
 vapply(pkgs, library, logical(1L), logical.return = TRUE,
        character.only = TRUE)
 
