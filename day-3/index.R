@@ -357,7 +357,8 @@ plot(resids)
 ## ----setup-shrinkage-example--------------------------------------------------
 ## an example of automatic model selection via null space penalization
 n <- 200
-dat <- data_sim("eg1", n=n, scale=.15, dist = 'poisson', seed = 3) ## simulate data
+dat <- data_sim("eg1", n = n, scale = .15, dist = "poisson", seed = 3) ## simulate data
+set.seed(21)
 dat <- dat %>% mutate(x4 = runif(n, 0, 1), x5 = runif(n, 0, 1),
                       f4 = rep(0, n), f5 = rep(0, n))   ## spurious
 
@@ -368,7 +369,7 @@ b <- gam(y ~ s(x0) + s(x1) + s(x2) + s(x3) +
          select = TRUE)
 
 
-## ----shrinkage-example-truth, echo = FALSE------------------------------------
+## ----shrinkage-example-truth, echo = FALSE, dependson=-1----------------------
 p1 <- ggplot(dat, aes(x = x0, y = f0)) + geom_line()
 p2 <- ggplot(dat, aes(x = x1, y = f1)) + geom_line()
 p3 <- ggplot(dat, aes(x = x2, y = f2)) + geom_line()
@@ -381,11 +382,11 @@ p1 + p2 + p3 + p4 + p5 + p6 +
   plot_annotation(tag_levels = "1", tag_prefix = "x")
 
 
-## ----shrinkage-example-summary------------------------------------------------
+## ----shrinkage-example-summary, dependson=-1----------------------------------
 summary(b)
 
 
-## ----shrinkage-example-plot, fig.align = "center", out.width = "95%"----------
+## ----shrinkage-example-plot, fig.align = "center", out.width = "95%", dependson=-1----
 draw(b, scales = 'fixed')
 
 

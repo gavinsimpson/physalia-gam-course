@@ -896,7 +896,8 @@ Marra &amp; Wood (2011) show that the double penalty and the shrinkage smooth ap
 ```r
 ## an example of automatic model selection via null space penalization
 n &lt;- 200
-dat &lt;- data_sim("eg1", n=n, scale=.15, dist = 'poisson', seed = 3) ## simulate data
+dat &lt;- data_sim("eg1", n = n, scale = .15, dist = "poisson", seed = 3) ## simulate data
+set.seed(21)
 dat &lt;- dat %&gt;% mutate(x4 = runif(n, 0, 1), x5 = runif(n, 0, 1),
                       f4 = rep(0, n), f5 = rep(0, n))   ## spurious
 ```
