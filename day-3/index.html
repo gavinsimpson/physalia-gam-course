@@ -25,7 +25,7 @@ class: inverse, middle, left, my-title-slide, title-slide
 ### Department of Animal &amp; Veterinary Sciences · Aarhus University
 ]
 .date[
-### 1400–2000 CET (1300–1900 UTC) Wednesday 13th, 2022
+### 1400–2000 CET (1300–1900 UTC) Wednesday 13th October, 2022
 ]
 
 ---
@@ -94,15 +94,21 @@ Source: Wood SN (2017)
 
 How do we test is we need something more than a linear effect?
 
-.row[
-
-.col-6[
+--
 
 Include a linear parametric term but remove it from the null space of the spline
 
 `m = c(2, 0)` implies 2&lt;sup&gt;nd&lt;/sup&gt; derivative penalty but zero null space
 
 Null space is the set of functions in the basis that the penalty doesn't affect
+
+---
+
+# Beyond linearity
+
+.row[
+
+.col-6[
 
 
 ```r
@@ -165,7 +171,11 @@ draw(model, parametric = TRUE)
 
 # Derivatives of smooths
 
-Derivatives of smooths 
+Derivatives of smooths are useful for a number of statistical problems
+
+* The 1st derivative at a specified value of the covariate is the GAM equivalent of the `\(\beta\)` in a (G)LM
+
+* Can also be used to investigate *where* in the range of the covariate `\(\hat{y}_i\)` changes
 
 ---
 
@@ -202,9 +212,7 @@ sm_plt &lt;- draw(m, residuals = TRUE)
 sm_plt
 ```
 
-.center[
-&lt;img src="index_files/figure-html/draw-mcycle-1.svg" width="90%" /&gt;
-]
+&lt;img src="index_files/figure-html/draw-mcycle-1.svg" width="70%" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -243,9 +251,7 @@ fd_plt &lt;- draw(fd) + labs(title = "First derivative s(times)")
 sm_plt + fd_plt + plot_layout(ncol = 2)
 ```
 
-.center[
-&lt;img src="index_files/figure-html/draw-derivatives-times-smooth-1.svg" width="90%" /&gt;
-]
+&lt;img src="index_files/figure-html/draw-derivatives-times-smooth-1.svg" width="90%" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -258,9 +264,7 @@ fd2_plt &lt;- draw(fd2)
 fd_plt + fd2_plt + plot_layout(ncol = 2)
 ```
 
-.center[
-&lt;img src="index_files/figure-html/draw-derivatives-times-smooth-2-1.svg" width="80%" /&gt;
-]
+&lt;img src="index_files/figure-html/draw-derivatives-times-smooth-2-1.svg" width="80%" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -274,9 +278,7 @@ fd2_plt &lt;- draw(fd2) + labs(title = "Second derivative s(times)")
 fd_plt + fd2_plt + plot_layout(ncol = 2)
 ```
 
-.center[
-&lt;img src="index_files/figure-html/draw-derivatives-times-smooth-2-right-1.svg" width="80%" /&gt;
-]
+&lt;img src="index_files/figure-html/draw-derivatives-times-smooth-2-right-1.svg" width="80%" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -307,28 +309,57 @@ Two ways to fit smooth interactions
 
 ---
 
+# Smooth interactions
+
 
 
 ![](index_files/figure-html/draw-tprs-vs-tensor-product-truth-1.svg)&lt;!-- --&gt;
 
 ---
 
-```{r-tprs-vs-tensor-product}
+# Smooth interactions
+
+
+```r
 df
+```
+
+```
+## # A tibble: 500 × 3
+##          y       x       z
+##      &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
+##  1  0.416  0.0418  0.415  
+##  2  0.714  0.0244  0.531  
+##  3  0.303  0.0216  0.00325
+##  4 -0.158  0.0440  0.252  
+##  5  0.349  0.0382  0.155  
+##  6  0.0949 0.00274 0.879  
+##  7  0.569  0.00996 0.204  
+##  8  0.145  0.0343  0.584  
+##  9  0.0736 0.0450  0.804  
+## 10  0.320  0.00229 0.265  
+## # … with 490 more rows
+```
+
+```r
 m_tprs &lt;- gam(y ~ s(x, z), data = df, method = "REML")
 m_te   &lt;- gam(y ~ te(x, z), data = df, method = "REML")
 ```
 
 ---
 
+# Smooth interactions
+
 
 ```r
 truth_plt + (draw(m_tprs) + coord_cartesian()) + draw(m_te) + plot_layout(ncol = 3)
 ```
 
-![](index_files/figure-html/draw-tprs-vs-tensor-product-1.svg)&lt;!-- --&gt;
+&lt;img src="index_files/figure-html/draw-tprs-vs-tensor-product-1.svg" width="95%" /&gt;
 
 ---
+
+# Smooth interactions
 
 
 ```r
@@ -437,9 +468,9 @@ So you have a GAM:
 
 # GAMs are models too
 
-How accurate your predictions will be depends on how good the model is
+How accurate your predictions depends on how good the model is
 
-![](index_files/figure-html/misspecify-1.svg)&lt;!-- --&gt;
+&lt;img src="index_files/figure-html/misspecify-1.svg" width="95%" /&gt;
 
 ---
 class: inverse center middle subsection
@@ -450,6 +481,11 @@ class: inverse center middle subsection
 
 # Simulated data
 
+`y` varies sinusoidally with `x1`
+
+`y` varies sigmoidally with `x2`
+
+Simulate response data from Gaussian, negative binomial, &amp; binomial distributions
 
 ```r
 set.seed(2)
@@ -618,11 +654,11 @@ class: inverse middle center subsection
 
 
 ```r
-norm_model &lt;- gam(y_norm ~ s(x1, k=12) + s(x2, k=12), method = 'REML')
+norm_model &lt;- gam(y_norm ~ s(x1, k=12) + s(x2, k=12), method="REML")
 gam.check(norm_model, rep = 500)
 ```
 
-![](index_files/figure-html/gam_check_plots1-1.svg)&lt;!-- --&gt;
+&lt;img src="index_files/figure-html/gam_check_plots1-1.svg" width="90%" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -630,11 +666,11 @@ gam.check(norm_model, rep = 500)
 
 
 ```r
-pois_model &lt;- gam(y_negbinom ~ s(x1, k=12) + s(x2, k=12), family=poisson, method= 'REML')
+pois_model &lt;- gam(y_negbinom ~ s(x1, k=12) + s(x2, k=12), family=poisson, method="REML")
 gam.check(pois_model, rep = 500)
 ```
 
-![](index_files/figure-html/gam_check_plots2-1.svg)&lt;!-- --&gt;
+&lt;img src="index_files/figure-html/gam_check_plots2-1.svg" width="90%" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -642,11 +678,11 @@ gam.check(pois_model, rep = 500)
 
 
 ```r
-negbin_model &lt;- gam(y_negbinom ~ s(x1, k=12) + s(x2, k=12), family = nb, method = 'REML')
+negbin_model &lt;- gam(y_negbinom ~ s(x1, k=12) + s(x2, k=12), family = nb, method="REML")
 gam.check(negbin_model, rep = 500)
 ```
 
-![](index_files/figure-html/gam_check_plots3-1.svg)&lt;!-- --&gt;
+&lt;img src="index_files/figure-html/gam_check_plots3-1.svg" width="90%" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -658,6 +694,120 @@ appraise(negbin_model, method = 'simulate')
 ```
 
 ![](index_files/figure-html/appraise-gam-check-example-1.svg)&lt;!-- --&gt;
+
+---
+
+# DHARMa &amp;mdash; alternate diagnostics
+
+The {DHARMa} 📦 by Florian Hartig provides additional diagnostics for a wide range of models
+
+DHARMa generates randomised quantile residuals from models
+
+Randomised quantile residuals are uniformly distributed
+
+These residuals are then used in model diagnostics
+
+---
+
+# DHARMa &amp;mdash; alternate diagnostics
+
+1. Simulate new response data from the fitted model for each observation.
+
+2. For each observation, calculate the empirical cumulative distribution function (ECDF) for the simulated observations, which describes the possible values at the predictor combination of the observed value, assuming the fitted model is correct.
+
+3. The residual is then defined as the value of the ECDF at the value of the observed data, so a residual of 0 means that all simulated values are larger than the observed value, and a residual of 0.5 means half of the simulated values are larger than the observed value.
+
+---
+
+# DHARMa &amp;mdash; alternate diagnostics
+
+&lt;img src="resources/dharma-randomised-residuals.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# DHARMa &amp;mdash; over dispersion
+
+A quick test for over dispersion is given by `testDispersion()`
+
+For the Poisson GAM fitted to Negative binomial data:
+
+
+```r
+library("mgcViz")
+library("DHARMa")
+
+testDispersion(pois_model, plot = FALSE)
+```
+
+```
+## 
+## 	DHARMa nonparametric dispersion test via sd of residuals fitted vs.
+## 	simulated
+## 
+## data:  simulationOutput
+## dispersion = 6.9332, p-value &lt; 2.2e-16
+## alternative hypothesis: two.sided
+```
+
+---
+
+# DHARMa &amp;mdash; over dispersion
+
+A quick test for over dispersion is given by `testDispersion()`
+
+For the Negative binomial GAM fitted to Negative binomial data:
+
+
+```r
+testDispersion(negbin_model, plot = FALSE)
+```
+
+```
+## 
+## 	DHARMa nonparametric dispersion test via sd of residuals fitted vs.
+## 	simulated
+## 
+## data:  simulationOutput
+## dispersion = 0.92591, p-value = 0.736
+## alternative hypothesis: two.sided
+```
+
+---
+
+# DHARMa &amp;mdash; randomised quantile residuals
+
+To generate just the randomised quantile residuals we use `simulateResiduals()`
+
+Do this to compute and store the residuals once, rather than for each test
+
+
+```r
+resids &lt;- simulateResiduals(fittedModel = pois_model, plot = FALSE)
+```
+
+---
+
+# DHARMa &amp;mdash; randomised quantile residuals
+
+
+```r
+plot(resids)
+```
+
+&lt;img src="index_files/figure-html/dharma-plots-possion-1.svg" width="90%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# DHARMa &amp;mdash; randomised quantile residuals
+
+
+```r
+resids &lt;- simulateResiduals(fittedModel = negbin_model, plot = FALSE)
+plot(resids)
+```
+
+&lt;img src="index_files/figure-html/dharma-plots-negbin-1.svg" width="90%" style="display: block; margin: auto;" /&gt;
+
 
 ---
 class: inverse center middle subsection
@@ -813,7 +963,7 @@ summary(b)
 draw(b, scales = 'fixed')
 ```
 
-![](index_files/figure-html/shrinkage-example-plot-1.svg)&lt;!-- --&gt;
+&lt;img src="index_files/figure-html/shrinkage-example-plot-1.svg" width="95%" style="display: block; margin: auto;" /&gt;
 
 ---
 class: inverse middle center subsection
@@ -848,6 +998,7 @@ Cross Validated question
 
 # Galveston Bay
 
+.small[
 
 ```r
 galveston &lt;- read_csv("https://bit.ly/gam-galveston") %&gt;%
@@ -860,7 +1011,7 @@ galveston &lt;- read_csv("https://bit.ly/gam-galveston") %&gt;%
 galveston
 ```
 
-```{.small}
+```
 ## # A tibble: 15,276 × 13
 ##    STATION_ID DATE     TIME   LATITUDE LONGIT…¹  YEAR MONTH   DAY SEASON MEASU…²
 ##    &lt;fct&gt;      &lt;chr&gt;    &lt;time&gt;    &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;    &lt;dbl&gt;
@@ -877,6 +1028,7 @@ galveston
 ## # … with 15,266 more rows, 3 more variables: datetime &lt;dttm&gt;, DoY &lt;dbl&gt;,
 ## #   ToD &lt;dbl&gt;, and abbreviated variable names ¹​LONGITUDE, ²​MEASUREMENT
 ```
+]
 
 ---
 
@@ -1116,7 +1268,7 @@ draw(m, scales = "free", rug = FALSE, n = 50) +  plot_layout(widths = 1) &amp;
   theme(strip.text.x = element_text(size = 8))
 ```
 
-![](index_files/figure-html/galveston-full-model-draw-1.svg)&lt;!-- --&gt;
+&lt;img src="index_files/figure-html/galveston-full-model-draw-1.svg" width="90%" style="display: block; margin: auto;" /&gt;
 
 ---
 

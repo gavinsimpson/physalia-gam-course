@@ -75,7 +75,7 @@ bfun %>%
 
 
 ## ----include-simons-tprs-2d-image, out.width = "45%", echo = FALSE------------
-knitr::include_graphics(here("day-3/resources/wood-2ed-fig-5-12-2-d-tprs-basis-funs.png"))
+knitr::include_graphics("resources/wood-2ed-fig-5-12-2-d-tprs-basis-funs.png")
 
 
 ## ----beyond-linearity---------------------------------------------------------
@@ -84,7 +84,7 @@ set.seed(2)
 df <- tibble(x = runif(n),
              y = x + x^2 * 0.2 + rnorm(n) * 0.1)
 
-model <- gam(y ~ x + s(x, m = c(2,0)),
+model <- gam(y ~ x + s(x, m = c(2, 0)),
              data = df, method = "REML")
 
 
@@ -92,22 +92,11 @@ model <- gam(y ~ x + s(x, m = c(2,0)),
 summary(model)
 
 
-## ----beyond-linearity-plot, fig.show = "hide"---------------------------------
+## ----beyond-linearity-plot, out.width = "95%", fig.align = "center"-----------
 draw(model, parametric = TRUE)
 
 
-## ----beyond-linearity-plot, out.width = "95%", echo = FALSE-------------------
-draw(model, parametric = TRUE)
-
-
-## ----draw-mcycle, fig.show = "hide"-------------------------------------------
-data(mcycle, package = "MASS")
-m <- gam(accel ~ s(times), data = mcycle, method = "REML")
-sm_plt <- draw(m, residuals = TRUE)
-sm_plt
-
-
-## ----draw-mcycle, out.width = "90%", echo = FALSE-----------------------------
+## ----draw-mcycle, out.width = "70%", fig.align = "center"---------------------
 data(mcycle, package = "MASS")
 m <- gam(accel ~ s(times), data = mcycle, method = "REML")
 sm_plt <- draw(m, residuals = TRUE)
@@ -119,36 +108,18 @@ fd <- derivatives(m, type = "central", unconditional = TRUE)
 fd
 
 
-## ----draw-derivatives-times-smooth, fig.show = "hide"-------------------------
+## ----draw-derivatives-times-smooth, fig.align = "center", out.width = "90%"----
 fd_plt <- draw(fd) + labs(title = "First derivative s(times)")
 sm_plt + fd_plt + plot_layout(ncol = 2)
 
 
-## ----draw-derivatives-times-smooth, out.width = "90%", echo = FALSE-----------
-fd_plt <- draw(fd) + labs(title = "First derivative s(times)")
-sm_plt + fd_plt + plot_layout(ncol = 2)
-
-
-## ----draw-derivatives-times-smooth-2, fig.show = "hide"-----------------------
+## ----draw-derivatives-times-smooth-2, fig.align = "center", out.width = "80%"----
 fd2 <- derivatives(m, order = 2, eps = 0.1, type = "central", unconditional = TRUE)
 fd2_plt <- draw(fd2)
 fd_plt + fd2_plt + plot_layout(ncol = 2)
 
 
-## ----draw-derivatives-times-smooth-2, out.width = "80%", echo = FALSE---------
-fd2 <- derivatives(m, order = 2, eps = 0.1, type = "central", unconditional = TRUE)
-fd2_plt <- draw(fd2)
-fd_plt + fd2_plt + plot_layout(ncol = 2)
-
-
-## ----draw-derivatives-times-smooth-2-right, fig.show = "hide"-----------------
-m2 <- gam(accel ~ s(times, m = 3), data = mcycle, method = "REML")
-fd2 <- derivatives(m2, order = 2, eps = 0.1, type = "central", unconditional = TRUE)
-fd2_plt <- draw(fd2) + labs(title = "Second derivative s(times)")
-fd_plt + fd2_plt + plot_layout(ncol = 2)
-
-
-## ----draw-derivatives-times-smooth-2-right, out.width = "80%", echo = FALSE----
+## ----draw-derivatives-times-smooth-2-right, fig.align = "center", out.width = "80%"----
 m2 <- gam(accel ~ s(times, m = 3), data = mcycle, method = "REML")
 fd2 <- derivatives(m2, order = 2, eps = 0.1, type = "central", unconditional = TRUE)
 fd2_plt <- draw(fd2) + labs(title = "Second derivative s(times)")
@@ -193,7 +164,13 @@ truth_plt +
 par(old_par)
 
 
-## ----draw-tprs-vs-tensor-product, message = FALSE-----------------------------
+## ----tprs-vs-tensor-product---------------------------------------------------
+df
+m_tprs <- gam(y ~ s(x, z), data = df, method = "REML")
+m_te   <- gam(y ~ te(x, z), data = df, method = "REML")
+
+
+## ----draw-tprs-vs-tensor-product, message = FALSE, out.width = "95%"----------
 truth_plt + (draw(m_tprs) + coord_cartesian()) + draw(m_te) + plot_layout(ncol = 3)
 
 
@@ -229,9 +206,9 @@ m_nlme <- lme(travel ~ 1, data = Rail, ~ 1 | Rail, method = "REML")
 m_gam  <- gam(travel ~ s(Rail, bs = "re"), data = Rail, method = "REML")
 
 
-## ----misspecify, echo = FALSE-------------------------------------------------
+## ----misspecify, echo = FALSE, out.width = "95%"------------------------------
 set.seed(15)
-model_list = c("right model", 
+model_list = c("right model",
                "wrong distribution",
                "heteroskedasticity",
                "dependent data",
@@ -281,30 +258,30 @@ y_binom <- rbinom(n,1,prob = exp(y_val)/(1+exp(y_val)))
 ## ----sims_plot,fig.width = 11, fig.height = 5.5, echo = FALSE-----------------
 p1 <- ggplot(data.frame(x = x1, y = y_norm),
              aes(x = x, y = y)) +
-    geom_point()
+    geom_point() + labs(x = "x1", title = "Gaussian")
 
 p2 <- ggplot(data.frame(x = x2, y = y_norm),
              aes(x = x, y = y)) +
-    geom_point()
+    geom_point() + labs(x = "x2", title = "Gaussian")
 
 p3 <- ggplot(data.frame(x = x1, y = y_negbinom),
              aes(x = x, y = y)) +
-    geom_point()
+    geom_point() + labs(x = "x1", title = "Negative binomial")
 
 p4 <- ggplot(data.frame(x = x2, y = y_negbinom),
              aes(x = x, y = y)) +
-    geom_point()
+    geom_point() + labs(x = "x2", title = "Negative binomial")
 
 p5 <- ggplot(data.frame(x = x1, y = y_binom),
              aes(x = x, y = y)) +
-    geom_point()
+    geom_point() + labs(x = "x1", title = "Binomial")
 
 p6 <- ggplot(data.frame(x = x2, y = y_binom),
              aes(x = x, y = y)) +
-    geom_point()
+    geom_point() + labs(x = "x2", title = "Binomial")
 
 #plot_grid(p1, p3, p5, p2, p4, p6, ncol = 3, align = 'hv', axis = 'lrtb')
-wrap_plots(p1, p2, p5, p2, p4, p6, ncol = 3)
+wrap_plots(p1, p3, p5, p2, p4, p6, ncol = 3)
 
 
 ## ----gam_check_norm1, fig.keep="none", include=TRUE,echo=TRUE, fig.width=11, fig.height = 5.5, fig.align="center"----
@@ -331,23 +308,51 @@ p3 <- draw(norm_model_3)
 wrap_plots(p1, p2, p3, nrow = 3)
 
 
-## ----gam_check_plots1, include=TRUE, echo=TRUE, results="hide"----------------
-norm_model <- gam(y_norm ~ s(x1, k=12) + s(x2, k=12), method = 'REML')
+## ----gam_check_plots1, include=TRUE, echo=TRUE, results="hide", out.width = "90%", fig.align = "center"----
+norm_model <- gam(y_norm ~ s(x1, k=12) + s(x2, k=12), method="REML")
 gam.check(norm_model, rep = 500)
 
 
-## ----gam_check_plots2, include=T, echo=TRUE, results="hide"-------------------
-pois_model <- gam(y_negbinom ~ s(x1, k=12) + s(x2, k=12), family=poisson, method= 'REML')
+## ----gam_check_plots2, include=T, echo=TRUE, results="hide", out.width = "90%", fig.align = "center"----
+pois_model <- gam(y_negbinom ~ s(x1, k=12) + s(x2, k=12), family=poisson, method="REML")
 gam.check(pois_model, rep = 500)
 
 
-## ----gam_check_plots3, include=T,echo=TRUE, results="hide"--------------------
-negbin_model <- gam(y_negbinom ~ s(x1, k=12) + s(x2, k=12), family = nb, method = 'REML')
+## ----gam_check_plots3, include=T,echo=TRUE, results="hide", out.width = "90%", fig.align = "center"----
+negbin_model <- gam(y_negbinom ~ s(x1, k=12) + s(x2, k=12), family = nb, method="REML")
 gam.check(negbin_model, rep = 500)
 
 
 ## ----appraise-gam-check-example, fig.height = 5.5-----------------------------
 appraise(negbin_model, method = 'simulate')
+
+
+## ----dharma-residuals-image, fig.align = "center", out.width = "50%", echo = FALSE----
+knitr::include_graphics("resources/dharma-randomised-residuals.png")
+
+
+## ----dharma-1-----------------------------------------------------------------
+library("mgcViz")
+library("DHARMa")
+
+testDispersion(pois_model, plot = FALSE)
+
+
+## ----dharma-2-----------------------------------------------------------------
+testDispersion(negbin_model, plot = FALSE)
+
+
+## ----dharma-sim-resids--------------------------------------------------------
+resids <- simulateResiduals(fittedModel = pois_model, plot = FALSE)
+
+
+## ----dharma-plots-possion, fig.align = "center", out.width = "90%"------------
+plot(resids)
+
+
+## ----dharma-plots-negbin, fig.align = "center", out.width = "90%"-------------
+resids <- simulateResiduals(fittedModel = negbin_model, plot = FALSE)
+plot(resids)
 
 
 ## ----setup-shrinkage-example--------------------------------------------------
@@ -381,16 +386,16 @@ p1 + p2 + p3 + p4 + p5 + p6 +
 summary(b)
 
 
-## ----shrinkage-example-plot---------------------------------------------------
+## ----shrinkage-example-plot, fig.align = "center", out.width = "95%"----------
 draw(b, scales = 'fixed')
 
 
 ## ----cross-validated, echo = FALSE--------------------------------------------
-knitr::include_graphics(here('day-3/resources', 'cross-validated.png'))
+knitr::include_graphics("resources/cross-validated.png")
 
 
 ## ----load-galveston-----------------------------------------------------------
-galveston <- read_csv(here('data', 'galveston.csv')) %>%
+galveston <- read_csv("https://bit.ly/gam-galveston") %>%
     mutate(datetime = as.POSIXct(paste(DATE, TIME),
                                  format = '%m/%d/%y %H:%M', tz = "CDT"),
            STATION_ID = factor(STATION_ID),
@@ -404,28 +409,28 @@ galveston
 knots <- list(DoY = c(0.5, 366.5))
 m <- bam(MEASUREMENT ~
              s(ToD, k = 10) +
-             s(DoY, k = 12, bs = 'cc') +
+             s(DoY, k = 12, bs = "cc") +
              s(YEAR, k = 30) +
-             s(LONGITUDE, LATITUDE, k = 100, bs = 'ds', m = c(1, 0.5)) +
-             ti(DoY, YEAR, bs = c('cc', 'tp'), k = c(12, 15)) +
-             ti(LONGITUDE, LATITUDE, ToD, d = c(2,1), bs = c('ds','tp'),
+             s(LONGITUDE, LATITUDE, k = 100, bs = "ds", m = c(1, 0.5)) +
+             ti(DoY, YEAR, bs = c("cc", "tp"), k = c(12, 15)) +
+             ti(LONGITUDE, LATITUDE, ToD, d = c(2,1), bs = c("ds", "tp"),
                 m = list(c(1, 0.5), NA), k = c(20, 10)) +
-             ti(LONGITUDE, LATITUDE, DoY, d = c(2,1), bs = c('ds','cc'),
+             ti(LONGITUDE, LATITUDE, DoY, d = c(2,1), bs = c("ds", "cc"),
                 m = list(c(1, 0.5), NA), k = c(25, 12)) +
-             ti(LONGITUDE, LATITUDE, YEAR, d = c(2,1), bs = c('ds','tp'),
+             ti(LONGITUDE, LATITUDE, YEAR, d = c(2,1), bs = c("ds", "tp"),
                 m = list(c(1, 0.5), NA), k = c(25, 15)),
-         data = galveston, method = 'fREML', knots = knots,
-         nthreads = c(4, 1), discrete = TRUE)
+         data = galveston, method = "fREML", knots = knots,
+         nthreads = c(6, 1), discrete = FALSE)
 
 
 ## ----galveston-simple-model---------------------------------------------------
 m.sub <- bam(MEASUREMENT ~
              s(ToD, k = 10) +
-             s(DoY, k = 12, bs = 'cc') +
+             s(DoY, k = 12, bs = "cc") +
              s(YEAR, k = 30) +
-             s(LONGITUDE, LATITUDE, k = 100, bs = 'ds', m = c(1, 0.5)) +
-             ti(DoY, YEAR, bs = c('cc', 'tp'), k = c(12, 15)),
-         data = galveston, method = 'fREML', knots = knots,
+             s(LONGITUDE, LATITUDE, k = 100, bs = "ds", m = c(1, 0.5)) +
+             ti(DoY, YEAR, bs = c("cc", "tp"), k = c(12, 15)),
+         data = galveston, method = "fREML", knots = knots,
          nthreads = c(4, 1), discrete = TRUE)
 
 
@@ -434,7 +439,7 @@ AIC(m, m.sub)
 
 
 ## ----galveston-compare-models-anova-------------------------------------------
-anova(m, m.sub, test = 'F')
+anova(m, m.sub, test = "F")
 
 
 ## ----galveston-full-model-summary---------------------------------------------
@@ -445,53 +450,59 @@ summary(m)
 plot(m, pages = 1, scheme = 2, shade = TRUE)
 
 
-## ----galveston-full-model-draw------------------------------------------------
-draw(m, scales = 'free')
+## ----galveston-full-model-draw, fig.height = 14, fig.width = 1.777777*14, fig.align = "center", out.width = "90%"----
+draw(m, scales = "free", rug = FALSE, n = 50) +  plot_layout(widths = 1) &
+  theme(strip.text.x = element_text(size = 8))
 
 
 ## ----galveston-full-predict---------------------------------------------------
-pdata <- with(galveston,
-              expand.grid(ToD = 12,
-                          DoY = 180,
-                          YEAR = seq(min(YEAR), max(YEAR), by = 1),
-                          LONGITUDE = seq_min_max(LONGITUDE, n = 100),
-                          LATITUDE  = seq_min_max(LATITUDE, n = 100)))
-fit <- predict(m, pdata)
-ind <- exclude.too.far(pdata$LONGITUDE, pdata$LATITUDE,
-                       galveston$LONGITUDE, galveston$LATITUDE, dist = 0.1)
-fit[ind] <- NA
-pred <- cbind(pdata, Fitted = fit)
+pdata <- data_slice(m, ToD = 12, DoY = 180,
+                    YEAR = evenly(YEAR, by = 1),
+                    LONGITUDE = evenly(LONGITUDE, n = 50),
+                    LATITUDE  = evenly(LATITUDE, n = 50))
+fv <- fitted_values(m, data = pdata)
+# set fitted values to NA for grid points that are too far from the data
+ind <- too_far(pdata$LONGITUDE, pdata$LATITUDE,
+               galveston$LONGITUDE, galveston$LATITUDE, dist = 0.1)
+fv <- fv %>%
+  mutate(fitted = if_else(ind, NA_real_, fitted))
 
 
-## ----galveston-full-predict-plot, fig.show = 'hide'---------------------------
-plt <- ggplot(pred, aes(x = LONGITUDE, y = LATITUDE)) +
-    geom_raster(aes(fill = Fitted)) + facet_wrap(~ YEAR, ncol = 12) +
-    scale_fill_viridis(name = expression(degree*C), option = 'plasma', na.value = 'transparent') +
+## ----galveston-full-predict-plot, fig.show = 'hide', fig.height = 10, fig.width = 1.777777*10----
+plt <- ggplot(fv, aes(x = LONGITUDE, y = LATITUDE)) +
+    geom_raster(aes(fill = fitted)) + facet_wrap(~ YEAR, ncol = 12) +
+    scale_fill_viridis(name = expression(degree*C), option = "plasma",
+      na.value = "transparent") +
     coord_quickmap() +
-    theme(legend.position = 'right')
+    scale_x_continuous(guide = guide_axis(n.dodge = 2,
+                                          check.overlap = TRUE)) +
+    theme(legend.position = "top")
 plt
 
 
-## ----galveston-full-predict-plot, echo = FALSE--------------------------------
-plt <- ggplot(pred, aes(x = LONGITUDE, y = LATITUDE)) +
-    geom_raster(aes(fill = Fitted)) + facet_wrap(~ YEAR, ncol = 12) +
-    scale_fill_viridis(name = expression(degree*C), option = 'plasma', na.value = 'transparent') +
+## ----galveston-full-predict-plot, echo = FALSE, fig.height = 10, fig.width = 1.777777*10----
+plt <- ggplot(fv, aes(x = LONGITUDE, y = LATITUDE)) +
+    geom_raster(aes(fill = fitted)) + facet_wrap(~ YEAR, ncol = 12) +
+    scale_fill_viridis(name = expression(degree*C), option = "plasma",
+      na.value = "transparent") +
     coord_quickmap() +
-    theme(legend.position = 'right')
+    scale_x_continuous(guide = guide_axis(n.dodge = 2,
+                                          check.overlap = TRUE)) +
+    theme(legend.position = "top")
 plt
 
 
 ## ----galveston-animation, echo = FALSE, results = 'hide'----------------------
-p <- ggplot(pred, aes(x = LONGITUDE, y = LATITUDE, frame = YEAR)) +
-    geom_raster(aes(fill = Fitted)) +
-    scale_fill_viridis(name = expression(degree*C), option = 'plasma',
-                       na.value = 'transparent') +
+p <- ggplot(fv, aes(x = LONGITUDE, y = LATITUDE, frame = YEAR)) +
+    geom_raster(aes(fill = fitted)) +
+    scale_fill_viridis(name = expression(degree*C), option = "plasma",
+                       na.value = "transparent") +
     coord_quickmap() +
-    theme(legend.position = 'right')+
-    labs(x = 'Longitude', y = 'Latitude')
+    theme(legend.position = "right") +
+    labs(x = "Longitude", y = "Latitude")
 
 anim <- p + transition_time(YEAR) +
-    ggtitle('Year {round(frame_time, 0)}')
+    ggtitle("Year {round(frame_time, 0)}")
 
 anim <- animate(anim,
                 nframes = 200, height = anim_height, width = anim_width,
@@ -500,40 +511,28 @@ anim <- animate(anim,
 anim_save('./resources/galveston-animation.gif', anim)
 
 
-## ----galveston-trends-by-month, fig.show = 'hide'-----------------------------
-pdata <- with(galveston,
-              expand.grid(ToD = 12,
-                          DoY = c(1, 90, 180, 270),
-                          YEAR = seq(min(YEAR), max(YEAR), length = 500),
-                          LONGITUDE = -94.8751,
-                          LATITUDE  = 29.50866))
+## ----galveston-trends-by-month, fig.show = "hide"-----------------------------
+ds <- data_slice(m, ToD = 12, DoY = c(1, 90, 180, 270),
+  YEAR = evenly(YEAR, n = 250),
+  LONGITUDE = -94.8751, LATITUDE  = 29.50866)
+fv <- fitted_values(m, data = ds, scale = "response")
 
-fit <- data.frame(predict(m, newdata = pdata, se.fit = TRUE))
-fit <- transform(fit, upper = fit + (2 * se.fit), lower = fit - (2 * se.fit))
-pred <- cbind(pdata, fit)
-
-plt2 <- ggplot(pred, aes(x = YEAR, y = fit, group = factor(DoY))) +
-    geom_ribbon(aes(ymin = lower, ymax = upper), fill = 'grey', alpha = 0.5) +
-    geom_line() + facet_wrap(~ DoY, scales = 'free_y') +
+plt2 <- ggplot(fv, aes(x = YEAR, y = fitted, group = factor(DoY))) +
+    geom_ribbon(aes(ymin = lower, ymax = upper), fill = "black", alpha = 0.2) +
+    geom_line() + facet_wrap(~ DoY, scales = "free_y") +
     labs(x = NULL, y = expression(Temperature ~ (degree * C)))
 plt2
 
 
 ## ----galveston-trends-by-month, echo = FALSE----------------------------------
-pdata <- with(galveston,
-              expand.grid(ToD = 12,
-                          DoY = c(1, 90, 180, 270),
-                          YEAR = seq(min(YEAR), max(YEAR), length = 500),
-                          LONGITUDE = -94.8751,
-                          LATITUDE  = 29.50866))
+ds <- data_slice(m, ToD = 12, DoY = c(1, 90, 180, 270),
+  YEAR = evenly(YEAR, n = 250),
+  LONGITUDE = -94.8751, LATITUDE  = 29.50866)
+fv <- fitted_values(m, data = ds, scale = "response")
 
-fit <- data.frame(predict(m, newdata = pdata, se.fit = TRUE))
-fit <- transform(fit, upper = fit + (2 * se.fit), lower = fit - (2 * se.fit))
-pred <- cbind(pdata, fit)
-
-plt2 <- ggplot(pred, aes(x = YEAR, y = fit, group = factor(DoY))) +
-    geom_ribbon(aes(ymin = lower, ymax = upper), fill = 'grey', alpha = 0.5) +
-    geom_line() + facet_wrap(~ DoY, scales = 'free_y') +
+plt2 <- ggplot(fv, aes(x = YEAR, y = fitted, group = factor(DoY))) +
+    geom_ribbon(aes(ymin = lower, ymax = upper), fill = "black", alpha = 0.2) +
+    geom_line() + facet_wrap(~ DoY, scales = "free_y") +
     labs(x = NULL, y = expression(Temperature ~ (degree * C)))
 plt2
 

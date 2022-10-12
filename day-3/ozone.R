@@ -29,16 +29,11 @@ vapply(pkgs, library, logical(1L), character.only = TRUE,
     logical.return = TRUE)
 
 # load the data
-load(here("ozone", "ozone.rda"))
-# produces object ozone
-
-# write this out as an rds object
-write_rds(ozone, here("ozone", "ozone.rds"))
+ozone <- read_csv("https://bit.ly/gam-ozone-data")
+# or with here
+#ozone <- read_csv(here("ozone", "ozone.csv"))
 
 # analysis
-
-# load data
-ozone <- read_rds(here("ozone", "ozone.rds"))
 
 # plot the data
 o3_lab <- expression(O[3])

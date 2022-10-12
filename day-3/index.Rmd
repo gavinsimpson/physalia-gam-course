@@ -3,7 +3,7 @@ title: "Generalized Additive Models"
 subtitle: "a data-driven approach to estimating regression models"
 institute: "Department of Animal & Veterinary Sciences · Aarhus University"
 author: "Gavin Simpson"
-date: "1400&ndash;2000 CET (1300&ndash;1900 UTC) Wednesday 13th, 2022"
+date: "1400&ndash;2000 CET (1300&ndash;1900 UTC) Wednesday 13th October, 2022"
 output:
   xaringan::moon_reader:
     css: ['default', 'https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css', 'slides.css']
@@ -152,15 +152,21 @@ Source: Wood SN (2017)
 
 How do we test is we need something more than a linear effect?
 
-.row[
-
-.col-6[
+--
 
 Include a linear parametric term but remove it from the null space of the spline
 
 `m = c(2, 0)` implies 2<sup>nd</sup> derivative penalty but zero null space
 
 Null space is the set of functions in the basis that the penalty doesn't affect
+
+---
+
+# Beyond linearity
+
+.row[
+
+.col-6[
 
 ```{r beyond-linearity}
 n <- 100
@@ -193,7 +199,11 @@ draw(model, parametric = TRUE)
 
 # Derivatives of smooths
 
-Derivatives of smooths 
+Derivatives of smooths are useful for a number of statistical problems
+
+* The 1st derivative at a specified value of the covariate is the GAM equivalent of the $\beta$ in a (G)LM
+
+* Can also be used to investigate *where* in the range of the covariate $\hat{y}_i$ changes
 
 ---
 
@@ -222,17 +232,12 @@ And set the finite difference `eps` to a much larger value than the default
 
 Simulated motorcycle collision data
 
-```{r draw-mcycle, fig.show = "hide"}
+```{r draw-mcycle, out.width = "70%", fig.align = "center"}
 data(mcycle, package = "MASS")
 m <- gam(accel ~ s(times), data = mcycle, method = "REML")
 sm_plt <- draw(m, residuals = TRUE)
 sm_plt
 ```
-
-.center[
-```{r draw-mcycle, out.width = "90%", echo = FALSE}
-```
-]
 
 ---
 
@@ -247,46 +252,31 @@ fd
 
 # Derivatives of `s(times)`
 
-```{r draw-derivatives-times-smooth, fig.show = "hide"}
+```{r draw-derivatives-times-smooth, fig.align = "center", out.width = "90%"}
 fd_plt <- draw(fd) + labs(title = "First derivative s(times)")
 sm_plt + fd_plt + plot_layout(ncol = 2)
 ```
-
-.center[
-```{r draw-derivatives-times-smooth, out.width = "90%", echo = FALSE}
-```
-]
 
 ---
 
 # Second derivative of `s(times)` &mdash; wrong!
 
-```{r draw-derivatives-times-smooth-2, fig.show = "hide"}
+```{r draw-derivatives-times-smooth-2, fig.align = "center", out.width = "80%"}
 fd2 <- derivatives(m, order = 2, eps = 0.1, type = "central", unconditional = TRUE)
 fd2_plt <- draw(fd2)
 fd_plt + fd2_plt + plot_layout(ncol = 2)
 ```
 
-.center[
-```{r draw-derivatives-times-smooth-2, out.width = "80%", echo = FALSE}
-```
-]
-
 ---
 
 # Second derivative of `s(times)` &mdash; right!
 
-```{r draw-derivatives-times-smooth-2-right, fig.show = "hide"}
+```{r draw-derivatives-times-smooth-2-right, fig.align = "center", out.width = "80%"}
 m2 <- gam(accel ~ s(times, m = 3), data = mcycle, method = "REML")
 fd2 <- derivatives(m2, order = 2, eps = 0.1, type = "central", unconditional = TRUE)
 fd2_plt <- draw(fd2) + labs(title = "Second derivative s(times)")
 fd_plt + fd2_plt + plot_layout(ncol = 2)
 ```
-
-.center[
-```{r draw-derivatives-times-smooth-2-right, out.width = "80%", echo = FALSE}
-```
-]
 
 ---
 
@@ -316,6 +306,8 @@ Two ways to fit smooth interactions
 	* `te(x, z)`
 
 ---
+
+# Smooth interactions
 
 ```{r tprs-vs-tensor-product-setup, echo = FALSE}
 # following shows how tensor pruduct deals nicely with 
@@ -357,7 +349,9 @@ par(old_par)
 
 ---
 
-```{r-tprs-vs-tensor-product}
+# Smooth interactions
+
+```{r tprs-vs-tensor-product}
 df
 m_tprs <- gam(y ~ s(x, z), data = df, method = "REML")
 m_te   <- gam(y ~ te(x, z), data = df, method = "REML")
@@ -365,11 +359,15 @@ m_te   <- gam(y ~ te(x, z), data = df, method = "REML")
 
 ---
 
-```{r draw-tprs-vs-tensor-product, message = FALSE}
+# Smooth interactions
+
+```{r draw-tprs-vs-tensor-product, message = FALSE, out.width = "95%"}
 truth_plt + (draw(m_tprs) + coord_cartesian()) + draw(m_te) + plot_layout(ncol = 3)
 ```
 
 ---
+
+# Smooth interactions
 
 ```{r plot-tprs-vs-tensor-product-fake, eval = FALSE}
 layout(matrix(1:3, ncol = 3))
@@ -490,11 +488,11 @@ So you have a GAM:
 
 # GAMs are models too
 
-How accurate your predictions will be depends on how good the model is
+How accurate your predictions depends on how good the model is
 
-```{r misspecify, echo = FALSE}
+```{r misspecify, echo = FALSE, out.width = "95%"}
 set.seed(15)
-model_list = c("right model", 
+model_list = c("right model",
                "wrong distribution",
                "heteroskedasticity",
                "dependent data",
@@ -539,6 +537,11 @@ class: inverse center middle subsection
 
 # Simulated data
 
+`y` varies sinusoidally with `x1`
+
+`y` varies sigmoidally with `x2`
+
+Simulate response data from Gaussian, negative binomial, & binomial distributions
 ```{r sims, include=TRUE,echo=TRUE}
 set.seed(2)
 n <- 400
@@ -557,30 +560,30 @@ y_binom <- rbinom(n,1,prob = exp(y_val)/(1+exp(y_val)))
 ```{r sims_plot,fig.width = 11, fig.height = 5.5, echo = FALSE}
 p1 <- ggplot(data.frame(x = x1, y = y_norm),
              aes(x = x, y = y)) +
-    geom_point()
+    geom_point() + labs(x = "x1", title = "Gaussian")
 
 p2 <- ggplot(data.frame(x = x2, y = y_norm),
              aes(x = x, y = y)) +
-    geom_point()
+    geom_point() + labs(x = "x2", title = "Gaussian")
 
 p3 <- ggplot(data.frame(x = x1, y = y_negbinom),
              aes(x = x, y = y)) +
-    geom_point()
+    geom_point() + labs(x = "x1", title = "Negative binomial")
 
 p4 <- ggplot(data.frame(x = x2, y = y_negbinom),
              aes(x = x, y = y)) +
-    geom_point()
+    geom_point() + labs(x = "x2", title = "Negative binomial")
 
 p5 <- ggplot(data.frame(x = x1, y = y_binom),
              aes(x = x, y = y)) +
-    geom_point()
+    geom_point() + labs(x = "x1", title = "Binomial")
 
 p6 <- ggplot(data.frame(x = x2, y = y_binom),
              aes(x = x, y = y)) +
-    geom_point()
+    geom_point() + labs(x = "x2", title = "Binomial")
 
 #plot_grid(p1, p3, p5, p2, p4, p6, ncol = 3, align = 'hv', axis = 'lrtb')
-wrap_plots(p1, p2, p5, p2, p4, p6, ncol = 3)
+wrap_plots(p1, p3, p5, p2, p4, p6, ncol = 3)
 ```
 
 ---
@@ -680,8 +683,8 @@ class: inverse middle center subsection
 
 # Gaussian data, Gaussian model
 
-```{r gam_check_plots1, include=TRUE, echo=TRUE, results="hide"}
-norm_model <- gam(y_norm ~ s(x1, k=12) + s(x2, k=12), method = 'REML')
+```{r gam_check_plots1, include=TRUE, echo=TRUE, results="hide", out.width = "90%", fig.align = "center"}
+norm_model <- gam(y_norm ~ s(x1, k=12) + s(x2, k=12), method="REML")
 gam.check(norm_model, rep = 500)
 ```
 
@@ -689,8 +692,8 @@ gam.check(norm_model, rep = 500)
 
 # Negative binomial data, Poisson model
 
-```{r gam_check_plots2, include=T, echo=TRUE, results="hide"}
-pois_model <- gam(y_negbinom ~ s(x1, k=12) + s(x2, k=12), family=poisson, method= 'REML')
+```{r gam_check_plots2, include=T, echo=TRUE, results="hide", out.width = "90%", fig.align = "center"}
+pois_model <- gam(y_negbinom ~ s(x1, k=12) + s(x2, k=12), family=poisson, method="REML")
 gam.check(pois_model, rep = 500)
 ```
 
@@ -698,8 +701,8 @@ gam.check(pois_model, rep = 500)
 
 # NB data, NB model
 
-```{r gam_check_plots3, include=T,echo=TRUE, results="hide"}
-negbin_model <- gam(y_negbinom ~ s(x1, k=12) + s(x2, k=12), family = nb, method = 'REML')
+```{r gam_check_plots3, include=T,echo=TRUE, results="hide", out.width = "90%", fig.align = "center"}
+negbin_model <- gam(y_negbinom ~ s(x1, k=12) + s(x2, k=12), family = nb, method="REML")
 gam.check(negbin_model, rep = 500)
 ```
 
@@ -710,6 +713,93 @@ gam.check(negbin_model, rep = 500)
 ```{r appraise-gam-check-example, fig.height = 5.5}
 appraise(negbin_model, method = 'simulate')
 ```
+
+---
+
+# DHARMa &mdash; alternate diagnostics
+
+The {DHARMa} 📦 by Florian Hartig provides additional diagnostics for a wide range of models
+
+DHARMa generates randomised quantile residuals from models
+
+Randomised quantile residuals are uniformly distributed
+
+These residuals are then used in model diagnostics
+
+---
+
+# DHARMa &mdash; alternate diagnostics
+
+1. Simulate new response data from the fitted model for each observation.
+
+2. For each observation, calculate the empirical cumulative distribution function (ECDF) for the simulated observations, which describes the possible values at the predictor combination of the observed value, assuming the fitted model is correct.
+
+3. The residual is then defined as the value of the ECDF at the value of the observed data, so a residual of 0 means that all simulated values are larger than the observed value, and a residual of 0.5 means half of the simulated values are larger than the observed value.
+
+---
+
+# DHARMa &mdash; alternate diagnostics
+
+```{r dharma-residuals-image, fig.align = "center", out.width = "50%", echo = FALSE}
+knitr::include_graphics("resources/dharma-randomised-residuals.png")
+```
+
+---
+
+# DHARMa &mdash; over dispersion
+
+A quick test for over dispersion is given by `testDispersion()`
+
+For the Poisson GAM fitted to Negative binomial data:
+
+```{r dharma-1}
+library("mgcViz")
+library("DHARMa")
+
+testDispersion(pois_model, plot = FALSE)
+```
+
+---
+
+# DHARMa &mdash; over dispersion
+
+A quick test for over dispersion is given by `testDispersion()`
+
+For the Negative binomial GAM fitted to Negative binomial data:
+
+```{r dharma-2}
+testDispersion(negbin_model, plot = FALSE)
+```
+
+---
+
+# DHARMa &mdash; randomised quantile residuals
+
+To generate just the randomised quantile residuals we use `simulateResiduals()`
+
+Do this to compute and store the residuals once, rather than for each test
+
+```{r dharma-sim-resids}
+resids <- simulateResiduals(fittedModel = pois_model, plot = FALSE)
+```
+
+---
+
+# DHARMa &mdash; randomised quantile residuals
+
+```{r dharma-plots-possion, fig.align = "center", out.width = "90%"}
+plot(resids)
+```
+
+---
+
+# DHARMa &mdash; randomised quantile residuals
+
+```{r dharma-plots-negbin, fig.align = "center", out.width = "90%"}
+resids <- simulateResiduals(fittedModel = negbin_model, plot = FALSE)
+plot(resids)
+```
+
 
 ---
 class: inverse center middle subsection
@@ -839,7 +929,7 @@ summary(b)
 
 # Example
 
-```{r shrinkage-example-plot}
+```{r shrinkage-example-plot, fig.align = "center", out.width = "95%"}
 draw(b, scales = 'fixed')
 ```
 
@@ -878,7 +968,8 @@ knitr::include_graphics("resources/cross-validated.png")
 
 # Galveston Bay
 
-```{r load-galveston, class.output = "small"}
+.small[
+```{r load-galveston}
 galveston <- read_csv("https://bit.ly/gam-galveston") %>%
     mutate(datetime = as.POSIXct(paste(DATE, TIME),
                                  format = '%m/%d/%y %H:%M', tz = "CDT"),
@@ -888,6 +979,7 @@ galveston <- read_csv("https://bit.ly/gam-galveston") %>%
                (as.numeric(format(datetime, format = '%M')) / 60))
 galveston
 ```
+]
 
 ---
 
@@ -1046,7 +1138,7 @@ plot(m, pages = 1, scheme = 2, shade = TRUE)
 
 # Galveston Bay &mdash; full model plot
 
-```{r galveston-full-model-draw}
+```{r galveston-full-model-draw, fig.height = 14, fig.width = 1.777777*14, fig.align = "center", out.width = "90%"}
 draw(m, scales = "free", rug = FALSE, n = 50) +  plot_layout(widths = 1) &
   theme(strip.text.x = element_text(size = 8))
 ```
@@ -1072,7 +1164,7 @@ fv <- fv %>%
 
 # Galveston Bay &mdash; plot
 
-```{r galveston-full-predict-plot, fig.show = 'hide'}
+```{r galveston-full-predict-plot, fig.show = 'hide', fig.height = 10, fig.width = 1.777777*10}
 plt <- ggplot(fv, aes(x = LONGITUDE, y = LATITUDE)) +
     geom_raster(aes(fill = fitted)) + facet_wrap(~ YEAR, ncol = 12) +
     scale_fill_viridis(name = expression(degree*C), option = "plasma",
@@ -1088,7 +1180,7 @@ plt
 
 # Galveston Bay &mdash; plot
 
-```{r galveston-full-predict-plot, echo = FALSE}
+```{r galveston-full-predict-plot, echo = FALSE, fig.height = 10, fig.width = 1.777777*10}
 ```
 
 ---
