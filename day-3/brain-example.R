@@ -12,10 +12,21 @@ brain
 brain <- brain %>%
   filter(medFPQ > 5e-3)
 
-# plot
+# plot the response
 brain %>%
   ggplot(aes(x = medFPQ)) +
     geom_density()
+
+# plot the response
+brain %>%
+  ggplot(aes(x = medFPQ)) +
+  geom_histogram()
+
+# plot as a surface
+brain %>%
+  ggplot(aes(x = X, y = Y, fill = medFPQ)) +
+  geom_raster() + coord_equal() +
+  scale_fill_viridis_c(option = "plasma")
 
 # fit a Gaussian GAM
 m_gaus <- gam(medFPQ ~ s(Y, X, k = 100), data = brain, method = "REML")
@@ -60,7 +71,7 @@ AIC(m_gamma_ml, m_gamma_te_ml)
 
 # ANOVA-like decomposition
 m_gamma_ti <- gam(medFPQ ~ s(Y, k = 10, bs = "cr") + s(X, k = 10, bs = "cr") +
-                    ti(Y, X, k = 10),
+                    ti(Y, X, k = 10, bs = c("cr", "cr")),
                   data = brain, method = "REML",
                   family = Gamma(link = "log"))
 
@@ -87,7 +98,7 @@ m_asym <- gam(medFPQ ~ s(Y, Xc, k = 100) + s(Y, Xc, k = 100, by = right),
 anova(m_asym)
 
 # this is less well justified
-anova(m_sym, m_asym, test = "F")
+anova(m_sym, m_asym, test = "LRT")
 
 # compare surfaces
 
@@ -145,6 +156,7 @@ draw(diffs)
 # reference level
 brain_comb <- brain_comb %>%
   mutate(sample_o = ordered(sample))
+contrasts(brain_comb$sample_o) <- "contr.treatment"
 
 m_diff2 <- gam(medFPQ ~ sample_o + s(Y, X, k = 100) +
                 s(Y, X, by = sample_o, k = 100),

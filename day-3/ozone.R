@@ -31,7 +31,7 @@ vapply(pkgs, library, logical(1L), character.only = TRUE,
 # load the data
 ozone <- read_csv("https://bit.ly/gam-ozone-data")
 # or with here
-#ozone <- read_csv(here("ozone", "ozone.csv"))
+#ozone <- read_csv(here("data", "ozone.csv"))
 
 # analysis
 
