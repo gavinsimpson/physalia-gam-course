@@ -91,11 +91,21 @@ crest3$scale # should be == 1
 summary(crest3)
 
 # let's look at some model diagnostics
-appraise(crest2, method = "simulate")
+appraise(crest3, method = "simulate")
 
 # compare the fits
 draw(crest, n = 75, rug = FALSE) +
     draw(crest3, n = 75, rug = FALSE) +
     plot_layout(ncol = 2)
+
+# generate fitted values
+ds <- data_slice(crest3, e = evenly(e, n = 75), n = evenly(n, n = 75))
+fv <- fitted_values(crest3, data = ds, scale = "response")
+
+fv %>%
+ggplot(aes(x = e, y = n, fill = fitted)) +
+  geom_tile() +
+  scale_fill_viridis_c(option = "plasma") +
+  coord_equal()
 
 # Repeat the modelling using the linnet data

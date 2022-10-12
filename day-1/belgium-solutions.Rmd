@@ -84,8 +84,7 @@ layout(1)
 6. Add fitted values of the model as a line on to the plot you created earlier. Add a confidence interval to the fitted value line.
 
 ```{r predict-m-1}
-pdat <- with(belgium, tibble(t = seq(min(t), max(t),
-                                           length = 100)))
+pdat <- with(belgium, tibble(t = seq(min(t), max(t), length = 100)))
 ## want year for each t; remember to add 1980
 pdat <- pdat %>%
   mutate(year = 1980 + t)
@@ -187,7 +186,7 @@ m_gam1 <- gam(cases ~ s(t), data = belgium, family = poisson(link = "log"),
 summary(m_gam1)
 
 # is GAM an improvement over the GLM? Yes, but no
-anova(m_gam0, m_gam1, test = "Chisq")
+anova(m_gam0, m_gam1, test = "LRT")
 AIC(m_gam0, m_gam1)
 model_edf(m_gam0, m_gam1)
 ## differences in reported EDFs due to smoothness selection correction

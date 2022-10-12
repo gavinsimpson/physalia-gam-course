@@ -23,13 +23,15 @@ gtemp_plt
 
 # fit the Gaussian GAM
 m_gtemp <- gam(Temperature ~ s(Year),
-    data = gtemp, method = "REML")
+    data = gtemp, method = "REML", family = gaussian())
 
 # model summary
 summary(m_gtemp)
 
 # plot the estimate smooth
 draw(m_gtemp, residuals = TRUE)
+
+plot(m_gtemp, residuals = TRUE, pch = 16)
 
 # plot the fitted smooth on the original data
 #
@@ -48,4 +50,4 @@ ggplot(aes(x = Year, y = fitted)) +
                 inherit.aes = FALSE,
                 fill = "#fdb338") +
     geom_line(size = 1, colour = "#025196") +
-    labs(x = "Year", y = expression(Temeprature ~ degree * C))
+    labs(x = "Year", y = expression(Temperature ~ degree * C))
