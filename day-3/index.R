@@ -196,8 +196,7 @@ par(old_par)
 
 
 ## ----echo = FALSE, out.width = "50%"------------------------------------------
-knitr::include_graphics(here("day-3/resources",
-                             "wood-gams-2ed-fig-5-17-tensor-product.svg"))
+knitr::include_graphics("resources/wood-gams-2ed-fig-5-17-tensor-product.svg")
 
 
 ## ----ranefs-------------------------------------------------------------------
