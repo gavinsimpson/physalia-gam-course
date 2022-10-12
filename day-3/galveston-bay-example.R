@@ -63,43 +63,35 @@ plot(m, pages = 1, scheme = 2, shade = TRUE)
 draw(m, scales = "free")
 
 # spatial predictions over time
-pdata <- with(galveston,
-              expand.grid(ToD = 12,
-                          DoY = 180,
-                          YEAR = seq(min(YEAR), max(YEAR), by = 1),
-                          LONGITUDE = seq_min_max(LONGITUDE, n = 100),
-                          LATITUDE  = seq_min_max(LATITUDE, n = 100)))
-fit <- predict(m, pdata)
-ind <- exclude.too.far(pdata$LONGITUDE, pdata$LATITUDE,
-                       galveston$LONGITUDE, galveston$LATITUDE, dist = 0.1)
-fit[ind] <- NA
-pred <- cbind(pdata, Fitted = fit)
+pdata <- data_slice(m, ToD = 12, DoY = 180,
+                    YEAR = evenly(YEAR, by = 1),
+                    LONGITUDE = evenly(LONGITUDE, n = 50),
+                    LATITUDE  = evenly(LATITUDE, n = 50))
+fv <- fitted_values(m, data = pdata)
+# set fitted values to NA for grid points that are too far from the data
+ind <- too_far(pdata$LONGITUDE, pdata$LATITUDE,
+               galveston$LONGITUDE, galveston$LATITUDE, dist = 0.1)
+fv <- fv %>%
+  mutate(fitted = if_else(ind, NA_real_, fitted))
 
 # plot the estimated spatial field over time
-ggplot(pred, aes(x = LONGITUDE, y = LATITUDE)) +
-    geom_raster(aes(fill = Fitted)) +
-    facet_wrap(~ YEAR, ncol = 12) +
-    scale_fill_viridis_c(name = expression(degree*C), option = "plasma",
-                         na.value = "transparent") +
-    coord_quickmap() +
-    theme(legend.position = "right")
+ggplot(fv, aes(x = LONGITUDE, y = LATITUDE)) +
+  geom_raster(aes(fill = fitted)) + facet_wrap(~ YEAR, ncol = 12) +
+  scale_fill_viridis(name = expression(degree*C), option = "plasma",
+                     na.value = "transparent") +
+  coord_quickmap() +
+  scale_x_continuous(guide = guide_axis(n.dodge = 2,
+                                        check.overlap = TRUE)) +
+  theme(legend.position = "top")
 
 # predict temperature time series at a particular location for 4 different
 # periods of the year
-pdata <- with(galveston,
-              expand.grid(ToD = 12,
-                          DoY = c(1, 90, 180, 270),
-                          YEAR = seq(min(YEAR), max(YEAR), length = 500),
-                          LONGITUDE = -94.8751,
-                          LATITUDE  = 29.50866))
+ds <- data_slice(m, ToD = 12, DoY = c(1, 90, 180, 270),
+                 YEAR = evenly(YEAR, n = 250),
+                 LONGITUDE = -94.8751, LATITUDE  = 29.50866)
+fv2 <- fitted_values(m, data = ds, scale = "response")
 
-# fitted values
-fv <- fitted_values(m, data = pdata, scale = "response")
-
-# plot the trends
-ggplot(fv, aes(x = YEAR, y = fitted, group = factor(DoY))) +
-    geom_ribbon(aes(ymin = lower, ymax = upper),
-                fill = "grey", alpha = 0.5) +
-    geom_line() +
-    facet_wrap(~ DoY, scales = "free_y") +
-    labs(x = NULL, y = expression(Temperature ~ (degree * C)))
+ggplot(fv2, aes(x = YEAR, y = fitted, group = factor(DoY))) +
+  geom_ribbon(aes(ymin = lower, ymax = upper), fill = "black", alpha = 0.2) +
+  geom_line() + facet_wrap(~ DoY, scales = "free_y") +
+  labs(x = NULL, y = expression(Temperature ~ (degree * C)))
