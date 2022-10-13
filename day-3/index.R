@@ -284,7 +284,7 @@ wrap_plots(p1, p3, p5, p2, p4, p6, ncol = 3)
 
 
 ## ----gam_check_norm1, fig.keep="none", include=TRUE,echo=TRUE, fig.width=11, fig.height = 5.5, fig.align="center"----
-norm_model_1 <- gam(y_norm~s(x1, k = 4) + s(x2, k = 4), method = 'REML')
+norm_model_1 <- gam(y_norm ~ s(x1, k = 4) + s(x2, k = 4), method = 'REML')
 gam.check(norm_model_1)
 
 
@@ -305,6 +305,24 @@ p3 <- draw(norm_model_3)
 
 ## plot_grid(p1, p2, p3, nrow = 3, align = 'hv', axis = 'lrtb')
 wrap_plots(p1, p2, p3, nrow = 3)
+
+
+## ----alt-basis-dim-check-1----------------------------------------------------
+norm_model_1 <- gam(y_norm ~ s(x1, k = 4) + s(x2, k = 4), method = "REML")
+k.check(norm_model_1)
+
+
+## ----alt-basis-dim-check-2----------------------------------------------------
+res <- resid(norm_model_1, type = "deviance")
+
+res_model <- gam(y_norm ~ s(x1, k = 12) + s(x2, k = 12),
+  method = "REML",
+  family = quasi(link = "identity", variance = "constant"))
+edf(res_model)
+
+
+## ----alt-basis-dim-check-3----------------------------------------------------
+draw(res_model)
 
 
 ## ----gam_check_plots1, include=TRUE, echo=TRUE, results="hide", out.width = "90%", fig.align = "center"----

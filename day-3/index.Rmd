@@ -617,7 +617,7 @@ class: inverse middle center subsection
 # Checking basis size
 
 ```{r gam_check_norm1, fig.keep="none", include=TRUE,echo=TRUE, fig.width=11, fig.height = 5.5, fig.align="center"}
-norm_model_1 <- gam(y_norm~s(x1, k = 4) + s(x2, k = 4), method = 'REML')
+norm_model_1 <- gam(y_norm ~ s(x1, k = 4) + s(x2, k = 4), method = 'REML')
 gam.check(norm_model_1)
 ```
 
@@ -650,6 +650,53 @@ p3 <- draw(norm_model_3)
 
 ## plot_grid(p1, p2, p3, nrow = 3, align = 'hv', axis = 'lrtb')
 wrap_plots(p1, p2, p3, nrow = 3)
+```
+
+---
+
+# Checking basis size
+
+Two common ways that the `k.check()` (`gam.check()`) test will reject the null hypothesis of adequate basis size
+
+1. Unmodelled auto-correlation
+
+2. Incorrectly specified mean-variance raltionship (wrong `family`)
+
+---
+
+# Checking basis size (alt)
+
+Model with `k` set to be too low for each smooth
+
+```{r alt-basis-dim-check-1}
+norm_model_1 <- gam(y_norm ~ s(x1, k = 4) + s(x2, k = 4), method = "REML")
+k.check(norm_model_1)
+```
+
+Alternate way of assessing if the basis size is sufficient is to take the deviance residuals from the model and fit a GAM to those with `family = quasi(link = "identity", variance = "constant")` and `k` doubled
+
+???
+
+Remember we had this model where we had set `k` to be too low for each of the two smooths
+
+---
+
+# Checking basis size (alt)
+
+```{r alt-basis-dim-check-2}
+res <- resid(norm_model_1, type = "deviance")
+
+res_model <- gam(y_norm ~ s(x1, k = 12) + s(x2, k = 12),
+  method = "REML",
+  family = quasi(link = "identity", variance = "constant"))
+edf(res_model)
+```
+
+---
+
+# Checking basis size (alt)
+```{r alt-basis-dim-check-3}
+draw(res_model)
 ```
 
 ---

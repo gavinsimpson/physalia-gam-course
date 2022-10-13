@@ -537,7 +537,7 @@ class: inverse middle center subsection
 
 
 ```r
-norm_model_1 &lt;- gam(y_norm~s(x1, k = 4) + s(x2, k = 4), method = 'REML')
+norm_model_1 &lt;- gam(y_norm ~ s(x1, k = 4) + s(x2, k = 4), method = 'REML')
 gam.check(norm_model_1)
 ```
 
@@ -621,6 +621,72 @@ gam.check(norm_model_3)
 # Checking basis size
 
 ![](index_files/figure-html/gam_check_norm4-1.svg)&lt;!-- --&gt;
+
+---
+
+# Checking basis size
+
+Two common ways that the `k.check()` (`gam.check()`) test will reject the null hypothesis of adequate basis size
+
+1. Unmodelled auto-correlation
+
+2. Incorrectly specified mean-variance raltionship (wrong `family`)
+
+---
+
+# Checking basis size (alt)
+
+Model with `k` set to be too low for each smooth
+
+
+```r
+norm_model_1 &lt;- gam(y_norm ~ s(x1, k = 4) + s(x2, k = 4), method = "REML")
+k.check(norm_model_1)
+```
+
+```
+##       k'      edf   k-index p-value
+## s(x1)  3 1.001710 0.1250378    0.00
+## s(x2)  3 2.913909 1.0446399    0.85
+```
+
+Alternate way of assessing if the basis size is sufficient is to take the deviance residuals from the model and fit a GAM to those with `family = quasi(link = "identity", variance = "constant")` and `k` doubled
+
+???
+
+Remember we had this model where we had set `k` to be too low for each of the two smooths
+
+---
+
+# Checking basis size (alt)
+
+
+```r
+res &lt;- resid(norm_model_1, type = "deviance")
+
+res_model &lt;- gam(y_norm ~ s(x1, k = 12) + s(x2, k = 12),
+  method = "REML",
+  family = quasi(link = "identity", variance = "constant"))
+edf(res_model)
+```
+
+```
+## # A tibble: 2 × 2
+##   smooth   edf
+##   &lt;chr&gt;  &lt;dbl&gt;
+## 1 s(x1)  10.8 
+## 2 s(x2)   7.95
+```
+
+---
+
+# Checking basis size (alt)
+
+```r
+draw(res_model)
+```
+
+![](index_files/figure-html/alt-basis-dim-check-3-1.svg)&lt;!-- --&gt;
 
 ---
 class: inverse middle center subsection
