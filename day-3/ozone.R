@@ -82,7 +82,7 @@ summary(m2)
 draw(m2)
 
 # ... the credible interval on the smooth is wide, though importantly it does
-# notinclude zero *everywhere*
+# not include zero *everywhere*
 # We can look at draws from the posterior of the smooth using
 samp_s_temp <- smooth_samples(m2, term = "s(temp)", n = 50)
 

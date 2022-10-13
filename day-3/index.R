@@ -315,7 +315,7 @@ k.check(norm_model_1)
 ## ----alt-basis-dim-check-2----------------------------------------------------
 res <- resid(norm_model_1, type = "deviance")
 
-res_model <- gam(y_norm ~ s(x1, k = 12) + s(x2, k = 12),
+res_model <- gam(res ~ s(x1, k = 12) + s(x2, k = 12),
   method = "REML",
   family = quasi(link = "identity", variance = "constant"))
 edf(res_model)

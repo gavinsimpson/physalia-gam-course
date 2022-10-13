@@ -109,7 +109,8 @@ p1 + p2 + plot_layout(ncol = 2)
 
 ## ----aic-models-setup, echo = FALSE-------------------------------------------
 n <- 200
-dat <- data_sim("eg1", n=n, scale=.15, dist = 'poisson', seed = 3)
+dat <- data_sim("eg1", n = n, scale = .15, dist = "poisson", seed = 3)
+set.seed(22)
 dat <- dat %>% mutate(x4 = runif(n, 0, 1), x5 = runif(n, 0, 1),
                       f4 = rep(0, n), f5 = rep(0, n))   ## spurious
 
@@ -134,17 +135,16 @@ m <- gam(y ~ s(x0) + s(x1) + s(x2) + s(x3) +
 summary(m) # ==>
 
 
-## ----aic-models---------------------------------------------------------------
+## ----aic-models, dependson="aic-models-setup"---------------------------------
 b0 <- gam(y ~ s(x0) + s(x1) + s(x2),
-          data = dat, family = poisson, method = 'REML')
+          data = dat, family = poisson, method = "REML")
 b1 <- gam(y ~ s(x0) + s(x1) + s(x2) + s(x3) + s(x4) + s(x5),
-          data = dat, family = poisson, method = 'REML',
-          select = TRUE)
+          data = dat, family = poisson, method = "REML", select = TRUE)
 b2 <- gam(y ~ s(x0) + s(x1) + s(x2) + s(x3) + s(x4) + s(x5),
-          data = dat, family = poisson, method = 'REML')
+          data = dat, family = poisson, method = "REML")
 
 
-## ----aic-example, echo = TRUE-------------------------------------------------
+## ----aic-example, echo = TRUE, dependson = -1---------------------------------
 AIC(b0, b1, b2)
 
 

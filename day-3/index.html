@@ -664,7 +664,7 @@ Remember we had this model where we had set `k` to be too low for each of the tw
 ```r
 res &lt;- resid(norm_model_1, type = "deviance")
 
-res_model &lt;- gam(y_norm ~ s(x1, k = 12) + s(x2, k = 12),
+res_model &lt;- gam(res ~ s(x1, k = 12) + s(x2, k = 12),
   method = "REML",
   family = quasi(link = "identity", variance = "constant"))
 edf(res_model)
@@ -675,7 +675,7 @@ edf(res_model)
 ##   smooth   edf
 ##   &lt;chr&gt;  &lt;dbl&gt;
 ## 1 s(x1)  10.8 
-## 2 s(x2)   7.95
+## 2 s(x2)   7.29
 ```
 
 ---

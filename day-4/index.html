@@ -245,23 +245,23 @@ summary(m) # ==&gt;
 ## 
 ## Parametric coefficients:
 ##             Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)   3.9300     0.1612   24.39   &lt;2e-16 ***
+## (Intercept)   3.9300     0.1601   24.54   &lt;2e-16 ***
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
 ## Approximate significance of smooth terms:
 ##             edf Ref.df      F p-value    
-## s(x0) 1.6560081      9  0.472  0.0672 .  
-## s(x1) 2.0835207      9  5.460  &lt;2e-16 ***
-## s(x2) 6.5243648      9 14.644  &lt;2e-16 ***
-## s(x3) 0.0002582      9  0.000  0.6232    
-## s(x4) 0.0002072      9  0.000  0.4775    
-## s(x5) 0.4008276      9  0.074  0.1965    
+## s(x0) 1.6991607      9  0.520  0.0539 .  
+## s(x1) 2.0925386      9  5.343  &lt;2e-16 ***
+## s(x2) 6.5698557      9 15.066  &lt;2e-16 ***
+## s(x3) 0.0000762      9  0.000  0.7022    
+## s(x4) 0.3056471      9  0.049  0.2289    
+## s(x5) 0.6950587      9  0.253  0.0711 .  
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
-## R-sq.(adj) =  0.506   Deviance explained = 53.3%
-## -REML = 466.73  Scale est. = 5.1944    n = 200
+## R-sq.(adj) =  0.512   Deviance explained =   54%
+## -REML = 466.22  Scale est. = 5.1285    n = 200
 ```
 ]
 ]
@@ -336,12 +336,11 @@ Neither of these are the default, so remember to use `method = "ML"` or `method 
 
 ```r
 b0 &lt;- gam(y ~ s(x0) + s(x1) + s(x2),
-          data = dat, family = poisson, method = 'REML')
+          data = dat, family = poisson, method = "REML")
 b1 &lt;- gam(y ~ s(x0) + s(x1) + s(x2) + s(x3) + s(x4) + s(x5),
-          data = dat, family = poisson, method = 'REML',
-          select = TRUE)
+          data = dat, family = poisson, method = "REML", select = TRUE)
 b2 &lt;- gam(y ~ s(x0) + s(x1) + s(x2) + s(x3) + s(x4) + s(x5),
-          data = dat, family = poisson, method = 'REML')
+          data = dat, family = poisson, method = "REML")
 ```
 
 ---
@@ -358,8 +357,8 @@ AIC(b0, b1, b2)
 ```
 ##          df      AIC
 ## b0 14.14062 841.5697
-## b1 13.44682 840.2129
-## b2 26.64659 835.0421
+## b1 14.36674 838.6076
+## b2 18.82059 842.1110
 ```
 
 When there is *no difference* in compared models, accepts larger model ~16% of the time: consistent with probability AIC chooses a model with 1 extra spurious parameter `\(Pr(\chi^2_1 &gt; 2)\)`
