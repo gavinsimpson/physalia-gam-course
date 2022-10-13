@@ -660,7 +660,7 @@ Two common ways that the `k.check()` (`gam.check()`) test will reject the null h
 
 1. Unmodelled auto-correlation
 
-2. Incorrectly specified mean-variance raltionship (wrong `family`)
+2. Incorrectly specified mean-variance relationship (wrong `family`)
 
 ---
 
@@ -695,7 +695,7 @@ edf(res_model)
 ---
 
 # Checking basis size (alt)
-```{r alt-basis-dim-check-3}
+```{r alt-basis-dim-check-3, fig.align = "center", out.width = "95%"}
 draw(res_model)
 ```
 

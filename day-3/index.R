@@ -321,7 +321,7 @@ res_model <- gam(y_norm ~ s(x1, k = 12) + s(x2, k = 12),
 edf(res_model)
 
 
-## ----alt-basis-dim-check-3----------------------------------------------------
+## ----alt-basis-dim-check-3, fig.align = "center", out.width = "95%"-----------
 draw(res_model)
 
 
