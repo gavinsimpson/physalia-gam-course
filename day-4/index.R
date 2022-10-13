@@ -40,8 +40,7 @@ xaringanExtra::use_tile_view()
 
 
 ## ----echo = FALSE, out.width = "90%"------------------------------------------
-knitr::include_graphics(here("day-3/resources",
-                             "miller-bayesian-gam-interpretation-fig.svg"))
+knitr::include_graphics("resources/miller-bayesian-gam-interpretation-fig.svg")
 
 
 ## ----setup-confint-example, fig = TRUE, fig.width = 11, fig.height = 5.5, results = "hide", echo = FALSE----
@@ -197,16 +196,12 @@ rats <- read_table(rats_url, col_types = "dddddddddddd-")
 #   row in the file
 
 rats <- rats %>%
-    mutate(treatment = fct_recode(factor(group, levels = c(2,1,3)),
+    mutate(treatment = fct_recode(factor(group, levels = c(1, 2, 3)),
                                   Low = "1",
-                                  High = "3",
-                                  Control = "2"),
+                                  High = "2",
+                                  Control = "3"),
+           treatment = fct_relevel(treatment, c("Control", "Low", "High")),
            subject = factor(subject))
-
-rats %>%
-    na.omit() %>%
-    count(subject) %>%
-    count(n, name = "n_rats")
 
 plt_labs <- labs(y = "Head height (distance in pixels)",
                  x = "Age in days",
@@ -231,8 +226,7 @@ rats %>%
 
 
 ## ---- fig.align = "center", out.width = "95%", echo = FALSE-------------------
-knitr::include_graphics(here("day-4", "resources",
-                             "lawton-et-al-hgam-locust-paper-fig.svg"))
+knitr::include_graphics("resources/lawton-et-al-hgam-locust-paper-fig.svg")
 
 
 ## ----load-shrimp--------------------------------------------------------------
@@ -362,8 +356,7 @@ ggplot(ti_pred2, aes(x = year)) + geom_ribbon(aes(ymin = lower, ymax = upper), a
 
 
 ## ----echo = FALSE, out.width = "80%"------------------------------------------
-knitr::include_graphics(here("day-3/resources",
-                             "miller-bayesian-gam-interpretation-fig.svg"))
+knitr::include_graphics("resources/miller-bayesian-gam-interpretation-fig.svg")
 
 
 ## ----richness-coefs-----------------------------------------------------------

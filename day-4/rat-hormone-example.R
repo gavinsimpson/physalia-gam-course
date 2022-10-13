@@ -14,10 +14,11 @@ rats <- read_table(rats_url, col_types = "dddddddddddd-")
 #   row in the file
 
 rats <- rats %>%
-    mutate(treatment = fct_recode(factor(group, levels = c(2,1,3)),
+    mutate(treatment = fct_recode(factor(group, levels = c(1, 2, 3)),
                                   Low = "1",
-                                  High = "3",
-                                  Control = "2"),
+                                  High = "2",
+                                  Control = "3"),
+           treatment = fct_relevel(treatment, c("Control", "Low", "High")),
            subject = factor(subject))
 
 rats %>%
@@ -30,7 +31,8 @@ plt_labs <- labs(y = "Head height (distance in pixels)",
                  colour = "Treatment")
 
 ggplot(rats, aes(x = time, y = response,
-                 group = subject, colour = treatment)) +
+    group = subject, colour = treatment)) +
+    geom_point(size = 1) +
     geom_line() +
     facet_wrap(~ treatment, ncol = 3) +
     plt_labs

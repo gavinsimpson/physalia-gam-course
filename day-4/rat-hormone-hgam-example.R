@@ -13,10 +13,11 @@ rats <- read_table(rats_url, col_types = "dddddddddddd-")
 #   row in the file
 
 rats <- rats %>%
-    mutate(treatment = fct_recode(factor(group, levels = c(3,2,1)),
-                                  Control = "3",
+    mutate(treatment = fct_recode(factor(group, levels = c(1, 2, 3)),
                                   Low = "1",
-                                  High = "2"),
+                                  High = "2",
+                                  Control = "3"),
+           treatment = fct_relevel(treatment, c("Control", "Low", "High")),
            subject = factor(subject))
 
 rats %>%
@@ -29,10 +30,11 @@ plt_labs <- labs(y = "Head height (distance in pixels)",
                  colour = "Treatment")
 
 ggplot(rats, aes(x = time, y = response,
-                 group = subject, colour = treatment)) +
-    geom_line() +
-    facet_wrap(~ treatment, ncol = 3) +
-    plt_labs
+   group = subject, colour = treatment)) +
+   geom_point(size = 1) +
+   geom_line() +
+   facet_wrap(~ treatment, ncol = 3) +
+   plt_labs
 
 K <- 7
 
@@ -77,7 +79,22 @@ m7_hgam <- gam(response ~ s(time, treatment, bs = "fs", k = K) +
                data = rats, method = "REML")
 
 ## This is Model S smooths only at the lowest subject level
-m8_hgam <- gam(response ~ s(time, subject, bs = "fs", k = 5), # not enough data for more
+m8_hgam <- gam(response ~ s(time, subject, bs = "fs", k =5), # not enough data for more
                data = rats, method = "REML")
 
-AIC(m1_hgam, m2_hgam, m3_hgam, m4_hgam, m5_hgam, m6_hgam, m7_hgam, m8_hgam)
+AIC(m1_hgam, m2_hgam, m3_hgam, m4_hgam, m5_hgam, m6_hgam, m7_hgam, m8_hgam) %>%
+   as_tibble() %>%
+   tibble::add_column(Model = paste0("m", 1:8),
+      Name = c("G", "S_treat", "I_treat", "GI_treat", "GS_treat", "GSS",
+         "SGS", "S"),
+      .before = 1L) %>%
+   arrange(AIC)
+
+# plot the best models
+draw(m2_hgam)
+
+draw(m3_hgam)
+
+draw(m4_hgam)
+
+draw(m8_hgam)
