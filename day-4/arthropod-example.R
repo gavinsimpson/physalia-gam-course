@@ -22,7 +22,7 @@ vapply(pkgs, library, logical(1L),
 ##
 ## Option 1:
 ##
-## If you have the jonitor package or can install it
+## If you have the janitor package or can install it
 ##   install.packages("janitor")
 ## then follow this
 

@@ -891,7 +891,7 @@ This idea is very general;  spatiotemporal model needs a grid of x,y coordinates
 
 
 ```r
-sp_new &lt;- with(shrimp, expand.grid(x = seq_min_max(x, n = 100), y = seq_min_max(y, n = 100),
+sp_new &lt;- with(shrimp, expand.grid(x = evenly(x, n = 100), y = evenly(y, n = 100),
                                    year = unique(year)))
 sp_pred &lt;- predict(m_spt, newdata = sp_new, se.fit = TRUE) # link scale is default
 sp_pred &lt;- bind_cols(as_tibble(sp_new), as_tibble(as.data.frame(sp_pred)))
@@ -1036,7 +1036,7 @@ Prediction data only need dummy values for `x` and `y`
 
 
 ```r
-ti_new &lt;- with(shrimp, expand.grid(x = mean(x), y = mean(y), year = seq_min_max(year, n = 100)))
+ti_new &lt;- with(shrimp, expand.grid(x = mean(x), y = mean(y), year = evenly(year, n = 100)))
 
 ti_pred &lt;- predict(m_ti, newdata = ti_new, se.fit = TRUE,
 *                  exclude = c("ti(x,y,year)", "s(x,y)"))
@@ -1155,7 +1155,7 @@ The vector of model parameters for the smooth, `\(\boldsymbol{\hat{\beta}}\)`
 
 ```r
 sm_year &lt;- get_smooth(m_rich, "s(year)") # extract the smooth object from model
-idx &lt;- gratia:::smooth_coefs(sm_year)    # indices of the coefs for this smooth
+idx &lt;- gratia:::smooth_coef_indices(sm_year) # indices of the coefs for this smooth
 idx
 ```
 
@@ -1214,7 +1214,7 @@ We get `\(\boldsymbol{X}_p\)` using the `predict()` method with `type = "lpmatri
 
 
 ```r
-new_year &lt;- with(shrimp, tibble(year = seq_min_max(year, n = 100)))
+new_year &lt;- with(shrimp, tibble(year = evenly(year, n = 100)))
 Xp &lt;- predict(m_rich, newdata = new_year, type = 'lpmatrix')
 dim(Xp)
 ```
@@ -1419,7 +1419,7 @@ But what if you also wanted the uncertainty in that estimate?
 
 
 ```r
-sp_new &lt;- with(shrimp, expand.grid(x = seq_min_max(x, n = 100), y = seq_min_max(y, n = 100),
+sp_new &lt;- with(shrimp, expand.grid(x = evenly(x, n = 100), y = evenly(y, n = 100),
                                    year = 2007))
 Xp &lt;- predict(m_spt, newdata = sp_new, type = "lpmatrix")
 

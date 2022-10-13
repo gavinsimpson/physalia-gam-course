@@ -251,6 +251,7 @@ draw(m_rich)
 
 
 ## ----biom-space-time-plot, fig.height=8, fig.width=15, echo=FALSE, dev="png", dpi = 300----
+library('sf')
 coast <- read_sf(here("data", "nl_coast.shp"))
 ggplot(shrimp) +
   geom_point(aes(x = long, y = lat, size = shrimp), alpha = 0.5) +
@@ -289,7 +290,7 @@ ggplot(pred, aes(x = year)) +
 
 
 ## ----spt-example-predict------------------------------------------------------
-sp_new <- with(shrimp, expand.grid(x = seq_min_max(x, n = 100), y = seq_min_max(y, n = 100),
+sp_new <- with(shrimp, expand.grid(x = evenly(x, n = 100), y = evenly(y, n = 100),
                                    year = unique(year)))
 sp_pred <- predict(m_spt, newdata = sp_new, se.fit = TRUE) # link scale is default
 sp_pred <- bind_cols(as_tibble(sp_new), as_tibble(as.data.frame(sp_pred)))
@@ -326,7 +327,7 @@ smooths(m_ti)
 
 
 ## ----pred-data-ti-model-------------------------------------------------------
-ti_new <- with(shrimp, expand.grid(x = mean(x), y = mean(y), year = seq_min_max(year, n = 100)))
+ti_new <- with(shrimp, expand.grid(x = mean(x), y = mean(y), year = evenly(year, n = 100)))
 
 ti_pred <- predict(m_ti, newdata = ti_new, se.fit = TRUE,
                    exclude = c("ti(x,y,year)", "s(x,y)")) #<<
@@ -361,42 +362,42 @@ knitr::include_graphics("resources/miller-bayesian-gam-interpretation-fig.svg")
 
 ## ----richness-coefs-----------------------------------------------------------
 sm_year <- get_smooth(m_rich, "s(year)") # extract the smooth object from model
-idx <- gratia:::smooth_coefs(sm_year)    # indices of the coefs for this smooth
+idx <- gratia:::smooth_coef_indices(sm_year) # indices of the coefs for this smooth
 idx
 
 beta <- coef(m_rich)                     # vector of model parameters
 beta[idx]                                # coefs for this smooth
 
 
-## ----richness-vcov, results = "hide"------------------------------------------
+## ----richness-vcov, results = "hide", dependson=-1----------------------------
 Vb <- vcov(m_rich) # default is the bayesian covariance matrix
 Vb
 
 
-## ----richness-vcov-print, echo = FALSE----------------------------------------
+## ----richness-vcov-print, echo = FALSE, dependson=-1--------------------------
 op <- options(width = 170)
 Vb
 options(op)
 
 
-## ----richness-xp-matrix-------------------------------------------------------
-new_year <- with(shrimp, tibble(year = seq_min_max(year, n = 100)))
+## ----richness-xp-matrix, dependson=-1-----------------------------------------
+new_year <- with(shrimp, tibble(year = evenly(year, n = 100)))
 Xp <- predict(m_rich, newdata = new_year, type = 'lpmatrix')
 dim(Xp)
 
 
-## ----richness-reduce-xp-------------------------------------------------------
+## ----richness-reduce-xp, dependson=-1-----------------------------------------
 Xp <- Xp[, idx, drop = FALSE]
 dim(Xp)
 
 
-## ----richness-simulate-params-------------------------------------------------
+## ----richness-simulate-params, dependson=-1-----------------------------------
 set.seed(42)
 beta_sim <- rmvn(n = 20, beta[idx], Vb[idx, idx, drop = FALSE])
 dim(beta_sim)
 
 
-## ----richness-posterior-draws, fig.height = 5, fig.show = 'hide'--------------
+## ----richness-posterior-draws, fig.height = 5, fig.show = 'hide', dependson=-1----
 sm_draws <- Xp %*% t(beta_sim)
 dim(sm_draws)
 matplot(sm_draws, type = 'l')
@@ -408,12 +409,12 @@ dim(sm_draws)
 matplot(sm_draws, type = 'l')
 
 
-## ----plot-posterior-smooths, fig.height = 5-----------------------------------
+## ----plot-posterior-smooths, fig.height = 5, dependson=-1---------------------
 sm_post <- smooth_samples(m_rich, 's(year)', n = 20, seed = 42)
 draw(sm_post)
 
 
-## ----posterior-sim-model------------------------------------------------------
+## ----posterior-sim-model, dependson=-1----------------------------------------
 beta <- coef(m_rich)   # vector of model parameters
 Vb <- vcov(m_rich)     # default is the bayesian covariance matrix
 Xp <- predict(m_rich, type = 'lpmatrix')
@@ -426,19 +427,19 @@ mean(mu_p[1, ]) # mean of posterior for the first observation in the data
 quantile(mu_p[1, ], probs = c(0.025, 0.975))
 
 
-## ----posterior-sim-model-hist, fig.height = 5---------------------------------
+## ----posterior-sim-model-hist, fig.height = 5, dependson=-1-------------------
 ggplot(tibble(richness = mu_p[587, ]), aes(x = richness)) +
     geom_histogram() + labs(title = "Posterior richness for obs #587")
 
 
-## ----richness-fitted-samples, fig.height = 4.5--------------------------------
+## ----richness-fitted-samples, fig.height = 4.5, dependson=-1------------------
 rich_post <- fitted_samples(m_rich, n = 1000, newdata = shrimp, seed = 42)
 ggplot(filter(rich_post, row == 587), aes(x = fitted)) +
     geom_histogram() + labs(title = "Posterior richness for obs #587", x = "Richness")
 
 
-## ----total-biomass-posterior-1------------------------------------------------
-sp_new <- with(shrimp, expand.grid(x = seq_min_max(x, n = 100), y = seq_min_max(y, n = 100),
+## ----total-biomass-posterior-1, dependson=-1----------------------------------
+sp_new <- with(shrimp, expand.grid(x = evenly(x, n = 100), y = evenly(y, n = 100),
                                    year = 2007))
 Xp <- predict(m_spt, newdata = sp_new, type = "lpmatrix")
 
@@ -462,12 +463,12 @@ mean(total_biomass)
 quantile(total_biomass, probs = c(0.025, 0.975))
 
 
-## ----total-biomass-histogram, echo = FALSE------------------------------------
+## ----total-biomass-histogram, echo = FALSE, dependson=-1----------------------
 ggplot(tibble(biomass = total_biomass), aes(x = biomass)) +
     geom_histogram()
 
 
-## ----biomass-fitted-samples-example-------------------------------------------
+## ----biomass-fitted-samples-example, dependson=-1-----------------------------
 bio_post <- fitted_samples(m_spt, n = 1000,
                            newdata = sp_new[!too_far, ],
                            seed = 42) %>%
@@ -479,7 +480,7 @@ with(bio_post, mean(total))
 with(bio_post, quantile(total, probs = c(0.025, 0.975)))
 
 
-## ----biomass-fitted-samples-plot, fig.width = 5, fig.height = 5---------------
+## ----biomass-fitted-samples-plot, fig.width = 5, fig.height = 5, dependson=-1----
 ggplot(bio_post, aes(x = total)) +
     geom_histogram() +
     labs(x = "Total biomass")

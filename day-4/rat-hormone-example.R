@@ -37,6 +37,13 @@ ggplot(rats, aes(x = time, y = response,
     facet_wrap(~ treatment, ncol = 3) +
     plt_labs
 
+ggplot(rats, aes(x = transf_time, y = response,
+                 group = subject, colour = treatment)) +
+  geom_point(size = 1) +
+  geom_line() +
+  facet_wrap(~ treatment, ncol = 3) +
+  plt_labs
+
 m1_lmer <- lmer(response ~ treatment:transf_time +
                     (1 | subject) + (0 + transf_time | subject),
                 data = rats)
