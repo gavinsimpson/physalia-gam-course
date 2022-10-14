@@ -1,0 +1,173 @@
+#-----------------------------------------------------------------------
+#                World Data Center for Paleoclimatology, Boulder 
+#                                  and 
+#                     NOAA Paleoclimatology Program 
+#----------------------------------------------------------------------- 
+
+# NOTE: Please cite original reference when using these data,
+# plus the Online Resource and date accessed.
+
+# Original_Source_URL: ftp://ftp.ncdc.noaa.gov/pub/data/paleo/paleolimnology/greenland/kangerlussuaq2011.txt
+# Archive: Lake sediment
+#--------------------
+# Contribution_Date
+# Date: 03-Jan-2015
+#--------------------
+# Title
+# Study_name: Lake Braya So  Kangerlussuaq Lake sediment Uk'37
+#--------------------
+# Investigators
+# Investigators: D'Andrea, William J. and Huang, Yongsong and Fritz, Sherilyn C. and Anderson, N. John
+#--------------------
+# Publication
+#       Authors: McKay, N.P. and Kaufman, D.S. 
+#       Journal_Name: Nature Scientific Data
+#       Published Title: An extended Arctic proxy temperature database for the past 2,000 years 
+#       Published Date: August 2014 
+#       DOI: 10.1038/sdata.2014.26 
+#       Abstract: Robust climate reconstructions of the most recent centuries and millennia are invaluable for placing modern warming in the context of natural variability. Here we present an extended and revised database (version 1.1) of proxy temperature records recently used to reconstruct Arctic temperatures for the past 2,000 years. The datasets are presented in a machine-readable format, and have been extended with the geochronologic data and consistently generated time-uncertain ensembles, which will be useful in future analyses of the influence of geochronologic uncertainty. A revised reconstruction using the included updates and corrections suggests a stronger long-term cooling trend between AD 1 and 1900 than previously reported, although decadal to century variability remains consistent with previous studies. Comparisons with the observational record of temperature suggest that as a whole, the datasets faithfully record temperature variability across the Arctic, especially in northeast Canada and Greenland, where the density of records is highest. 
+#--------------------
+# Publication
+#       Authors: D'Andrea, William J. and Huang, Yongsong and Fritz, Sherilyn C. and Anderson, N. John 
+#       Journal Name: Proceedings of the National Academy of Sciences 
+#       Published Title: Abrupt Holocene climate change as an important factor for human migration in West Greenland 
+#       Published Date: 2011 
+#       DOI: 10.1073/pnas.1101708108 
+#       Abstract: West Greenland has had multiple episodes of human colonization and cultural transitions over the past 4,500 y. However, the explanations for these large-scale human migrations are varied, including climatic factors, resistance to adaptation, economic marginalization, mercantile exploration, and hostile neighborhood interactions. Evaluating the potential role of climate change is complicated by the lack of quantitative paleoclimate reconstructions near settlement areas and by the relative stability of Holocene temperature derived from ice cores atop the Greenland ice sheet. Here we present high-resolution records of temperature over the past 5,600 y based on alkenone unsaturation in sediments of two lakes in West Greenland. We find that major temperature changes in the past 4,500 y occurred abruptly (within decades), and were coeval in timing with the archaeological records of settlement and abandonment of the Saqqaq, Dorset, and Norse cultures, which suggests that abrupt temperature changes profoundly impacted human civilization in the region. Temperature variations in West Greenland display an antiphased relationship to temperature changes in Ireland over centennial to millennial timescales, resembling the interannual to multidecadal temperature seesaw associated with the North Atlantic Oscillation. 
+#--------------------
+# Site_Information
+#        Site_Name: Lake Braya So
+#        Region: Arctic
+#        Northernmost Latitude: 67
+#        Southernmost Latitude: 67
+#        Easternmost Longitude: -50.7
+#        Westernmost Longitude: -50.7
+#--------------------
+# Data_Collection
+#        Collection_Name: DAndrea.2011.Lake Braya So
+#        Earliest_Year: -997.9
+#        Most_Recent_Year: 1999.1
+#        Time_Unit: AD
+#        Core_Length: 47.5 (in cm)
+#--------------------
+# Chronology
+          depth (mm) | age14C (bp) | age_error (years) | age (bp) | cal_age_range_old (bp) | cal_age_range_young (2_s)
+          0            NA            NA                  -56        NA                       NA
+          185          780           25                  NA         511                      475
+          187.5        465           140                 NA         510                      NA
+          215          1430          30                  NA         994                      940
+          245          1585          45                  NA         1219                     1089
+          280          1500          140                 NA         1530                     1264
+          385          3230          40                  NA         3043                     2921
+          545          3685          50                  NA         3616                     3488
+          580          3950          30                  NA         3927                     3851
+          585          3920          35                  NA         3899                     3809
+          600          3780          55                  NA         4235                     4065
+          600          4185          55                  NA         4311                     4129
+          830          5300          40                  NA         5698                     5616
+          945          5785          60                  NA         6293                     6171
+          1180         6735          55                  NA         7359                     7243
+#--------------------
+# Variables
+# Data line variables format:  9 components, and a 10th for climate-sensitive variables: what, material, error, units, seasonality, archive, detail, method, C or N for Character or Numeric data, direction of relation to climate (positive or negative)
+## depth_cm	 depth, , , cm, , ,middle of sample, ,N 
+## depthUpper_cm	 depth, , , cm, , ,top of sample, ,N 
+## depthLower_cm	 depth, , , cm, , ,bottom of sample, ,N 
+## year_AD	 age, , , AD, , ,middle of sample, Bacon ,N 
+## yearYoung_AD	 age, , , AD, , ,top of sample, Bacon ,N 
+## yearOld_AD	 age, , , AD, , ,bottom of sample, Bacon ,N 
+## Uk37	 Uk37,sediment,,none,Summer,Paleolimnology,,,N,positive
+#--------------------
+# Data
+# Missing_Values: NA
+# Age Ensembles archived at DAndrea.2011.Lake Braya So_AgeEnsemble.nc 
+#depth_cm	depthUpper_cm	depthLower_cm	year_AD	yearYoung_AD	yearOld_AD	Uk37	
+0.25	 0.00	 0.50	 1999.125	 2006.000	 1992.250	 -0.640
+0.75	 0.50	 1.00	 1985.375	 1992.250	 1978.500	 -0.637
+1.25	 1.00	 1.50	 1971.525	 1978.500	 1964.550	 -0.614
+1.75	 1.50	 2.00	 1957.575	 1964.550	 1950.600	 -0.627
+2.25	 2.00	 2.50	 1943.150	 1950.600	 1935.700	 -0.633
+2.75	 2.50	 3.00	 1928.250	 1935.700	 1920.800	 -0.616
+3.25	 3.00	 3.50	 1913.525	 1920.800	 1906.250	 -0.617
+3.75	 3.50	 4.00	 1898.975	 1906.250	 1891.700	 -0.585
+4.25	 4.00	 4.50	 1884.175	 1891.700	 1876.650	 -0.620
+5.25	 5.00	 5.50	 1854.075	 1861.600	 1846.550	 -0.651
+5.75	 5.50	 6.00	 1839.025	 1846.550	 1831.500	 -0.644
+6.25	 6.00	 6.50	 1824.300	 1831.500	 1817.100	 -0.637
+6.75	 6.50	 7.00	 1809.900	 1817.100	 1802.700	 -0.634
+7.25	 7.00	 7.50	 1795.500	 1802.700	 1788.300	 -0.637
+7.75	 7.50	 8.00	 1781.100	 1788.300	 1773.900	 -0.673
+8.25	 8.00	 8.50	 1766.425	 1773.900	 1758.950	 -0.648
+8.75	 8.50	 9.00	 1751.475	 1758.950	 1744.000	 -0.629
+9.25	 9.00	 9.50	 1736.650	 1744.000	 1729.300	 -0.600
+9.75	 9.50	 10.00	 1721.950	 1729.300	 1714.600	 -0.634
+10.25	 10.00	 10.50	 1707.050	 1714.600	 1699.500	 -0.597
+10.75	 10.50	 11.00	 1691.950	 1699.500	 1684.400	 -0.645
+11.00	 10.75	 11.25	 1684.400	 1691.950	 1676.750	 -0.661
+11.25	 11.00	 11.50	 1676.750	 1684.400	 1669.100	 -0.644
+11.75	 11.50	 12.00	 1661.450	 1669.100	 1653.800	 -0.646
+12.25	 12.00	 12.50	 1646.575	 1653.800	 1639.350	 -0.642
+12.50	 12.25	 12.75	 1639.350	 1646.575	 1632.125	 -0.640
+12.75	 12.50	 13.00	 1632.125	 1639.350	 1624.900	 -0.615
+13.25	 13.00	 13.50	 1617.550	 1624.900	 1610.200	 -0.628
+13.75	 13.50	 14.00	 1602.850	 1610.200	 1595.500	 -0.630
+14.25	 14.00	 14.50	 1587.975	 1595.500	 1580.450	 -0.637
+14.75	 14.50	 15.00	 1572.925	 1580.450	 1565.400	 -0.599
+15.25	 15.00	 15.50	 1557.975	 1565.400	 1550.550	 -0.624
+15.75	 15.50	 16.00	 1543.125	 1550.550	 1535.700	 -0.581
+16.25	 16.00	 16.50	 1528.200	 1535.700	 1520.700	 -0.625
+16.75	 16.50	 17.00	 1513.200	 1520.700	 1505.700	 -0.637
+17.25	 17.00	 17.50	 1498.175	 1505.700	 1490.650	 -0.633
+17.75	 17.50	 18.00	 1483.125	 1490.650	 1475.600	 -0.618
+18.25	 18.00	 18.50	 1460.775	 1475.600	 1445.950	 -0.628
+18.75	 18.50	 19.00	 1431.125	 1445.950	 1416.300	 -0.632
+19.25	 19.00	 19.50	 1401.225	 1416.300	 1386.150	 -0.645
+19.75	 19.50	 20.00	 1371.075	 1386.150	 1356.000	 -0.683
+20.25	 20.00	 20.50	 1311.775	 1356.000	 1267.550	 -0.680
+20.50	 20.25	 20.75	 1267.550	 1311.775	 1223.325	 -0.694
+20.75	 20.50	 21.00	 1223.325	 1267.550	 1179.100	 -0.622
+21.25	 21.00	 21.50	 1134.975	 1179.100	 1090.850	 -0.591
+21.75	 21.50	 22.00	 1046.725	 1090.850	 1002.600	 -0.618
+22.25	 22.00	 22.50	 987.450	 1002.600	 972.300	 -0.629
+22.75	 22.50	 23.00	 957.150	 972.300	 942.000	 -0.653
+23.25	 23.00	 23.50	 926.825	 942.000	 911.650	 -0.651
+23.75	 23.50	 24.00	 896.475	 911.650	 881.300	 -0.666
+24.25	 24.00	 24.50	 867.800	 881.300	 854.300	 -0.674
+24.75	 24.50	 25.00	 840.800	 854.300	 827.300	 -0.648
+25.25	 25.00	 25.50	 813.825	 827.300	 800.350	 -0.659
+25.75	 25.50	 26.00	 786.875	 800.350	 773.400	 -0.650
+26.25	 26.00	 26.50	 761.375	 773.400	 749.350	 -0.646
+26.75	 26.50	 27.00	 737.325	 749.350	 725.300	 -0.635
+27.25	 27.00	 27.50	 713.600	 725.300	 701.900	 -0.668
+27.75	 27.50	 28.00	 690.200	 701.900	 678.500	 -0.679
+28.25	 28.00	 28.50	 660.525	 678.500	 642.550	 -0.669
+28.75	 28.50	 29.00	 624.575	 642.550	 606.600	 -0.671
+29.25	 29.00	 29.50	 589.075	 606.600	 571.550	 -0.657
+29.75	 29.50	 30.00	 554.025	 571.550	 536.500	 -0.641
+30.25	 30.00	 30.50	 515.425	 536.500	 494.350	 -0.601
+30.75	 30.50	 31.00	 473.275	 494.350	 452.200	 -0.658
+31.75	 31.50	 32.00	 391.150	 411.500	 370.800	 -0.658
+32.25	 32.00	 32.50	 349.650	 370.800	 328.500	 -0.623
+32.75	 32.50	 33.00	 307.350	 328.500	 286.200	 -0.600
+33.25	 33.00	 33.50	 265.275	 286.200	 244.350	 -0.557
+33.75	 33.50	 34.00	 223.425	 244.350	 202.500	 -0.566
+34.25	 34.00	 34.50	 181.225	 202.500	 159.950	 -0.637
+34.75	 34.50	 35.00	 138.675	 159.950	 117.400	 -0.667
+35.25	 35.00	 35.50	 96.325	 117.400	 75.250	 -0.689
+36.25	 36.00	 36.50	 10.500	 33.100	 -12.100	 -0.656
+36.75	 36.50	 37.00	 -34.700	 -12.100	 -57.300	 -0.657
+37.25	 37.00	 37.50	 -79.825	 -57.300	 -102.350	 -0.640
+38.25	 38.00	 38.50	 -169.725	 -147.400	 -192.050	 -0.605
+38.75	 38.50	 39.00	 -214.375	 -192.050	 -236.700	 -0.622
+39.25	 39.00	 39.50	 -258.675	 -236.700	 -280.650	 -0.639
+39.75	 39.50	 40.00	 -302.625	 -280.650	 -324.600	 -0.584
+40.25	 40.00	 40.50	 -346.400	 -324.600	 -368.200	 -0.580
+40.75	 40.50	 41.00	 -390.000	 -368.200	 -411.800	 -0.628
+41.75	 41.50	 42.00	 -477.425	 -455.550	 -499.300	 -0.659
+42.75	 42.50	 43.00	 -564.925	 -543.050	 -586.800	 -0.594
+43.75	 43.50	 44.00	 -651.900	 -630.200	 -673.600	 -0.629
+44.75	 44.50	 45.00	 -738.400	 -716.800	 -760.000	 -0.632
+45.75	 45.50	 46.00	 -824.650	 -803.100	 -846.200	 -0.627
+46.75	 46.50	 47.00	 -910.700	 -889.200	 -932.200	 -0.607
+47.25	 47.00	 47.50	 -954.100	 -932.200	 -976.000	 -0.634
+47.75	 47.50	 48.00	 -997.900	 -976.000	 -1019.800	 -0.591

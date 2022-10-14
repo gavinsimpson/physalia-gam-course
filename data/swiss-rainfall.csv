@@ -1,0 +1,2197 @@
+year,exra,nao,location,code,elevation,climate.region,N,E
+1984,43.4,2.17,Adelboden,ABO,1327,Western Alpine north slope,46.49,7.56
+1985,41.5,-3.09,Adelboden,ABO,1327,Western Alpine north slope,46.49,7.56
+1986,46.4,3.14,Adelboden,ABO,1327,Western Alpine north slope,46.49,7.56
+1987,43.4,-3.01,Adelboden,ABO,1327,Western Alpine north slope,46.49,7.56
+1988,41.8,-0.13,Adelboden,ABO,1327,Western Alpine north slope,46.49,7.56
+1989,40.9,2.38,Adelboden,ABO,1327,Western Alpine north slope,46.49,7.56
+1990,52.5,3.88,Adelboden,ABO,1327,Western Alpine north slope,46.49,7.56
+1991,42.8,1.14,Adelboden,ABO,1327,Western Alpine north slope,46.49,7.56
+1992,37.6,2.54,Adelboden,ABO,1327,Western Alpine north slope,46.49,7.56
+1993,39.8,1.71,Adelboden,ABO,1327,Western Alpine north slope,46.49,7.56
+1994,33.8,2.86,Adelboden,ABO,1327,Western Alpine north slope,46.49,7.56
+1995,40.6,-1.11,Adelboden,ABO,1327,Western Alpine north slope,46.49,7.56
+1996,38.9,-1.98,Adelboden,ABO,1327,Western Alpine north slope,46.49,7.56
+1997,60.7,-0.93,Adelboden,ABO,1327,Western Alpine north slope,46.49,7.56
+1998,33.6,1.03,Adelboden,ABO,1327,Western Alpine north slope,46.49,7.56
+1999,49.6,2.25,Adelboden,ABO,1327,Western Alpine north slope,46.49,7.56
+2000,35.9,1.18,Adelboden,ABO,1327,Western Alpine north slope,46.49,7.56
+2001,62.7,-1.91,Adelboden,ABO,1327,Western Alpine north slope,46.49,7.56
+2002,49.2,1,Adelboden,ABO,1327,Western Alpine north slope,46.49,7.56
+2003,49.1,-0.09,Adelboden,ABO,1327,Western Alpine north slope,46.49,7.56
+2004,48.6,0.7,Adelboden,ABO,1327,Western Alpine north slope,46.49,7.56
+2005,49.7,-1.35,Adelboden,ABO,1327,Western Alpine north slope,46.49,7.56
+2006,36,-0.2,Adelboden,ABO,1327,Western Alpine north slope,46.49,7.56
+2007,59,1.35,Adelboden,ABO,1327,Western Alpine north slope,46.49,7.56
+2008,31,1.72,Adelboden,ABO,1327,Western Alpine north slope,46.49,7.56
+2009,36.5,0.72,Adelboden,ABO,1327,Western Alpine north slope,46.49,7.56
+2010,36.3,-5.96,Adelboden,ABO,1327,Western Alpine north slope,46.49,7.56
+2011,56.3,2.95,Adelboden,ABO,1327,Western Alpine north slope,46.49,7.56
+2012,49.6,-0.25,Adelboden,ABO,1327,Western Alpine north slope,46.49,7.56
+2013,36.6,0.9,Adelboden,ABO,1327,Western Alpine north slope,46.49,7.56
+2014,51.6,2.97,Adelboden,ABO,1327,Western Alpine north slope,46.49,7.56
+2015,69.2,4.09,Adelboden,ABO,1327,Western Alpine north slope,46.49,7.56
+1981,50.3,-0.55,Aigle,AIG,381,Western Alpine north slope,46.33,6.92
+1982,42.4,2.63,Aigle,AIG,381,Western Alpine north slope,46.33,6.92
+1983,48.8,0.38,Aigle,AIG,381,Western Alpine north slope,46.33,6.92
+1984,30.6,2.17,Aigle,AIG,381,Western Alpine north slope,46.33,6.92
+1985,34.8,-3.09,Aigle,AIG,381,Western Alpine north slope,46.33,6.92
+1986,56,3.14,Aigle,AIG,381,Western Alpine north slope,46.33,6.92
+1987,40.7,-3.01,Aigle,AIG,381,Western Alpine north slope,46.33,6.92
+1988,58.8,-0.13,Aigle,AIG,381,Western Alpine north slope,46.33,6.92
+1989,35.4,2.38,Aigle,AIG,381,Western Alpine north slope,46.33,6.92
+1990,48.6,3.88,Aigle,AIG,381,Western Alpine north slope,46.33,6.92
+1991,40.3,1.14,Aigle,AIG,381,Western Alpine north slope,46.33,6.92
+1992,54.5,2.54,Aigle,AIG,381,Western Alpine north slope,46.33,6.92
+1993,42.7,1.71,Aigle,AIG,381,Western Alpine north slope,46.33,6.92
+1994,42.3,2.86,Aigle,AIG,381,Western Alpine north slope,46.33,6.92
+1995,37.2,-1.11,Aigle,AIG,381,Western Alpine north slope,46.33,6.92
+1996,43.7,-1.98,Aigle,AIG,381,Western Alpine north slope,46.33,6.92
+1997,44.8,-0.93,Aigle,AIG,381,Western Alpine north slope,46.33,6.92
+1998,28.8,1.03,Aigle,AIG,381,Western Alpine north slope,46.33,6.92
+1999,41.9,2.25,Aigle,AIG,381,Western Alpine north slope,46.33,6.92
+2000,28.9,1.18,Aigle,AIG,381,Western Alpine north slope,46.33,6.92
+2001,33.9,-1.91,Aigle,AIG,381,Western Alpine north slope,46.33,6.92
+2002,33,1,Aigle,AIG,381,Western Alpine north slope,46.33,6.92
+2003,29,-0.09,Aigle,AIG,381,Western Alpine north slope,46.33,6.92
+2004,52.3,0.7,Aigle,AIG,381,Western Alpine north slope,46.33,6.92
+2005,58.1,-1.35,Aigle,AIG,381,Western Alpine north slope,46.33,6.92
+2006,49.2,-0.2,Aigle,AIG,381,Western Alpine north slope,46.33,6.92
+2007,51.2,1.35,Aigle,AIG,381,Western Alpine north slope,46.33,6.92
+2008,26.8,1.72,Aigle,AIG,381,Western Alpine north slope,46.33,6.92
+2009,31.7,0.72,Aigle,AIG,381,Western Alpine north slope,46.33,6.92
+2010,26.8,-5.96,Aigle,AIG,381,Western Alpine north slope,46.33,6.92
+2011,33.5,2.95,Aigle,AIG,381,Western Alpine north slope,46.33,6.92
+2012,38.8,-0.25,Aigle,AIG,381,Western Alpine north slope,46.33,6.92
+2013,48.9,0.9,Aigle,AIG,381,Western Alpine north slope,46.33,6.92
+2014,48.8,2.97,Aigle,AIG,381,Western Alpine north slope,46.33,6.92
+2015,35.9,4.09,Aigle,AIG,381,Western Alpine north slope,46.33,6.92
+1981,49.8,-0.55,Altdorf,ALT,438,Central Alpine north slope,46.89,8.62
+1982,41.6,2.63,Altdorf,ALT,438,Central Alpine north slope,46.89,8.62
+1983,37.8,0.38,Altdorf,ALT,438,Central Alpine north slope,46.89,8.62
+1984,56.3,2.17,Altdorf,ALT,438,Central Alpine north slope,46.89,8.62
+1985,31.4,-3.09,Altdorf,ALT,438,Central Alpine north slope,46.89,8.62
+1986,54.9,3.14,Altdorf,ALT,438,Central Alpine north slope,46.89,8.62
+1987,57.6,-3.01,Altdorf,ALT,438,Central Alpine north slope,46.89,8.62
+1988,37.1,-0.13,Altdorf,ALT,438,Central Alpine north slope,46.89,8.62
+1989,46.4,2.38,Altdorf,ALT,438,Central Alpine north slope,46.89,8.62
+1990,51.6,3.88,Altdorf,ALT,438,Central Alpine north slope,46.89,8.62
+1991,65.6,1.14,Altdorf,ALT,438,Central Alpine north slope,46.89,8.62
+1992,40,2.54,Altdorf,ALT,438,Central Alpine north slope,46.89,8.62
+1993,49.3,1.71,Altdorf,ALT,438,Central Alpine north slope,46.89,8.62
+1994,38,2.86,Altdorf,ALT,438,Central Alpine north slope,46.89,8.62
+1995,50.4,-1.11,Altdorf,ALT,438,Central Alpine north slope,46.89,8.62
+1996,60,-1.98,Altdorf,ALT,438,Central Alpine north slope,46.89,8.62
+1997,37.5,-0.93,Altdorf,ALT,438,Central Alpine north slope,46.89,8.62
+1998,40.3,1.03,Altdorf,ALT,438,Central Alpine north slope,46.89,8.62
+1999,55,2.25,Altdorf,ALT,438,Central Alpine north slope,46.89,8.62
+2000,49.3,1.18,Altdorf,ALT,438,Central Alpine north slope,46.89,8.62
+2001,40.5,-1.91,Altdorf,ALT,438,Central Alpine north slope,46.89,8.62
+2002,104.7,1,Altdorf,ALT,438,Central Alpine north slope,46.89,8.62
+2003,38.2,-0.09,Altdorf,ALT,438,Central Alpine north slope,46.89,8.62
+2004,43.1,0.7,Altdorf,ALT,438,Central Alpine north slope,46.89,8.62
+2005,53.4,-1.35,Altdorf,ALT,438,Central Alpine north slope,46.89,8.62
+2006,71.9,-0.2,Altdorf,ALT,438,Central Alpine north slope,46.89,8.62
+2007,45.5,1.35,Altdorf,ALT,438,Central Alpine north slope,46.89,8.62
+2008,48.1,1.72,Altdorf,ALT,438,Central Alpine north slope,46.89,8.62
+2009,47.2,0.72,Altdorf,ALT,438,Central Alpine north slope,46.89,8.62
+2010,51.2,-5.96,Altdorf,ALT,438,Central Alpine north slope,46.89,8.62
+2011,38.1,2.95,Altdorf,ALT,438,Central Alpine north slope,46.89,8.62
+2012,27.4,-0.25,Altdorf,ALT,438,Central Alpine north slope,46.89,8.62
+2013,50.2,0.9,Altdorf,ALT,438,Central Alpine north slope,46.89,8.62
+2014,45.3,2.97,Altdorf,ALT,438,Central Alpine north slope,46.89,8.62
+2015,38.1,4.09,Altdorf,ALT,438,Central Alpine north slope,46.89,8.62
+1981,39.1,-0.55,Basel.Binningen,BAS,316,Eastern Jura,47.54,7.58
+1982,41.8,2.63,Basel.Binningen,BAS,316,Eastern Jura,47.54,7.58
+1983,27.5,0.38,Basel.Binningen,BAS,316,Eastern Jura,47.54,7.58
+1984,29.3,2.17,Basel.Binningen,BAS,316,Eastern Jura,47.54,7.58
+1985,24.9,-3.09,Basel.Binningen,BAS,316,Eastern Jura,47.54,7.58
+1986,35.2,3.14,Basel.Binningen,BAS,316,Eastern Jura,47.54,7.58
+1987,43.5,-3.01,Basel.Binningen,BAS,316,Eastern Jura,47.54,7.58
+1988,28.6,-0.13,Basel.Binningen,BAS,316,Eastern Jura,47.54,7.58
+1989,25.5,2.38,Basel.Binningen,BAS,316,Eastern Jura,47.54,7.58
+1990,32.4,3.88,Basel.Binningen,BAS,316,Eastern Jura,47.54,7.58
+1991,85,1.14,Basel.Binningen,BAS,316,Eastern Jura,47.54,7.58
+1992,32.6,2.54,Basel.Binningen,BAS,316,Eastern Jura,47.54,7.58
+1993,34,1.71,Basel.Binningen,BAS,316,Eastern Jura,47.54,7.58
+1994,59.8,2.86,Basel.Binningen,BAS,316,Eastern Jura,47.54,7.58
+1995,36.1,-1.11,Basel.Binningen,BAS,316,Eastern Jura,47.54,7.58
+1996,47.7,-1.98,Basel.Binningen,BAS,316,Eastern Jura,47.54,7.58
+1997,45.2,-0.93,Basel.Binningen,BAS,316,Eastern Jura,47.54,7.58
+1998,45.9,1.03,Basel.Binningen,BAS,316,Eastern Jura,47.54,7.58
+1999,43.3,2.25,Basel.Binningen,BAS,316,Eastern Jura,47.54,7.58
+2000,37,1.18,Basel.Binningen,BAS,316,Eastern Jura,47.54,7.58
+2001,28.4,-1.91,Basel.Binningen,BAS,316,Eastern Jura,47.54,7.58
+2002,30.2,1,Basel.Binningen,BAS,316,Eastern Jura,47.54,7.58
+2003,23.2,-0.09,Basel.Binningen,BAS,316,Eastern Jura,47.54,7.58
+2004,35.6,0.7,Basel.Binningen,BAS,316,Eastern Jura,47.54,7.58
+2005,24.9,-1.35,Basel.Binningen,BAS,316,Eastern Jura,47.54,7.58
+2006,41.6,-0.2,Basel.Binningen,BAS,316,Eastern Jura,47.54,7.58
+2007,63.4,1.35,Basel.Binningen,BAS,316,Eastern Jura,47.54,7.58
+2008,47.6,1.72,Basel.Binningen,BAS,316,Eastern Jura,47.54,7.58
+2009,39.1,0.72,Basel.Binningen,BAS,316,Eastern Jura,47.54,7.58
+2010,47.9,-5.96,Basel.Binningen,BAS,316,Eastern Jura,47.54,7.58
+2011,30.2,2.95,Basel.Binningen,BAS,316,Eastern Jura,47.54,7.58
+2012,42.8,-0.25,Basel.Binningen,BAS,316,Eastern Jura,47.54,7.58
+2013,34.3,0.9,Basel.Binningen,BAS,316,Eastern Jura,47.54,7.58
+2014,29,2.97,Basel.Binningen,BAS,316,Eastern Jura,47.54,7.58
+2015,35.7,4.09,Basel.Binningen,BAS,316,Eastern Jura,47.54,7.58
+1981,46.7,-0.55,Bern.Zollikofen,BER,553,Central plateau,46.99,7.46
+1982,57.6,2.63,Bern.Zollikofen,BER,553,Central plateau,46.99,7.46
+1983,56.5,0.38,Bern.Zollikofen,BER,553,Central plateau,46.99,7.46
+1984,40.4,2.17,Bern.Zollikofen,BER,553,Central plateau,46.99,7.46
+1985,42.9,-3.09,Bern.Zollikofen,BER,553,Central plateau,46.99,7.46
+1986,50.7,3.14,Bern.Zollikofen,BER,553,Central plateau,46.99,7.46
+1987,50.8,-3.01,Bern.Zollikofen,BER,553,Central plateau,46.99,7.46
+1988,44.8,-0.13,Bern.Zollikofen,BER,553,Central plateau,46.99,7.46
+1989,44.9,2.38,Bern.Zollikofen,BER,553,Central plateau,46.99,7.46
+1990,55,3.88,Bern.Zollikofen,BER,553,Central plateau,46.99,7.46
+1991,41.1,1.14,Bern.Zollikofen,BER,553,Central plateau,46.99,7.46
+1992,45.4,2.54,Bern.Zollikofen,BER,553,Central plateau,46.99,7.46
+1993,40.4,1.71,Bern.Zollikofen,BER,553,Central plateau,46.99,7.46
+1994,29,2.86,Bern.Zollikofen,BER,553,Central plateau,46.99,7.46
+1995,41.6,-1.11,Bern.Zollikofen,BER,553,Central plateau,46.99,7.46
+1996,40,-1.98,Bern.Zollikofen,BER,553,Central plateau,46.99,7.46
+1997,43,-0.93,Bern.Zollikofen,BER,553,Central plateau,46.99,7.46
+1998,41.8,1.03,Bern.Zollikofen,BER,553,Central plateau,46.99,7.46
+1999,54.9,2.25,Bern.Zollikofen,BER,553,Central plateau,46.99,7.46
+2000,43.9,1.18,Bern.Zollikofen,BER,553,Central plateau,46.99,7.46
+2001,42.3,-1.91,Bern.Zollikofen,BER,553,Central plateau,46.99,7.46
+2002,50.6,1,Bern.Zollikofen,BER,553,Central plateau,46.99,7.46
+2003,26.7,-0.09,Bern.Zollikofen,BER,553,Central plateau,46.99,7.46
+2004,31.1,0.7,Bern.Zollikofen,BER,553,Central plateau,46.99,7.46
+2005,51.5,-1.35,Bern.Zollikofen,BER,553,Central plateau,46.99,7.46
+2006,38.7,-0.2,Bern.Zollikofen,BER,553,Central plateau,46.99,7.46
+2007,68.7,1.35,Bern.Zollikofen,BER,553,Central plateau,46.99,7.46
+2008,41.7,1.72,Bern.Zollikofen,BER,553,Central plateau,46.99,7.46
+2009,40.9,0.72,Bern.Zollikofen,BER,553,Central plateau,46.99,7.46
+2010,89.6,-5.96,Bern.Zollikofen,BER,553,Central plateau,46.99,7.46
+2011,52.8,2.95,Bern.Zollikofen,BER,553,Central plateau,46.99,7.46
+2012,32.6,-0.25,Bern.Zollikofen,BER,553,Central plateau,46.99,7.46
+2013,53.2,0.9,Bern.Zollikofen,BER,553,Central plateau,46.99,7.46
+2014,41.8,2.97,Bern.Zollikofen,BER,553,Central plateau,46.99,7.46
+2015,37.4,4.09,Bern.Zollikofen,BER,553,Central plateau,46.99,7.46
+1981,46.8,-0.55,Beznau,BEZ,326,North-eastern plateau,47.56,8.23
+1982,57.8,2.63,Beznau,BEZ,326,North-eastern plateau,47.56,8.23
+1983,56.5,0.38,Beznau,BEZ,326,North-eastern plateau,47.56,8.23
+1984,40.4,2.17,Beznau,BEZ,326,North-eastern plateau,47.56,8.23
+1985,43.1,-3.09,Beznau,BEZ,326,North-eastern plateau,47.56,8.23
+1986,50.7,3.14,Beznau,BEZ,326,North-eastern plateau,47.56,8.23
+1987,50.8,-3.01,Beznau,BEZ,326,North-eastern plateau,47.56,8.23
+1988,44.9,-0.13,Beznau,BEZ,326,North-eastern plateau,47.56,8.23
+1989,44.9,2.38,Beznau,BEZ,326,North-eastern plateau,47.56,8.23
+1990,55.1,3.88,Beznau,BEZ,326,North-eastern plateau,47.56,8.23
+1991,41.4,1.14,Beznau,BEZ,326,North-eastern plateau,47.56,8.23
+1992,45.5,2.54,Beznau,BEZ,326,North-eastern plateau,47.56,8.23
+1993,40.6,1.71,Beznau,BEZ,326,North-eastern plateau,47.56,8.23
+1994,29.2,2.86,Beznau,BEZ,326,North-eastern plateau,47.56,8.23
+1995,41.7,-1.11,Beznau,BEZ,326,North-eastern plateau,47.56,8.23
+1996,40.2,-1.98,Beznau,BEZ,326,North-eastern plateau,47.56,8.23
+1997,43,-0.93,Beznau,BEZ,326,North-eastern plateau,47.56,8.23
+1998,41.7,1.03,Beznau,BEZ,326,North-eastern plateau,47.56,8.23
+1999,55,2.25,Beznau,BEZ,326,North-eastern plateau,47.56,8.23
+2000,44.1,1.18,Beznau,BEZ,326,North-eastern plateau,47.56,8.23
+2001,42.6,-1.91,Beznau,BEZ,326,North-eastern plateau,47.56,8.23
+2002,50.8,1,Beznau,BEZ,326,North-eastern plateau,47.56,8.23
+2003,26.9,-0.09,Beznau,BEZ,326,North-eastern plateau,47.56,8.23
+2004,31.1,0.7,Beznau,BEZ,326,North-eastern plateau,47.56,8.23
+2005,51.7,-1.35,Beznau,BEZ,326,North-eastern plateau,47.56,8.23
+2006,38.9,-0.2,Beznau,BEZ,326,North-eastern plateau,47.56,8.23
+2007,68.8,1.35,Beznau,BEZ,326,North-eastern plateau,47.56,8.23
+2008,41.9,1.72,Beznau,BEZ,326,North-eastern plateau,47.56,8.23
+2009,41,0.72,Beznau,BEZ,326,North-eastern plateau,47.56,8.23
+2010,89.8,-5.96,Beznau,BEZ,326,North-eastern plateau,47.56,8.23
+2011,53,2.95,Beznau,BEZ,326,North-eastern plateau,47.56,8.23
+2012,32.9,-0.25,Beznau,BEZ,326,North-eastern plateau,47.56,8.23
+2013,53.4,0.9,Beznau,BEZ,326,North-eastern plateau,47.56,8.23
+2014,41.9,2.97,Beznau,BEZ,326,North-eastern plateau,47.56,8.23
+2015,37.7,4.09,Beznau,BEZ,326,North-eastern plateau,47.56,8.23
+1985,32.8,-3.09,Buchs.Aarau,BUS,387,Central plateau,47.38,8.08
+1986,49.6,3.14,Buchs.Aarau,BUS,387,Central plateau,47.38,8.08
+1987,58.7,-3.01,Buchs.Aarau,BUS,387,Central plateau,47.38,8.08
+1988,32.2,-0.13,Buchs.Aarau,BUS,387,Central plateau,47.38,8.08
+1989,54.7,2.38,Buchs.Aarau,BUS,387,Central plateau,47.38,8.08
+1990,45.3,3.88,Buchs.Aarau,BUS,387,Central plateau,47.38,8.08
+1991,35.8,1.14,Buchs.Aarau,BUS,387,Central plateau,47.38,8.08
+1992,58.2,2.54,Buchs.Aarau,BUS,387,Central plateau,47.38,8.08
+1993,52.5,1.71,Buchs.Aarau,BUS,387,Central plateau,47.38,8.08
+1994,87.3,2.86,Buchs.Aarau,BUS,387,Central plateau,47.38,8.08
+1995,35.6,-1.11,Buchs.Aarau,BUS,387,Central plateau,47.38,8.08
+1996,49.2,-1.98,Buchs.Aarau,BUS,387,Central plateau,47.38,8.08
+1997,36.1,-0.93,Buchs.Aarau,BUS,387,Central plateau,47.38,8.08
+1998,36.6,1.03,Buchs.Aarau,BUS,387,Central plateau,47.38,8.08
+1999,75.1,2.25,Buchs.Aarau,BUS,387,Central plateau,47.38,8.08
+2000,32.8,1.18,Buchs.Aarau,BUS,387,Central plateau,47.38,8.08
+2001,30.3,-1.91,Buchs.Aarau,BUS,387,Central plateau,47.38,8.08
+2002,35.1,1,Buchs.Aarau,BUS,387,Central plateau,47.38,8.08
+2003,29,-0.09,Buchs.Aarau,BUS,387,Central plateau,47.38,8.08
+2004,32.3,0.7,Buchs.Aarau,BUS,387,Central plateau,47.38,8.08
+2005,36.4,-1.35,Buchs.Aarau,BUS,387,Central plateau,47.38,8.08
+2006,44.3,-0.2,Buchs.Aarau,BUS,387,Central plateau,47.38,8.08
+2007,66.7,1.35,Buchs.Aarau,BUS,387,Central plateau,47.38,8.08
+2008,40.5,1.72,Buchs.Aarau,BUS,387,Central plateau,47.38,8.08
+2009,50.9,0.72,Buchs.Aarau,BUS,387,Central plateau,47.38,8.08
+2010,40.4,-5.96,Buchs.Aarau,BUS,387,Central plateau,47.38,8.08
+2011,40.3,2.95,Buchs.Aarau,BUS,387,Central plateau,47.38,8.08
+2012,30.4,-0.25,Buchs.Aarau,BUS,387,Central plateau,47.38,8.08
+2013,42.9,0.9,Buchs.Aarau,BUS,387,Central plateau,47.38,8.08
+2014,38.3,2.97,Buchs.Aarau,BUS,387,Central plateau,47.38,8.08
+2015,35.2,4.09,Buchs.Aarau,BUS,387,Central plateau,47.38,8.08
+1985,32.9,-3.09,La Chaux-de-Fonds,CDF,1018,Western Jura,47.08,6.79
+1986,49.5,3.14,La Chaux-de-Fonds,CDF,1018,Western Jura,47.08,6.79
+1987,58.8,-3.01,La Chaux-de-Fonds,CDF,1018,Western Jura,47.08,6.79
+1988,32.5,-0.13,La Chaux-de-Fonds,CDF,1018,Western Jura,47.08,6.79
+1989,54.9,2.38,La Chaux-de-Fonds,CDF,1018,Western Jura,47.08,6.79
+1990,45.3,3.88,La Chaux-de-Fonds,CDF,1018,Western Jura,47.08,6.79
+1991,36,1.14,La Chaux-de-Fonds,CDF,1018,Western Jura,47.08,6.79
+1992,58.5,2.54,La Chaux-de-Fonds,CDF,1018,Western Jura,47.08,6.79
+1993,52.6,1.71,La Chaux-de-Fonds,CDF,1018,Western Jura,47.08,6.79
+1994,87.3,2.86,La Chaux-de-Fonds,CDF,1018,Western Jura,47.08,6.79
+1995,35.6,-1.11,La Chaux-de-Fonds,CDF,1018,Western Jura,47.08,6.79
+1996,49.1,-1.98,La Chaux-de-Fonds,CDF,1018,Western Jura,47.08,6.79
+1997,36.1,-0.93,La Chaux-de-Fonds,CDF,1018,Western Jura,47.08,6.79
+1998,36.7,1.03,La Chaux-de-Fonds,CDF,1018,Western Jura,47.08,6.79
+1999,75.3,2.25,La Chaux-de-Fonds,CDF,1018,Western Jura,47.08,6.79
+2000,32.8,1.18,La Chaux-de-Fonds,CDF,1018,Western Jura,47.08,6.79
+2001,30.6,-1.91,La Chaux-de-Fonds,CDF,1018,Western Jura,47.08,6.79
+2002,35.4,1,La Chaux-de-Fonds,CDF,1018,Western Jura,47.08,6.79
+2003,29.1,-0.09,La Chaux-de-Fonds,CDF,1018,Western Jura,47.08,6.79
+2004,32.2,0.7,La Chaux-de-Fonds,CDF,1018,Western Jura,47.08,6.79
+2005,36.6,-1.35,La Chaux-de-Fonds,CDF,1018,Western Jura,47.08,6.79
+2006,44.5,-0.2,La Chaux-de-Fonds,CDF,1018,Western Jura,47.08,6.79
+2007,66.9,1.35,La Chaux-de-Fonds,CDF,1018,Western Jura,47.08,6.79
+2008,40.6,1.72,La Chaux-de-Fonds,CDF,1018,Western Jura,47.08,6.79
+2009,51.2,0.72,La Chaux-de-Fonds,CDF,1018,Western Jura,47.08,6.79
+2010,40.6,-5.96,La Chaux-de-Fonds,CDF,1018,Western Jura,47.08,6.79
+2011,40.5,2.95,La Chaux-de-Fonds,CDF,1018,Western Jura,47.08,6.79
+2012,30.7,-0.25,La Chaux-de-Fonds,CDF,1018,Western Jura,47.08,6.79
+2013,43.1,0.9,La Chaux-de-Fonds,CDF,1018,Western Jura,47.08,6.79
+2014,38.7,2.97,La Chaux-de-Fonds,CDF,1018,Western Jura,47.08,6.79
+2015,35.5,4.09,La Chaux-de-Fonds,CDF,1018,Western Jura,47.08,6.79
+1981,37.2,-0.55,Nyon.Changins,CGI,455,Western plateau,46.4,6.23
+1982,40.5,2.63,Nyon.Changins,CGI,455,Western plateau,46.4,6.23
+1983,44.5,0.38,Nyon.Changins,CGI,455,Western plateau,46.4,6.23
+1984,28.3,2.17,Nyon.Changins,CGI,455,Western plateau,46.4,6.23
+1985,35.2,-3.09,Nyon.Changins,CGI,455,Western plateau,46.4,6.23
+1986,34.8,3.14,Nyon.Changins,CGI,455,Western plateau,46.4,6.23
+1987,30.7,-3.01,Nyon.Changins,CGI,455,Western plateau,46.4,6.23
+1988,37.2,-0.13,Nyon.Changins,CGI,455,Western plateau,46.4,6.23
+1989,35.2,2.38,Nyon.Changins,CGI,455,Western plateau,46.4,6.23
+1990,49.8,3.88,Nyon.Changins,CGI,455,Western plateau,46.4,6.23
+1991,40.2,1.14,Nyon.Changins,CGI,455,Western plateau,46.4,6.23
+1992,43.2,2.54,Nyon.Changins,CGI,455,Western plateau,46.4,6.23
+1993,62.4,1.71,Nyon.Changins,CGI,455,Western plateau,46.4,6.23
+1994,51,2.86,Nyon.Changins,CGI,455,Western plateau,46.4,6.23
+1995,32.2,-1.11,Nyon.Changins,CGI,455,Western plateau,46.4,6.23
+1996,48.3,-1.98,Nyon.Changins,CGI,455,Western plateau,46.4,6.23
+1997,61.1,-0.93,Nyon.Changins,CGI,455,Western plateau,46.4,6.23
+1998,48.9,1.03,Nyon.Changins,CGI,455,Western plateau,46.4,6.23
+1999,57,2.25,Nyon.Changins,CGI,455,Western plateau,46.4,6.23
+2000,44.2,1.18,Nyon.Changins,CGI,455,Western plateau,46.4,6.23
+2001,50.4,-1.91,Nyon.Changins,CGI,455,Western plateau,46.4,6.23
+2002,43.7,1,Nyon.Changins,CGI,455,Western plateau,46.4,6.23
+2003,36.4,-0.09,Nyon.Changins,CGI,455,Western plateau,46.4,6.23
+2004,49.4,0.7,Nyon.Changins,CGI,455,Western plateau,46.4,6.23
+2005,49.3,-1.35,Nyon.Changins,CGI,455,Western plateau,46.4,6.23
+2006,29,-0.2,Nyon.Changins,CGI,455,Western plateau,46.4,6.23
+2007,37.9,1.35,Nyon.Changins,CGI,455,Western plateau,46.4,6.23
+2008,56.3,1.72,Nyon.Changins,CGI,455,Western plateau,46.4,6.23
+2009,29.8,0.72,Nyon.Changins,CGI,455,Western plateau,46.4,6.23
+2010,30.6,-5.96,Nyon.Changins,CGI,455,Western plateau,46.4,6.23
+2011,36.2,2.95,Nyon.Changins,CGI,455,Western plateau,46.4,6.23
+2012,47.8,-0.25,Nyon.Changins,CGI,455,Western plateau,46.4,6.23
+2013,63.1,0.9,Nyon.Changins,CGI,455,Western plateau,46.4,6.23
+2014,47.7,2.97,Nyon.Changins,CGI,455,Western plateau,46.4,6.23
+2015,54.6,4.09,Nyon.Changins,CGI,455,Western plateau,46.4,6.23
+1981,46.7,-0.55,Chasseral,CHA,1599,Western Jura,47.13,7.05
+1982,34.9,2.63,Chasseral,CHA,1599,Western Jura,47.13,7.05
+1983,45.5,0.38,Chasseral,CHA,1599,Western Jura,47.13,7.05
+1984,35.7,2.17,Chasseral,CHA,1599,Western Jura,47.13,7.05
+1985,36.1,-3.09,Chasseral,CHA,1599,Western Jura,47.13,7.05
+1986,35.5,3.14,Chasseral,CHA,1599,Western Jura,47.13,7.05
+1987,69.4,-3.01,Chasseral,CHA,1599,Western Jura,47.13,7.05
+1988,43.2,-0.13,Chasseral,CHA,1599,Western Jura,47.13,7.05
+1989,31,2.38,Chasseral,CHA,1599,Western Jura,47.13,7.05
+1990,38.9,3.88,Chasseral,CHA,1599,Western Jura,47.13,7.05
+1991,42.7,1.14,Chasseral,CHA,1599,Western Jura,47.13,7.05
+1992,49.6,2.54,Chasseral,CHA,1599,Western Jura,47.13,7.05
+1993,48.9,1.71,Chasseral,CHA,1599,Western Jura,47.13,7.05
+1994,40.9,2.86,Chasseral,CHA,1599,Western Jura,47.13,7.05
+1995,42.7,-1.11,Chasseral,CHA,1599,Western Jura,47.13,7.05
+1996,57.3,-1.98,Chasseral,CHA,1599,Western Jura,47.13,7.05
+1997,34.5,-0.93,Chasseral,CHA,1599,Western Jura,47.13,7.05
+1998,44.8,1.03,Chasseral,CHA,1599,Western Jura,47.13,7.05
+1999,64.7,2.25,Chasseral,CHA,1599,Western Jura,47.13,7.05
+2000,61.1,1.18,Chasseral,CHA,1599,Western Jura,47.13,7.05
+2001,69.2,-1.91,Chasseral,CHA,1599,Western Jura,47.13,7.05
+2002,41.8,1,Chasseral,CHA,1599,Western Jura,47.13,7.05
+2003,43,-0.09,Chasseral,CHA,1599,Western Jura,47.13,7.05
+2004,37.3,0.7,Chasseral,CHA,1599,Western Jura,47.13,7.05
+2005,55.2,-1.35,Chasseral,CHA,1599,Western Jura,47.13,7.05
+2006,55.8,-0.2,Chasseral,CHA,1599,Western Jura,47.13,7.05
+2007,83.8,1.35,Chasseral,CHA,1599,Western Jura,47.13,7.05
+2008,55,1.72,Chasseral,CHA,1599,Western Jura,47.13,7.05
+2009,42.7,0.72,Chasseral,CHA,1599,Western Jura,47.13,7.05
+2010,74,-5.96,Chasseral,CHA,1599,Western Jura,47.13,7.05
+2011,31.3,2.95,Chasseral,CHA,1599,Western Jura,47.13,7.05
+2012,46.9,-0.25,Chasseral,CHA,1599,Western Jura,47.13,7.05
+2013,76.9,0.9,Chasseral,CHA,1599,Western Jura,47.13,7.05
+2014,41.8,2.97,Chasseral,CHA,1599,Western Jura,47.13,7.05
+2015,50.2,4.09,Chasseral,CHA,1599,Western Jura,47.13,7.05
+1981,43.3,-0.55,Chur,CHU,556,Northern and central Grisons,46.87,9.53
+1982,38.1,2.63,Chur,CHU,556,Northern and central Grisons,46.87,9.53
+1983,49.2,0.38,Chur,CHU,556,Northern and central Grisons,46.87,9.53
+1984,56,2.17,Chur,CHU,556,Northern and central Grisons,46.87,9.53
+1985,62.8,-3.09,Chur,CHU,556,Northern and central Grisons,46.87,9.53
+1986,49.3,3.14,Chur,CHU,556,Northern and central Grisons,46.87,9.53
+1987,60.7,-3.01,Chur,CHU,556,Northern and central Grisons,46.87,9.53
+1988,60.2,-0.13,Chur,CHU,556,Northern and central Grisons,46.87,9.53
+1989,30.8,2.38,Chur,CHU,556,Northern and central Grisons,46.87,9.53
+1990,44.3,3.88,Chur,CHU,556,Northern and central Grisons,46.87,9.53
+1991,73.3,1.14,Chur,CHU,556,Northern and central Grisons,46.87,9.53
+1992,41.9,2.54,Chur,CHU,556,Northern and central Grisons,46.87,9.53
+1993,43.6,1.71,Chur,CHU,556,Northern and central Grisons,46.87,9.53
+1994,32.2,2.86,Chur,CHU,556,Northern and central Grisons,46.87,9.53
+1995,44.2,-1.11,Chur,CHU,556,Northern and central Grisons,46.87,9.53
+1996,33.2,-1.98,Chur,CHU,556,Northern and central Grisons,46.87,9.53
+1997,39.4,-0.93,Chur,CHU,556,Northern and central Grisons,46.87,9.53
+1998,53.9,1.03,Chur,CHU,556,Northern and central Grisons,46.87,9.53
+1999,50.1,2.25,Chur,CHU,556,Northern and central Grisons,46.87,9.53
+2000,54.5,1.18,Chur,CHU,556,Northern and central Grisons,46.87,9.53
+2001,42.2,-1.91,Chur,CHU,556,Northern and central Grisons,46.87,9.53
+2002,58.8,1,Chur,CHU,556,Northern and central Grisons,46.87,9.53
+2003,46.2,-0.09,Chur,CHU,556,Northern and central Grisons,46.87,9.53
+2004,39.4,0.7,Chur,CHU,556,Northern and central Grisons,46.87,9.53
+2005,33.1,-1.35,Chur,CHU,556,Northern and central Grisons,46.87,9.53
+2006,49.1,-0.2,Chur,CHU,556,Northern and central Grisons,46.87,9.53
+2007,34.6,1.35,Chur,CHU,556,Northern and central Grisons,46.87,9.53
+2008,41.4,1.72,Chur,CHU,556,Northern and central Grisons,46.87,9.53
+2009,44,0.72,Chur,CHU,556,Northern and central Grisons,46.87,9.53
+2010,39.1,-5.96,Chur,CHU,556,Northern and central Grisons,46.87,9.53
+2011,31.4,2.95,Chur,CHU,556,Northern and central Grisons,46.87,9.53
+2012,47.7,-0.25,Chur,CHU,556,Northern and central Grisons,46.87,9.53
+2013,41.2,0.9,Chur,CHU,556,Northern and central Grisons,46.87,9.53
+2014,43.3,2.97,Chur,CHU,556,Northern and central Grisons,46.87,9.53
+2015,29.9,4.09,Chur,CHU,556,Northern and central Grisons,46.87,9.53
+1982,127.5,2.63,Cimetta,CIM,1661,Alpine south side,46.2,8.79
+1983,164.3,0.38,Cimetta,CIM,1661,Alpine south side,46.2,8.79
+1984,124.7,2.17,Cimetta,CIM,1661,Alpine south side,46.2,8.79
+1985,91.8,-3.09,Cimetta,CIM,1661,Alpine south side,46.2,8.79
+1986,84.1,3.14,Cimetta,CIM,1661,Alpine south side,46.2,8.79
+1987,139.4,-3.01,Cimetta,CIM,1661,Alpine south side,46.2,8.79
+1988,154.7,-0.13,Cimetta,CIM,1661,Alpine south side,46.2,8.79
+1989,65.9,2.38,Cimetta,CIM,1661,Alpine south side,46.2,8.79
+1990,94.1,3.88,Cimetta,CIM,1661,Alpine south side,46.2,8.79
+1991,173.1,1.14,Cimetta,CIM,1661,Alpine south side,46.2,8.79
+1992,76.9,2.54,Cimetta,CIM,1661,Alpine south side,46.2,8.79
+1993,122.4,1.71,Cimetta,CIM,1661,Alpine south side,46.2,8.79
+1994,102.7,2.86,Cimetta,CIM,1661,Alpine south side,46.2,8.79
+1995,68.2,-1.11,Cimetta,CIM,1661,Alpine south side,46.2,8.79
+1996,89.2,-1.98,Cimetta,CIM,1661,Alpine south side,46.2,8.79
+1997,115.1,-0.93,Cimetta,CIM,1661,Alpine south side,46.2,8.79
+1998,118.8,1.03,Cimetta,CIM,1661,Alpine south side,46.2,8.79
+1999,100,2.25,Cimetta,CIM,1661,Alpine south side,46.2,8.79
+2000,60.4,1.18,Cimetta,CIM,1661,Alpine south side,46.2,8.79
+2001,61.4,-1.91,Cimetta,CIM,1661,Alpine south side,46.2,8.79
+2002,118,1,Cimetta,CIM,1661,Alpine south side,46.2,8.79
+2003,88.4,-0.09,Cimetta,CIM,1661,Alpine south side,46.2,8.79
+2004,112.4,0.7,Cimetta,CIM,1661,Alpine south side,46.2,8.79
+2005,83.5,-1.35,Cimetta,CIM,1661,Alpine south side,46.2,8.79
+2006,121.4,-0.2,Cimetta,CIM,1661,Alpine south side,46.2,8.79
+2007,60.8,1.35,Cimetta,CIM,1661,Alpine south side,46.2,8.79
+2008,75.1,1.72,Cimetta,CIM,1661,Alpine south side,46.2,8.79
+2009,112.4,0.72,Cimetta,CIM,1661,Alpine south side,46.2,8.79
+2010,71.8,-5.96,Cimetta,CIM,1661,Alpine south side,46.2,8.79
+2011,101.2,2.95,Cimetta,CIM,1661,Alpine south side,46.2,8.79
+2012,58.4,-0.25,Cimetta,CIM,1661,Alpine south side,46.2,8.79
+2013,130.2,0.9,Cimetta,CIM,1661,Alpine south side,46.2,8.79
+2014,119.8,2.97,Cimetta,CIM,1661,Alpine south side,46.2,8.79
+2015,98,4.09,Cimetta,CIM,1661,Alpine south side,46.2,8.79
+1988,81,-0.13,Acquarossa.Comprovasco,COM,575,Alpine south side,46.46,8.94
+1989,56.7,2.38,Acquarossa.Comprovasco,COM,575,Alpine south side,46.46,8.94
+1990,65.1,3.88,Acquarossa.Comprovasco,COM,575,Alpine south side,46.46,8.94
+1991,72.8,1.14,Acquarossa.Comprovasco,COM,575,Alpine south side,46.46,8.94
+1992,72.2,2.54,Acquarossa.Comprovasco,COM,575,Alpine south side,46.46,8.94
+1993,99,1.71,Acquarossa.Comprovasco,COM,575,Alpine south side,46.46,8.94
+1994,93.4,2.86,Acquarossa.Comprovasco,COM,575,Alpine south side,46.46,8.94
+1995,48.1,-1.11,Acquarossa.Comprovasco,COM,575,Alpine south side,46.46,8.94
+1996,59.7,-1.98,Acquarossa.Comprovasco,COM,575,Alpine south side,46.46,8.94
+1997,60.3,-0.93,Acquarossa.Comprovasco,COM,575,Alpine south side,46.46,8.94
+1998,70,1.03,Acquarossa.Comprovasco,COM,575,Alpine south side,46.46,8.94
+1999,66.3,2.25,Acquarossa.Comprovasco,COM,575,Alpine south side,46.46,8.94
+2000,51.9,1.18,Acquarossa.Comprovasco,COM,575,Alpine south side,46.46,8.94
+2001,89.7,-1.91,Acquarossa.Comprovasco,COM,575,Alpine south side,46.46,8.94
+2002,87.1,1,Acquarossa.Comprovasco,COM,575,Alpine south side,46.46,8.94
+2003,166.9,-0.09,Acquarossa.Comprovasco,COM,575,Alpine south side,46.46,8.94
+2004,82.4,0.7,Acquarossa.Comprovasco,COM,575,Alpine south side,46.46,8.94
+2005,43.5,-1.35,Acquarossa.Comprovasco,COM,575,Alpine south side,46.46,8.94
+2006,56.8,-0.2,Acquarossa.Comprovasco,COM,575,Alpine south side,46.46,8.94
+2007,46.1,1.35,Acquarossa.Comprovasco,COM,575,Alpine south side,46.46,8.94
+2008,78.5,1.72,Acquarossa.Comprovasco,COM,575,Alpine south side,46.46,8.94
+2009,95.6,0.72,Acquarossa.Comprovasco,COM,575,Alpine south side,46.46,8.94
+2010,54.6,-5.96,Acquarossa.Comprovasco,COM,575,Alpine south side,46.46,8.94
+2011,101.8,2.95,Acquarossa.Comprovasco,COM,575,Alpine south side,46.46,8.94
+2012,82.1,-0.25,Acquarossa.Comprovasco,COM,575,Alpine south side,46.46,8.94
+2013,67.9,0.9,Acquarossa.Comprovasco,COM,575,Alpine south side,46.46,8.94
+2014,89.6,2.97,Acquarossa.Comprovasco,COM,575,Alpine south side,46.46,8.94
+2015,88.3,4.09,Acquarossa.Comprovasco,COM,575,Alpine south side,46.46,8.94
+1981,34,-0.55,Piz Corvatsch,COV,3302,Engadine,46.42,9.82
+1982,33.4,2.63,Piz Corvatsch,COV,3302,Engadine,46.42,9.82
+1983,30.2,0.38,Piz Corvatsch,COV,3302,Engadine,46.42,9.82
+1984,35.2,2.17,Piz Corvatsch,COV,3302,Engadine,46.42,9.82
+1985,53.6,-3.09,Piz Corvatsch,COV,3302,Engadine,46.42,9.82
+1986,33.8,3.14,Piz Corvatsch,COV,3302,Engadine,46.42,9.82
+1987,30.1,-3.01,Piz Corvatsch,COV,3302,Engadine,46.42,9.82
+1988,61.4,-0.13,Piz Corvatsch,COV,3302,Engadine,46.42,9.82
+1989,36.1,2.38,Piz Corvatsch,COV,3302,Engadine,46.42,9.82
+1990,25.2,3.88,Piz Corvatsch,COV,3302,Engadine,46.42,9.82
+1991,65,1.14,Piz Corvatsch,COV,3302,Engadine,46.42,9.82
+1992,42.9,2.54,Piz Corvatsch,COV,3302,Engadine,46.42,9.82
+1993,54,1.71,Piz Corvatsch,COV,3302,Engadine,46.42,9.82
+1994,28.4,2.86,Piz Corvatsch,COV,3302,Engadine,46.42,9.82
+1995,31.5,-1.11,Piz Corvatsch,COV,3302,Engadine,46.42,9.82
+1996,50.9,-1.98,Piz Corvatsch,COV,3302,Engadine,46.42,9.82
+1997,30.7,-0.93,Piz Corvatsch,COV,3302,Engadine,46.42,9.82
+1998,44,1.03,Piz Corvatsch,COV,3302,Engadine,46.42,9.82
+1999,31.5,2.25,Piz Corvatsch,COV,3302,Engadine,46.42,9.82
+2000,34.9,1.18,Piz Corvatsch,COV,3302,Engadine,46.42,9.82
+2001,39.7,-1.91,Piz Corvatsch,COV,3302,Engadine,46.42,9.82
+2002,45.9,1,Piz Corvatsch,COV,3302,Engadine,46.42,9.82
+2003,27.8,-0.09,Piz Corvatsch,COV,3302,Engadine,46.42,9.82
+2004,26.8,0.7,Piz Corvatsch,COV,3302,Engadine,46.42,9.82
+2005,39.9,-1.35,Piz Corvatsch,COV,3302,Engadine,46.42,9.82
+2006,31.2,-0.2,Piz Corvatsch,COV,3302,Engadine,46.42,9.82
+2007,26.8,1.35,Piz Corvatsch,COV,3302,Engadine,46.42,9.82
+2008,40.7,1.72,Piz Corvatsch,COV,3302,Engadine,46.42,9.82
+2009,41,0.72,Piz Corvatsch,COV,3302,Engadine,46.42,9.82
+2010,41.7,-5.96,Piz Corvatsch,COV,3302,Engadine,46.42,9.82
+2011,79.8,2.95,Piz Corvatsch,COV,3302,Engadine,46.42,9.82
+2012,51.8,-0.25,Piz Corvatsch,COV,3302,Engadine,46.42,9.82
+2013,59.5,0.9,Piz Corvatsch,COV,3302,Engadine,46.42,9.82
+2014,81.3,2.97,Piz Corvatsch,COV,3302,Engadine,46.42,9.82
+2015,47.5,4.09,Piz Corvatsch,COV,3302,Engadine,46.42,9.82
+1981,37.6,-0.55,Davos,DAV,1594,Northern and central Grisons,46.81,9.84
+1982,45.1,2.63,Davos,DAV,1594,Northern and central Grisons,46.81,9.84
+1983,40.9,0.38,Davos,DAV,1594,Northern and central Grisons,46.81,9.84
+1984,40.4,2.17,Davos,DAV,1594,Northern and central Grisons,46.81,9.84
+1985,69.8,-3.09,Davos,DAV,1594,Northern and central Grisons,46.81,9.84
+1986,44.5,3.14,Davos,DAV,1594,Northern and central Grisons,46.81,9.84
+1987,38.6,-3.01,Davos,DAV,1594,Northern and central Grisons,46.81,9.84
+1988,55.4,-0.13,Davos,DAV,1594,Northern and central Grisons,46.81,9.84
+1989,27.4,2.38,Davos,DAV,1594,Northern and central Grisons,46.81,9.84
+1990,44.8,3.88,Davos,DAV,1594,Northern and central Grisons,46.81,9.84
+1991,57.6,1.14,Davos,DAV,1594,Northern and central Grisons,46.81,9.84
+1992,38.1,2.54,Davos,DAV,1594,Northern and central Grisons,46.81,9.84
+1993,50.2,1.71,Davos,DAV,1594,Northern and central Grisons,46.81,9.84
+1994,49.6,2.86,Davos,DAV,1594,Northern and central Grisons,46.81,9.84
+1995,46.7,-1.11,Davos,DAV,1594,Northern and central Grisons,46.81,9.84
+1996,48.4,-1.98,Davos,DAV,1594,Northern and central Grisons,46.81,9.84
+1997,35,-0.93,Davos,DAV,1594,Northern and central Grisons,46.81,9.84
+1998,33.7,1.03,Davos,DAV,1594,Northern and central Grisons,46.81,9.84
+1999,49.4,2.25,Davos,DAV,1594,Northern and central Grisons,46.81,9.84
+2000,53.5,1.18,Davos,DAV,1594,Northern and central Grisons,46.81,9.84
+2001,61.7,-1.91,Davos,DAV,1594,Northern and central Grisons,46.81,9.84
+2002,47.1,1,Davos,DAV,1594,Northern and central Grisons,46.81,9.84
+2003,56.4,-0.09,Davos,DAV,1594,Northern and central Grisons,46.81,9.84
+2004,56.3,0.7,Davos,DAV,1594,Northern and central Grisons,46.81,9.84
+2005,55.4,-1.35,Davos,DAV,1594,Northern and central Grisons,46.81,9.84
+2006,34.2,-0.2,Davos,DAV,1594,Northern and central Grisons,46.81,9.84
+2007,40,1.35,Davos,DAV,1594,Northern and central Grisons,46.81,9.84
+2008,41.7,1.72,Davos,DAV,1594,Northern and central Grisons,46.81,9.84
+2009,37.3,0.72,Davos,DAV,1594,Northern and central Grisons,46.81,9.84
+2010,33.1,-5.96,Davos,DAV,1594,Northern and central Grisons,46.81,9.84
+2011,58.4,2.95,Davos,DAV,1594,Northern and central Grisons,46.81,9.84
+2012,39.4,-0.25,Davos,DAV,1594,Northern and central Grisons,46.81,9.84
+2013,31.3,0.9,Davos,DAV,1594,Northern and central Grisons,46.81,9.84
+2014,50.4,2.97,Davos,DAV,1594,Northern and central Grisons,46.81,9.84
+2015,31,4.09,Davos,DAV,1594,Northern and central Grisons,46.81,9.84
+1981,48.1,-0.55,Disentis.Sedrun,DIS,1197,Northern and central Grisons,46.71,8.85
+1982,55,2.63,Disentis.Sedrun,DIS,1197,Northern and central Grisons,46.71,8.85
+1983,66,0.38,Disentis.Sedrun,DIS,1197,Northern and central Grisons,46.71,8.85
+1984,66.8,2.17,Disentis.Sedrun,DIS,1197,Northern and central Grisons,46.71,8.85
+1985,70.9,-3.09,Disentis.Sedrun,DIS,1197,Northern and central Grisons,46.71,8.85
+1986,41.3,3.14,Disentis.Sedrun,DIS,1197,Northern and central Grisons,46.71,8.85
+1987,71.6,-3.01,Disentis.Sedrun,DIS,1197,Northern and central Grisons,46.71,8.85
+1988,48.7,-0.13,Disentis.Sedrun,DIS,1197,Northern and central Grisons,46.71,8.85
+1989,58.2,2.38,Disentis.Sedrun,DIS,1197,Northern and central Grisons,46.71,8.85
+1990,40.6,3.88,Disentis.Sedrun,DIS,1197,Northern and central Grisons,46.71,8.85
+1991,71.5,1.14,Disentis.Sedrun,DIS,1197,Northern and central Grisons,46.71,8.85
+1992,50.2,2.54,Disentis.Sedrun,DIS,1197,Northern and central Grisons,46.71,8.85
+1993,55.5,1.71,Disentis.Sedrun,DIS,1197,Northern and central Grisons,46.71,8.85
+1994,45.8,2.86,Disentis.Sedrun,DIS,1197,Northern and central Grisons,46.71,8.85
+1995,64.8,-1.11,Disentis.Sedrun,DIS,1197,Northern and central Grisons,46.71,8.85
+1996,74.8,-1.98,Disentis.Sedrun,DIS,1197,Northern and central Grisons,46.71,8.85
+1997,44.1,-0.93,Disentis.Sedrun,DIS,1197,Northern and central Grisons,46.71,8.85
+1998,72.9,1.03,Disentis.Sedrun,DIS,1197,Northern and central Grisons,46.71,8.85
+1999,42.2,2.25,Disentis.Sedrun,DIS,1197,Northern and central Grisons,46.71,8.85
+2000,58.9,1.18,Disentis.Sedrun,DIS,1197,Northern and central Grisons,46.71,8.85
+2001,59.5,-1.91,Disentis.Sedrun,DIS,1197,Northern and central Grisons,46.71,8.85
+2002,91.2,1,Disentis.Sedrun,DIS,1197,Northern and central Grisons,46.71,8.85
+2003,70,-0.09,Disentis.Sedrun,DIS,1197,Northern and central Grisons,46.71,8.85
+2004,45,0.7,Disentis.Sedrun,DIS,1197,Northern and central Grisons,46.71,8.85
+2005,48.2,-1.35,Disentis.Sedrun,DIS,1197,Northern and central Grisons,46.71,8.85
+2006,36.1,-0.2,Disentis.Sedrun,DIS,1197,Northern and central Grisons,46.71,8.85
+2007,55.5,1.35,Disentis.Sedrun,DIS,1197,Northern and central Grisons,46.71,8.85
+2008,68.8,1.72,Disentis.Sedrun,DIS,1197,Northern and central Grisons,46.71,8.85
+2009,74.2,0.72,Disentis.Sedrun,DIS,1197,Northern and central Grisons,46.71,8.85
+2010,46.1,-5.96,Disentis.Sedrun,DIS,1197,Northern and central Grisons,46.71,8.85
+2011,59.3,2.95,Disentis.Sedrun,DIS,1197,Northern and central Grisons,46.71,8.85
+2012,64.8,-0.25,Disentis.Sedrun,DIS,1197,Northern and central Grisons,46.71,8.85
+2013,69.8,0.9,Disentis.Sedrun,DIS,1197,Northern and central Grisons,46.71,8.85
+2014,84.1,2.97,Disentis.Sedrun,DIS,1197,Northern and central Grisons,46.71,8.85
+2015,42.5,4.09,Disentis.Sedrun,DIS,1197,Northern and central Grisons,46.71,8.85
+1981,75.2,-0.55,La Dole,DOL,1670,Western Jura,46.42,6.1
+1982,52.3,2.63,La Dole,DOL,1670,Western Jura,46.42,6.1
+1983,73.3,0.38,La Dole,DOL,1670,Western Jura,46.42,6.1
+1984,42.7,2.17,La Dole,DOL,1670,Western Jura,46.42,6.1
+1985,37.9,-3.09,La Dole,DOL,1670,Western Jura,46.42,6.1
+1986,41.3,3.14,La Dole,DOL,1670,Western Jura,46.42,6.1
+1987,44.6,-3.01,La Dole,DOL,1670,Western Jura,46.42,6.1
+1988,69.6,-0.13,La Dole,DOL,1670,Western Jura,46.42,6.1
+1989,33.2,2.38,La Dole,DOL,1670,Western Jura,46.42,6.1
+1990,65.8,3.88,La Dole,DOL,1670,Western Jura,46.42,6.1
+1991,57.9,1.14,La Dole,DOL,1670,Western Jura,46.42,6.1
+1992,52.3,2.54,La Dole,DOL,1670,Western Jura,46.42,6.1
+1993,67.2,1.71,La Dole,DOL,1670,Western Jura,46.42,6.1
+1994,54.9,2.86,La Dole,DOL,1670,Western Jura,46.42,6.1
+1995,59.2,-1.11,La Dole,DOL,1670,Western Jura,46.42,6.1
+1996,58.4,-1.98,La Dole,DOL,1670,Western Jura,46.42,6.1
+1997,63.3,-0.93,La Dole,DOL,1670,Western Jura,46.42,6.1
+1998,67.9,1.03,La Dole,DOL,1670,Western Jura,46.42,6.1
+1999,46.2,2.25,La Dole,DOL,1670,Western Jura,46.42,6.1
+2000,49,1.18,La Dole,DOL,1670,Western Jura,46.42,6.1
+2001,51.7,-1.91,La Dole,DOL,1670,Western Jura,46.42,6.1
+2002,61.5,1,La Dole,DOL,1670,Western Jura,46.42,6.1
+2003,51.1,-0.09,La Dole,DOL,1670,Western Jura,46.42,6.1
+2004,74.7,0.7,La Dole,DOL,1670,Western Jura,46.42,6.1
+2005,28.7,-1.35,La Dole,DOL,1670,Western Jura,46.42,6.1
+2006,45.6,-0.2,La Dole,DOL,1670,Western Jura,46.42,6.1
+2007,67.4,1.35,La Dole,DOL,1670,Western Jura,46.42,6.1
+2008,67.8,1.72,La Dole,DOL,1670,Western Jura,46.42,6.1
+2009,41.2,0.72,La Dole,DOL,1670,Western Jura,46.42,6.1
+2010,53.8,-5.96,La Dole,DOL,1670,Western Jura,46.42,6.1
+2011,43.5,2.95,La Dole,DOL,1670,Western Jura,46.42,6.1
+2012,47.5,-0.25,La Dole,DOL,1670,Western Jura,46.42,6.1
+2013,48.5,0.9,La Dole,DOL,1670,Western Jura,46.42,6.1
+2014,50,2.97,La Dole,DOL,1670,Western Jura,46.42,6.1
+2015,85.8,4.09,La Dole,DOL,1670,Western Jura,46.42,6.1
+1983,50.7,0.38,Engelberg,ENG,1036,Central Alpine north slope,46.82,8.41
+1984,58,2.17,Engelberg,ENG,1036,Central Alpine north slope,46.82,8.41
+1985,35.6,-3.09,Engelberg,ENG,1036,Central Alpine north slope,46.82,8.41
+1986,43.6,3.14,Engelberg,ENG,1036,Central Alpine north slope,46.82,8.41
+1987,52.5,-3.01,Engelberg,ENG,1036,Central Alpine north slope,46.82,8.41
+1988,41.5,-0.13,Engelberg,ENG,1036,Central Alpine north slope,46.82,8.41
+1989,55.3,2.38,Engelberg,ENG,1036,Central Alpine north slope,46.82,8.41
+1990,47.8,3.88,Engelberg,ENG,1036,Central Alpine north slope,46.82,8.41
+1991,81.6,1.14,Engelberg,ENG,1036,Central Alpine north slope,46.82,8.41
+1992,34.6,2.54,Engelberg,ENG,1036,Central Alpine north slope,46.82,8.41
+1993,49.9,1.71,Engelberg,ENG,1036,Central Alpine north slope,46.82,8.41
+1994,37,2.86,Engelberg,ENG,1036,Central Alpine north slope,46.82,8.41
+1995,44.3,-1.11,Engelberg,ENG,1036,Central Alpine north slope,46.82,8.41
+1996,56.5,-1.98,Engelberg,ENG,1036,Central Alpine north slope,46.82,8.41
+1997,48.4,-0.93,Engelberg,ENG,1036,Central Alpine north slope,46.82,8.41
+1998,37.8,1.03,Engelberg,ENG,1036,Central Alpine north slope,46.82,8.41
+1999,49.1,2.25,Engelberg,ENG,1036,Central Alpine north slope,46.82,8.41
+2000,63.9,1.18,Engelberg,ENG,1036,Central Alpine north slope,46.82,8.41
+2001,39.6,-1.91,Engelberg,ENG,1036,Central Alpine north slope,46.82,8.41
+2002,79.8,1,Engelberg,ENG,1036,Central Alpine north slope,46.82,8.41
+2003,49.5,-0.09,Engelberg,ENG,1036,Central Alpine north slope,46.82,8.41
+2004,40.8,0.7,Engelberg,ENG,1036,Central Alpine north slope,46.82,8.41
+2005,88.1,-1.35,Engelberg,ENG,1036,Central Alpine north slope,46.82,8.41
+2006,49.1,-0.2,Engelberg,ENG,1036,Central Alpine north slope,46.82,8.41
+2007,45.7,1.35,Engelberg,ENG,1036,Central Alpine north slope,46.82,8.41
+2008,65.1,1.72,Engelberg,ENG,1036,Central Alpine north slope,46.82,8.41
+2009,55,0.72,Engelberg,ENG,1036,Central Alpine north slope,46.82,8.41
+2010,51.2,-5.96,Engelberg,ENG,1036,Central Alpine north slope,46.82,8.41
+2011,73,2.95,Engelberg,ENG,1036,Central Alpine north slope,46.82,8.41
+2012,39.2,-0.25,Engelberg,ENG,1036,Central Alpine north slope,46.82,8.41
+2013,74.9,0.9,Engelberg,ENG,1036,Central Alpine north slope,46.82,8.41
+2014,56.8,2.97,Engelberg,ENG,1036,Central Alpine north slope,46.82,8.41
+2015,48.5,4.09,Engelberg,ENG,1036,Central Alpine north slope,46.82,8.41
+1987,40.1,-3.01,Evolene.Villa,EVO,1825,Valais,46.11,7.51
+1988,50.7,-0.13,Evolene.Villa,EVO,1825,Valais,46.11,7.51
+1989,46.7,2.38,Evolene.Villa,EVO,1825,Valais,46.11,7.51
+1990,25.5,3.88,Evolene.Villa,EVO,1825,Valais,46.11,7.51
+1991,45.5,1.14,Evolene.Villa,EVO,1825,Valais,46.11,7.51
+1992,27,2.54,Evolene.Villa,EVO,1825,Valais,46.11,7.51
+1993,36.1,1.71,Evolene.Villa,EVO,1825,Valais,46.11,7.51
+1994,53.6,2.86,Evolene.Villa,EVO,1825,Valais,46.11,7.51
+1995,36,-1.11,Evolene.Villa,EVO,1825,Valais,46.11,7.51
+1996,28.2,-1.98,Evolene.Villa,EVO,1825,Valais,46.11,7.51
+1997,35.3,-0.93,Evolene.Villa,EVO,1825,Valais,46.11,7.51
+1998,29.4,1.03,Evolene.Villa,EVO,1825,Valais,46.11,7.51
+1999,34.3,2.25,Evolene.Villa,EVO,1825,Valais,46.11,7.51
+2000,62.8,1.18,Evolene.Villa,EVO,1825,Valais,46.11,7.51
+2001,42.5,-1.91,Evolene.Villa,EVO,1825,Valais,46.11,7.51
+2002,53.6,1,Evolene.Villa,EVO,1825,Valais,46.11,7.51
+2003,25.5,-0.09,Evolene.Villa,EVO,1825,Valais,46.11,7.51
+2004,34,0.7,Evolene.Villa,EVO,1825,Valais,46.11,7.51
+2005,24.2,-1.35,Evolene.Villa,EVO,1825,Valais,46.11,7.51
+2006,28.6,-0.2,Evolene.Villa,EVO,1825,Valais,46.11,7.51
+2007,54.9,1.35,Evolene.Villa,EVO,1825,Valais,46.11,7.51
+2008,28.2,1.72,Evolene.Villa,EVO,1825,Valais,46.11,7.51
+2009,48.6,0.72,Evolene.Villa,EVO,1825,Valais,46.11,7.51
+2010,41.5,-5.96,Evolene.Villa,EVO,1825,Valais,46.11,7.51
+2011,37.4,2.95,Evolene.Villa,EVO,1825,Valais,46.11,7.51
+2012,24.3,-0.25,Evolene.Villa,EVO,1825,Valais,46.11,7.51
+2013,30.8,0.9,Evolene.Villa,EVO,1825,Valais,46.11,7.51
+2014,49,2.97,Evolene.Villa,EVO,1825,Valais,46.11,7.51
+2015,28.6,4.09,Evolene.Villa,EVO,1825,Valais,46.11,7.51
+1981,32.9,-0.55,Fahy,FAH,596,Eastern Jura,47.42,6.94
+1982,45.6,2.63,Fahy,FAH,596,Eastern Jura,47.42,6.94
+1983,47,0.38,Fahy,FAH,596,Eastern Jura,47.42,6.94
+1984,29.2,2.17,Fahy,FAH,596,Eastern Jura,47.42,6.94
+1985,35.7,-3.09,Fahy,FAH,596,Eastern Jura,47.42,6.94
+1986,41,3.14,Fahy,FAH,596,Eastern Jura,47.42,6.94
+1987,53.5,-3.01,Fahy,FAH,596,Eastern Jura,47.42,6.94
+1988,46.4,-0.13,Fahy,FAH,596,Eastern Jura,47.42,6.94
+1989,40,2.38,Fahy,FAH,596,Eastern Jura,47.42,6.94
+1990,36.7,3.88,Fahy,FAH,596,Eastern Jura,47.42,6.94
+1991,38.1,1.14,Fahy,FAH,596,Eastern Jura,47.42,6.94
+1992,41,2.54,Fahy,FAH,596,Eastern Jura,47.42,6.94
+1993,35.4,1.71,Fahy,FAH,596,Eastern Jura,47.42,6.94
+1994,37.8,2.86,Fahy,FAH,596,Eastern Jura,47.42,6.94
+1995,42.8,-1.11,Fahy,FAH,596,Eastern Jura,47.42,6.94
+1996,47,-1.98,Fahy,FAH,596,Eastern Jura,47.42,6.94
+1997,36.5,-0.93,Fahy,FAH,596,Eastern Jura,47.42,6.94
+1998,32.1,1.03,Fahy,FAH,596,Eastern Jura,47.42,6.94
+1999,54,2.25,Fahy,FAH,596,Eastern Jura,47.42,6.94
+2000,28.5,1.18,Fahy,FAH,596,Eastern Jura,47.42,6.94
+2001,32.4,-1.91,Fahy,FAH,596,Eastern Jura,47.42,6.94
+2002,35.4,1,Fahy,FAH,596,Eastern Jura,47.42,6.94
+2003,38.4,-0.09,Fahy,FAH,596,Eastern Jura,47.42,6.94
+2004,56.6,0.7,Fahy,FAH,596,Eastern Jura,47.42,6.94
+2005,61.2,-1.35,Fahy,FAH,596,Eastern Jura,47.42,6.94
+2006,51.8,-0.2,Fahy,FAH,596,Eastern Jura,47.42,6.94
+2007,73.2,1.35,Fahy,FAH,596,Eastern Jura,47.42,6.94
+2008,42.3,1.72,Fahy,FAH,596,Eastern Jura,47.42,6.94
+2009,36.2,0.72,Fahy,FAH,596,Eastern Jura,47.42,6.94
+2010,73.2,-5.96,Fahy,FAH,596,Eastern Jura,47.42,6.94
+2011,26.4,2.95,Fahy,FAH,596,Eastern Jura,47.42,6.94
+2012,42.3,-0.25,Fahy,FAH,596,Eastern Jura,47.42,6.94
+2013,37.4,0.9,Fahy,FAH,596,Eastern Jura,47.42,6.94
+2014,32.7,2.97,Fahy,FAH,596,Eastern Jura,47.42,6.94
+2015,31.4,4.09,Fahy,FAH,596,Eastern Jura,47.42,6.94
+1981,38.6,-0.55,Bullet.La Fretaz,FRE,1205,Western Jura,46.84,6.58
+1982,43.2,2.63,Bullet.La Fretaz,FRE,1205,Western Jura,46.84,6.58
+1983,59.6,0.38,Bullet.La Fretaz,FRE,1205,Western Jura,46.84,6.58
+1984,25.8,2.17,Bullet.La Fretaz,FRE,1205,Western Jura,46.84,6.58
+1985,45.4,-3.09,Bullet.La Fretaz,FRE,1205,Western Jura,46.84,6.58
+1986,38.9,3.14,Bullet.La Fretaz,FRE,1205,Western Jura,46.84,6.58
+1987,107,-3.01,Bullet.La Fretaz,FRE,1205,Western Jura,46.84,6.58
+1988,43.2,-0.13,Bullet.La Fretaz,FRE,1205,Western Jura,46.84,6.58
+1989,40.3,2.38,Bullet.La Fretaz,FRE,1205,Western Jura,46.84,6.58
+1990,67,3.88,Bullet.La Fretaz,FRE,1205,Western Jura,46.84,6.58
+1991,49.9,1.14,Bullet.La Fretaz,FRE,1205,Western Jura,46.84,6.58
+1992,38.5,2.54,Bullet.La Fretaz,FRE,1205,Western Jura,46.84,6.58
+1993,48.1,1.71,Bullet.La Fretaz,FRE,1205,Western Jura,46.84,6.58
+1994,52.5,2.86,Bullet.La Fretaz,FRE,1205,Western Jura,46.84,6.58
+1995,75.1,-1.11,Bullet.La Fretaz,FRE,1205,Western Jura,46.84,6.58
+1996,68,-1.98,Bullet.La Fretaz,FRE,1205,Western Jura,46.84,6.58
+1997,46.3,-0.93,Bullet.La Fretaz,FRE,1205,Western Jura,46.84,6.58
+1998,36.2,1.03,Bullet.La Fretaz,FRE,1205,Western Jura,46.84,6.58
+1999,53.1,2.25,Bullet.La Fretaz,FRE,1205,Western Jura,46.84,6.58
+2000,32.8,1.18,Bullet.La Fretaz,FRE,1205,Western Jura,46.84,6.58
+2001,35.5,-1.91,Bullet.La Fretaz,FRE,1205,Western Jura,46.84,6.58
+2002,52.8,1,Bullet.La Fretaz,FRE,1205,Western Jura,46.84,6.58
+2003,51.4,-0.09,Bullet.La Fretaz,FRE,1205,Western Jura,46.84,6.58
+2004,89.3,0.7,Bullet.La Fretaz,FRE,1205,Western Jura,46.84,6.58
+2005,42.6,-1.35,Bullet.La Fretaz,FRE,1205,Western Jura,46.84,6.58
+2006,41,-0.2,Bullet.La Fretaz,FRE,1205,Western Jura,46.84,6.58
+2007,55.7,1.35,Bullet.La Fretaz,FRE,1205,Western Jura,46.84,6.58
+2008,41.4,1.72,Bullet.La Fretaz,FRE,1205,Western Jura,46.84,6.58
+2009,53.5,0.72,Bullet.La Fretaz,FRE,1205,Western Jura,46.84,6.58
+2010,47,-5.96,Bullet.La Fretaz,FRE,1205,Western Jura,46.84,6.58
+2011,43.1,2.95,Bullet.La Fretaz,FRE,1205,Western Jura,46.84,6.58
+2012,48.5,-0.25,Bullet.La Fretaz,FRE,1205,Western Jura,46.84,6.58
+2013,51.8,0.9,Bullet.La Fretaz,FRE,1205,Western Jura,46.84,6.58
+2014,59.1,2.97,Bullet.La Fretaz,FRE,1205,Western Jura,46.84,6.58
+2015,55,4.09,Bullet.La Fretaz,FRE,1205,Western Jura,46.84,6.58
+1981,46.8,-0.55,Glarus,GLA,517,Eastern Alpine north slope,47.03,9.07
+1982,52.8,2.63,Glarus,GLA,517,Eastern Alpine north slope,47.03,9.07
+1983,39.8,0.38,Glarus,GLA,517,Eastern Alpine north slope,47.03,9.07
+1984,52.3,2.17,Glarus,GLA,517,Eastern Alpine north slope,47.03,9.07
+1985,45.7,-3.09,Glarus,GLA,517,Eastern Alpine north slope,47.03,9.07
+1986,41.4,3.14,Glarus,GLA,517,Eastern Alpine north slope,47.03,9.07
+1987,62.5,-3.01,Glarus,GLA,517,Eastern Alpine north slope,47.03,9.07
+1988,38.3,-0.13,Glarus,GLA,517,Eastern Alpine north slope,47.03,9.07
+1989,43.8,2.38,Glarus,GLA,517,Eastern Alpine north slope,47.03,9.07
+1990,35.1,3.88,Glarus,GLA,517,Eastern Alpine north slope,47.03,9.07
+1991,87.5,1.14,Glarus,GLA,517,Eastern Alpine north slope,47.03,9.07
+1992,44.8,2.54,Glarus,GLA,517,Eastern Alpine north slope,47.03,9.07
+1993,56.7,1.71,Glarus,GLA,517,Eastern Alpine north slope,47.03,9.07
+1994,40.2,2.86,Glarus,GLA,517,Eastern Alpine north slope,47.03,9.07
+1995,62.7,-1.11,Glarus,GLA,517,Eastern Alpine north slope,47.03,9.07
+1996,53.2,-1.98,Glarus,GLA,517,Eastern Alpine north slope,47.03,9.07
+1997,48.3,-0.93,Glarus,GLA,517,Eastern Alpine north slope,47.03,9.07
+1998,62.7,1.03,Glarus,GLA,517,Eastern Alpine north slope,47.03,9.07
+1999,73.2,2.25,Glarus,GLA,517,Eastern Alpine north slope,47.03,9.07
+2000,61.6,1.18,Glarus,GLA,517,Eastern Alpine north slope,47.03,9.07
+2001,51.5,-1.91,Glarus,GLA,517,Eastern Alpine north slope,47.03,9.07
+2002,67.5,1,Glarus,GLA,517,Eastern Alpine north slope,47.03,9.07
+2003,51,-0.09,Glarus,GLA,517,Eastern Alpine north slope,47.03,9.07
+2004,41.5,0.7,Glarus,GLA,517,Eastern Alpine north slope,47.03,9.07
+2005,57.7,-1.35,Glarus,GLA,517,Eastern Alpine north slope,47.03,9.07
+2006,82.4,-0.2,Glarus,GLA,517,Eastern Alpine north slope,47.03,9.07
+2007,41.6,1.35,Glarus,GLA,517,Eastern Alpine north slope,47.03,9.07
+2008,46.9,1.72,Glarus,GLA,517,Eastern Alpine north slope,47.03,9.07
+2009,65.4,0.72,Glarus,GLA,517,Eastern Alpine north slope,47.03,9.07
+2010,52.1,-5.96,Glarus,GLA,517,Eastern Alpine north slope,47.03,9.07
+2011,50.8,2.95,Glarus,GLA,517,Eastern Alpine north slope,47.03,9.07
+2012,56,-0.25,Glarus,GLA,517,Eastern Alpine north slope,47.03,9.07
+2013,47.2,0.9,Glarus,GLA,517,Eastern Alpine north slope,47.03,9.07
+2014,45.4,2.97,Glarus,GLA,517,Eastern Alpine north slope,47.03,9.07
+2015,36.1,4.09,Glarus,GLA,517,Eastern Alpine north slope,47.03,9.07
+1989,52.5,2.38,Goesgen,GOE,380,Central plateau,47.36,7.97
+1990,40.5,3.88,Goesgen,GOE,380,Central plateau,47.36,7.97
+1991,31.7,1.14,Goesgen,GOE,380,Central plateau,47.36,7.97
+1992,63.7,2.54,Goesgen,GOE,380,Central plateau,47.36,7.97
+1993,41.7,1.71,Goesgen,GOE,380,Central plateau,47.36,7.97
+1994,67.3,2.86,Goesgen,GOE,380,Central plateau,47.36,7.97
+1995,43.7,-1.11,Goesgen,GOE,380,Central plateau,47.36,7.97
+1996,46.8,-1.98,Goesgen,GOE,380,Central plateau,47.36,7.97
+1997,32.9,-0.93,Goesgen,GOE,380,Central plateau,47.36,7.97
+1998,39.3,1.03,Goesgen,GOE,380,Central plateau,47.36,7.97
+1999,79.2,2.25,Goesgen,GOE,380,Central plateau,47.36,7.97
+2000,29.3,1.18,Goesgen,GOE,380,Central plateau,47.36,7.97
+2001,29.8,-1.91,Goesgen,GOE,380,Central plateau,47.36,7.97
+2002,34.6,1,Goesgen,GOE,380,Central plateau,47.36,7.97
+2003,28.4,-0.09,Goesgen,GOE,380,Central plateau,47.36,7.97
+2004,29.9,0.7,Goesgen,GOE,380,Central plateau,47.36,7.97
+2005,36.1,-1.35,Goesgen,GOE,380,Central plateau,47.36,7.97
+2006,45.3,-0.2,Goesgen,GOE,380,Central plateau,47.36,7.97
+2007,74.3,1.35,Goesgen,GOE,380,Central plateau,47.36,7.97
+2008,50,1.72,Goesgen,GOE,380,Central plateau,47.36,7.97
+2009,64.7,0.72,Goesgen,GOE,380,Central plateau,47.36,7.97
+2010,38,-5.96,Goesgen,GOE,380,Central plateau,47.36,7.97
+2011,47.4,2.95,Goesgen,GOE,380,Central plateau,47.36,7.97
+2012,41,-0.25,Goesgen,GOE,380,Central plateau,47.36,7.97
+2013,90.2,0.9,Goesgen,GOE,380,Central plateau,47.36,7.97
+2014,31.6,2.97,Goesgen,GOE,380,Central plateau,47.36,7.97
+2015,68,4.09,Goesgen,GOE,380,Central plateau,47.36,7.97
+1990,47,3.88,Grimsel Hospiz,GRH,1980,Western Alpine north slope,46.57,8.33
+1991,105.9,1.14,Grimsel Hospiz,GRH,1980,Western Alpine north slope,46.57,8.33
+1992,44.2,2.54,Grimsel Hospiz,GRH,1980,Western Alpine north slope,46.57,8.33
+1993,78.1,1.71,Grimsel Hospiz,GRH,1980,Western Alpine north slope,46.57,8.33
+1994,54,2.86,Grimsel Hospiz,GRH,1980,Western Alpine north slope,46.57,8.33
+1995,83.2,-1.11,Grimsel Hospiz,GRH,1980,Western Alpine north slope,46.57,8.33
+1996,53.4,-1.98,Grimsel Hospiz,GRH,1980,Western Alpine north slope,46.57,8.33
+1997,47.3,-0.93,Grimsel Hospiz,GRH,1980,Western Alpine north slope,46.57,8.33
+1998,50,1.03,Grimsel Hospiz,GRH,1980,Western Alpine north slope,46.57,8.33
+1999,101,2.25,Grimsel Hospiz,GRH,1980,Western Alpine north slope,46.57,8.33
+2000,58.9,1.18,Grimsel Hospiz,GRH,1980,Western Alpine north slope,46.57,8.33
+2001,42.1,-1.91,Grimsel Hospiz,GRH,1980,Western Alpine north slope,46.57,8.33
+2002,62.6,1,Grimsel Hospiz,GRH,1980,Western Alpine north slope,46.57,8.33
+2003,42.6,-0.09,Grimsel Hospiz,GRH,1980,Western Alpine north slope,46.57,8.33
+2004,51.5,0.7,Grimsel Hospiz,GRH,1980,Western Alpine north slope,46.57,8.33
+2005,58.7,-1.35,Grimsel Hospiz,GRH,1980,Western Alpine north slope,46.57,8.33
+2006,43.3,-0.2,Grimsel Hospiz,GRH,1980,Western Alpine north slope,46.57,8.33
+2007,71.5,1.35,Grimsel Hospiz,GRH,1980,Western Alpine north slope,46.57,8.33
+2008,54.2,1.72,Grimsel Hospiz,GRH,1980,Western Alpine north slope,46.57,8.33
+2009,61.2,0.72,Grimsel Hospiz,GRH,1980,Western Alpine north slope,46.57,8.33
+2010,45,-5.96,Grimsel Hospiz,GRH,1980,Western Alpine north slope,46.57,8.33
+2011,63.8,2.95,Grimsel Hospiz,GRH,1980,Western Alpine north slope,46.57,8.33
+2012,79.3,-0.25,Grimsel Hospiz,GRH,1980,Western Alpine north slope,46.57,8.33
+2013,59.3,0.9,Grimsel Hospiz,GRH,1980,Western Alpine north slope,46.57,8.33
+2014,50.3,2.97,Grimsel Hospiz,GRH,1980,Western Alpine north slope,46.57,8.33
+2015,73.4,4.09,Grimsel Hospiz,GRH,1980,Western Alpine north slope,46.57,8.33
+1982,85.5,2.63,Col du Grand St-Bernard,GSB,2472,Alpine south side,45.87,7.17
+1983,63.6,0.38,Col du Grand St-Bernard,GSB,2472,Alpine south side,45.87,7.17
+1984,80.1,2.17,Col du Grand St-Bernard,GSB,2472,Alpine south side,45.87,7.17
+1985,65,-3.09,Col du Grand St-Bernard,GSB,2472,Alpine south side,45.87,7.17
+1986,50.2,3.14,Col du Grand St-Bernard,GSB,2472,Alpine south side,45.87,7.17
+1987,99.3,-3.01,Col du Grand St-Bernard,GSB,2472,Alpine south side,45.87,7.17
+1988,103.2,-0.13,Col du Grand St-Bernard,GSB,2472,Alpine south side,45.87,7.17
+1989,104.8,2.38,Col du Grand St-Bernard,GSB,2472,Alpine south side,45.87,7.17
+1990,62,3.88,Col du Grand St-Bernard,GSB,2472,Alpine south side,45.87,7.17
+1991,77.3,1.14,Col du Grand St-Bernard,GSB,2472,Alpine south side,45.87,7.17
+1992,66.9,2.54,Col du Grand St-Bernard,GSB,2472,Alpine south side,45.87,7.17
+1993,96.4,1.71,Col du Grand St-Bernard,GSB,2472,Alpine south side,45.87,7.17
+1994,116.7,2.86,Col du Grand St-Bernard,GSB,2472,Alpine south side,45.87,7.17
+1995,79.5,-1.11,Col du Grand St-Bernard,GSB,2472,Alpine south side,45.87,7.17
+1996,108,-1.98,Col du Grand St-Bernard,GSB,2472,Alpine south side,45.87,7.17
+1997,89.7,-0.93,Col du Grand St-Bernard,GSB,2472,Alpine south side,45.87,7.17
+1998,62,1.03,Col du Grand St-Bernard,GSB,2472,Alpine south side,45.87,7.17
+1999,138.6,2.25,Col du Grand St-Bernard,GSB,2472,Alpine south side,45.87,7.17
+2000,127.1,1.18,Col du Grand St-Bernard,GSB,2472,Alpine south side,45.87,7.17
+2001,85,-1.91,Col du Grand St-Bernard,GSB,2472,Alpine south side,45.87,7.17
+2002,97,1,Col du Grand St-Bernard,GSB,2472,Alpine south side,45.87,7.17
+2003,83,-0.09,Col du Grand St-Bernard,GSB,2472,Alpine south side,45.87,7.17
+2004,74.3,0.7,Col du Grand St-Bernard,GSB,2472,Alpine south side,45.87,7.17
+2005,100.1,-1.35,Col du Grand St-Bernard,GSB,2472,Alpine south side,45.87,7.17
+2006,94.9,-0.2,Col du Grand St-Bernard,GSB,2472,Alpine south side,45.87,7.17
+2007,101.3,1.35,Col du Grand St-Bernard,GSB,2472,Alpine south side,45.87,7.17
+2008,75.8,1.72,Col du Grand St-Bernard,GSB,2472,Alpine south side,45.87,7.17
+2009,71.9,0.72,Col du Grand St-Bernard,GSB,2472,Alpine south side,45.87,7.17
+2010,121.3,-5.96,Col du Grand St-Bernard,GSB,2472,Alpine south side,45.87,7.17
+2011,119.9,2.95,Col du Grand St-Bernard,GSB,2472,Alpine south side,45.87,7.17
+2012,96.8,-0.25,Col du Grand St-Bernard,GSB,2472,Alpine south side,45.87,7.17
+2013,55.3,0.9,Col du Grand St-Bernard,GSB,2472,Alpine south side,45.87,7.17
+2014,102.8,2.97,Col du Grand St-Bernard,GSB,2472,Alpine south side,45.87,7.17
+2015,97.5,4.09,Col du Grand St-Bernard,GSB,2472,Alpine south side,45.87,7.17
+1981,82.4,-0.55,Guetsch ob Andermatt,GUE,2283,Central Alpine north slope,46.65,8.62
+1982,63.1,2.63,Guetsch ob Andermatt,GUE,2283,Central Alpine north slope,46.65,8.62
+1983,59.4,0.38,Guetsch ob Andermatt,GUE,2283,Central Alpine north slope,46.65,8.62
+1984,89.3,2.17,Guetsch ob Andermatt,GUE,2283,Central Alpine north slope,46.65,8.62
+1985,57.5,-3.09,Guetsch ob Andermatt,GUE,2283,Central Alpine north slope,46.65,8.62
+1986,55.3,3.14,Guetsch ob Andermatt,GUE,2283,Central Alpine north slope,46.65,8.62
+1987,84.4,-3.01,Guetsch ob Andermatt,GUE,2283,Central Alpine north slope,46.65,8.62
+1988,61.7,-0.13,Guetsch ob Andermatt,GUE,2283,Central Alpine north slope,46.65,8.62
+1989,57,2.38,Guetsch ob Andermatt,GUE,2283,Central Alpine north slope,46.65,8.62
+1990,82,3.88,Guetsch ob Andermatt,GUE,2283,Central Alpine north slope,46.65,8.62
+1991,103.9,1.14,Guetsch ob Andermatt,GUE,2283,Central Alpine north slope,46.65,8.62
+1992,51.5,2.54,Guetsch ob Andermatt,GUE,2283,Central Alpine north slope,46.65,8.62
+1993,78.3,1.71,Guetsch ob Andermatt,GUE,2283,Central Alpine north slope,46.65,8.62
+1994,39,2.86,Guetsch ob Andermatt,GUE,2283,Central Alpine north slope,46.65,8.62
+1995,113.2,-1.11,Guetsch ob Andermatt,GUE,2283,Central Alpine north slope,46.65,8.62
+1996,102.2,-1.98,Guetsch ob Andermatt,GUE,2283,Central Alpine north slope,46.65,8.62
+1997,59.9,-0.93,Guetsch ob Andermatt,GUE,2283,Central Alpine north slope,46.65,8.62
+1998,55.6,1.03,Guetsch ob Andermatt,GUE,2283,Central Alpine north slope,46.65,8.62
+1999,72.4,2.25,Guetsch ob Andermatt,GUE,2283,Central Alpine north slope,46.65,8.62
+2000,73.3,1.18,Guetsch ob Andermatt,GUE,2283,Central Alpine north slope,46.65,8.62
+2001,58.3,-1.91,Guetsch ob Andermatt,GUE,2283,Central Alpine north slope,46.65,8.62
+2002,81.7,1,Guetsch ob Andermatt,GUE,2283,Central Alpine north slope,46.65,8.62
+2003,50.6,-0.09,Guetsch ob Andermatt,GUE,2283,Central Alpine north slope,46.65,8.62
+2004,55.8,0.7,Guetsch ob Andermatt,GUE,2283,Central Alpine north slope,46.65,8.62
+2005,48.2,-1.35,Guetsch ob Andermatt,GUE,2283,Central Alpine north slope,46.65,8.62
+2006,47.2,-0.2,Guetsch ob Andermatt,GUE,2283,Central Alpine north slope,46.65,8.62
+2007,65.8,1.35,Guetsch ob Andermatt,GUE,2283,Central Alpine north slope,46.65,8.62
+2008,79.8,1.72,Guetsch ob Andermatt,GUE,2283,Central Alpine north slope,46.65,8.62
+2009,76.4,0.72,Guetsch ob Andermatt,GUE,2283,Central Alpine north slope,46.65,8.62
+2010,59.2,-5.96,Guetsch ob Andermatt,GUE,2283,Central Alpine north slope,46.65,8.62
+2011,47,2.95,Guetsch ob Andermatt,GUE,2283,Central Alpine north slope,46.65,8.62
+2012,56.2,-0.25,Guetsch ob Andermatt,GUE,2283,Central Alpine north slope,46.65,8.62
+2013,77.6,0.9,Guetsch ob Andermatt,GUE,2283,Central Alpine north slope,46.65,8.62
+2014,86.2,2.97,Guetsch ob Andermatt,GUE,2283,Central Alpine north slope,46.65,8.62
+2015,69.9,4.09,Guetsch ob Andermatt,GUE,2283,Central Alpine north slope,46.65,8.62
+1981,31,-0.55,Guettingen,GUT,440,North-eastern plateau,47.6,9.28
+1982,48.2,2.63,Guettingen,GUT,440,North-eastern plateau,47.6,9.28
+1983,27.3,0.38,Guettingen,GUT,440,North-eastern plateau,47.6,9.28
+1984,56.5,2.17,Guettingen,GUT,440,North-eastern plateau,47.6,9.28
+1985,42.5,-3.09,Guettingen,GUT,440,North-eastern plateau,47.6,9.28
+1986,46.2,3.14,Guettingen,GUT,440,North-eastern plateau,47.6,9.28
+1987,55.5,-3.01,Guettingen,GUT,440,North-eastern plateau,47.6,9.28
+1988,33.7,-0.13,Guettingen,GUT,440,North-eastern plateau,47.6,9.28
+1989,37.1,2.38,Guettingen,GUT,440,North-eastern plateau,47.6,9.28
+1990,47.4,3.88,Guettingen,GUT,440,North-eastern plateau,47.6,9.28
+1991,40.7,1.14,Guettingen,GUT,440,North-eastern plateau,47.6,9.28
+1992,33.6,2.54,Guettingen,GUT,440,North-eastern plateau,47.6,9.28
+1993,78.7,1.71,Guettingen,GUT,440,North-eastern plateau,47.6,9.28
+1994,38.2,2.86,Guettingen,GUT,440,North-eastern plateau,47.6,9.28
+1995,37.8,-1.11,Guettingen,GUT,440,North-eastern plateau,47.6,9.28
+1996,59.7,-1.98,Guettingen,GUT,440,North-eastern plateau,47.6,9.28
+1997,32.2,-0.93,Guettingen,GUT,440,North-eastern plateau,47.6,9.28
+1998,30.3,1.03,Guettingen,GUT,440,North-eastern plateau,47.6,9.28
+1999,53.1,2.25,Guettingen,GUT,440,North-eastern plateau,47.6,9.28
+2000,55.3,1.18,Guettingen,GUT,440,North-eastern plateau,47.6,9.28
+2001,39.7,-1.91,Guettingen,GUT,440,North-eastern plateau,47.6,9.28
+2002,39.9,1,Guettingen,GUT,440,North-eastern plateau,47.6,9.28
+2003,35.3,-0.09,Guettingen,GUT,440,North-eastern plateau,47.6,9.28
+2004,32.6,0.7,Guettingen,GUT,440,North-eastern plateau,47.6,9.28
+2005,27.1,-1.35,Guettingen,GUT,440,North-eastern plateau,47.6,9.28
+2006,44.6,-0.2,Guettingen,GUT,440,North-eastern plateau,47.6,9.28
+2007,45.9,1.35,Guettingen,GUT,440,North-eastern plateau,47.6,9.28
+2008,40.8,1.72,Guettingen,GUT,440,North-eastern plateau,47.6,9.28
+2009,52.3,0.72,Guettingen,GUT,440,North-eastern plateau,47.6,9.28
+2010,36.7,-5.96,Guettingen,GUT,440,North-eastern plateau,47.6,9.28
+2011,39.8,2.95,Guettingen,GUT,440,North-eastern plateau,47.6,9.28
+2012,41.3,-0.25,Guettingen,GUT,440,North-eastern plateau,47.6,9.28
+2013,30.6,0.9,Guettingen,GUT,440,North-eastern plateau,47.6,9.28
+2014,35.4,2.97,Guettingen,GUT,440,North-eastern plateau,47.6,9.28
+2015,107.8,4.09,Guettingen,GUT,440,North-eastern plateau,47.6,9.28
+1981,35,-0.55,Geneve-Cointrin,GVE,412,Western plateau,46.25,6.13
+1982,40.8,2.63,Geneve-Cointrin,GVE,412,Western plateau,46.25,6.13
+1983,50.2,0.38,Geneve-Cointrin,GVE,412,Western plateau,46.25,6.13
+1984,33.2,2.17,Geneve-Cointrin,GVE,412,Western plateau,46.25,6.13
+1985,32.2,-3.09,Geneve-Cointrin,GVE,412,Western plateau,46.25,6.13
+1986,33.2,3.14,Geneve-Cointrin,GVE,412,Western plateau,46.25,6.13
+1987,33.3,-3.01,Geneve-Cointrin,GVE,412,Western plateau,46.25,6.13
+1988,30.9,-0.13,Geneve-Cointrin,GVE,412,Western plateau,46.25,6.13
+1989,32.7,2.38,Geneve-Cointrin,GVE,412,Western plateau,46.25,6.13
+1990,37.4,3.88,Geneve-Cointrin,GVE,412,Western plateau,46.25,6.13
+1991,37.4,1.14,Geneve-Cointrin,GVE,412,Western plateau,46.25,6.13
+1992,38.7,2.54,Geneve-Cointrin,GVE,412,Western plateau,46.25,6.13
+1993,65.6,1.71,Geneve-Cointrin,GVE,412,Western plateau,46.25,6.13
+1994,41.8,2.86,Geneve-Cointrin,GVE,412,Western plateau,46.25,6.13
+1995,34.5,-1.11,Geneve-Cointrin,GVE,412,Western plateau,46.25,6.13
+1996,47.4,-1.98,Geneve-Cointrin,GVE,412,Western plateau,46.25,6.13
+1997,64.7,-0.93,Geneve-Cointrin,GVE,412,Western plateau,46.25,6.13
+1998,49.4,1.03,Geneve-Cointrin,GVE,412,Western plateau,46.25,6.13
+1999,50,2.25,Geneve-Cointrin,GVE,412,Western plateau,46.25,6.13
+2000,50,1.18,Geneve-Cointrin,GVE,412,Western plateau,46.25,6.13
+2001,52.1,-1.91,Geneve-Cointrin,GVE,412,Western plateau,46.25,6.13
+2002,46.9,1,Geneve-Cointrin,GVE,412,Western plateau,46.25,6.13
+2003,30,-0.09,Geneve-Cointrin,GVE,412,Western plateau,46.25,6.13
+2004,48.6,0.7,Geneve-Cointrin,GVE,412,Western plateau,46.25,6.13
+2005,34.4,-1.35,Geneve-Cointrin,GVE,412,Western plateau,46.25,6.13
+2006,39.5,-0.2,Geneve-Cointrin,GVE,412,Western plateau,46.25,6.13
+2007,45.4,1.35,Geneve-Cointrin,GVE,412,Western plateau,46.25,6.13
+2008,53.3,1.72,Geneve-Cointrin,GVE,412,Western plateau,46.25,6.13
+2009,30.7,0.72,Geneve-Cointrin,GVE,412,Western plateau,46.25,6.13
+2010,36.2,-5.96,Geneve-Cointrin,GVE,412,Western plateau,46.25,6.13
+2011,37.2,2.95,Geneve-Cointrin,GVE,412,Western plateau,46.25,6.13
+2012,40.3,-0.25,Geneve-Cointrin,GVE,412,Western plateau,46.25,6.13
+2013,82.7,0.9,Geneve-Cointrin,GVE,412,Western plateau,46.25,6.13
+2014,70,2.97,Geneve-Cointrin,GVE,412,Western plateau,46.25,6.13
+2015,51.6,4.09,Geneve-Cointrin,GVE,412,Western plateau,46.25,6.13
+1981,54,-0.55,Interlaken,INT,577,Western Alpine north slope,46.67,7.87
+1982,44.5,2.63,Interlaken,INT,577,Western Alpine north slope,46.67,7.87
+1983,41.4,0.38,Interlaken,INT,577,Western Alpine north slope,46.67,7.87
+1984,62.6,2.17,Interlaken,INT,577,Western Alpine north slope,46.67,7.87
+1985,37.2,-3.09,Interlaken,INT,577,Western Alpine north slope,46.67,7.87
+1986,45.3,3.14,Interlaken,INT,577,Western Alpine north slope,46.67,7.87
+1987,39.5,-3.01,Interlaken,INT,577,Western Alpine north slope,46.67,7.87
+1988,29.7,-0.13,Interlaken,INT,577,Western Alpine north slope,46.67,7.87
+1989,44.3,2.38,Interlaken,INT,577,Western Alpine north slope,46.67,7.87
+1990,59.4,3.88,Interlaken,INT,577,Western Alpine north slope,46.67,7.87
+1991,61.9,1.14,Interlaken,INT,577,Western Alpine north slope,46.67,7.87
+1992,39.2,2.54,Interlaken,INT,577,Western Alpine north slope,46.67,7.87
+1993,47.6,1.71,Interlaken,INT,577,Western Alpine north slope,46.67,7.87
+1994,31.9,2.86,Interlaken,INT,577,Western Alpine north slope,46.67,7.87
+1995,44.4,-1.11,Interlaken,INT,577,Western Alpine north slope,46.67,7.87
+1996,41.2,-1.98,Interlaken,INT,577,Western Alpine north slope,46.67,7.87
+1997,40.1,-0.93,Interlaken,INT,577,Western Alpine north slope,46.67,7.87
+1998,35.7,1.03,Interlaken,INT,577,Western Alpine north slope,46.67,7.87
+1999,40.9,2.25,Interlaken,INT,577,Western Alpine north slope,46.67,7.87
+2000,45.2,1.18,Interlaken,INT,577,Western Alpine north slope,46.67,7.87
+2001,35.4,-1.91,Interlaken,INT,577,Western Alpine north slope,46.67,7.87
+2002,45.5,1,Interlaken,INT,577,Western Alpine north slope,46.67,7.87
+2003,31.8,-0.09,Interlaken,INT,577,Western Alpine north slope,46.67,7.87
+2004,51.8,0.7,Interlaken,INT,577,Western Alpine north slope,46.67,7.87
+2005,61.4,-1.35,Interlaken,INT,577,Western Alpine north slope,46.67,7.87
+2006,37.6,-0.2,Interlaken,INT,577,Western Alpine north slope,46.67,7.87
+2007,61.3,1.35,Interlaken,INT,577,Western Alpine north slope,46.67,7.87
+2008,41.2,1.72,Interlaken,INT,577,Western Alpine north slope,46.67,7.87
+2009,40.3,0.72,Interlaken,INT,577,Western Alpine north slope,46.67,7.87
+2010,43.2,-5.96,Interlaken,INT,577,Western Alpine north slope,46.67,7.87
+2011,38.7,2.95,Interlaken,INT,577,Western Alpine north slope,46.67,7.87
+2012,37.6,-0.25,Interlaken,INT,577,Western Alpine north slope,46.67,7.87
+2013,36.8,0.9,Interlaken,INT,577,Western Alpine north slope,46.67,7.87
+2014,40.1,2.97,Interlaken,INT,577,Western Alpine north slope,46.67,7.87
+2015,44.1,4.09,Interlaken,INT,577,Western Alpine north slope,46.67,7.87
+1981,46.5,-0.55,Zuerich.Kloten,KLO,426,North-eastern plateau,47.48,8.54
+1982,28.4,2.63,Zuerich.Kloten,KLO,426,North-eastern plateau,47.48,8.54
+1983,44.2,0.38,Zuerich.Kloten,KLO,426,North-eastern plateau,47.48,8.54
+1984,41,2.17,Zuerich.Kloten,KLO,426,North-eastern plateau,47.48,8.54
+1985,35.4,-3.09,Zuerich.Kloten,KLO,426,North-eastern plateau,47.48,8.54
+1986,49.9,3.14,Zuerich.Kloten,KLO,426,North-eastern plateau,47.48,8.54
+1987,62.1,-3.01,Zuerich.Kloten,KLO,426,North-eastern plateau,47.48,8.54
+1988,32.2,-0.13,Zuerich.Kloten,KLO,426,North-eastern plateau,47.48,8.54
+1989,36.2,2.38,Zuerich.Kloten,KLO,426,North-eastern plateau,47.48,8.54
+1990,50.9,3.88,Zuerich.Kloten,KLO,426,North-eastern plateau,47.48,8.54
+1991,30.6,1.14,Zuerich.Kloten,KLO,426,North-eastern plateau,47.48,8.54
+1992,44.3,2.54,Zuerich.Kloten,KLO,426,North-eastern plateau,47.48,8.54
+1993,56.5,1.71,Zuerich.Kloten,KLO,426,North-eastern plateau,47.48,8.54
+1994,57.9,2.86,Zuerich.Kloten,KLO,426,North-eastern plateau,47.48,8.54
+1995,63.6,-1.11,Zuerich.Kloten,KLO,426,North-eastern plateau,47.48,8.54
+1996,36.6,-1.98,Zuerich.Kloten,KLO,426,North-eastern plateau,47.48,8.54
+1997,33.2,-0.93,Zuerich.Kloten,KLO,426,North-eastern plateau,47.48,8.54
+1998,30.1,1.03,Zuerich.Kloten,KLO,426,North-eastern plateau,47.48,8.54
+1999,45,2.25,Zuerich.Kloten,KLO,426,North-eastern plateau,47.48,8.54
+2000,48.4,1.18,Zuerich.Kloten,KLO,426,North-eastern plateau,47.48,8.54
+2001,39.6,-1.91,Zuerich.Kloten,KLO,426,North-eastern plateau,47.48,8.54
+2002,45,1,Zuerich.Kloten,KLO,426,North-eastern plateau,47.48,8.54
+2003,40.8,-0.09,Zuerich.Kloten,KLO,426,North-eastern plateau,47.48,8.54
+2004,47,0.7,Zuerich.Kloten,KLO,426,North-eastern plateau,47.48,8.54
+2005,42.9,-1.35,Zuerich.Kloten,KLO,426,North-eastern plateau,47.48,8.54
+2006,39.3,-0.2,Zuerich.Kloten,KLO,426,North-eastern plateau,47.48,8.54
+2007,72.6,1.35,Zuerich.Kloten,KLO,426,North-eastern plateau,47.48,8.54
+2008,47,1.72,Zuerich.Kloten,KLO,426,North-eastern plateau,47.48,8.54
+2009,35.9,0.72,Zuerich.Kloten,KLO,426,North-eastern plateau,47.48,8.54
+2010,72.4,-5.96,Zuerich.Kloten,KLO,426,North-eastern plateau,47.48,8.54
+2011,45.5,2.95,Zuerich.Kloten,KLO,426,North-eastern plateau,47.48,8.54
+2012,49.6,-0.25,Zuerich.Kloten,KLO,426,North-eastern plateau,47.48,8.54
+2013,42.5,0.9,Zuerich.Kloten,KLO,426,North-eastern plateau,47.48,8.54
+2014,33.2,2.97,Zuerich.Kloten,KLO,426,North-eastern plateau,47.48,8.54
+2015,39.6,4.09,Zuerich.Kloten,KLO,426,North-eastern plateau,47.48,8.54
+1989,23.4,2.38,Leibstadt,LEI,341,Eastern Jura,47.6,8.19
+1990,42.3,3.88,Leibstadt,LEI,341,Eastern Jura,47.6,8.19
+1991,26.4,1.14,Leibstadt,LEI,341,Eastern Jura,47.6,8.19
+1992,38.1,2.54,Leibstadt,LEI,341,Eastern Jura,47.6,8.19
+1993,35.7,1.71,Leibstadt,LEI,341,Eastern Jura,47.6,8.19
+1994,48.6,2.86,Leibstadt,LEI,341,Eastern Jura,47.6,8.19
+1995,70.4,-1.11,Leibstadt,LEI,341,Eastern Jura,47.6,8.19
+1996,36.7,-1.98,Leibstadt,LEI,341,Eastern Jura,47.6,8.19
+1997,37.1,-0.93,Leibstadt,LEI,341,Eastern Jura,47.6,8.19
+1998,31.9,1.03,Leibstadt,LEI,341,Eastern Jura,47.6,8.19
+1999,32.3,2.25,Leibstadt,LEI,341,Eastern Jura,47.6,8.19
+2000,31.4,1.18,Leibstadt,LEI,341,Eastern Jura,47.6,8.19
+2001,51.3,-1.91,Leibstadt,LEI,341,Eastern Jura,47.6,8.19
+2002,47.1,1,Leibstadt,LEI,341,Eastern Jura,47.6,8.19
+2003,28,-0.09,Leibstadt,LEI,341,Eastern Jura,47.6,8.19
+2004,37.1,0.7,Leibstadt,LEI,341,Eastern Jura,47.6,8.19
+2005,31.7,-1.35,Leibstadt,LEI,341,Eastern Jura,47.6,8.19
+2006,41,-0.2,Leibstadt,LEI,341,Eastern Jura,47.6,8.19
+2007,43.6,1.35,Leibstadt,LEI,341,Eastern Jura,47.6,8.19
+2008,41.3,1.72,Leibstadt,LEI,341,Eastern Jura,47.6,8.19
+2009,63.6,0.72,Leibstadt,LEI,341,Eastern Jura,47.6,8.19
+2010,32,-5.96,Leibstadt,LEI,341,Eastern Jura,47.6,8.19
+2011,27.7,2.95,Leibstadt,LEI,341,Eastern Jura,47.6,8.19
+2012,28.3,-0.25,Leibstadt,LEI,341,Eastern Jura,47.6,8.19
+2013,64.5,0.9,Leibstadt,LEI,341,Eastern Jura,47.6,8.19
+2014,32.9,2.97,Leibstadt,LEI,341,Eastern Jura,47.6,8.19
+2015,63.3,4.09,Leibstadt,LEI,341,Eastern Jura,47.6,8.19
+1981,75.3,-0.55,Lugano,LUG,273,Alpine south side,46,8.96
+1982,99,2.63,Lugano,LUG,273,Alpine south side,46,8.96
+1983,78.1,0.38,Lugano,LUG,273,Alpine south side,46,8.96
+1984,85.2,2.17,Lugano,LUG,273,Alpine south side,46,8.96
+1985,69.2,-3.09,Lugano,LUG,273,Alpine south side,46,8.96
+1986,91,3.14,Lugano,LUG,273,Alpine south side,46,8.96
+1987,85.7,-3.01,Lugano,LUG,273,Alpine south side,46,8.96
+1988,42.2,-0.13,Lugano,LUG,273,Alpine south side,46,8.96
+1989,65.9,2.38,Lugano,LUG,273,Alpine south side,46,8.96
+1990,77.6,3.88,Lugano,LUG,273,Alpine south side,46,8.96
+1991,108,1.14,Lugano,LUG,273,Alpine south side,46,8.96
+1992,71,2.54,Lugano,LUG,273,Alpine south side,46,8.96
+1993,67.2,1.71,Lugano,LUG,273,Alpine south side,46,8.96
+1994,171.8,2.86,Lugano,LUG,273,Alpine south side,46,8.96
+1995,161.5,-1.11,Lugano,LUG,273,Alpine south side,46,8.96
+1996,90.4,-1.98,Lugano,LUG,273,Alpine south side,46,8.96
+1997,82.9,-0.93,Lugano,LUG,273,Alpine south side,46,8.96
+1998,127.8,1.03,Lugano,LUG,273,Alpine south side,46,8.96
+1999,64.2,2.25,Lugano,LUG,273,Alpine south side,46,8.96
+2000,128,1.18,Lugano,LUG,273,Alpine south side,46,8.96
+2001,93.5,-1.91,Lugano,LUG,273,Alpine south side,46,8.96
+2002,106.8,1,Lugano,LUG,273,Alpine south side,46,8.96
+2003,77.6,-0.09,Lugano,LUG,273,Alpine south side,46,8.96
+2004,62,0.7,Lugano,LUG,273,Alpine south side,46,8.96
+2005,46.5,-1.35,Lugano,LUG,273,Alpine south side,46,8.96
+2006,76.3,-0.2,Lugano,LUG,273,Alpine south side,46,8.96
+2007,77.6,1.35,Lugano,LUG,273,Alpine south side,46,8.96
+2008,117.7,1.72,Lugano,LUG,273,Alpine south side,46,8.96
+2009,127.8,0.72,Lugano,LUG,273,Alpine south side,46,8.96
+2010,64.7,-5.96,Lugano,LUG,273,Alpine south side,46,8.96
+2011,99.8,2.95,Lugano,LUG,273,Alpine south side,46,8.96
+2012,52.6,-0.25,Lugano,LUG,273,Alpine south side,46,8.96
+2013,62,0.9,Lugano,LUG,273,Alpine south side,46,8.96
+2014,113.6,2.97,Lugano,LUG,273,Alpine south side,46,8.96
+2015,90.4,4.09,Lugano,LUG,273,Alpine south side,46,8.96
+1981,58.2,-0.55,Luzern,LUZ,454,Central plateau,47.04,8.3
+1982,32.3,2.63,Luzern,LUZ,454,Central plateau,47.04,8.3
+1983,35.8,0.38,Luzern,LUZ,454,Central plateau,47.04,8.3
+1984,56.8,2.17,Luzern,LUZ,454,Central plateau,47.04,8.3
+1985,42.7,-3.09,Luzern,LUZ,454,Central plateau,47.04,8.3
+1986,40.5,3.14,Luzern,LUZ,454,Central plateau,47.04,8.3
+1987,54.9,-3.01,Luzern,LUZ,454,Central plateau,47.04,8.3
+1988,57.4,-0.13,Luzern,LUZ,454,Central plateau,47.04,8.3
+1989,37.7,2.38,Luzern,LUZ,454,Central plateau,47.04,8.3
+1990,50.6,3.88,Luzern,LUZ,454,Central plateau,47.04,8.3
+1991,38.6,1.14,Luzern,LUZ,454,Central plateau,47.04,8.3
+1992,45.6,2.54,Luzern,LUZ,454,Central plateau,47.04,8.3
+1993,94.4,1.71,Luzern,LUZ,454,Central plateau,47.04,8.3
+1994,52.6,2.86,Luzern,LUZ,454,Central plateau,47.04,8.3
+1995,42.2,-1.11,Luzern,LUZ,454,Central plateau,47.04,8.3
+1996,63.1,-1.98,Luzern,LUZ,454,Central plateau,47.04,8.3
+1997,53.2,-0.93,Luzern,LUZ,454,Central plateau,47.04,8.3
+1998,46.9,1.03,Luzern,LUZ,454,Central plateau,47.04,8.3
+1999,35,2.25,Luzern,LUZ,454,Central plateau,47.04,8.3
+2000,40.3,1.18,Luzern,LUZ,454,Central plateau,47.04,8.3
+2001,43.8,-1.91,Luzern,LUZ,454,Central plateau,47.04,8.3
+2002,111.7,1,Luzern,LUZ,454,Central plateau,47.04,8.3
+2003,33.2,-0.09,Luzern,LUZ,454,Central plateau,47.04,8.3
+2004,41.8,0.7,Luzern,LUZ,454,Central plateau,47.04,8.3
+2005,74.4,-1.35,Luzern,LUZ,454,Central plateau,47.04,8.3
+2006,52.7,-0.2,Luzern,LUZ,454,Central plateau,47.04,8.3
+2007,52.9,1.35,Luzern,LUZ,454,Central plateau,47.04,8.3
+2008,46,1.72,Luzern,LUZ,454,Central plateau,47.04,8.3
+2009,44,0.72,Luzern,LUZ,454,Central plateau,47.04,8.3
+2010,57.9,-5.96,Luzern,LUZ,454,Central plateau,47.04,8.3
+2011,40.4,2.95,Luzern,LUZ,454,Central plateau,47.04,8.3
+2012,44.8,-0.25,Luzern,LUZ,454,Central plateau,47.04,8.3
+2013,44.2,0.9,Luzern,LUZ,454,Central plateau,47.04,8.3
+2014,54.7,2.97,Luzern,LUZ,454,Central plateau,47.04,8.3
+2015,39.6,4.09,Luzern,LUZ,454,Central plateau,47.04,8.3
+1981,140.1,-0.55,Magadino.Cadenazzo,MAG,203,Alpine south side,46.16,8.93
+1982,96.9,2.63,Magadino.Cadenazzo,MAG,203,Alpine south side,46.16,8.93
+1983,204.4,0.38,Magadino.Cadenazzo,MAG,203,Alpine south side,46.16,8.93
+1984,182.8,2.17,Magadino.Cadenazzo,MAG,203,Alpine south side,46.16,8.93
+1985,92.2,-3.09,Magadino.Cadenazzo,MAG,203,Alpine south side,46.16,8.93
+1986,83.9,3.14,Magadino.Cadenazzo,MAG,203,Alpine south side,46.16,8.93
+1987,138.9,-3.01,Magadino.Cadenazzo,MAG,203,Alpine south side,46.16,8.93
+1988,122.9,-0.13,Magadino.Cadenazzo,MAG,203,Alpine south side,46.16,8.93
+1989,81,2.38,Magadino.Cadenazzo,MAG,203,Alpine south side,46.16,8.93
+1990,93.3,3.88,Magadino.Cadenazzo,MAG,203,Alpine south side,46.16,8.93
+1991,236,1.14,Magadino.Cadenazzo,MAG,203,Alpine south side,46.16,8.93
+1992,78.1,2.54,Magadino.Cadenazzo,MAG,203,Alpine south side,46.16,8.93
+1993,101.7,1.71,Magadino.Cadenazzo,MAG,203,Alpine south side,46.16,8.93
+1994,108.8,2.86,Magadino.Cadenazzo,MAG,203,Alpine south side,46.16,8.93
+1995,89.2,-1.11,Magadino.Cadenazzo,MAG,203,Alpine south side,46.16,8.93
+1996,84.8,-1.98,Magadino.Cadenazzo,MAG,203,Alpine south side,46.16,8.93
+1997,118.8,-0.93,Magadino.Cadenazzo,MAG,203,Alpine south side,46.16,8.93
+1998,194.8,1.03,Magadino.Cadenazzo,MAG,203,Alpine south side,46.16,8.93
+1999,102.5,2.25,Magadino.Cadenazzo,MAG,203,Alpine south side,46.16,8.93
+2000,90.3,1.18,Magadino.Cadenazzo,MAG,203,Alpine south side,46.16,8.93
+2001,146.6,-1.91,Magadino.Cadenazzo,MAG,203,Alpine south side,46.16,8.93
+2002,226.6,1,Magadino.Cadenazzo,MAG,203,Alpine south side,46.16,8.93
+2003,120.8,-0.09,Magadino.Cadenazzo,MAG,203,Alpine south side,46.16,8.93
+2004,95.4,0.7,Magadino.Cadenazzo,MAG,203,Alpine south side,46.16,8.93
+2005,68.9,-1.35,Magadino.Cadenazzo,MAG,203,Alpine south side,46.16,8.93
+2006,97.4,-0.2,Magadino.Cadenazzo,MAG,203,Alpine south side,46.16,8.93
+2007,68.4,1.35,Magadino.Cadenazzo,MAG,203,Alpine south side,46.16,8.93
+2008,100.3,1.72,Magadino.Cadenazzo,MAG,203,Alpine south side,46.16,8.93
+2009,84.4,0.72,Magadino.Cadenazzo,MAG,203,Alpine south side,46.16,8.93
+2010,63.5,-5.96,Magadino.Cadenazzo,MAG,203,Alpine south side,46.16,8.93
+2011,86.2,2.95,Magadino.Cadenazzo,MAG,203,Alpine south side,46.16,8.93
+2012,106.5,-0.25,Magadino.Cadenazzo,MAG,203,Alpine south side,46.16,8.93
+2013,86.4,0.9,Magadino.Cadenazzo,MAG,203,Alpine south side,46.16,8.93
+2014,106.5,2.97,Magadino.Cadenazzo,MAG,203,Alpine south side,46.16,8.93
+2015,73.5,4.09,Magadino.Cadenazzo,MAG,203,Alpine south side,46.16,8.93
+1983,39.3,0.38,Le Moleson,MLS,1974,Western Alpine north slope,46.55,7.02
+1984,49.5,2.17,Le Moleson,MLS,1974,Western Alpine north slope,46.55,7.02
+1985,41.7,-3.09,Le Moleson,MLS,1974,Western Alpine north slope,46.55,7.02
+1986,51.4,3.14,Le Moleson,MLS,1974,Western Alpine north slope,46.55,7.02
+1987,54.8,-3.01,Le Moleson,MLS,1974,Western Alpine north slope,46.55,7.02
+1988,45.5,-0.13,Le Moleson,MLS,1974,Western Alpine north slope,46.55,7.02
+1989,38.9,2.38,Le Moleson,MLS,1974,Western Alpine north slope,46.55,7.02
+1990,84.2,3.88,Le Moleson,MLS,1974,Western Alpine north slope,46.55,7.02
+1991,47.3,1.14,Le Moleson,MLS,1974,Western Alpine north slope,46.55,7.02
+1992,42.9,2.54,Le Moleson,MLS,1974,Western Alpine north slope,46.55,7.02
+1993,34.9,1.71,Le Moleson,MLS,1974,Western Alpine north slope,46.55,7.02
+1994,34.8,2.86,Le Moleson,MLS,1974,Western Alpine north slope,46.55,7.02
+1995,31.3,-1.11,Le Moleson,MLS,1974,Western Alpine north slope,46.55,7.02
+1996,32,-1.98,Le Moleson,MLS,1974,Western Alpine north slope,46.55,7.02
+1997,35.5,-0.93,Le Moleson,MLS,1974,Western Alpine north slope,46.55,7.02
+1998,24.6,1.03,Le Moleson,MLS,1974,Western Alpine north slope,46.55,7.02
+1999,34.6,2.25,Le Moleson,MLS,1974,Western Alpine north slope,46.55,7.02
+2000,23,1.18,Le Moleson,MLS,1974,Western Alpine north slope,46.55,7.02
+2001,28.4,-1.91,Le Moleson,MLS,1974,Western Alpine north slope,46.55,7.02
+2002,45.7,1,Le Moleson,MLS,1974,Western Alpine north slope,46.55,7.02
+2003,37.2,-0.09,Le Moleson,MLS,1974,Western Alpine north slope,46.55,7.02
+2004,31,0.7,Le Moleson,MLS,1974,Western Alpine north slope,46.55,7.02
+2005,61.1,-1.35,Le Moleson,MLS,1974,Western Alpine north slope,46.55,7.02
+2006,49.1,-0.2,Le Moleson,MLS,1974,Western Alpine north slope,46.55,7.02
+2007,49.5,1.35,Le Moleson,MLS,1974,Western Alpine north slope,46.55,7.02
+2008,30.2,1.72,Le Moleson,MLS,1974,Western Alpine north slope,46.55,7.02
+2009,32.1,0.72,Le Moleson,MLS,1974,Western Alpine north slope,46.55,7.02
+2010,40.2,-5.96,Le Moleson,MLS,1974,Western Alpine north slope,46.55,7.02
+2011,34.4,2.95,Le Moleson,MLS,1974,Western Alpine north slope,46.55,7.02
+2012,39.5,-0.25,Le Moleson,MLS,1974,Western Alpine north slope,46.55,7.02
+2013,54.6,0.9,Le Moleson,MLS,1974,Western Alpine north slope,46.55,7.02
+2014,82.8,2.97,Le Moleson,MLS,1974,Western Alpine north slope,46.55,7.02
+2015,43,4.09,Le Moleson,MLS,1974,Western Alpine north slope,46.55,7.02
+1989,36.9,2.38,Muehleberg,MUB,480,Central plateau,46.97,7.28
+1990,58.8,3.88,Muehleberg,MUB,480,Central plateau,46.97,7.28
+1991,45,1.14,Muehleberg,MUB,480,Central plateau,46.97,7.28
+1992,35.6,2.54,Muehleberg,MUB,480,Central plateau,46.97,7.28
+1993,35.3,1.71,Muehleberg,MUB,480,Central plateau,46.97,7.28
+1994,35.6,2.86,Muehleberg,MUB,480,Central plateau,46.97,7.28
+1995,40.2,-1.11,Muehleberg,MUB,480,Central plateau,46.97,7.28
+1996,37.7,-1.98,Muehleberg,MUB,480,Central plateau,46.97,7.28
+1997,46.6,-0.93,Muehleberg,MUB,480,Central plateau,46.97,7.28
+1998,32.9,1.03,Muehleberg,MUB,480,Central plateau,46.97,7.28
+1999,43,2.25,Muehleberg,MUB,480,Central plateau,46.97,7.28
+2000,39.9,1.18,Muehleberg,MUB,480,Central plateau,46.97,7.28
+2001,34.5,-1.91,Muehleberg,MUB,480,Central plateau,46.97,7.28
+2002,31,1,Muehleberg,MUB,480,Central plateau,46.97,7.28
+2003,43.5,-0.09,Muehleberg,MUB,480,Central plateau,46.97,7.28
+2004,36.6,0.7,Muehleberg,MUB,480,Central plateau,46.97,7.28
+2005,56.4,-1.35,Muehleberg,MUB,480,Central plateau,46.97,7.28
+2006,41.4,-0.2,Muehleberg,MUB,480,Central plateau,46.97,7.28
+2007,71,1.35,Muehleberg,MUB,480,Central plateau,46.97,7.28
+2008,42.8,1.72,Muehleberg,MUB,480,Central plateau,46.97,7.28
+2009,51.9,0.72,Muehleberg,MUB,480,Central plateau,46.97,7.28
+2010,55.6,-5.96,Muehleberg,MUB,480,Central plateau,46.97,7.28
+2011,25.7,2.95,Muehleberg,MUB,480,Central plateau,46.97,7.28
+2012,26.8,-0.25,Muehleberg,MUB,480,Central plateau,46.97,7.28
+2013,58,0.9,Muehleberg,MUB,480,Central plateau,46.97,7.28
+2014,42.5,2.97,Muehleberg,MUB,480,Central plateau,46.97,7.28
+2015,30.3,4.09,Muehleberg,MUB,480,Central plateau,46.97,7.28
+1981,45.1,-0.55,Montana,MVE,1427,Valais,46.3,7.46
+1982,35.9,2.63,Montana,MVE,1427,Valais,46.3,7.46
+1983,47.7,0.38,Montana,MVE,1427,Valais,46.3,7.46
+1984,45.8,2.17,Montana,MVE,1427,Valais,46.3,7.46
+1985,50.1,-3.09,Montana,MVE,1427,Valais,46.3,7.46
+1986,44.5,3.14,Montana,MVE,1427,Valais,46.3,7.46
+1987,31.9,-3.01,Montana,MVE,1427,Valais,46.3,7.46
+1988,57.6,-0.13,Montana,MVE,1427,Valais,46.3,7.46
+1989,31.7,2.38,Montana,MVE,1427,Valais,46.3,7.46
+1990,66.4,3.88,Montana,MVE,1427,Valais,46.3,7.46
+1991,86.6,1.14,Montana,MVE,1427,Valais,46.3,7.46
+1992,36.7,2.54,Montana,MVE,1427,Valais,46.3,7.46
+1993,41.6,1.71,Montana,MVE,1427,Valais,46.3,7.46
+1994,34,2.86,Montana,MVE,1427,Valais,46.3,7.46
+1995,82.2,-1.11,Montana,MVE,1427,Valais,46.3,7.46
+1996,46.5,-1.98,Montana,MVE,1427,Valais,46.3,7.46
+1997,48.6,-0.93,Montana,MVE,1427,Valais,46.3,7.46
+1998,41.8,1.03,Montana,MVE,1427,Valais,46.3,7.46
+1999,53.3,2.25,Montana,MVE,1427,Valais,46.3,7.46
+2000,30.8,1.18,Montana,MVE,1427,Valais,46.3,7.46
+2001,44.5,-1.91,Montana,MVE,1427,Valais,46.3,7.46
+2002,40.2,1,Montana,MVE,1427,Valais,46.3,7.46
+2003,34.4,-0.09,Montana,MVE,1427,Valais,46.3,7.46
+2004,46.9,0.7,Montana,MVE,1427,Valais,46.3,7.46
+2005,32.4,-1.35,Montana,MVE,1427,Valais,46.3,7.46
+2006,36,-0.2,Montana,MVE,1427,Valais,46.3,7.46
+2007,60.3,1.35,Montana,MVE,1427,Valais,46.3,7.46
+2008,30.8,1.72,Montana,MVE,1427,Valais,46.3,7.46
+2009,43.2,0.72,Montana,MVE,1427,Valais,46.3,7.46
+2010,23.8,-5.96,Montana,MVE,1427,Valais,46.3,7.46
+2011,43.2,2.95,Montana,MVE,1427,Valais,46.3,7.46
+2012,27.4,-0.25,Montana,MVE,1427,Valais,46.3,7.46
+2013,32.3,0.9,Montana,MVE,1427,Valais,46.3,7.46
+2014,43.8,2.97,Montana,MVE,1427,Valais,46.3,7.46
+2015,48.9,4.09,Montana,MVE,1427,Valais,46.3,7.46
+1981,46.1,-0.55,Napf,"NAP",1404,Central Alpine north slope,47,7.94
+1982,46.7,2.63,Napf,"NAP",1404,Central Alpine north slope,47,7.94
+1983,41.8,0.38,Napf,"NAP",1404,Central Alpine north slope,47,7.94
+1984,55.3,2.17,Napf,"NAP",1404,Central Alpine north slope,47,7.94
+1985,44.4,-3.09,Napf,"NAP",1404,Central Alpine north slope,47,7.94
+1986,36.9,3.14,Napf,"NAP",1404,Central Alpine north slope,47,7.94
+1987,43.4,-3.01,Napf,"NAP",1404,Central Alpine north slope,47,7.94
+1988,54,-0.13,Napf,"NAP",1404,Central Alpine north slope,47,7.94
+1989,47.4,2.38,Napf,"NAP",1404,Central Alpine north slope,47,7.94
+1990,68.9,3.88,Napf,"NAP",1404,Central Alpine north slope,47,7.94
+1991,39.2,1.14,Napf,"NAP",1404,Central Alpine north slope,47,7.94
+1992,42.9,2.54,Napf,"NAP",1404,Central Alpine north slope,47,7.94
+1993,47.6,1.71,Napf,"NAP",1404,Central Alpine north slope,47,7.94
+1994,75.1,2.86,Napf,"NAP",1404,Central Alpine north slope,47,7.94
+1995,52.3,-1.11,Napf,"NAP",1404,Central Alpine north slope,47,7.94
+1996,44.6,-1.98,Napf,"NAP",1404,Central Alpine north slope,47,7.94
+1997,41.6,-0.93,Napf,"NAP",1404,Central Alpine north slope,47,7.94
+1998,54.4,1.03,Napf,"NAP",1404,Central Alpine north slope,47,7.94
+1999,56.3,2.25,Napf,"NAP",1404,Central Alpine north slope,47,7.94
+2000,40.8,1.18,Napf,"NAP",1404,Central Alpine north slope,47,7.94
+2001,44.7,-1.91,Napf,"NAP",1404,Central Alpine north slope,47,7.94
+2002,52.6,1,Napf,"NAP",1404,Central Alpine north slope,47,7.94
+2003,42.2,-0.09,Napf,"NAP",1404,Central Alpine north slope,47,7.94
+2004,43.8,0.7,Napf,"NAP",1404,Central Alpine north slope,47,7.94
+2005,83.7,-1.35,Napf,"NAP",1404,Central Alpine north slope,47,7.94
+2006,77,-0.2,Napf,"NAP",1404,Central Alpine north slope,47,7.94
+2007,57.4,1.35,Napf,"NAP",1404,Central Alpine north slope,47,7.94
+2008,52.6,1.72,Napf,"NAP",1404,Central Alpine north slope,47,7.94
+2009,69.3,0.72,Napf,"NAP",1404,Central Alpine north slope,47,7.94
+2010,46.4,-5.96,Napf,"NAP",1404,Central Alpine north slope,47,7.94
+2011,39.9,2.95,Napf,"NAP",1404,Central Alpine north slope,47,7.94
+2012,68.3,-0.25,Napf,"NAP",1404,Central Alpine north slope,47,7.94
+2013,43.8,0.9,Napf,"NAP",1404,Central Alpine north slope,47,7.94
+2014,58.2,2.97,Napf,"NAP",1404,Central Alpine north slope,47,7.94
+2015,47.2,4.09,Napf,"NAP",1404,Central Alpine north slope,47,7.94
+1981,37,-0.55,Neuchatel,NEU,485,Western plateau,47,6.95
+1982,38.9,2.63,Neuchatel,NEU,485,Western plateau,47,6.95
+1983,69,0.38,Neuchatel,NEU,485,Western plateau,47,6.95
+1984,28,2.17,Neuchatel,NEU,485,Western plateau,47,6.95
+1985,42.7,-3.09,Neuchatel,NEU,485,Western plateau,47,6.95
+1986,34.7,3.14,Neuchatel,NEU,485,Western plateau,47,6.95
+1987,61.1,-3.01,Neuchatel,NEU,485,Western plateau,47,6.95
+1988,115.4,-0.13,Neuchatel,NEU,485,Western plateau,47,6.95
+1989,28.2,2.38,Neuchatel,NEU,485,Western plateau,47,6.95
+1990,36,3.88,Neuchatel,NEU,485,Western plateau,47,6.95
+1991,46.2,1.14,Neuchatel,NEU,485,Western plateau,47,6.95
+1992,34.9,2.54,Neuchatel,NEU,485,Western plateau,47,6.95
+1993,42.3,1.71,Neuchatel,NEU,485,Western plateau,47,6.95
+1994,38.1,2.86,Neuchatel,NEU,485,Western plateau,47,6.95
+1995,26.7,-1.11,Neuchatel,NEU,485,Western plateau,47,6.95
+1996,54,-1.98,Neuchatel,NEU,485,Western plateau,47,6.95
+1997,56.6,-0.93,Neuchatel,NEU,485,Western plateau,47,6.95
+1998,27.4,1.03,Neuchatel,NEU,485,Western plateau,47,6.95
+1999,47.8,2.25,Neuchatel,NEU,485,Western plateau,47,6.95
+2000,37.7,1.18,Neuchatel,NEU,485,Western plateau,47,6.95
+2001,31.8,-1.91,Neuchatel,NEU,485,Western plateau,47,6.95
+2002,46.6,1,Neuchatel,NEU,485,Western plateau,47,6.95
+2003,41.3,-0.09,Neuchatel,NEU,485,Western plateau,47,6.95
+2004,44.3,0.7,Neuchatel,NEU,485,Western plateau,47,6.95
+2005,41.7,-1.35,Neuchatel,NEU,485,Western plateau,47,6.95
+2006,51,-0.2,Neuchatel,NEU,485,Western plateau,47,6.95
+2007,91.1,1.35,Neuchatel,NEU,485,Western plateau,47,6.95
+2008,48.9,1.72,Neuchatel,NEU,485,Western plateau,47,6.95
+2009,39.1,0.72,Neuchatel,NEU,485,Western plateau,47,6.95
+2010,27.7,-5.96,Neuchatel,NEU,485,Western plateau,47,6.95
+2011,33.1,2.95,Neuchatel,NEU,485,Western plateau,47,6.95
+2012,38.7,-0.25,Neuchatel,NEU,485,Western plateau,47,6.95
+2013,82.1,0.9,Neuchatel,NEU,485,Western plateau,47,6.95
+2014,34.5,2.97,Neuchatel,NEU,485,Western plateau,47,6.95
+2015,41,4.09,Neuchatel,NEU,485,Western plateau,47,6.95
+1981,219.5,-0.55,Locarno.Monti,OTL,367,Alpine south side,46.17,8.79
+1982,141,2.63,Locarno.Monti,OTL,367,Alpine south side,46.17,8.79
+1983,200.3,0.38,Locarno.Monti,OTL,367,Alpine south side,46.17,8.79
+1984,149.3,2.17,Locarno.Monti,OTL,367,Alpine south side,46.17,8.79
+1985,107.8,-3.09,Locarno.Monti,OTL,367,Alpine south side,46.17,8.79
+1986,76.4,3.14,Locarno.Monti,OTL,367,Alpine south side,46.17,8.79
+1987,164,-3.01,Locarno.Monti,OTL,367,Alpine south side,46.17,8.79
+1988,234,-0.13,Locarno.Monti,OTL,367,Alpine south side,46.17,8.79
+1989,80.2,2.38,Locarno.Monti,OTL,367,Alpine south side,46.17,8.79
+1990,101.4,3.88,Locarno.Monti,OTL,367,Alpine south side,46.17,8.79
+1991,258.1,1.14,Locarno.Monti,OTL,367,Alpine south side,46.17,8.79
+1992,79.4,2.54,Locarno.Monti,OTL,367,Alpine south side,46.17,8.79
+1993,138,1.71,Locarno.Monti,OTL,367,Alpine south side,46.17,8.79
+1994,98.5,2.86,Locarno.Monti,OTL,367,Alpine south side,46.17,8.79
+1995,83.8,-1.11,Locarno.Monti,OTL,367,Alpine south side,46.17,8.79
+1996,82.5,-1.98,Locarno.Monti,OTL,367,Alpine south side,46.17,8.79
+1997,159.4,-0.93,Locarno.Monti,OTL,367,Alpine south side,46.17,8.79
+1998,141.1,1.03,Locarno.Monti,OTL,367,Alpine south side,46.17,8.79
+1999,132.9,2.25,Locarno.Monti,OTL,367,Alpine south side,46.17,8.79
+2000,79,1.18,Locarno.Monti,OTL,367,Alpine south side,46.17,8.79
+2001,87.9,-1.91,Locarno.Monti,OTL,367,Alpine south side,46.17,8.79
+2002,176.8,1,Locarno.Monti,OTL,367,Alpine south side,46.17,8.79
+2003,125.6,-0.09,Locarno.Monti,OTL,367,Alpine south side,46.17,8.79
+2004,122,0.7,Locarno.Monti,OTL,367,Alpine south side,46.17,8.79
+2005,89.7,-1.35,Locarno.Monti,OTL,367,Alpine south side,46.17,8.79
+2006,149.2,-0.2,Locarno.Monti,OTL,367,Alpine south side,46.17,8.79
+2007,76.3,1.35,Locarno.Monti,OTL,367,Alpine south side,46.17,8.79
+2008,73.4,1.72,Locarno.Monti,OTL,367,Alpine south side,46.17,8.79
+2009,165.9,0.72,Locarno.Monti,OTL,367,Alpine south side,46.17,8.79
+2010,85.3,-5.96,Locarno.Monti,OTL,367,Alpine south side,46.17,8.79
+2011,92.2,2.95,Locarno.Monti,OTL,367,Alpine south side,46.17,8.79
+2012,73.9,-0.25,Locarno.Monti,OTL,367,Alpine south side,46.17,8.79
+2013,131.6,0.9,Locarno.Monti,OTL,367,Alpine south side,46.17,8.79
+2014,135.7,2.97,Locarno.Monti,OTL,367,Alpine south side,46.17,8.79
+2015,86.4,4.09,Locarno.Monti,OTL,367,Alpine south side,46.17,8.79
+1981,34.7,-0.55,Payerne,PAY,490,Western plateau,46.81,6.94
+1982,44.6,2.63,Payerne,PAY,490,Western plateau,46.81,6.94
+1983,48.5,0.38,Payerne,PAY,490,Western plateau,46.81,6.94
+1984,45.8,2.17,Payerne,PAY,490,Western plateau,46.81,6.94
+1985,42.7,-3.09,Payerne,PAY,490,Western plateau,46.81,6.94
+1986,42.6,3.14,Payerne,PAY,490,Western plateau,46.81,6.94
+1987,58.9,-3.01,Payerne,PAY,490,Western plateau,46.81,6.94
+1988,46.7,-0.13,Payerne,PAY,490,Western plateau,46.81,6.94
+1989,28.5,2.38,Payerne,PAY,490,Western plateau,46.81,6.94
+1990,35.6,3.88,Payerne,PAY,490,Western plateau,46.81,6.94
+1991,52,1.14,Payerne,PAY,490,Western plateau,46.81,6.94
+1992,36.9,2.54,Payerne,PAY,490,Western plateau,46.81,6.94
+1993,34.2,1.71,Payerne,PAY,490,Western plateau,46.81,6.94
+1994,42.6,2.86,Payerne,PAY,490,Western plateau,46.81,6.94
+1995,67,-1.11,Payerne,PAY,490,Western plateau,46.81,6.94
+1996,34.3,-1.98,Payerne,PAY,490,Western plateau,46.81,6.94
+1997,46,-0.93,Payerne,PAY,490,Western plateau,46.81,6.94
+1998,38.4,1.03,Payerne,PAY,490,Western plateau,46.81,6.94
+1999,40.6,2.25,Payerne,PAY,490,Western plateau,46.81,6.94
+2000,39.1,1.18,Payerne,PAY,490,Western plateau,46.81,6.94
+2001,34.1,-1.91,Payerne,PAY,490,Western plateau,46.81,6.94
+2002,32,1,Payerne,PAY,490,Western plateau,46.81,6.94
+2003,32.1,-0.09,Payerne,PAY,490,Western plateau,46.81,6.94
+2004,33.3,0.7,Payerne,PAY,490,Western plateau,46.81,6.94
+2005,47.9,-1.35,Payerne,PAY,490,Western plateau,46.81,6.94
+2006,35.5,-0.2,Payerne,PAY,490,Western plateau,46.81,6.94
+2007,55.5,1.35,Payerne,PAY,490,Western plateau,46.81,6.94
+2008,51,1.72,Payerne,PAY,490,Western plateau,46.81,6.94
+2009,38.6,0.72,Payerne,PAY,490,Western plateau,46.81,6.94
+2010,23.6,-5.96,Payerne,PAY,490,Western plateau,46.81,6.94
+2011,32.3,2.95,Payerne,PAY,490,Western plateau,46.81,6.94
+2012,33.1,-0.25,Payerne,PAY,490,Western plateau,46.81,6.94
+2013,55,0.9,Payerne,PAY,490,Western plateau,46.81,6.94
+2014,59.6,2.97,Payerne,PAY,490,Western plateau,46.81,6.94
+2015,25.5,4.09,Payerne,PAY,490,Western plateau,46.81,6.94
+1981,63.2,-0.55,Pilatus,PIL,2106,Central Alpine north slope,46.98,8.25
+1982,72.2,2.63,Pilatus,PIL,2106,Central Alpine north slope,46.98,8.25
+1983,50.4,0.38,Pilatus,PIL,2106,Central Alpine north slope,46.98,8.25
+1984,56.5,2.17,Pilatus,PIL,2106,Central Alpine north slope,46.98,8.25
+1985,57.7,-3.09,Pilatus,PIL,2106,Central Alpine north slope,46.98,8.25
+1986,83.6,3.14,Pilatus,PIL,2106,Central Alpine north slope,46.98,8.25
+1987,42.1,-3.01,Pilatus,PIL,2106,Central Alpine north slope,46.98,8.25
+1988,54.5,-0.13,Pilatus,PIL,2106,Central Alpine north slope,46.98,8.25
+1989,48.6,2.38,Pilatus,PIL,2106,Central Alpine north slope,46.98,8.25
+1990,58.2,3.88,Pilatus,PIL,2106,Central Alpine north slope,46.98,8.25
+1991,99.3,1.14,Pilatus,PIL,2106,Central Alpine north slope,46.98,8.25
+1992,53.5,2.54,Pilatus,PIL,2106,Central Alpine north slope,46.98,8.25
+1993,74.5,1.71,Pilatus,PIL,2106,Central Alpine north slope,46.98,8.25
+1994,50,2.86,Pilatus,PIL,2106,Central Alpine north slope,46.98,8.25
+1995,77.1,-1.11,Pilatus,PIL,2106,Central Alpine north slope,46.98,8.25
+1996,125.4,-1.98,Pilatus,PIL,2106,Central Alpine north slope,46.98,8.25
+1997,62.6,-0.93,Pilatus,PIL,2106,Central Alpine north slope,46.98,8.25
+1998,53.5,1.03,Pilatus,PIL,2106,Central Alpine north slope,46.98,8.25
+1999,72.2,2.25,Pilatus,PIL,2106,Central Alpine north slope,46.98,8.25
+2000,74,1.18,Pilatus,PIL,2106,Central Alpine north slope,46.98,8.25
+2001,74.3,-1.91,Pilatus,PIL,2106,Central Alpine north slope,46.98,8.25
+2002,67.3,1,Pilatus,PIL,2106,Central Alpine north slope,46.98,8.25
+2003,55.7,-0.09,Pilatus,PIL,2106,Central Alpine north slope,46.98,8.25
+2004,199.6,0.7,Pilatus,PIL,2106,Central Alpine north slope,46.98,8.25
+2005,189.4,-1.35,Pilatus,PIL,2106,Central Alpine north slope,46.98,8.25
+2006,100.1,-0.2,Pilatus,PIL,2106,Central Alpine north slope,46.98,8.25
+2007,109.9,1.35,Pilatus,PIL,2106,Central Alpine north slope,46.98,8.25
+2008,59.4,1.72,Pilatus,PIL,2106,Central Alpine north slope,46.98,8.25
+2009,53.9,0.72,Pilatus,PIL,2106,Central Alpine north slope,46.98,8.25
+2010,52.9,-5.96,Pilatus,PIL,2106,Central Alpine north slope,46.98,8.25
+2011,43.5,2.95,Pilatus,PIL,2106,Central Alpine north slope,46.98,8.25
+2012,49.4,-0.25,Pilatus,PIL,2106,Central Alpine north slope,46.98,8.25
+2013,52.2,0.9,Pilatus,PIL,2106,Central Alpine north slope,46.98,8.25
+2014,44.1,2.97,Pilatus,PIL,2106,Central Alpine north slope,46.98,8.25
+2015,45.5,4.09,Pilatus,PIL,2106,Central Alpine north slope,46.98,8.25
+1981,74,-0.55,Piotta,PIO,990,Alpine south side,46.51,8.69
+1982,76.1,2.63,Piotta,PIO,990,Alpine south side,46.51,8.69
+1983,78.7,0.38,Piotta,PIO,990,Alpine south side,46.51,8.69
+1984,59.7,2.17,Piotta,PIO,990,Alpine south side,46.51,8.69
+1985,76.3,-3.09,Piotta,PIO,990,Alpine south side,46.51,8.69
+1986,52.7,3.14,Piotta,PIO,990,Alpine south side,46.51,8.69
+1987,99.2,-3.01,Piotta,PIO,990,Alpine south side,46.51,8.69
+1988,84.1,-0.13,Piotta,PIO,990,Alpine south side,46.51,8.69
+1989,62.3,2.38,Piotta,PIO,990,Alpine south side,46.51,8.69
+1990,53.3,3.88,Piotta,PIO,990,Alpine south side,46.51,8.69
+1991,97.2,1.14,Piotta,PIO,990,Alpine south side,46.51,8.69
+1992,76,2.54,Piotta,PIO,990,Alpine south side,46.51,8.69
+1993,104.4,1.71,Piotta,PIO,990,Alpine south side,46.51,8.69
+1994,64.8,2.86,Piotta,PIO,990,Alpine south side,46.51,8.69
+1995,63.1,-1.11,Piotta,PIO,990,Alpine south side,46.51,8.69
+1996,86.5,-1.98,Piotta,PIO,990,Alpine south side,46.51,8.69
+1997,64.9,-0.93,Piotta,PIO,990,Alpine south side,46.51,8.69
+1998,85.6,1.03,Piotta,PIO,990,Alpine south side,46.51,8.69
+1999,69.1,2.25,Piotta,PIO,990,Alpine south side,46.51,8.69
+2000,78.5,1.18,Piotta,PIO,990,Alpine south side,46.51,8.69
+2001,87.2,-1.91,Piotta,PIO,990,Alpine south side,46.51,8.69
+2002,110.6,1,Piotta,PIO,990,Alpine south side,46.51,8.69
+2003,69.6,-0.09,Piotta,PIO,990,Alpine south side,46.51,8.69
+2004,56.8,0.7,Piotta,PIO,990,Alpine south side,46.51,8.69
+2005,41.9,-1.35,Piotta,PIO,990,Alpine south side,46.51,8.69
+2006,70.5,-0.2,Piotta,PIO,990,Alpine south side,46.51,8.69
+2007,80.8,1.35,Piotta,PIO,990,Alpine south side,46.51,8.69
+2008,106.3,1.72,Piotta,PIO,990,Alpine south side,46.51,8.69
+2009,76.1,0.72,Piotta,PIO,990,Alpine south side,46.51,8.69
+2010,57.3,-5.96,Piotta,PIO,990,Alpine south side,46.51,8.69
+2011,96.2,2.95,Piotta,PIO,990,Alpine south side,46.51,8.69
+2012,95.9,-0.25,Piotta,PIO,990,Alpine south side,46.51,8.69
+2013,74.4,0.9,Piotta,PIO,990,Alpine south side,46.51,8.69
+2014,93.1,2.97,Piotta,PIO,990,Alpine south side,46.51,8.69
+2015,52.4,4.09,Piotta,PIO,990,Alpine south side,46.51,8.69
+1990,63.1,3.88,Plaffeien,PLF,1042,Western Alpine north slope,46.75,7.27
+1991,41.1,1.14,Plaffeien,PLF,1042,Western Alpine north slope,46.75,7.27
+1992,62.3,2.54,Plaffeien,PLF,1042,Western Alpine north slope,46.75,7.27
+1993,53.7,1.71,Plaffeien,PLF,1042,Western Alpine north slope,46.75,7.27
+1994,45.8,2.86,Plaffeien,PLF,1042,Western Alpine north slope,46.75,7.27
+1995,67.3,-1.11,Plaffeien,PLF,1042,Western Alpine north slope,46.75,7.27
+1996,52.8,-1.98,Plaffeien,PLF,1042,Western Alpine north slope,46.75,7.27
+1997,64.3,-0.93,Plaffeien,PLF,1042,Western Alpine north slope,46.75,7.27
+1998,35.6,1.03,Plaffeien,PLF,1042,Western Alpine north slope,46.75,7.27
+1999,75.3,2.25,Plaffeien,PLF,1042,Western Alpine north slope,46.75,7.27
+2000,26.9,1.18,Plaffeien,PLF,1042,Western Alpine north slope,46.75,7.27
+2001,49,-1.91,Plaffeien,PLF,1042,Western Alpine north slope,46.75,7.27
+2002,63.7,1,Plaffeien,PLF,1042,Western Alpine north slope,46.75,7.27
+2003,39.8,-0.09,Plaffeien,PLF,1042,Western Alpine north slope,46.75,7.27
+2004,40.2,0.7,Plaffeien,PLF,1042,Western Alpine north slope,46.75,7.27
+2005,60.8,-1.35,Plaffeien,PLF,1042,Western Alpine north slope,46.75,7.27
+2006,36.8,-0.2,Plaffeien,PLF,1042,Western Alpine north slope,46.75,7.27
+2007,65.4,1.35,Plaffeien,PLF,1042,Western Alpine north slope,46.75,7.27
+2008,38.9,1.72,Plaffeien,PLF,1042,Western Alpine north slope,46.75,7.27
+2009,41.4,0.72,Plaffeien,PLF,1042,Western Alpine north slope,46.75,7.27
+2010,43.7,-5.96,Plaffeien,PLF,1042,Western Alpine north slope,46.75,7.27
+2011,42.4,2.95,Plaffeien,PLF,1042,Western Alpine north slope,46.75,7.27
+2012,36.5,-0.25,Plaffeien,PLF,1042,Western Alpine north slope,46.75,7.27
+2013,40.5,0.9,Plaffeien,PLF,1042,Western Alpine north slope,46.75,7.27
+2014,48.7,2.97,Plaffeien,PLF,1042,Western Alpine north slope,46.75,7.27
+2015,32.3,4.09,Plaffeien,PLF,1042,Western Alpine north slope,46.75,7.27
+1981,39.8,-0.55,Pully,PUY,456,Western plateau,46.51,6.67
+1982,45.3,2.63,Pully,PUY,456,Western plateau,46.51,6.67
+1983,42.9,0.38,Pully,PUY,456,Western plateau,46.51,6.67
+1984,74.6,2.17,Pully,PUY,456,Western plateau,46.51,6.67
+1985,55.6,-3.09,Pully,PUY,456,Western plateau,46.51,6.67
+1986,50.4,3.14,Pully,PUY,456,Western plateau,46.51,6.67
+1987,64,-3.01,Pully,PUY,456,Western plateau,46.51,6.67
+1988,58.3,-0.13,Pully,PUY,456,Western plateau,46.51,6.67
+1989,43.5,2.38,Pully,PUY,456,Western plateau,46.51,6.67
+1990,63.8,3.88,Pully,PUY,456,Western plateau,46.51,6.67
+1991,50.2,1.14,Pully,PUY,456,Western plateau,46.51,6.67
+1992,44,2.54,Pully,PUY,456,Western plateau,46.51,6.67
+1993,43.4,1.71,Pully,PUY,456,Western plateau,46.51,6.67
+1994,72.7,2.86,Pully,PUY,456,Western plateau,46.51,6.67
+1995,57,-1.11,Pully,PUY,456,Western plateau,46.51,6.67
+1996,40.9,-1.98,Pully,PUY,456,Western plateau,46.51,6.67
+1997,68.5,-0.93,Pully,PUY,456,Western plateau,46.51,6.67
+1998,50.9,1.03,Pully,PUY,456,Western plateau,46.51,6.67
+1999,68.6,2.25,Pully,PUY,456,Western plateau,46.51,6.67
+2000,45.9,1.18,Pully,PUY,456,Western plateau,46.51,6.67
+2001,49.5,-1.91,Pully,PUY,456,Western plateau,46.51,6.67
+2002,54.6,1,Pully,PUY,456,Western plateau,46.51,6.67
+2003,35.8,-0.09,Pully,PUY,456,Western plateau,46.51,6.67
+2004,47.8,0.7,Pully,PUY,456,Western plateau,46.51,6.67
+2005,46.7,-1.35,Pully,PUY,456,Western plateau,46.51,6.67
+2006,66.7,-0.2,Pully,PUY,456,Western plateau,46.51,6.67
+2007,61.3,1.35,Pully,PUY,456,Western plateau,46.51,6.67
+2008,54.7,1.72,Pully,PUY,456,Western plateau,46.51,6.67
+2009,28.9,0.72,Pully,PUY,456,Western plateau,46.51,6.67
+2010,39,-5.96,Pully,PUY,456,Western plateau,46.51,6.67
+2011,41.9,2.95,Pully,PUY,456,Western plateau,46.51,6.67
+2012,42.6,-0.25,Pully,PUY,456,Western plateau,46.51,6.67
+2013,85.6,0.9,Pully,PUY,456,Western plateau,46.51,6.67
+2014,73.6,2.97,Pully,PUY,456,Western plateau,46.51,6.67
+2015,41.9,4.09,Pully,PUY,456,Western plateau,46.51,6.67
+1981,41.3,-0.55,Zuerich.Affoltern,REH,444,North-eastern plateau,47.43,8.52
+1982,35,2.63,Zuerich.Affoltern,REH,444,North-eastern plateau,47.43,8.52
+1983,41.7,0.38,Zuerich.Affoltern,REH,444,North-eastern plateau,47.43,8.52
+1984,38,2.17,Zuerich.Affoltern,REH,444,North-eastern plateau,47.43,8.52
+1985,36.3,-3.09,Zuerich.Affoltern,REH,444,North-eastern plateau,47.43,8.52
+1986,47.2,3.14,Zuerich.Affoltern,REH,444,North-eastern plateau,47.43,8.52
+1987,62.9,-3.01,Zuerich.Affoltern,REH,444,North-eastern plateau,47.43,8.52
+1988,48.5,-0.13,Zuerich.Affoltern,REH,444,North-eastern plateau,47.43,8.52
+1989,35,2.38,Zuerich.Affoltern,REH,444,North-eastern plateau,47.43,8.52
+1990,30.6,3.88,Zuerich.Affoltern,REH,444,North-eastern plateau,47.43,8.52
+1991,34.2,1.14,Zuerich.Affoltern,REH,444,North-eastern plateau,47.43,8.52
+1992,47,2.54,Zuerich.Affoltern,REH,444,North-eastern plateau,47.43,8.52
+1993,64.4,1.71,Zuerich.Affoltern,REH,444,North-eastern plateau,47.43,8.52
+1994,69.2,2.86,Zuerich.Affoltern,REH,444,North-eastern plateau,47.43,8.52
+1995,40.8,-1.11,Zuerich.Affoltern,REH,444,North-eastern plateau,47.43,8.52
+1996,39,-1.98,Zuerich.Affoltern,REH,444,North-eastern plateau,47.43,8.52
+1997,34.9,-0.93,Zuerich.Affoltern,REH,444,North-eastern plateau,47.43,8.52
+1998,35.7,1.03,Zuerich.Affoltern,REH,444,North-eastern plateau,47.43,8.52
+1999,47.3,2.25,Zuerich.Affoltern,REH,444,North-eastern plateau,47.43,8.52
+2000,47,1.18,Zuerich.Affoltern,REH,444,North-eastern plateau,47.43,8.52
+2001,37.4,-1.91,Zuerich.Affoltern,REH,444,North-eastern plateau,47.43,8.52
+2002,72.9,1,Zuerich.Affoltern,REH,444,North-eastern plateau,47.43,8.52
+2003,31.3,-0.09,Zuerich.Affoltern,REH,444,North-eastern plateau,47.43,8.52
+2004,45.7,0.7,Zuerich.Affoltern,REH,444,North-eastern plateau,47.43,8.52
+2005,35.5,-1.35,Zuerich.Affoltern,REH,444,North-eastern plateau,47.43,8.52
+2006,40.8,-0.2,Zuerich.Affoltern,REH,444,North-eastern plateau,47.43,8.52
+2007,63.7,1.35,Zuerich.Affoltern,REH,444,North-eastern plateau,47.43,8.52
+2008,44.2,1.72,Zuerich.Affoltern,REH,444,North-eastern plateau,47.43,8.52
+2009,47.2,0.72,Zuerich.Affoltern,REH,444,North-eastern plateau,47.43,8.52
+2010,59,-5.96,Zuerich.Affoltern,REH,444,North-eastern plateau,47.43,8.52
+2011,37.5,2.95,Zuerich.Affoltern,REH,444,North-eastern plateau,47.43,8.52
+2012,50.2,-0.25,Zuerich.Affoltern,REH,444,North-eastern plateau,47.43,8.52
+2013,46.2,0.9,Zuerich.Affoltern,REH,444,North-eastern plateau,47.43,8.52
+2014,47.9,2.97,Zuerich.Affoltern,REH,444,North-eastern plateau,47.43,8.52
+2015,40.5,4.09,Zuerich.Affoltern,REH,444,North-eastern plateau,47.43,8.52
+1981,56.5,-0.55,Poschiavo.Robbia,ROB,1078,Alpine south side,46.35,10.06
+1982,40,2.63,Poschiavo.Robbia,ROB,1078,Alpine south side,46.35,10.06
+1983,48.7,0.38,Poschiavo.Robbia,ROB,1078,Alpine south side,46.35,10.06
+1984,36.6,2.17,Poschiavo.Robbia,ROB,1078,Alpine south side,46.35,10.06
+1985,68.5,-3.09,Poschiavo.Robbia,ROB,1078,Alpine south side,46.35,10.06
+1986,42,3.14,Poschiavo.Robbia,ROB,1078,Alpine south side,46.35,10.06
+1987,82.9,-3.01,Poschiavo.Robbia,ROB,1078,Alpine south side,46.35,10.06
+1988,71.2,-0.13,Poschiavo.Robbia,ROB,1078,Alpine south side,46.35,10.06
+1989,39.6,2.38,Poschiavo.Robbia,ROB,1078,Alpine south side,46.35,10.06
+1990,37,3.88,Poschiavo.Robbia,ROB,1078,Alpine south side,46.35,10.06
+1991,41.1,1.14,Poschiavo.Robbia,ROB,1078,Alpine south side,46.35,10.06
+1992,61,2.54,Poschiavo.Robbia,ROB,1078,Alpine south side,46.35,10.06
+1993,58.7,1.71,Poschiavo.Robbia,ROB,1078,Alpine south side,46.35,10.06
+1994,47.1,2.86,Poschiavo.Robbia,ROB,1078,Alpine south side,46.35,10.06
+1995,41.6,-1.11,Poschiavo.Robbia,ROB,1078,Alpine south side,46.35,10.06
+1996,54.1,-1.98,Poschiavo.Robbia,ROB,1078,Alpine south side,46.35,10.06
+1997,55.2,-0.93,Poschiavo.Robbia,ROB,1078,Alpine south side,46.35,10.06
+1998,44.7,1.03,Poschiavo.Robbia,ROB,1078,Alpine south side,46.35,10.06
+1999,94.6,2.25,Poschiavo.Robbia,ROB,1078,Alpine south side,46.35,10.06
+2000,65.6,1.18,Poschiavo.Robbia,ROB,1078,Alpine south side,46.35,10.06
+2001,49.1,-1.91,Poschiavo.Robbia,ROB,1078,Alpine south side,46.35,10.06
+2002,53.9,1,Poschiavo.Robbia,ROB,1078,Alpine south side,46.35,10.06
+2003,54.9,-0.09,Poschiavo.Robbia,ROB,1078,Alpine south side,46.35,10.06
+2004,45.2,0.7,Poschiavo.Robbia,ROB,1078,Alpine south side,46.35,10.06
+2005,42.1,-1.35,Poschiavo.Robbia,ROB,1078,Alpine south side,46.35,10.06
+2006,54.3,-0.2,Poschiavo.Robbia,ROB,1078,Alpine south side,46.35,10.06
+2007,34.7,1.35,Poschiavo.Robbia,ROB,1078,Alpine south side,46.35,10.06
+2008,52.5,1.72,Poschiavo.Robbia,ROB,1078,Alpine south side,46.35,10.06
+2009,52.6,0.72,Poschiavo.Robbia,ROB,1078,Alpine south side,46.35,10.06
+2010,49.5,-5.96,Poschiavo.Robbia,ROB,1078,Alpine south side,46.35,10.06
+2011,57.3,2.95,Poschiavo.Robbia,ROB,1078,Alpine south side,46.35,10.06
+2012,51.4,-0.25,Poschiavo.Robbia,ROB,1078,Alpine south side,46.35,10.06
+2013,52,0.9,Poschiavo.Robbia,ROB,1078,Alpine south side,46.35,10.06
+2014,53.9,2.97,Poschiavo.Robbia,ROB,1078,Alpine south side,46.35,10.06
+2015,32,4.09,Poschiavo.Robbia,ROB,1078,Alpine south side,46.35,10.06
+1983,24.6,0.38,Ruenenberg,RUE,611,Eastern Jura,47.43,7.88
+1984,32.5,2.17,Ruenenberg,RUE,611,Eastern Jura,47.43,7.88
+1985,60.8,-3.09,Ruenenberg,RUE,611,Eastern Jura,47.43,7.88
+1986,38.1,3.14,Ruenenberg,RUE,611,Eastern Jura,47.43,7.88
+1987,46.8,-3.01,Ruenenberg,RUE,611,Eastern Jura,47.43,7.88
+1988,28.7,-0.13,Ruenenberg,RUE,611,Eastern Jura,47.43,7.88
+1989,66.1,2.38,Ruenenberg,RUE,611,Eastern Jura,47.43,7.88
+1990,60.1,3.88,Ruenenberg,RUE,611,Eastern Jura,47.43,7.88
+1991,38.3,1.14,Ruenenberg,RUE,611,Eastern Jura,47.43,7.88
+1992,35.2,2.54,Ruenenberg,RUE,611,Eastern Jura,47.43,7.88
+1993,43.8,1.71,Ruenenberg,RUE,611,Eastern Jura,47.43,7.88
+1994,69.9,2.86,Ruenenberg,RUE,611,Eastern Jura,47.43,7.88
+1995,34.8,-1.11,Ruenenberg,RUE,611,Eastern Jura,47.43,7.88
+1996,46.3,-1.98,Ruenenberg,RUE,611,Eastern Jura,47.43,7.88
+1997,39.2,-0.93,Ruenenberg,RUE,611,Eastern Jura,47.43,7.88
+1998,44.6,1.03,Ruenenberg,RUE,611,Eastern Jura,47.43,7.88
+1999,45.5,2.25,Ruenenberg,RUE,611,Eastern Jura,47.43,7.88
+2000,36.1,1.18,Ruenenberg,RUE,611,Eastern Jura,47.43,7.88
+2001,57.7,-1.91,Ruenenberg,RUE,611,Eastern Jura,47.43,7.88
+2002,35.8,1,Ruenenberg,RUE,611,Eastern Jura,47.43,7.88
+2003,21.5,-0.09,Ruenenberg,RUE,611,Eastern Jura,47.43,7.88
+2004,31.7,0.7,Ruenenberg,RUE,611,Eastern Jura,47.43,7.88
+2005,26,-1.35,Ruenenberg,RUE,611,Eastern Jura,47.43,7.88
+2006,58.7,-0.2,Ruenenberg,RUE,611,Eastern Jura,47.43,7.88
+2007,77,1.35,Ruenenberg,RUE,611,Eastern Jura,47.43,7.88
+2008,39.3,1.72,Ruenenberg,RUE,611,Eastern Jura,47.43,7.88
+2009,66.2,0.72,Ruenenberg,RUE,611,Eastern Jura,47.43,7.88
+2010,38.8,-5.96,Ruenenberg,RUE,611,Eastern Jura,47.43,7.88
+2011,25.1,2.95,Ruenenberg,RUE,611,Eastern Jura,47.43,7.88
+2012,31.2,-0.25,Ruenenberg,RUE,611,Eastern Jura,47.43,7.88
+2013,52.4,0.9,Ruenenberg,RUE,611,Eastern Jura,47.43,7.88
+2014,30.1,2.97,Ruenenberg,RUE,611,Eastern Jura,47.43,7.88
+2015,33.9,4.09,Ruenenberg,RUE,611,Eastern Jura,47.43,7.88
+1981,107,-0.55,Saentis,SAE,2502,Eastern Alpine north slope,47.25,9.34
+1982,43.8,2.63,Saentis,SAE,2502,Eastern Alpine north slope,47.25,9.34
+1983,64.3,0.38,Saentis,SAE,2502,Eastern Alpine north slope,47.25,9.34
+1984,61.7,2.17,Saentis,SAE,2502,Eastern Alpine north slope,47.25,9.34
+1985,56.4,-3.09,Saentis,SAE,2502,Eastern Alpine north slope,47.25,9.34
+1986,51.1,3.14,Saentis,SAE,2502,Eastern Alpine north slope,47.25,9.34
+1987,52.1,-3.01,Saentis,SAE,2502,Eastern Alpine north slope,47.25,9.34
+1988,54.5,-0.13,Saentis,SAE,2502,Eastern Alpine north slope,47.25,9.34
+1989,68.7,2.38,Saentis,SAE,2502,Eastern Alpine north slope,47.25,9.34
+1990,88.4,3.88,Saentis,SAE,2502,Eastern Alpine north slope,47.25,9.34
+1991,136.8,1.14,Saentis,SAE,2502,Eastern Alpine north slope,47.25,9.34
+1992,77.5,2.54,Saentis,SAE,2502,Eastern Alpine north slope,47.25,9.34
+1993,65.6,1.71,Saentis,SAE,2502,Eastern Alpine north slope,47.25,9.34
+1994,108,2.86,Saentis,SAE,2502,Eastern Alpine north slope,47.25,9.34
+1995,87.3,-1.11,Saentis,SAE,2502,Eastern Alpine north slope,47.25,9.34
+1996,63.9,-1.98,Saentis,SAE,2502,Eastern Alpine north slope,47.25,9.34
+1997,64.9,-0.93,Saentis,SAE,2502,Eastern Alpine north slope,47.25,9.34
+1998,56.9,1.03,Saentis,SAE,2502,Eastern Alpine north slope,47.25,9.34
+1999,64.7,2.25,Saentis,SAE,2502,Eastern Alpine north slope,47.25,9.34
+2000,75.8,1.18,Saentis,SAE,2502,Eastern Alpine north slope,47.25,9.34
+2001,79.4,-1.91,Saentis,SAE,2502,Eastern Alpine north slope,47.25,9.34
+2002,107.8,1,Saentis,SAE,2502,Eastern Alpine north slope,47.25,9.34
+2003,62.9,-0.09,Saentis,SAE,2502,Eastern Alpine north slope,47.25,9.34
+2004,61.4,0.7,Saentis,SAE,2502,Eastern Alpine north slope,47.25,9.34
+2005,145.6,-1.35,Saentis,SAE,2502,Eastern Alpine north slope,47.25,9.34
+2006,77.4,-0.2,Saentis,SAE,2502,Eastern Alpine north slope,47.25,9.34
+2007,80.2,1.35,Saentis,SAE,2502,Eastern Alpine north slope,47.25,9.34
+2008,80.5,1.72,Saentis,SAE,2502,Eastern Alpine north slope,47.25,9.34
+2009,77.8,0.72,Saentis,SAE,2502,Eastern Alpine north slope,47.25,9.34
+2010,67.2,-5.96,Saentis,SAE,2502,Eastern Alpine north slope,47.25,9.34
+2011,105.4,2.95,Saentis,SAE,2502,Eastern Alpine north slope,47.25,9.34
+2012,71.6,-0.25,Saentis,SAE,2502,Eastern Alpine north slope,47.25,9.34
+2013,101.9,0.9,Saentis,SAE,2502,Eastern Alpine north slope,47.25,9.34
+2014,84,2.97,Saentis,SAE,2502,Eastern Alpine north slope,47.25,9.34
+2015,67.2,4.09,Saentis,SAE,2502,Eastern Alpine north slope,47.25,9.34
+1981,52.2,-0.55,Samedan,SAM,1709,Engadine,46.53,9.88
+1982,40.9,2.63,Samedan,SAM,1709,Engadine,46.53,9.88
+1983,52.4,0.38,Samedan,SAM,1709,Engadine,46.53,9.88
+1984,30.2,2.17,Samedan,SAM,1709,Engadine,46.53,9.88
+1985,59.6,-3.09,Samedan,SAM,1709,Engadine,46.53,9.88
+1986,25.2,3.14,Samedan,SAM,1709,Engadine,46.53,9.88
+1987,36,-3.01,Samedan,SAM,1709,Engadine,46.53,9.88
+1988,63.5,-0.13,Samedan,SAM,1709,Engadine,46.53,9.88
+1989,30,2.38,Samedan,SAM,1709,Engadine,46.53,9.88
+1990,33.9,3.88,Samedan,SAM,1709,Engadine,46.53,9.88
+1991,46.4,1.14,Samedan,SAM,1709,Engadine,46.53,9.88
+1992,33.6,2.54,Samedan,SAM,1709,Engadine,46.53,9.88
+1993,49.1,1.71,Samedan,SAM,1709,Engadine,46.53,9.88
+1994,34.3,2.86,Samedan,SAM,1709,Engadine,46.53,9.88
+1995,31.8,-1.11,Samedan,SAM,1709,Engadine,46.53,9.88
+1996,56.2,-1.98,Samedan,SAM,1709,Engadine,46.53,9.88
+1997,38.5,-0.93,Samedan,SAM,1709,Engadine,46.53,9.88
+1998,33.9,1.03,Samedan,SAM,1709,Engadine,46.53,9.88
+1999,68,2.25,Samedan,SAM,1709,Engadine,46.53,9.88
+2000,45.4,1.18,Samedan,SAM,1709,Engadine,46.53,9.88
+2001,36.4,-1.91,Samedan,SAM,1709,Engadine,46.53,9.88
+2002,51,1,Samedan,SAM,1709,Engadine,46.53,9.88
+2003,50.3,-0.09,Samedan,SAM,1709,Engadine,46.53,9.88
+2004,29,0.7,Samedan,SAM,1709,Engadine,46.53,9.88
+2005,37,-1.35,Samedan,SAM,1709,Engadine,46.53,9.88
+2006,23,-0.2,Samedan,SAM,1709,Engadine,46.53,9.88
+2007,30.1,1.35,Samedan,SAM,1709,Engadine,46.53,9.88
+2008,39.2,1.72,Samedan,SAM,1709,Engadine,46.53,9.88
+2009,41,0.72,Samedan,SAM,1709,Engadine,46.53,9.88
+2010,30.3,-5.96,Samedan,SAM,1709,Engadine,46.53,9.88
+2011,51.2,2.95,Samedan,SAM,1709,Engadine,46.53,9.88
+2012,40.1,-0.25,Samedan,SAM,1709,Engadine,46.53,9.88
+2013,44.6,0.9,Samedan,SAM,1709,Engadine,46.53,9.88
+2014,51.2,2.97,Samedan,SAM,1709,Engadine,46.53,9.88
+2015,39.8,4.09,Samedan,SAM,1709,Engadine,46.53,9.88
+1982,77.9,2.63,S. Bernardino,SBE,1639,Alpine south side,46.46,9.18
+1983,87.7,0.38,S. Bernardino,SBE,1639,Alpine south side,46.46,9.18
+1984,111.3,2.17,S. Bernardino,SBE,1639,Alpine south side,46.46,9.18
+1985,74.5,-3.09,S. Bernardino,SBE,1639,Alpine south side,46.46,9.18
+1986,95.8,3.14,S. Bernardino,SBE,1639,Alpine south side,46.46,9.18
+1987,121.7,-3.01,S. Bernardino,SBE,1639,Alpine south side,46.46,9.18
+1988,147.3,-0.13,S. Bernardino,SBE,1639,Alpine south side,46.46,9.18
+1989,62.9,2.38,S. Bernardino,SBE,1639,Alpine south side,46.46,9.18
+1990,65.5,3.88,S. Bernardino,SBE,1639,Alpine south side,46.46,9.18
+1991,81.3,1.14,S. Bernardino,SBE,1639,Alpine south side,46.46,9.18
+1992,94.3,2.54,S. Bernardino,SBE,1639,Alpine south side,46.46,9.18
+1993,59.9,1.71,S. Bernardino,SBE,1639,Alpine south side,46.46,9.18
+1994,68.9,2.86,S. Bernardino,SBE,1639,Alpine south side,46.46,9.18
+1995,49.8,-1.11,S. Bernardino,SBE,1639,Alpine south side,46.46,9.18
+1996,81.9,-1.98,S. Bernardino,SBE,1639,Alpine south side,46.46,9.18
+1997,93.6,-0.93,S. Bernardino,SBE,1639,Alpine south side,46.46,9.18
+1998,72.1,1.03,S. Bernardino,SBE,1639,Alpine south side,46.46,9.18
+1999,119.2,2.25,S. Bernardino,SBE,1639,Alpine south side,46.46,9.18
+2000,70.3,1.18,S. Bernardino,SBE,1639,Alpine south side,46.46,9.18
+2001,78.6,-1.91,S. Bernardino,SBE,1639,Alpine south side,46.46,9.18
+2002,86.4,1,S. Bernardino,SBE,1639,Alpine south side,46.46,9.18
+2003,90.8,-0.09,S. Bernardino,SBE,1639,Alpine south side,46.46,9.18
+2004,103.1,0.7,S. Bernardino,SBE,1639,Alpine south side,46.46,9.18
+2005,41.8,-1.35,S. Bernardino,SBE,1639,Alpine south side,46.46,9.18
+2006,127,-0.2,S. Bernardino,SBE,1639,Alpine south side,46.46,9.18
+2007,59.1,1.35,S. Bernardino,SBE,1639,Alpine south side,46.46,9.18
+2008,65.5,1.72,S. Bernardino,SBE,1639,Alpine south side,46.46,9.18
+2009,80.6,0.72,S. Bernardino,SBE,1639,Alpine south side,46.46,9.18
+2010,51.4,-5.96,S. Bernardino,SBE,1639,Alpine south side,46.46,9.18
+2011,69.6,2.95,S. Bernardino,SBE,1639,Alpine south side,46.46,9.18
+2012,64.3,-0.25,S. Bernardino,SBE,1639,Alpine south side,46.46,9.18
+2013,72.5,0.9,S. Bernardino,SBE,1639,Alpine south side,46.46,9.18
+2014,73.1,2.97,S. Bernardino,SBE,1639,Alpine south side,46.46,9.18
+2015,58.5,4.09,S. Bernardino,SBE,1639,Alpine south side,46.46,9.18
+1982,121.2,2.63,Stabio,SBO,353,Alpine south side,45.84,8.93
+1983,61.8,0.38,Stabio,SBO,353,Alpine south side,45.84,8.93
+1984,112.2,2.17,Stabio,SBO,353,Alpine south side,45.84,8.93
+1985,48.3,-3.09,Stabio,SBO,353,Alpine south side,45.84,8.93
+1986,66.7,3.14,Stabio,SBO,353,Alpine south side,45.84,8.93
+1987,64.1,-3.01,Stabio,SBO,353,Alpine south side,45.84,8.93
+1988,112.2,-0.13,Stabio,SBO,353,Alpine south side,45.84,8.93
+1989,71.8,2.38,Stabio,SBO,353,Alpine south side,45.84,8.93
+1990,61.4,3.88,Stabio,SBO,353,Alpine south side,45.84,8.93
+1991,77.2,1.14,Stabio,SBO,353,Alpine south side,45.84,8.93
+1992,116.6,2.54,Stabio,SBO,353,Alpine south side,45.84,8.93
+1993,67.1,1.71,Stabio,SBO,353,Alpine south side,45.84,8.93
+1994,74.4,2.86,Stabio,SBO,353,Alpine south side,45.84,8.93
+1995,199.1,-1.11,Stabio,SBO,353,Alpine south side,45.84,8.93
+1996,105.7,-1.98,Stabio,SBO,353,Alpine south side,45.84,8.93
+1997,73.1,-0.93,Stabio,SBO,353,Alpine south side,45.84,8.93
+1998,83.9,1.03,Stabio,SBO,353,Alpine south side,45.84,8.93
+1999,110.2,2.25,Stabio,SBO,353,Alpine south side,45.84,8.93
+2000,109.1,1.18,Stabio,SBO,353,Alpine south side,45.84,8.93
+2001,70.4,-1.91,Stabio,SBO,353,Alpine south side,45.84,8.93
+2002,189.7,1,Stabio,SBO,353,Alpine south side,45.84,8.93
+2003,68.2,-0.09,Stabio,SBO,353,Alpine south side,45.84,8.93
+2004,66.3,0.7,Stabio,SBO,353,Alpine south side,45.84,8.93
+2005,50.2,-1.35,Stabio,SBO,353,Alpine south side,45.84,8.93
+2006,70.4,-0.2,Stabio,SBO,353,Alpine south side,45.84,8.93
+2007,134.9,1.35,Stabio,SBO,353,Alpine south side,45.84,8.93
+2008,76.4,1.72,Stabio,SBO,353,Alpine south side,45.84,8.93
+2009,62.8,0.72,Stabio,SBO,353,Alpine south side,45.84,8.93
+2010,79.6,-5.96,Stabio,SBO,353,Alpine south side,45.84,8.93
+2011,97.4,2.95,Stabio,SBO,353,Alpine south side,45.84,8.93
+2012,64.2,-0.25,Stabio,SBO,353,Alpine south side,45.84,8.93
+2013,67.1,0.9,Stabio,SBO,353,Alpine south side,45.84,8.93
+2014,121.1,2.97,Stabio,SBO,353,Alpine south side,45.84,8.93
+2015,90.5,4.09,Stabio,SBO,353,Alpine south side,45.84,8.93
+1981,44.6,-0.55,Scuol,SCU,1304,Engadine,46.79,10.28
+1982,39.7,2.63,Scuol,SCU,1304,Engadine,46.79,10.28
+1983,42.5,0.38,Scuol,SCU,1304,Engadine,46.79,10.28
+1984,41,2.17,Scuol,SCU,1304,Engadine,46.79,10.28
+1985,69.7,-3.09,Scuol,SCU,1304,Engadine,46.79,10.28
+1986,25.6,3.14,Scuol,SCU,1304,Engadine,46.79,10.28
+1987,37.2,-3.01,Scuol,SCU,1304,Engadine,46.79,10.28
+1988,46.6,-0.13,Scuol,SCU,1304,Engadine,46.79,10.28
+1989,24.2,2.38,Scuol,SCU,1304,Engadine,46.79,10.28
+1990,35.1,3.88,Scuol,SCU,1304,Engadine,46.79,10.28
+1991,53.8,1.14,Scuol,SCU,1304,Engadine,46.79,10.28
+1992,39.4,2.54,Scuol,SCU,1304,Engadine,46.79,10.28
+1993,42.9,1.71,Scuol,SCU,1304,Engadine,46.79,10.28
+1994,38.7,2.86,Scuol,SCU,1304,Engadine,46.79,10.28
+1995,39.1,-1.11,Scuol,SCU,1304,Engadine,46.79,10.28
+1996,63.3,-1.98,Scuol,SCU,1304,Engadine,46.79,10.28
+1997,33.2,-0.93,Scuol,SCU,1304,Engadine,46.79,10.28
+1998,31.6,1.03,Scuol,SCU,1304,Engadine,46.79,10.28
+1999,54.8,2.25,Scuol,SCU,1304,Engadine,46.79,10.28
+2000,50.3,1.18,Scuol,SCU,1304,Engadine,46.79,10.28
+2001,48.3,-1.91,Scuol,SCU,1304,Engadine,46.79,10.28
+2002,46.9,1,Scuol,SCU,1304,Engadine,46.79,10.28
+2003,46,-0.09,Scuol,SCU,1304,Engadine,46.79,10.28
+2004,28.6,0.7,Scuol,SCU,1304,Engadine,46.79,10.28
+2005,48.2,-1.35,Scuol,SCU,1304,Engadine,46.79,10.28
+2006,22.8,-0.2,Scuol,SCU,1304,Engadine,46.79,10.28
+2007,27.8,1.35,Scuol,SCU,1304,Engadine,46.79,10.28
+2008,35.7,1.72,Scuol,SCU,1304,Engadine,46.79,10.28
+2009,33.5,0.72,Scuol,SCU,1304,Engadine,46.79,10.28
+2010,29.1,-5.96,Scuol,SCU,1304,Engadine,46.79,10.28
+2011,37.7,2.95,Scuol,SCU,1304,Engadine,46.79,10.28
+2012,31.9,-0.25,Scuol,SCU,1304,Engadine,46.79,10.28
+2013,37.3,0.9,Scuol,SCU,1304,Engadine,46.79,10.28
+2014,35.9,2.97,Scuol,SCU,1304,Engadine,46.79,10.28
+2015,32.2,4.09,Scuol,SCU,1304,Engadine,46.79,10.28
+1982,60.7,2.63,Schaffhausen,SHA,438,North-eastern plateau,47.69,8.62
+1983,39.6,0.38,Schaffhausen,SHA,438,North-eastern plateau,47.69,8.62
+1984,86.5,2.17,Schaffhausen,SHA,438,North-eastern plateau,47.69,8.62
+1985,27.6,-3.09,Schaffhausen,SHA,438,North-eastern plateau,47.69,8.62
+1986,39.5,3.14,Schaffhausen,SHA,438,North-eastern plateau,47.69,8.62
+1987,41.3,-3.01,Schaffhausen,SHA,438,North-eastern plateau,47.69,8.62
+1988,27.8,-0.13,Schaffhausen,SHA,438,North-eastern plateau,47.69,8.62
+1989,32.8,2.38,Schaffhausen,SHA,438,North-eastern plateau,47.69,8.62
+1990,29.9,3.88,Schaffhausen,SHA,438,North-eastern plateau,47.69,8.62
+1991,24.4,1.14,Schaffhausen,SHA,438,North-eastern plateau,47.69,8.62
+1992,85.4,2.54,Schaffhausen,SHA,438,North-eastern plateau,47.69,8.62
+1993,40,1.71,Schaffhausen,SHA,438,North-eastern plateau,47.69,8.62
+1994,95.2,2.86,Schaffhausen,SHA,438,North-eastern plateau,47.69,8.62
+1995,33.9,-1.11,Schaffhausen,SHA,438,North-eastern plateau,47.69,8.62
+1996,49.9,-1.98,Schaffhausen,SHA,438,North-eastern plateau,47.69,8.62
+1997,40.4,-0.93,Schaffhausen,SHA,438,North-eastern plateau,47.69,8.62
+1998,23.1,1.03,Schaffhausen,SHA,438,North-eastern plateau,47.69,8.62
+1999,34.9,2.25,Schaffhausen,SHA,438,North-eastern plateau,47.69,8.62
+2000,43.4,1.18,Schaffhausen,SHA,438,North-eastern plateau,47.69,8.62
+2001,37.7,-1.91,Schaffhausen,SHA,438,North-eastern plateau,47.69,8.62
+2002,30.1,1,Schaffhausen,SHA,438,North-eastern plateau,47.69,8.62
+2003,30.5,-0.09,Schaffhausen,SHA,438,North-eastern plateau,47.69,8.62
+2004,33.8,0.7,Schaffhausen,SHA,438,North-eastern plateau,47.69,8.62
+2005,25.5,-1.35,Schaffhausen,SHA,438,North-eastern plateau,47.69,8.62
+2006,34.4,-0.2,Schaffhausen,SHA,438,North-eastern plateau,47.69,8.62
+2007,56.4,1.35,Schaffhausen,SHA,438,North-eastern plateau,47.69,8.62
+2008,44.1,1.72,Schaffhausen,SHA,438,North-eastern plateau,47.69,8.62
+2009,74.2,0.72,Schaffhausen,SHA,438,North-eastern plateau,47.69,8.62
+2010,41.9,-5.96,Schaffhausen,SHA,438,North-eastern plateau,47.69,8.62
+2011,42.4,2.95,Schaffhausen,SHA,438,North-eastern plateau,47.69,8.62
+2012,45.4,-0.25,Schaffhausen,SHA,438,North-eastern plateau,47.69,8.62
+2013,53.4,0.9,Schaffhausen,SHA,438,North-eastern plateau,47.69,8.62
+2014,34.4,2.97,Schaffhausen,SHA,438,North-eastern plateau,47.69,8.62
+2015,54.7,4.09,Schaffhausen,SHA,438,North-eastern plateau,47.69,8.62
+1981,25.9,-0.55,Sion,SIO,482,Valais,46.22,7.33
+1982,24.7,2.63,Sion,SIO,482,Valais,46.22,7.33
+1983,36.3,0.38,Sion,SIO,482,Valais,46.22,7.33
+1984,29.6,2.17,Sion,SIO,482,Valais,46.22,7.33
+1985,39.3,-3.09,Sion,SIO,482,Valais,46.22,7.33
+1986,41.6,3.14,Sion,SIO,482,Valais,46.22,7.33
+1987,25.9,-3.01,Sion,SIO,482,Valais,46.22,7.33
+1988,56,-0.13,Sion,SIO,482,Valais,46.22,7.33
+1989,26.9,2.38,Sion,SIO,482,Valais,46.22,7.33
+1990,57.4,3.88,Sion,SIO,482,Valais,46.22,7.33
+1991,39.5,1.14,Sion,SIO,482,Valais,46.22,7.33
+1992,36.8,2.54,Sion,SIO,482,Valais,46.22,7.33
+1993,25,1.71,Sion,SIO,482,Valais,46.22,7.33
+1994,26.4,2.86,Sion,SIO,482,Valais,46.22,7.33
+1995,28.7,-1.11,Sion,SIO,482,Valais,46.22,7.33
+1996,39.1,-1.98,Sion,SIO,482,Valais,46.22,7.33
+1997,49.9,-0.93,Sion,SIO,482,Valais,46.22,7.33
+1998,36,1.03,Sion,SIO,482,Valais,46.22,7.33
+1999,30.5,2.25,Sion,SIO,482,Valais,46.22,7.33
+2000,42.1,1.18,Sion,SIO,482,Valais,46.22,7.33
+2001,36.8,-1.91,Sion,SIO,482,Valais,46.22,7.33
+2002,38,1,Sion,SIO,482,Valais,46.22,7.33
+2003,29.4,-0.09,Sion,SIO,482,Valais,46.22,7.33
+2004,36,0.7,Sion,SIO,482,Valais,46.22,7.33
+2005,33.2,-1.35,Sion,SIO,482,Valais,46.22,7.33
+2006,29.5,-0.2,Sion,SIO,482,Valais,46.22,7.33
+2007,38.8,1.35,Sion,SIO,482,Valais,46.22,7.33
+2008,21,1.72,Sion,SIO,482,Valais,46.22,7.33
+2009,28.4,0.72,Sion,SIO,482,Valais,46.22,7.33
+2010,28.2,-5.96,Sion,SIO,482,Valais,46.22,7.33
+2011,42,2.95,Sion,SIO,482,Valais,46.22,7.33
+2012,23.6,-0.25,Sion,SIO,482,Valais,46.22,7.33
+2013,32.6,0.9,Sion,SIO,482,Valais,46.22,7.33
+2014,28.6,2.97,Sion,SIO,482,Valais,46.22,7.33
+2015,31.6,4.09,Sion,SIO,482,Valais,46.22,7.33
+1981,52.2,-0.55,Zuerich.Fluntern,SMA,556,North-eastern plateau,47.38,8.57
+1982,38.6,2.63,Zuerich.Fluntern,SMA,556,North-eastern plateau,47.38,8.57
+1983,36.4,0.38,Zuerich.Fluntern,SMA,556,North-eastern plateau,47.38,8.57
+1984,46.2,2.17,Zuerich.Fluntern,SMA,556,North-eastern plateau,47.38,8.57
+1985,46.4,-3.09,Zuerich.Fluntern,SMA,556,North-eastern plateau,47.38,8.57
+1986,47.4,3.14,Zuerich.Fluntern,SMA,556,North-eastern plateau,47.38,8.57
+1987,79.1,-3.01,Zuerich.Fluntern,SMA,556,North-eastern plateau,47.38,8.57
+1988,80.5,-0.13,Zuerich.Fluntern,SMA,556,North-eastern plateau,47.38,8.57
+1989,37.9,2.38,Zuerich.Fluntern,SMA,556,North-eastern plateau,47.38,8.57
+1990,45.9,3.88,Zuerich.Fluntern,SMA,556,North-eastern plateau,47.38,8.57
+1991,40.9,1.14,Zuerich.Fluntern,SMA,556,North-eastern plateau,47.38,8.57
+1992,39,2.54,Zuerich.Fluntern,SMA,556,North-eastern plateau,47.38,8.57
+1993,66.2,1.71,Zuerich.Fluntern,SMA,556,North-eastern plateau,47.38,8.57
+1994,62.8,2.86,Zuerich.Fluntern,SMA,556,North-eastern plateau,47.38,8.57
+1995,41.3,-1.11,Zuerich.Fluntern,SMA,556,North-eastern plateau,47.38,8.57
+1996,42.4,-1.98,Zuerich.Fluntern,SMA,556,North-eastern plateau,47.38,8.57
+1997,37.5,-0.93,Zuerich.Fluntern,SMA,556,North-eastern plateau,47.38,8.57
+1998,29.9,1.03,Zuerich.Fluntern,SMA,556,North-eastern plateau,47.38,8.57
+1999,74.9,2.25,Zuerich.Fluntern,SMA,556,North-eastern plateau,47.38,8.57
+2000,54.3,1.18,Zuerich.Fluntern,SMA,556,North-eastern plateau,47.38,8.57
+2001,40.4,-1.91,Zuerich.Fluntern,SMA,556,North-eastern plateau,47.38,8.57
+2002,42.1,1,Zuerich.Fluntern,SMA,556,North-eastern plateau,47.38,8.57
+2003,38.3,-0.09,Zuerich.Fluntern,SMA,556,North-eastern plateau,47.38,8.57
+2004,55.1,0.7,Zuerich.Fluntern,SMA,556,North-eastern plateau,47.38,8.57
+2005,40.8,-1.35,Zuerich.Fluntern,SMA,556,North-eastern plateau,47.38,8.57
+2006,42.5,-0.2,Zuerich.Fluntern,SMA,556,North-eastern plateau,47.38,8.57
+2007,81.7,1.35,Zuerich.Fluntern,SMA,556,North-eastern plateau,47.38,8.57
+2008,46.4,1.72,Zuerich.Fluntern,SMA,556,North-eastern plateau,47.38,8.57
+2009,58,0.72,Zuerich.Fluntern,SMA,556,North-eastern plateau,47.38,8.57
+2010,37.8,-5.96,Zuerich.Fluntern,SMA,556,North-eastern plateau,47.38,8.57
+2011,53.7,2.95,Zuerich.Fluntern,SMA,556,North-eastern plateau,47.38,8.57
+2012,51.9,-0.25,Zuerich.Fluntern,SMA,556,North-eastern plateau,47.38,8.57
+2013,44.4,0.9,Zuerich.Fluntern,SMA,556,North-eastern plateau,47.38,8.57
+2014,42,2.97,Zuerich.Fluntern,SMA,556,North-eastern plateau,47.38,8.57
+2015,52.2,4.09,Zuerich.Fluntern,SMA,556,North-eastern plateau,47.38,8.57
+1982,39.7,2.63,St. Gallen,STG,776,North-eastern plateau,47.43,9.4
+1983,56.3,0.38,St. Gallen,STG,776,North-eastern plateau,47.43,9.4
+1984,66.3,2.17,St. Gallen,STG,776,North-eastern plateau,47.43,9.4
+1985,45.8,-3.09,St. Gallen,STG,776,North-eastern plateau,47.43,9.4
+1986,64.5,3.14,St. Gallen,STG,776,North-eastern plateau,47.43,9.4
+1987,43.9,-3.01,St. Gallen,STG,776,North-eastern plateau,47.43,9.4
+1988,40.8,-0.13,St. Gallen,STG,776,North-eastern plateau,47.43,9.4
+1989,38.9,2.38,St. Gallen,STG,776,North-eastern plateau,47.43,9.4
+1990,85.4,3.88,St. Gallen,STG,776,North-eastern plateau,47.43,9.4
+1991,47.9,1.14,St. Gallen,STG,776,North-eastern plateau,47.43,9.4
+1992,38.1,2.54,St. Gallen,STG,776,North-eastern plateau,47.43,9.4
+1993,67.7,1.71,St. Gallen,STG,776,North-eastern plateau,47.43,9.4
+1994,65.9,2.86,St. Gallen,STG,776,North-eastern plateau,47.43,9.4
+1995,47.1,-1.11,St. Gallen,STG,776,North-eastern plateau,47.43,9.4
+1996,44.7,-1.98,St. Gallen,STG,776,North-eastern plateau,47.43,9.4
+1997,47,-0.93,St. Gallen,STG,776,North-eastern plateau,47.43,9.4
+1998,40.8,1.03,St. Gallen,STG,776,North-eastern plateau,47.43,9.4
+1999,60.7,2.25,St. Gallen,STG,776,North-eastern plateau,47.43,9.4
+2000,59.3,1.18,St. Gallen,STG,776,North-eastern plateau,47.43,9.4
+2001,49.5,-1.91,St. Gallen,STG,776,North-eastern plateau,47.43,9.4
+2002,92.2,1,St. Gallen,STG,776,North-eastern plateau,47.43,9.4
+2003,38.1,-0.09,St. Gallen,STG,776,North-eastern plateau,47.43,9.4
+2004,46,0.7,St. Gallen,STG,776,North-eastern plateau,47.43,9.4
+2005,45.5,-1.35,St. Gallen,STG,776,North-eastern plateau,47.43,9.4
+2006,61.3,-0.2,St. Gallen,STG,776,North-eastern plateau,47.43,9.4
+2007,61.3,1.35,St. Gallen,STG,776,North-eastern plateau,47.43,9.4
+2008,51.3,1.72,St. Gallen,STG,776,North-eastern plateau,47.43,9.4
+2009,73.2,0.72,St. Gallen,STG,776,North-eastern plateau,47.43,9.4
+2010,64.3,-5.96,St. Gallen,STG,776,North-eastern plateau,47.43,9.4
+2011,63.1,2.95,St. Gallen,STG,776,North-eastern plateau,47.43,9.4
+2012,41.7,-0.25,St. Gallen,STG,776,North-eastern plateau,47.43,9.4
+2013,57.9,0.9,St. Gallen,STG,776,North-eastern plateau,47.43,9.4
+2014,63.7,2.97,St. Gallen,STG,776,North-eastern plateau,47.43,9.4
+2015,79.2,4.09,St. Gallen,STG,776,North-eastern plateau,47.43,9.4
+1981,48.7,-0.55,Aadorf.Taenikon,TAE,539,North-eastern plateau,47.48,8.9
+1982,61.4,2.63,Aadorf.Taenikon,TAE,539,North-eastern plateau,47.48,8.9
+1983,41.3,0.38,Aadorf.Taenikon,TAE,539,North-eastern plateau,47.48,8.9
+1984,57.5,2.17,Aadorf.Taenikon,TAE,539,North-eastern plateau,47.48,8.9
+1985,40.4,-3.09,Aadorf.Taenikon,TAE,539,North-eastern plateau,47.48,8.9
+1986,51.8,3.14,Aadorf.Taenikon,TAE,539,North-eastern plateau,47.48,8.9
+1987,64.3,-3.01,Aadorf.Taenikon,TAE,539,North-eastern plateau,47.48,8.9
+1988,32.9,-0.13,Aadorf.Taenikon,TAE,539,North-eastern plateau,47.48,8.9
+1989,37.6,2.38,Aadorf.Taenikon,TAE,539,North-eastern plateau,47.48,8.9
+1990,45.6,3.88,Aadorf.Taenikon,TAE,539,North-eastern plateau,47.48,8.9
+1991,44.6,1.14,Aadorf.Taenikon,TAE,539,North-eastern plateau,47.48,8.9
+1992,42.8,2.54,Aadorf.Taenikon,TAE,539,North-eastern plateau,47.48,8.9
+1993,88.6,1.71,Aadorf.Taenikon,TAE,539,North-eastern plateau,47.48,8.9
+1994,71.3,2.86,Aadorf.Taenikon,TAE,539,North-eastern plateau,47.48,8.9
+1995,53.2,-1.11,Aadorf.Taenikon,TAE,539,North-eastern plateau,47.48,8.9
+1996,42.2,-1.98,Aadorf.Taenikon,TAE,539,North-eastern plateau,47.48,8.9
+1997,47.9,-0.93,Aadorf.Taenikon,TAE,539,North-eastern plateau,47.48,8.9
+1998,33,1.03,Aadorf.Taenikon,TAE,539,North-eastern plateau,47.48,8.9
+1999,43.4,2.25,Aadorf.Taenikon,TAE,539,North-eastern plateau,47.48,8.9
+2000,56.4,1.18,Aadorf.Taenikon,TAE,539,North-eastern plateau,47.48,8.9
+2001,42.1,-1.91,Aadorf.Taenikon,TAE,539,North-eastern plateau,47.48,8.9
+2002,32.3,1,Aadorf.Taenikon,TAE,539,North-eastern plateau,47.48,8.9
+2003,29.1,-0.09,Aadorf.Taenikon,TAE,539,North-eastern plateau,47.48,8.9
+2004,34.7,0.7,Aadorf.Taenikon,TAE,539,North-eastern plateau,47.48,8.9
+2005,58.6,-1.35,Aadorf.Taenikon,TAE,539,North-eastern plateau,47.48,8.9
+2006,31.3,-0.2,Aadorf.Taenikon,TAE,539,North-eastern plateau,47.48,8.9
+2007,63.3,1.35,Aadorf.Taenikon,TAE,539,North-eastern plateau,47.48,8.9
+2008,43.8,1.72,Aadorf.Taenikon,TAE,539,North-eastern plateau,47.48,8.9
+2009,60.7,0.72,Aadorf.Taenikon,TAE,539,North-eastern plateau,47.48,8.9
+2010,35.8,-5.96,Aadorf.Taenikon,TAE,539,North-eastern plateau,47.48,8.9
+2011,43.7,2.95,Aadorf.Taenikon,TAE,539,North-eastern plateau,47.48,8.9
+2012,46.4,-0.25,Aadorf.Taenikon,TAE,539,North-eastern plateau,47.48,8.9
+2013,34.5,0.9,Aadorf.Taenikon,TAE,539,North-eastern plateau,47.48,8.9
+2014,45.1,2.97,Aadorf.Taenikon,TAE,539,North-eastern plateau,47.48,8.9
+2015,71.3,4.09,Aadorf.Taenikon,TAE,539,North-eastern plateau,47.48,8.9
+1981,45.9,-0.55,Ulrichen,ULR,1346,Valais,46.5,8.31
+1982,45.4,2.63,Ulrichen,ULR,1346,Valais,46.5,8.31
+1983,54.4,0.38,Ulrichen,ULR,1346,Valais,46.5,8.31
+1984,58.8,2.17,Ulrichen,ULR,1346,Valais,46.5,8.31
+1985,60,-3.09,Ulrichen,ULR,1346,Valais,46.5,8.31
+1986,49.2,3.14,Ulrichen,ULR,1346,Valais,46.5,8.31
+1987,66,-3.01,Ulrichen,ULR,1346,Valais,46.5,8.31
+1988,65.7,-0.13,Ulrichen,ULR,1346,Valais,46.5,8.31
+1989,69.3,2.38,Ulrichen,ULR,1346,Valais,46.5,8.31
+1990,58.1,3.88,Ulrichen,ULR,1346,Valais,46.5,8.31
+1991,78.4,1.14,Ulrichen,ULR,1346,Valais,46.5,8.31
+1992,39.8,2.54,Ulrichen,ULR,1346,Valais,46.5,8.31
+1993,62.2,1.71,Ulrichen,ULR,1346,Valais,46.5,8.31
+1994,54.3,2.86,Ulrichen,ULR,1346,Valais,46.5,8.31
+1995,54.9,-1.11,Ulrichen,ULR,1346,Valais,46.5,8.31
+1996,70.5,-1.98,Ulrichen,ULR,1346,Valais,46.5,8.31
+1997,51,-0.93,Ulrichen,ULR,1346,Valais,46.5,8.31
+1998,47.4,1.03,Ulrichen,ULR,1346,Valais,46.5,8.31
+1999,52.1,2.25,Ulrichen,ULR,1346,Valais,46.5,8.31
+2000,58.6,1.18,Ulrichen,ULR,1346,Valais,46.5,8.31
+2001,31.6,-1.91,Ulrichen,ULR,1346,Valais,46.5,8.31
+2002,91.7,1,Ulrichen,ULR,1346,Valais,46.5,8.31
+2003,64.1,-0.09,Ulrichen,ULR,1346,Valais,46.5,8.31
+2004,46.5,0.7,Ulrichen,ULR,1346,Valais,46.5,8.31
+2005,29.4,-1.35,Ulrichen,ULR,1346,Valais,46.5,8.31
+2006,40.2,-0.2,Ulrichen,ULR,1346,Valais,46.5,8.31
+2007,58.1,1.35,Ulrichen,ULR,1346,Valais,46.5,8.31
+2008,45.1,1.72,Ulrichen,ULR,1346,Valais,46.5,8.31
+2009,61.1,0.72,Ulrichen,ULR,1346,Valais,46.5,8.31
+2010,40.2,-5.96,Ulrichen,ULR,1346,Valais,46.5,8.31
+2011,38.2,2.95,Ulrichen,ULR,1346,Valais,46.5,8.31
+2012,41.3,-0.25,Ulrichen,ULR,1346,Valais,46.5,8.31
+2013,49.7,0.9,Ulrichen,ULR,1346,Valais,46.5,8.31
+2014,79,2.97,Ulrichen,ULR,1346,Valais,46.5,8.31
+2015,40.2,4.09,Ulrichen,ULR,1346,Valais,46.5,8.31
+1981,44.4,-0.55,Vaduz,VAD,457,Eastern Alpine north slope,47.13,9.52
+1982,70.6,2.63,Vaduz,VAD,457,Eastern Alpine north slope,47.13,9.52
+1983,49.2,0.38,Vaduz,VAD,457,Eastern Alpine north slope,47.13,9.52
+1984,77,2.17,Vaduz,VAD,457,Eastern Alpine north slope,47.13,9.52
+1985,59.6,-3.09,Vaduz,VAD,457,Eastern Alpine north slope,47.13,9.52
+1986,48.6,3.14,Vaduz,VAD,457,Eastern Alpine north slope,47.13,9.52
+1987,52.5,-3.01,Vaduz,VAD,457,Eastern Alpine north slope,47.13,9.52
+1988,47.2,-0.13,Vaduz,VAD,457,Eastern Alpine north slope,47.13,9.52
+1989,28.5,2.38,Vaduz,VAD,457,Eastern Alpine north slope,47.13,9.52
+1990,53.3,3.88,Vaduz,VAD,457,Eastern Alpine north slope,47.13,9.52
+1991,58.6,1.14,Vaduz,VAD,457,Eastern Alpine north slope,47.13,9.52
+1992,48.8,2.54,Vaduz,VAD,457,Eastern Alpine north slope,47.13,9.52
+1993,50.1,1.71,Vaduz,VAD,457,Eastern Alpine north slope,47.13,9.52
+1994,44.3,2.86,Vaduz,VAD,457,Eastern Alpine north slope,47.13,9.52
+1995,30.2,-1.11,Vaduz,VAD,457,Eastern Alpine north slope,47.13,9.52
+1996,37,-1.98,Vaduz,VAD,457,Eastern Alpine north slope,47.13,9.52
+1997,52.2,-0.93,Vaduz,VAD,457,Eastern Alpine north slope,47.13,9.52
+1998,44.4,1.03,Vaduz,VAD,457,Eastern Alpine north slope,47.13,9.52
+1999,46,2.25,Vaduz,VAD,457,Eastern Alpine north slope,47.13,9.52
+2000,80.2,1.18,Vaduz,VAD,457,Eastern Alpine north slope,47.13,9.52
+2001,51.8,-1.91,Vaduz,VAD,457,Eastern Alpine north slope,47.13,9.52
+2002,35.1,1,Vaduz,VAD,457,Eastern Alpine north slope,47.13,9.52
+2003,57.4,-0.09,Vaduz,VAD,457,Eastern Alpine north slope,47.13,9.52
+2004,41.5,0.7,Vaduz,VAD,457,Eastern Alpine north slope,47.13,9.52
+2005,87.5,-1.35,Vaduz,VAD,457,Eastern Alpine north slope,47.13,9.52
+2006,95,-0.2,Vaduz,VAD,457,Eastern Alpine north slope,47.13,9.52
+2007,28.7,1.35,Vaduz,VAD,457,Eastern Alpine north slope,47.13,9.52
+2008,41.7,1.72,Vaduz,VAD,457,Eastern Alpine north slope,47.13,9.52
+2009,52.6,0.72,Vaduz,VAD,457,Eastern Alpine north slope,47.13,9.52
+2010,34.3,-5.96,Vaduz,VAD,457,Eastern Alpine north slope,47.13,9.52
+2011,54.6,2.95,Vaduz,VAD,457,Eastern Alpine north slope,47.13,9.52
+2012,55.6,-0.25,Vaduz,VAD,457,Eastern Alpine north slope,47.13,9.52
+2013,52.6,0.9,Vaduz,VAD,457,Eastern Alpine north slope,47.13,9.52
+2014,54.8,2.97,Vaduz,VAD,457,Eastern Alpine north slope,47.13,9.52
+2015,68.2,4.09,Vaduz,VAD,457,Eastern Alpine north slope,47.13,9.52
+1981,48.1,-0.55,Visp,VIS,639,Valais,46.3,7.84
+1982,39.3,2.63,Visp,VIS,639,Valais,46.3,7.84
+1983,34.9,0.38,Visp,VIS,639,Valais,46.3,7.84
+1984,30.3,2.17,Visp,VIS,639,Valais,46.3,7.84
+1985,51.5,-3.09,Visp,VIS,639,Valais,46.3,7.84
+1986,44.3,3.14,Visp,VIS,639,Valais,46.3,7.84
+1987,70.1,-3.01,Visp,VIS,639,Valais,46.3,7.84
+1988,45.8,-0.13,Visp,VIS,639,Valais,46.3,7.84
+1989,56.6,2.38,Visp,VIS,639,Valais,46.3,7.84
+1990,44.1,3.88,Visp,VIS,639,Valais,46.3,7.84
+1991,74.3,1.14,Visp,VIS,639,Valais,46.3,7.84
+1992,32.5,2.54,Visp,VIS,639,Valais,46.3,7.84
+1993,46.5,1.71,Visp,VIS,639,Valais,46.3,7.84
+1994,62.4,2.86,Visp,VIS,639,Valais,46.3,7.84
+1995,29.6,-1.11,Visp,VIS,639,Valais,46.3,7.84
+1996,45.1,-1.98,Visp,VIS,639,Valais,46.3,7.84
+1997,28,-0.93,Visp,VIS,639,Valais,46.3,7.84
+1998,31.7,1.03,Visp,VIS,639,Valais,46.3,7.84
+1999,27.5,2.25,Visp,VIS,639,Valais,46.3,7.84
+2000,82.4,1.18,Visp,VIS,639,Valais,46.3,7.84
+2001,35.7,-1.91,Visp,VIS,639,Valais,46.3,7.84
+2002,36.2,1,Visp,VIS,639,Valais,46.3,7.84
+2003,33.5,-0.09,Visp,VIS,639,Valais,46.3,7.84
+2004,44.3,0.7,Visp,VIS,639,Valais,46.3,7.84
+2005,38.3,-1.35,Visp,VIS,639,Valais,46.3,7.84
+2006,35.9,-0.2,Visp,VIS,639,Valais,46.3,7.84
+2007,49.6,1.35,Visp,VIS,639,Valais,46.3,7.84
+2008,37.5,1.72,Visp,VIS,639,Valais,46.3,7.84
+2009,68.3,0.72,Visp,VIS,639,Valais,46.3,7.84
+2010,40.6,-5.96,Visp,VIS,639,Valais,46.3,7.84
+2011,34.3,2.95,Visp,VIS,639,Valais,46.3,7.84
+2012,37.9,-0.25,Visp,VIS,639,Valais,46.3,7.84
+2013,29.9,0.9,Visp,VIS,639,Valais,46.3,7.84
+2014,46.8,2.97,Visp,VIS,639,Valais,46.3,7.84
+2015,43.8,4.09,Visp,VIS,639,Valais,46.3,7.84
+1981,47.8,-0.55,Waedenswil,WAE,485,North-eastern plateau,47.22,8.68
+1982,45.4,2.63,Waedenswil,WAE,485,North-eastern plateau,47.22,8.68
+1983,55.9,0.38,Waedenswil,WAE,485,North-eastern plateau,47.22,8.68
+1984,68.6,2.17,Waedenswil,WAE,485,North-eastern plateau,47.22,8.68
+1985,36.9,-3.09,Waedenswil,WAE,485,North-eastern plateau,47.22,8.68
+1986,52.1,3.14,Waedenswil,WAE,485,North-eastern plateau,47.22,8.68
+1987,51.3,-3.01,Waedenswil,WAE,485,North-eastern plateau,47.22,8.68
+1988,64.7,-0.13,Waedenswil,WAE,485,North-eastern plateau,47.22,8.68
+1989,59.2,2.38,Waedenswil,WAE,485,North-eastern plateau,47.22,8.68
+1990,56.9,3.88,Waedenswil,WAE,485,North-eastern plateau,47.22,8.68
+1991,40,1.14,Waedenswil,WAE,485,North-eastern plateau,47.22,8.68
+1992,52.4,2.54,Waedenswil,WAE,485,North-eastern plateau,47.22,8.68
+1993,62.9,1.71,Waedenswil,WAE,485,North-eastern plateau,47.22,8.68
+1994,89.6,2.86,Waedenswil,WAE,485,North-eastern plateau,47.22,8.68
+1995,51.1,-1.11,Waedenswil,WAE,485,North-eastern plateau,47.22,8.68
+1996,46.5,-1.98,Waedenswil,WAE,485,North-eastern plateau,47.22,8.68
+1997,41.6,-0.93,Waedenswil,WAE,485,North-eastern plateau,47.22,8.68
+1998,50,1.03,Waedenswil,WAE,485,North-eastern plateau,47.22,8.68
+1999,57.5,2.25,Waedenswil,WAE,485,North-eastern plateau,47.22,8.68
+2000,64.8,1.18,Waedenswil,WAE,485,North-eastern plateau,47.22,8.68
+2001,47.4,-1.91,Waedenswil,WAE,485,North-eastern plateau,47.22,8.68
+2002,52.4,1,Waedenswil,WAE,485,North-eastern plateau,47.22,8.68
+2003,42.7,-0.09,Waedenswil,WAE,485,North-eastern plateau,47.22,8.68
+2004,54.9,0.7,Waedenswil,WAE,485,North-eastern plateau,47.22,8.68
+2005,61.3,-1.35,Waedenswil,WAE,485,North-eastern plateau,47.22,8.68
+2006,28.1,-0.2,Waedenswil,WAE,485,North-eastern plateau,47.22,8.68
+2007,63.7,1.35,Waedenswil,WAE,485,North-eastern plateau,47.22,8.68
+2008,46.7,1.72,Waedenswil,WAE,485,North-eastern plateau,47.22,8.68
+2009,52.9,0.72,Waedenswil,WAE,485,North-eastern plateau,47.22,8.68
+2010,50.8,-5.96,Waedenswil,WAE,485,North-eastern plateau,47.22,8.68
+2011,83.3,2.95,Waedenswil,WAE,485,North-eastern plateau,47.22,8.68
+2012,54.9,-0.25,Waedenswil,WAE,485,North-eastern plateau,47.22,8.68
+2013,44.9,0.9,Waedenswil,WAE,485,North-eastern plateau,47.22,8.68
+2014,52.5,2.97,Waedenswil,WAE,485,North-eastern plateau,47.22,8.68
+2015,44.6,4.09,Waedenswil,WAE,485,North-eastern plateau,47.22,8.68
+1981,59.3,-0.55,Weissfluhjoch,WFJ,2691,Northern and central Grisons,46.83,9.81
+1982,51.9,2.63,Weissfluhjoch,WFJ,2691,Northern and central Grisons,46.83,9.81
+1983,47.9,0.38,Weissfluhjoch,WFJ,2691,Northern and central Grisons,46.83,9.81
+1984,44.4,2.17,Weissfluhjoch,WFJ,2691,Northern and central Grisons,46.83,9.81
+1985,68.4,-3.09,Weissfluhjoch,WFJ,2691,Northern and central Grisons,46.83,9.81
+1986,52.6,3.14,Weissfluhjoch,WFJ,2691,Northern and central Grisons,46.83,9.81
+1987,37.8,-3.01,Weissfluhjoch,WFJ,2691,Northern and central Grisons,46.83,9.81
+1988,63.8,-0.13,Weissfluhjoch,WFJ,2691,Northern and central Grisons,46.83,9.81
+1989,26.8,2.38,Weissfluhjoch,WFJ,2691,Northern and central Grisons,46.83,9.81
+1990,62.8,3.88,Weissfluhjoch,WFJ,2691,Northern and central Grisons,46.83,9.81
+1991,90.5,1.14,Weissfluhjoch,WFJ,2691,Northern and central Grisons,46.83,9.81
+1992,42.8,2.54,Weissfluhjoch,WFJ,2691,Northern and central Grisons,46.83,9.81
+1993,57.7,1.71,Weissfluhjoch,WFJ,2691,Northern and central Grisons,46.83,9.81
+1994,38.8,2.86,Weissfluhjoch,WFJ,2691,Northern and central Grisons,46.83,9.81
+1995,55,-1.11,Weissfluhjoch,WFJ,2691,Northern and central Grisons,46.83,9.81
+1996,50.4,-1.98,Weissfluhjoch,WFJ,2691,Northern and central Grisons,46.83,9.81
+1997,37.7,-0.93,Weissfluhjoch,WFJ,2691,Northern and central Grisons,46.83,9.81
+1998,35.9,1.03,Weissfluhjoch,WFJ,2691,Northern and central Grisons,46.83,9.81
+1999,49.9,2.25,Weissfluhjoch,WFJ,2691,Northern and central Grisons,46.83,9.81
+2000,54.4,1.18,Weissfluhjoch,WFJ,2691,Northern and central Grisons,46.83,9.81
+2001,64.1,-1.91,Weissfluhjoch,WFJ,2691,Northern and central Grisons,46.83,9.81
+2002,58.5,1,Weissfluhjoch,WFJ,2691,Northern and central Grisons,46.83,9.81
+2003,64.9,-0.09,Weissfluhjoch,WFJ,2691,Northern and central Grisons,46.83,9.81
+2004,63.7,0.7,Weissfluhjoch,WFJ,2691,Northern and central Grisons,46.83,9.81
+2005,64.6,-1.35,Weissfluhjoch,WFJ,2691,Northern and central Grisons,46.83,9.81
+2006,51.2,-0.2,Weissfluhjoch,WFJ,2691,Northern and central Grisons,46.83,9.81
+2007,55,1.35,Weissfluhjoch,WFJ,2691,Northern and central Grisons,46.83,9.81
+2008,47,1.72,Weissfluhjoch,WFJ,2691,Northern and central Grisons,46.83,9.81
+2009,44,0.72,Weissfluhjoch,WFJ,2691,Northern and central Grisons,46.83,9.81
+2010,39.6,-5.96,Weissfluhjoch,WFJ,2691,Northern and central Grisons,46.83,9.81
+2011,52.4,2.95,Weissfluhjoch,WFJ,2691,Northern and central Grisons,46.83,9.81
+2012,50,-0.25,Weissfluhjoch,WFJ,2691,Northern and central Grisons,46.83,9.81
+2013,34.9,0.9,Weissfluhjoch,WFJ,2691,Northern and central Grisons,46.83,9.81
+2014,59.6,2.97,Weissfluhjoch,WFJ,2691,Northern and central Grisons,46.83,9.81
+2015,64.4,4.09,Weissfluhjoch,WFJ,2691,Northern and central Grisons,46.83,9.81
+1981,47.4,-0.55,Wynau,WYN,422,Central plateau,47.26,7.79
+1982,47.7,2.63,Wynau,WYN,422,Central plateau,47.26,7.79
+1983,43.4,0.38,Wynau,WYN,422,Central plateau,47.26,7.79
+1984,41.9,2.17,Wynau,WYN,422,Central plateau,47.26,7.79
+1985,40.7,-3.09,Wynau,WYN,422,Central plateau,47.26,7.79
+1986,32.6,3.14,Wynau,WYN,422,Central plateau,47.26,7.79
+1987,69.5,-3.01,Wynau,WYN,422,Central plateau,47.26,7.79
+1988,33,-0.13,Wynau,WYN,422,Central plateau,47.26,7.79
+1989,53.6,2.38,Wynau,WYN,422,Central plateau,47.26,7.79
+1990,56.2,3.88,Wynau,WYN,422,Central plateau,47.26,7.79
+1991,41.5,1.14,Wynau,WYN,422,Central plateau,47.26,7.79
+1992,30.7,2.54,Wynau,WYN,422,Central plateau,47.26,7.79
+1993,49.4,1.71,Wynau,WYN,422,Central plateau,47.26,7.79
+1994,42.2,2.86,Wynau,WYN,422,Central plateau,47.26,7.79
+1995,66.8,-1.11,Wynau,WYN,422,Central plateau,47.26,7.79
+1996,27.7,-1.98,Wynau,WYN,422,Central plateau,47.26,7.79
+1997,40.3,-0.93,Wynau,WYN,422,Central plateau,47.26,7.79
+1998,39.6,1.03,Wynau,WYN,422,Central plateau,47.26,7.79
+1999,46.7,2.25,Wynau,WYN,422,Central plateau,47.26,7.79
+2000,47.8,1.18,Wynau,WYN,422,Central plateau,47.26,7.79
+2001,38.5,-1.91,Wynau,WYN,422,Central plateau,47.26,7.79
+2002,29.8,1,Wynau,WYN,422,Central plateau,47.26,7.79
+2003,33.9,-0.09,Wynau,WYN,422,Central plateau,47.26,7.79
+2004,41.3,0.7,Wynau,WYN,422,Central plateau,47.26,7.79
+2005,49.3,-1.35,Wynau,WYN,422,Central plateau,47.26,7.79
+2006,53.2,-0.2,Wynau,WYN,422,Central plateau,47.26,7.79
+2007,57.7,1.35,Wynau,WYN,422,Central plateau,47.26,7.79
+2008,70.5,1.72,Wynau,WYN,422,Central plateau,47.26,7.79
+2009,35.8,0.72,Wynau,WYN,422,Central plateau,47.26,7.79
+2010,33.9,-5.96,Wynau,WYN,422,Central plateau,47.26,7.79
+2011,57.2,2.95,Wynau,WYN,422,Central plateau,47.26,7.79
+2012,26.3,-0.25,Wynau,WYN,422,Central plateau,47.26,7.79
+2013,61.7,0.9,Wynau,WYN,422,Central plateau,47.26,7.79
+2014,38.8,2.97,Wynau,WYN,422,Central plateau,47.26,7.79
+2015,60.8,4.09,Wynau,WYN,422,Central plateau,47.26,7.79
+1982,31.1,2.63,Zermatt,ZER,1638,Valais,46.03,7.75
+1983,23.6,0.38,Zermatt,ZER,1638,Valais,46.03,7.75
+1984,35.3,2.17,Zermatt,ZER,1638,Valais,46.03,7.75
+1985,48.7,-3.09,Zermatt,ZER,1638,Valais,46.03,7.75
+1986,41.6,3.14,Zermatt,ZER,1638,Valais,46.03,7.75
+1987,58.9,-3.01,Zermatt,ZER,1638,Valais,46.03,7.75
+1988,34.3,-0.13,Zermatt,ZER,1638,Valais,46.03,7.75
+1989,66.7,2.38,Zermatt,ZER,1638,Valais,46.03,7.75
+1990,51.3,3.88,Zermatt,ZER,1638,Valais,46.03,7.75
+1991,66.4,1.14,Zermatt,ZER,1638,Valais,46.03,7.75
+1992,58.3,2.54,Zermatt,ZER,1638,Valais,46.03,7.75
+1993,46.2,1.71,Zermatt,ZER,1638,Valais,46.03,7.75
+1994,80.1,2.86,Zermatt,ZER,1638,Valais,46.03,7.75
+1995,39.7,-1.11,Zermatt,ZER,1638,Valais,46.03,7.75
+1996,53.3,-1.98,Zermatt,ZER,1638,Valais,46.03,7.75
+1997,24.4,-0.93,Zermatt,ZER,1638,Valais,46.03,7.75
+1998,25.8,1.03,Zermatt,ZER,1638,Valais,46.03,7.75
+1999,30.1,2.25,Zermatt,ZER,1638,Valais,46.03,7.75
+2000,71,1.18,Zermatt,ZER,1638,Valais,46.03,7.75
+2001,23.8,-1.91,Zermatt,ZER,1638,Valais,46.03,7.75
+2002,48.8,1,Zermatt,ZER,1638,Valais,46.03,7.75
+2003,23.5,-0.09,Zermatt,ZER,1638,Valais,46.03,7.75
+2004,33.9,0.7,Zermatt,ZER,1638,Valais,46.03,7.75
+2005,36.4,-1.35,Zermatt,ZER,1638,Valais,46.03,7.75
+2006,30.7,-0.2,Zermatt,ZER,1638,Valais,46.03,7.75
+2007,44.3,1.35,Zermatt,ZER,1638,Valais,46.03,7.75
+2008,40.7,1.72,Zermatt,ZER,1638,Valais,46.03,7.75
+2009,50,0.72,Zermatt,ZER,1638,Valais,46.03,7.75
+2010,49.1,-5.96,Zermatt,ZER,1638,Valais,46.03,7.75
+2011,32.9,2.95,Zermatt,ZER,1638,Valais,46.03,7.75
+2012,22.4,-0.25,Zermatt,ZER,1638,Valais,46.03,7.75
+2013,40.6,0.9,Zermatt,ZER,1638,Valais,46.03,7.75
+2014,49.8,2.97,Zermatt,ZER,1638,Valais,46.03,7.75
+2015,31.4,4.09,Zermatt,ZER,1638,Valais,46.03,7.75
