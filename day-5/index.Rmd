@@ -581,6 +581,96 @@ class: inverse center middle subsection
 
 # Example
 
+---
+class: inverse center middle subsection
+
+# Overview
+
+---
+
+# Overview
+
+* We choose to use GAMs when we expect non-linear relationships between covariates and $y$
+
+* GAMs represent non-linear functions $fj(x_{ij})$ using splines
+
+* Splines are big functions made up of little functions &mdash; *basis function*
+
+* Estimate a coefficient $\beta_k$ for each basis function $b_k$
+
+* As a user we need to set `k` the upper limit on the wiggliness for each $f_j()$
+
+* Avoid overfitting through a wiggliness penalty &mdash; curvature or 2nd derivative
+
+---
+
+# Overview
+
+* GAMs are just fancy GLMs &mdash; usual diagnostics apply `gam.check()` or `appraise()`
+
+* Check you have the right distribution `family` using QQ plot, plot of residuls vs $\eta_i$, DHARMa residuals
+
+* But have to check that the value(s) of `k` were large enough with `k.check()`
+
+* Model selection can be done with `select = TRUE` or `bs = "ts"` or `bs = "cs"`
+
+* Plot your fitted smooths using `plot.gam()` or `draw()`
+
+* Produce hypotheticals using `data_slice()` and `fitted_values()` or `predict()`
+
+---
+
+# Overview
+
+* Avoid fitting multiple models dropping terms in turn
+
+* Can use AIC to select among mondels for prediction
+
+* GAMs should be fitted with `method = "REML"` or `"ML"`
+
+* Then they are an empirical Bayesian model
+
+* Can explore uncertainty in estimates by smapling from the posterior of smooths or the model
+
+---
+
+# Overview
+
+* The default basis is the low-rank thin plate spline
+
+* Good properties but can be slow to set up &mdash; use `bs = "cr"` with big data
+
+* Other basis types are available &mdash; most aren't needed in general but do have specific uses
+
+* Tensor product smooths allow us to add smooth interactions to our models with `te()` or `t2()`
+
+* `s()` can be used for multivariate smooths, but assumes isotropy
+
+* Use `s(x) + s(z) + ti(x,z)` to test for an interaction
+
+---
+
+# Overview
+
+* Smoothing temporal or spatial data can be tricky due to autocorrelation
+
+* In some cases we can fit separate smooth trends & autocorrelatation processes
+
+* But they can fail often
+
+* Including smooths of space and time in your model can remove other effects: **confounding**
+
+---
+
+# Overview
+
+* {mgcv} smooths can be used in other software
+
+* Bayesian GAMs well catered for with {brms}
+
+* Consider more than the mean parameter &mdash; distributional GAMs
+
+* Consider modeling empirical quantiles using quantile GAMs
 
 ---
 
