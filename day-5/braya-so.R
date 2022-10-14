@@ -1,9 +1,17 @@
 # braya so example
-braya <- read_table(here("data", "braya-so.txt"), skip = 84,
+URL <- "https://bit.ly/gam-braya-so"
+
+braya <- read_table(URL, skip = 84,
     col_names = FALSE, col_types = "ddddddd") %>%
     setNames(c("Depth", "DepthUpper", "DepthLower", "Year", "YearYoung",
         "YearOld", "UK37")) %>%
     mutate(sampleInterval = YearYoung - YearOld)
+ 
+# braya <- read_table(here("data", "braya-so.txt"), skip = 84,
+#     col_names = FALSE, col_types = "ddddddd") %>%
+#     setNames(c("Depth", "DepthUpper", "DepthLower", "Year", "YearYoung",
+#         "YearOld", "UK37")) %>%
+#     mutate(sampleInterval = YearYoung - YearOld)
 
 braya
 
