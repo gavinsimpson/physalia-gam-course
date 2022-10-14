@@ -6,9 +6,14 @@ pkgs <- c("mgcv", "lme4", "ggplot2", "readr", "dplyr", "tidyr",
 vapply(pkgs, library, logical(1), character.only = TRUE, logical.return = TRUE,
        quietly = TRUE)
 
-ocean <- read_csv(here("data", "chlorophyll.csv"), col_types = "dddddd") %>%
+URL <- "https://bit.ly/gam-chlorophyll"
+ocean <- read_csv(URL, col_types = "dddddd") %>%
     rename(longitude = lon, latitude = lat, julian_day = jul.day,
-    ocean_depth = bath, chl_sw = chl.sw)
+        ocean_depth = bath, chl_sw = chl.sw)
+
+# ocean <- read_csv(here("data", "chlorophyll.csv"), col_types = "dddddd") %>%
+#     rename(longitude = lon, latitude = lat, julian_day = jul.day,
+#     ocean_depth = bath, chl_sw = chl.sw)
 # Variables are
 
 # * `lon` longitude

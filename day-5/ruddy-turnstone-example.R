@@ -9,7 +9,7 @@ vapply(pkgs, library, logical(1), character.only = TRUE, logical.return = TRUE,
        quietly = TRUE)
 
 # load data
-ruddy_url <- "https://bit.ly/rat-hormone" # update
+ruddy_url <- "https://bit.ly/gam-ruddy"
 ruddy <- read_table(ruddy_url)
 
 ruddy <- read_table(here("data", "ruddy.txt"), col_types = "ddddcdddddd") %>%
