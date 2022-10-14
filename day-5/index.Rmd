@@ -541,7 +541,7 @@ Treating smooths as random effects implies the (improper) Gaussian priors on $\b
 
 We fit by maximising the likelihood given this implied prior
 
-*empirical* because we do not have priors for the $\boldsymbol{\lambda}
+*empirical* because we do not have priors for the $\boldsymbol{\lambda}$
 
 ---
 
