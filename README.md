@@ -6,7 +6,7 @@ https://www.physalia-courses.org/
 
 ### Gavin Simpson
 
-#### 10&ndash;14th November, 2022
+#### 20&ndash;24th March, 2023
 
 ## Overview
 
@@ -57,17 +57,11 @@ pkgs <- c("mgcv",  "brms", "qgam", "gamm4", "tidyverse", "readxl",
 install.packages(pkgs, Ncpus = 4) # set Ncpus to # of CPU cores you have
 ```
 
-Finally, we will make use of the development version of the gratia package as it is not quite ready for CRAN. You can install this package using the binaries provided by the [rOpenSci](https://ropensci.org/) build service [R-Universe](https://r-universe.dev). To install from my R-Universe, you need to make a *temporary* configuration change to tell R to also install packages from my R-Universe package repo:
+Finally, we will make use of the development version of the gratia package as it is not quite ready for CRAN. You can install this package using the binaries provided by the [rOpenSci](https://ropensci.org/) build service [R-Universe](https://r-universe.dev). To install from my R-Universe, you need  to tell R to also install packages from my R-Universe package repo:
 
 ```r
-####### **temporary** configuration to install gratia from my R-Universe #######
-# Enable repository from gavinsimpson
-options(repos = c(
-  gavinsimpson = "https://gavinsimpson.r-universe.dev",
-  CRAN = "https://cloud.r-project.org"))
-
 # Download and install gratia
-install.packages("gratia")
+install.packages('gratia', repos = c('https://gavinsimpson.r-universe.dev', 'https://cloud.r-project.org'))
 ```
 
 ## Programme
@@ -112,4 +106,4 @@ We’ll dig under the hood a bit to understand how GAMs work at a practical leve
 [Slides](https://gavinsimpson.github.io/physalia-gam-course/day-5/index.html)
 
 * Going beyond the mean; fitting distributional models and quantile GAMs
-* Fitting GAMs with brms
+* Fitting Bayesian GAMs with brms
