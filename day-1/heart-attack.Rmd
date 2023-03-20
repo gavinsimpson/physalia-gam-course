@@ -69,6 +69,8 @@ ck <- ck %>%
 
 4. Calculate a quick goodness of fit test for the model using the information provided on the residual deviance
 
+    Hint: the residual device should be a typical value from a $\chi^2$ distributed random variable with degress of freedom equal to the residual degrees of freedom of the model. You'll need `pchisq()`, `deviance()`, and `df.residual()`&hellip;
+
 5. Plot the model diagnostics
 
 6. Add fitted values of the model as a line on to the plot you created earlier
