@@ -924,6 +924,8 @@ Simon Wood &amp; colleagues (2016) have extended the *mgcv* methods to some non-
 * `ocat()`
 * `shash()`
 * `gumbls()`
+* `cnorm()`
+* `ziP()`
 ]
 ]
 
@@ -938,6 +940,7 @@ The default is a low-rank thin plate spline `bs = 'tp'`
 Many others available
 
 .row[
+.small[
 .col-6[
 
 * Cubic splines `bs = 'cr'`
@@ -954,6 +957,8 @@ Many others available
 * MRFs `bs = 'mrf'`
 * Soap-film smooth `bs = 'so'`
 * Gaussian process `bs = 'gp'`
+* Constrained factor smooth `bs = 'sz'`
+]
 ]
 ]
 
@@ -1191,6 +1196,36 @@ draw(bfun) + facet_wrap(~ bf)
 # Cyclic cubic regression splines
 
 ![](index_files/figure-html/plot-cc-basis-1.svg)&lt;!-- --&gt;
+
+---
+
+# The whole process 1
+
+![](index_files/figure-html/whole-basis-proces-1.svg)&lt;!-- --&gt;
+
+---
+
+# The whole process 2
+
+
+```r
+dat &lt;- data_sim("eg1", seed = 4)
+m &lt;- gam(y ~ s(x0) + s(x1) + s(x2, bs = "bs") + s(x3),
+         data = dat, method = "REML")
+```
+
+
+```r
+draw(m) + plot_layout(ncol = 4)
+```
+
+![](index_files/figure-html/whole-basis-proces-2-model-draw-1.svg)&lt;!-- --&gt;
+
+---
+
+# The whole process 3
+
+![](index_files/figure-html/whole-basis-proces-2-1.svg)&lt;!-- --&gt;
 
 ---
 class: inverse middle center big-subsection

@@ -38,7 +38,7 @@ library('readr')
 library('dplyr')
 library('gganimate')
 
-## plot defaults
+## plot defaultsFriday 14th
 theme_set(theme_bw(base_size = 16, base_family = 'Fira Sans'))
 
 ## constants
@@ -944,6 +944,8 @@ Simon Wood & colleagues (2016) have extended the *mgcv* methods to some non-expo
 * `ocat()`
 * `shash()`
 * `gumbls()`
+* `cnorm()`
+* `ziP()`
 ]
 ]
 
@@ -958,6 +960,7 @@ The default is a low-rank thin plate spline `bs = 'tp'`
 Many others available
 
 .row[
+.small[
 .col-6[
 
 * Cubic splines `bs = 'cr'`
@@ -974,6 +977,8 @@ Many others available
 * MRFs `bs = 'mrf'`
 * Soap-film smooth `bs = 'so'`
 * Gaussian process `bs = 'gp'`
+* Constrained factor smooth `bs = 'sz'`
+]
 ]
 ]
 
@@ -1173,6 +1178,128 @@ draw(bfun) + facet_wrap(~ bf)
 # Cyclic cubic regression splines
 
 ```{r plot-cc-basis, echo = FALSE}
+```
+
+---
+
+# The whole process 1
+
+```{r whole-basis-proces, echo = FALSE, fig.height = 4, fig.width = 1.777777 * 6}
+K <- 13
+df <- data.frame(x = seq(0, 1, length = 200))
+knots <- data.frame(x = seq(0, 1, length.out = 11))
+bs <- basis(s(x, bs = "ps", k = K), data = df,
+    knots = list(x = seq(-3, 13) / 10))
+
+# let's weight the basis functions (simulating model coefs)
+set.seed(1)
+betas <- data.frame(bf = factor(seq_len(K)), beta = rnorm(K))
+
+unwtd_bs_plt <- bs |>
+    draw() +
+    geom_vline(aes(xintercept = x), data = knots, linetype = "dotted",
+        alpha = 0.5)
+
+# we need to merge the weights for each basis function with the basis object
+bs <- bs |>
+    left_join(betas, by = join_by("bf" == "bf")) |>
+    mutate(value_w = value * beta)
+
+# weighted basis
+wtd_bs_plt <- bs |>
+    ggplot(aes(x = x, y = value_w, colour = bf, group = bf)) +
+    geom_line(show.legend = FALSE) +
+    geom_vline(aes(xintercept = x), data = knots, linetype = "dotted",
+        alpha = 0.5) +
+    labs(y = expression(f(x)), x = "x")
+
+# now we want to sum the weighted basis functions for each value of `x`
+spl <- bs |>
+    group_by(x) |>
+    summarise(spline = sum(value_w))
+
+take <- c(83, 115)
+pts <- bs |>
+    group_by(bf) |>
+    slice(take)
+
+# now plot
+bs_plt <- bs |>
+    ggplot(aes(x = x, y = value_w, colour = bf, group = bf)) +
+    geom_line(show.legend = FALSE) +
+    geom_line(aes(x = x, y = spline), data = spl, linewidth = 1.25,
+              inherit.aes = FALSE) +
+    geom_vline(aes(xintercept = x), data = knots, linetype = "dotted",
+        alpha = 0.5) +
+    geom_vline(xintercept = c(df$x[take]), linetype = "dashed",
+        alpha = 1) +
+    geom_point(data = pts, aes(x = x, y = value_w, colour = bf, group = bf),
+        size = 2, show.legend = FALSE) +
+    geom_point(data = slice(spl, take), aes(x = x, y = spline),
+        size = 3, colour = "red", inherit.aes = FALSE) +
+    labs(y = expression(f(x)), x = "x")
+
+unwtd_bs_plt + wtd_bs_plt + bs_plt + plot_layout(ncol = 3)
+```
+
+---
+
+# The whole process 2
+
+```{r whole-basis-proces-2-model}
+dat <- data_sim("eg1", seed = 4)
+m <- gam(y ~ s(x0) + s(x1) + s(x2, bs = "bs") + s(x3),
+         data = dat, method = "REML")
+```
+
+```{r whole-basis-proces-2-model-draw, fig.height = 5, fig.width = 1.777777 * 6}
+draw(m) + plot_layout(ncol = 4)
+```
+
+---
+
+# The whole process 3
+
+```{r whole-basis-proces-2, echo = FALSE, fig.height = 6, fig.width = 1.777777 * 6}
+# data to evaluate the basis at
+# using the CRAN version of {gratia}, we need `m`
+ds <- data_slice(m, x2 = evenly(x2, n = 200))
+# from 0.9.0 (or current GitHub version) you can do
+# ds <- data_slice(dat, x2 = evenly(x2, n = 200))
+
+# generate a tidy representation of the fitted basis functions
+x2_bs <- basis(m, term = "s(x2)", data = ds)
+
+# compute values of the spline by summing basis functions at each x2
+x2_spl <- x2_bs |>
+    group_by(x2) |>
+    summarise(spline = sum(value))
+
+# evaluate the spline at the same values as we evaluated the basis functions
+x2_sm <- smooth_estimates(m, "s(x2)", data = ds) |>
+    add_confint()
+
+take <- c(65, 175)
+pts <- x2_bs |>
+    group_by(bf) |>
+    slice(take)
+
+# now plot
+x2_bs |>
+    ggplot(aes(x = x2, y = value, colour = bf, group = bf)) +
+    geom_line(show.legend = FALSE) +
+    geom_ribbon(aes(x = x2, ymin = lower_ci, ymax = upper_ci),
+                data = x2_sm,
+                inherit.aes = FALSE, alpha = 0.2) +
+    geom_line(aes(x = x2, y = est), data = x2_sm,
+              linewidth = 1.5, inherit.aes = FALSE) +
+    geom_vline(xintercept = c(ds$x2[take]), linetype = "dashed",
+        alpha = 1) +
+    geom_point(data = pts, aes(x = x2, y = value, colour = bf, group = bf),
+        size = 2, show.legend = FALSE) +
+    geom_point(data = slice(x2_sm, take), aes(x = x2, y = est),
+        size = 3, colour = "red", inherit.aes = FALSE) +
+    labs(y = expression(f(x2)), x = "x2")
 ```
 
 ---
