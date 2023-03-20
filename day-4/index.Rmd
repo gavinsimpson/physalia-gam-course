@@ -3,7 +3,7 @@ title: "Generalized Additive Models"
 subtitle: "a data-driven approach to estimating regression models"
 institute: "Department of Animal & Veterinary Sciences · Aarhus University"
 author: "Gavin Simpson"
-date: "1400&ndash;2000 CET (1300&ndash;1900 UTC) Thursday 13th October, 2022"
+date: "1400&ndash;2000 CET (1300&ndash;1900 UTC) Thursday 23rd March, 2023"
 output:
   xaringan::moon_reader:
     css: ['default', 'https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css', 'slides.css']
@@ -20,7 +20,7 @@ class: inverse middle center big-subsection
 
 ```{r setup, include=FALSE, cache=FALSE}
 options(htmltools.dir.version = FALSE)
-knitr::opts_chunk$set(cache = TRUE, dev = 'svg', echo = TRUE, message = FALSE,
+knitr::opts_chunk$set(cache = TRUE, dev = "svg", echo = TRUE, message = FALSE,
                       warning = FALSE,
                       fig.height = 6, fig.width = 1.777777 * 6)
 
