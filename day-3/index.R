@@ -1,7 +1,7 @@
 ## ----setup, include=FALSE, cache=FALSE----------------------------------------
 options(htmltools.dir.version = FALSE)
-knitr::opts_chunk$set(cache = TRUE, dev = 'svg', echo = TRUE, message = FALSE, warning = FALSE,
-                      fig.height = 6, fig.width = 1.777777*6)
+knitr::opts_chunk$set(cache = TRUE, dev = "svg", echo = TRUE, message = FALSE, 
+  warning = FALSE, fig.height = 6, fig.width = 1.777777 * 6)
 
 library("gridGraphics")
 library('here')
