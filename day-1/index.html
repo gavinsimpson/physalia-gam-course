@@ -634,6 +634,25 @@ p1 + p2
 ![](index_files/figure-html/unnamed-chunk-2-1.svg)&lt;!-- --&gt;
 
 ---
+
+# Transform or GLM?
+
+```
+m1 &lt;- glm(log(y) ~ x, data = my_data, family = Gamma(link = "identity"))
+
+m2 &lt;- glm(y ~ x, data = my_data, family = Gamma(link = "log"))
+```
+
+These models are different
+
+1. `m1` is a model for `\(\mathbb{E}(log(y_i))\)`
+2. `m2` is a model for `\(\mathbb{E}(y_i)\)`
+
+$$
+\log(\mathbb{E}(y_i) \neq \mathbb{E}(\log(y_i)))
+$$
+
+---
 class: inverse middle center huge-subsection
 
 # GAMs
