@@ -645,11 +645,11 @@ m2 &lt;- glm(y ~ x, data = my_data, family = Gamma(link = "log"))
 
 These models are different
 
-1. `m1` is a model for `\(\mathbb{E}(log(y_i))\)`
+1. `m1` is a model for `\(\mathbb{E}(\log(y_i))\)`
 2. `m2` is a model for `\(\mathbb{E}(y_i)\)`
 
 $$
-\log(\mathbb{E}(y_i) \neq \mathbb{E}(\log(y_i)))
+\log(\mathbb{E}(y_i)) \neq \mathbb{E}(\log(y_i))
 $$
 
 ---
