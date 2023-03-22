@@ -39,7 +39,7 @@ ozone <- read_csv("https://bit.ly/gam-ozone-data")
 o3_lab <- expression(O[3])
 temp_lab <- expression(Temperature ~ (degree * F))
 
-ozone |>
+ozone |> # %>%
     ggplot(aes(y = O3, x = temp)) +
     geom_point() +
     labs(y = o3_lab, x = temp_lab)
@@ -119,8 +119,8 @@ appraise(m4, method = "simulate")
 m5 <- gam(O3 ~ s(temp) + s(ibh) + s(ibt),
     data = ozone, method = "ML", family = quasipoisson())
 summary(m5)
-draw(m4)
-appraise(m4, method = "simulate")
+draw(m5)
+appraise(m5, method = "simulate")
 
 # the Tweedie has perhaps the best justification so we'll proceed with that
 # we could perform model selection using `select = TRUE`
@@ -138,3 +138,6 @@ m_full <- gam(O3 ~ s(temp) + s(ibh) + s(ibt) + s(humidity) + s(vh) +
 summary(m_full)
 draw(m_full)
 appraise(m_full, method = "simulate", n_simulate = 1000)
+
+conc <- concrvity(m_full, pairwise = TRUE)
+draw(conc)
