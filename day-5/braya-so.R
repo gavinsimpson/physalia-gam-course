@@ -30,6 +30,8 @@ braya_car1 <- gamm(UK37 ~ s(Year, k = 30), data = braya,
 		           control = list(niterEM = 0, optimMethod = "BFGS",
                                   opt = "optim"))
 
+draw(braya_car1$gam, n = 200)
+
 ## fit model using GCV
 braya_gcv <- gam(UK37 ~ s(Year, k = 30), data = braya)
 

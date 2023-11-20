@@ -9,21 +9,21 @@ brain <- read_csv(URL, col_types = "ddddd")
 brain
 
 # filter two outliers
-brain <- brain %>%
+brain <- brain |>
   filter(medFPQ > 5e-3)
 
 # plot the response
-brain %>%
+brain |>
   ggplot(aes(x = medFPQ)) +
     geom_density()
 
 # plot the response
-brain %>%
+brain |>
   ggplot(aes(x = medFPQ)) +
   geom_histogram()
 
 # plot as a surface
-brain %>%
+brain |>
   ggplot(aes(x = X, y = Y, fill = medFPQ)) +
   geom_raster() + coord_equal() +
   scale_fill_viridis_c(option = "plasma")

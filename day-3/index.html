@@ -225,20 +225,20 @@ fd
 ```
 
 ```
-## # A tibble: 200 × 8
-##    smooth   var    data derivative    se  crit lower upper
-##    &lt;chr&gt;    &lt;chr&gt; &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-##  1 s(times) times  2.40      -2.16  3.30  1.96 -8.62  4.30
-##  2 s(times) times  2.68      -2.15  3.29  1.96 -8.60  4.31
-##  3 s(times) times  2.95      -2.12  3.28  1.96 -8.55  4.31
-##  4 s(times) times  3.23      -2.06  3.26  1.96 -8.45  4.32
-##  5 s(times) times  3.51      -1.98  3.22  1.96 -8.29  4.33
-##  6 s(times) times  3.79      -1.86  3.17  1.96 -8.08  4.35
-##  7 s(times) times  4.06      -1.72  3.11  1.96 -7.81  4.37
-##  8 s(times) times  4.34      -1.55  3.03  1.96 -7.48  4.38
-##  9 s(times) times  4.62      -1.36  2.93  1.96 -7.10  4.39
-## 10 s(times) times  4.90      -1.14  2.82  1.96 -6.67  4.40
-## # … with 190 more rows
+## # A tibble: 100 × 10
+##    smooth   var   by_var fs_var  data derivative    se  crit lower upper
+##    &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;  &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1 s(times) times &lt;NA&gt;   &lt;NA&gt;    2.40     -2.16   3.30  1.96 -8.62  4.30
+##  2 s(times) times &lt;NA&gt;   &lt;NA&gt;    2.96     -2.12   3.28  1.96 -8.55  4.31
+##  3 s(times) times &lt;NA&gt;   &lt;NA&gt;    3.52     -1.98   3.22  1.96 -8.29  4.34
+##  4 s(times) times &lt;NA&gt;   &lt;NA&gt;    4.07     -1.72   3.10  1.96 -7.80  4.37
+##  5 s(times) times &lt;NA&gt;   &lt;NA&gt;    4.63     -1.35   2.93  1.96 -7.09  4.39
+##  6 s(times) times &lt;NA&gt;   &lt;NA&gt;    5.19     -0.877  2.69  1.96 -6.16  4.40
+##  7 s(times) times &lt;NA&gt;   &lt;NA&gt;    5.75     -0.304  2.41  1.96 -5.03  4.42
+##  8 s(times) times &lt;NA&gt;   &lt;NA&gt;    6.30      0.370  2.10  1.96 -3.74  4.48
+##  9 s(times) times &lt;NA&gt;   &lt;NA&gt;    6.86      1.08   1.79  1.96 -2.42  4.59
+## 10 s(times) times &lt;NA&gt;   &lt;NA&gt;    7.42      1.70   1.54  1.96 -1.32  4.73
+## # ℹ 90 more rows
 ```
 
 ---
@@ -338,7 +338,7 @@ df
 ##  8  0.145  0.0343  0.584  
 ##  9  0.0736 0.0450  0.804  
 ## 10  0.320  0.00229 0.265  
-## # … with 490 more rows
+## # ℹ 490 more rows
 ```
 
 ```r
@@ -603,7 +603,7 @@ gam.check(norm_model_3)
 ## 
 ## Method: REML   Optimizer: outer newton
 ## full convergence after 8 iterations.
-## Gradient range [-1.136192e-08,6.794565e-13]
+## Gradient range [-1.136192e-08,6.901146e-13]
 ## (score 334.2084 &amp; scale 0.2485446).
 ## Hessian positive definite, eigenvalue range [2.812271,198.6868].
 ## Model rank =  23 / 23 
@@ -1001,23 +1001,23 @@ summary(b)
 ## 
 ## Parametric coefficients:
 ##             Estimate Std. Error z value Pr(&gt;|z|)    
-## (Intercept)  1.21758    0.04082   29.83   &lt;2e-16 ***
+## (Intercept)  1.21564    0.04087   29.74   &lt;2e-16 ***
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
 ## Approximate significance of smooth terms:
 ##             edf Ref.df  Chi.sq p-value    
-## s(x0) 1.7655088      9   5.264  0.0392 *  
-## s(x1) 1.9271040      9  65.356  &lt;2e-16 ***
-## s(x2) 6.1351414      9 156.204  &lt;2e-16 ***
-## s(x3) 0.0002849      9   0.000  0.4181    
-## s(x4) 0.0003044      9   0.000  0.9703    
-## s(x5) 0.1756926      9   0.195  0.3018    
+## s(x0) 1.698e+00      9   4.554  0.0555 .  
+## s(x1) 1.937e+00      9  64.813  &lt;2e-16 ***
+## s(x2) 6.089e+00      9 158.767  &lt;2e-16 ***
+## s(x3) 7.431e-05      9   0.000  0.4534    
+## s(x4) 6.127e-01      9   0.894  0.2190    
+## s(x5) 8.089e-01      9   4.205  0.0217 *  
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
-## R-sq.(adj) =  0.545   Deviance explained = 51.6%
-## -REML = 430.78  Scale est. = 1         n = 200
+## R-sq.(adj) =  0.555   Deviance explained = 52.7%
+## -REML = 429.49  Scale est. = 1         n = 200
 ```
 ]
 
@@ -1080,20 +1080,20 @@ galveston
 
 ```
 ## # A tibble: 15,276 × 13
-##    STATION_ID DATE     TIME   LATITUDE LONGIT…¹  YEAR MONTH   DAY SEASON MEASU…²
-##    &lt;fct&gt;      &lt;chr&gt;    &lt;time&gt;    &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;    &lt;dbl&gt;
-##  1 13296      6/20/91  11:04      29.5    -94.8  1991     6    20 Summer    28  
-##  2 13296      3/17/92  09:30      29.5    -94.8  1992     3    17 Spring    20.1
-##  3 13296      9/23/91  11:24      29.5    -94.8  1991     9    23 Fall      26  
-##  4 13296      9/23/91  11:24      29.5    -94.8  1991     9    23 Fall      26  
-##  5 13296      6/20/91  11:04      29.5    -94.8  1991     6    20 Summer    28  
-##  6 13296      12/17/91 10:15      29.5    -94.8  1991    12    17 Winter    13  
-##  7 13296      6/29/92  11:17      29.5    -94.8  1992     6    29 Summer    29.2
-##  8 13305      3/24/87  11:53      29.6    -95.0  1987     3    24 Spring    18.5
-##  9 13305      4/2/87   13:39      29.6    -95.0  1987     4     2 Spring    16.9
-## 10 13305      8/11/87  15:25      29.6    -95.0  1987     8    11 Summer    29.8
-## # … with 15,266 more rows, 3 more variables: datetime &lt;dttm&gt;, DoY &lt;dbl&gt;,
-## #   ToD &lt;dbl&gt;, and abbreviated variable names ¹​LONGITUDE, ²​MEASUREMENT
+##    STATION_ID DATE     TIME   LATITUDE LONGITUDE  YEAR MONTH   DAY SEASON
+##    &lt;fct&gt;      &lt;chr&gt;    &lt;time&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt; 
+##  1 13296      6/20/91  11:04      29.5     -94.8  1991     6    20 Summer
+##  2 13296      3/17/92  09:30      29.5     -94.8  1992     3    17 Spring
+##  3 13296      9/23/91  11:24      29.5     -94.8  1991     9    23 Fall  
+##  4 13296      9/23/91  11:24      29.5     -94.8  1991     9    23 Fall  
+##  5 13296      6/20/91  11:04      29.5     -94.8  1991     6    20 Summer
+##  6 13296      12/17/91 10:15      29.5     -94.8  1991    12    17 Winter
+##  7 13296      6/29/92  11:17      29.5     -94.8  1992     6    29 Summer
+##  8 13305      3/24/87  11:53      29.6     -95.0  1987     3    24 Spring
+##  9 13305      4/2/87   13:39      29.6     -95.0  1987     4     2 Spring
+## 10 13305      8/11/87  15:25      29.6     -95.0  1987     8    11 Summer
+## # ℹ 15,266 more rows
+## # ℹ 4 more variables: MEASUREMENT &lt;dbl&gt;, datetime &lt;dttm&gt;, DoY &lt;dbl&gt;, ToD &lt;dbl&gt;
 ```
 ]
 
@@ -1228,7 +1228,7 @@ AIC(m, m.sub)
 
 ```
 ##             df      AIC
-## m     442.5221 58590.61
+## m     484.7684 58544.03
 ## m.sub 238.2766 59193.50
 ```
 ---
@@ -1292,25 +1292,25 @@ summary(m)
 ## 
 ## Parametric coefficients:
 ##             Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept) 21.83529    0.08755   249.4   &lt;2e-16 ***
+## (Intercept) 21.61913    0.02078    1040   &lt;2e-16 ***
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
 ## Approximate significance of smooth terms:
-##                                 edf Ref.df        F  p-value    
-## s(ToD)                        3.357   4.05    5.626 0.000147 ***
-## s(DoY)                        9.551  10.00 3266.413  &lt; 2e-16 ***
-## s(YEAR)                      27.987  28.74   54.565  &lt; 2e-16 ***
-## s(LONGITUDE,LATITUDE)        54.264  99.00    5.177  &lt; 2e-16 ***
-## ti(DoY,YEAR)                131.329 140.00   34.598  &lt; 2e-16 ***
-## ti(ToD,LONGITUDE,LATITUDE)   42.235 171.00    0.872  &lt; 2e-16 ***
-## ti(DoY,LONGITUDE,LATITUDE)   80.831 240.00    1.189  &lt; 2e-16 ***
-## ti(YEAR,LONGITUDE,LATITUDE)  83.543 329.00    1.080  &lt; 2e-16 ***
+##                                 edf Ref.df         F p-value    
+## s(ToD)                        1.000   1.00    25.979 8.8e-07 ***
+## s(DoY)                        9.896  10.00 13430.960 &lt; 2e-16 ***
+## s(YEAR)                      28.026  28.75    75.994 &lt; 2e-16 ***
+## s(LONGITUDE,LATITUDE)        69.104  99.00     6.713 &lt; 2e-16 ***
+## ti(DoY,YEAR)                131.299 140.00    34.690 &lt; 2e-16 ***
+## ti(LONGITUDE,LATITUDE,ToD)   50.398 171.00     0.981 &lt; 2e-16 ***
+## ti(LONGITUDE,LATITUDE,DoY)   92.991 240.00     1.301 &lt; 2e-16 ***
+## ti(LONGITUDE,LATITUDE,YEAR)  91.791 287.00     1.305 &lt; 2e-16 ***
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
 ## R-sq.(adj) =   0.94   Deviance explained = 94.2%
-## fREML =  29810  Scale est. = 2.6339    n = 15276
+## fREML =  29799  Scale est. = 2.6187    n = 15276
 ```
 ]
 
@@ -1352,7 +1352,7 @@ fv &lt;- fitted_values(m, data = pdata)
 ind &lt;- too_far(pdata$LONGITUDE, pdata$LATITUDE,
                galveston$LONGITUDE, galveston$LATITUDE, dist = 0.1)
 fv &lt;- fv %&gt;%
-  mutate(fitted = if_else(ind, NA_real_, fitted))
+  mutate(fitted = if_else(ind, NA_real_, .fitted))
 ```
 
 ---
@@ -1362,7 +1362,7 @@ fv &lt;- fv %&gt;%
 
 ```r
 plt &lt;- ggplot(fv, aes(x = LONGITUDE, y = LATITUDE)) +
-    geom_raster(aes(fill = fitted)) + facet_wrap(~ YEAR, ncol = 12) +
+    geom_raster(aes(fill = .fitted)) + facet_wrap(~ YEAR, ncol = 12) +
     scale_fill_viridis(name = expression(degree*C), option = "plasma",
       na.value = "transparent") +
     coord_quickmap() +
@@ -1397,8 +1397,8 @@ ds &lt;- data_slice(m, ToD = 12, DoY = c(1, 90, 180, 270),
   LONGITUDE = -94.8751, LATITUDE  = 29.50866)
 fv &lt;- fitted_values(m, data = ds, scale = "response")
 
-plt2 &lt;- ggplot(fv, aes(x = YEAR, y = fitted, group = factor(DoY))) +
-    geom_ribbon(aes(ymin = lower, ymax = upper), fill = "black", alpha = 0.2) +
+plt2 &lt;- ggplot(fv, aes(x = YEAR, y = .fitted, group = factor(DoY))) +
+    geom_ribbon(aes(ymin = .lower_ci, ymax = .upper_ci), fill = "black", alpha = 0.2) +
     geom_line() + facet_wrap(~ DoY, scales = "free_y") +
     labs(x = NULL, y = expression(Temperature ~ (degree * C)))
 plt2

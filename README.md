@@ -63,6 +63,7 @@ Finally, we will make use of the development version of the gratia package as it
 # Download and install gratia
 install.packages("gratia",
     repos = c("https://gavinsimpson.r-universe.dev", "https://cloud.r-project.org"))
+
 ```
 
 ## Programme

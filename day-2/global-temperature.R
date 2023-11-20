@@ -42,12 +42,12 @@ newd <- data_slice(m_gtemp, Year = evenly(Year, n = 200))
 fv_gtemp <- fitted_values(m_gtemp, newd, scale = "response")
 
 # plot
-fv_gtemp %>%
-ggplot(aes(x = Year, y = fitted)) +
+fv_gtemp |>
+ggplot(aes(x = Year, y = .fitted)) +
     geom_point(data = gtemp, aes(x = Year, y = Temperature)) +
-    geom_ribbon(aes(ymin = lower, ymax = upper, x = Year),
+    geom_ribbon(aes(ymin = .lower_ci, ymax = .upper_ci, x = Year),
                 alpha = 0.4,
                 inherit.aes = FALSE,
                 fill = "#fdb338") +
-    geom_line(size = 1, colour = "#025196") +
+    geom_line(linewidth = 1, colour = "#025196") +
     labs(x = "Year", y = expression(Temperature ~ degree * C))

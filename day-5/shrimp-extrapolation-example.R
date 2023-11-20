@@ -9,23 +9,25 @@ vapply(pkgs, library, logical(1), character.only = TRUE, logical.return = TRUE,
 #
 shrimp <- read_csv(here("data", "trawl_nl.csv"),
     col_types = "dcdddddddddddd") %>%
-    mutate(stratum = factor(stratum))
+    mutate(stratum = factor(stratum)) # to allow a random effect of stratum
 
 ggplot(shrimp) +
   geom_violin(aes(x = richness, y = factor(year))) +
-    labs(x = "Number of species", y = "Year")
+    labs(x = "Number of species", y = "Year") + coord_flip()
 
-#
+# model for richness in time + ranef of stratum
 m_rich <- gam(richness ~ s(year) + s(stratum, bs = "re"),
               family = poisson,
               method = "REML",
               data = shrimp)
 
-#
+# draw the estimated smooths
 draw(m_rich)
 
-# How to predict for the last year
-fv <- fitted_values(m_rich, data = data_slice(m_rich, year = 2015:2016))
+# How to predict for the last year - exclude the random effect when predicting
+fv <- fitted_values(m_rich, data = data_slice(m_rich, year = 2015:2016),
+                    exclude = "s(stratum)")
+fv
 
 # Better control on uncertainty
 knots <- list(year = c(2004, 2005, 2014, 2016))
@@ -52,9 +54,9 @@ fitted_values(bs_1, data = data_slice(m_rich, year = 2015:2016),
 ds <- data_slice(m_rich, year = seq(2005, 2016, length = 100))
 fv_bs1 <- fitted_values(bs_1, data = ds, exclude = "s(stratum)")
 
-fv_bs1 %>%
-    ggplot(aes(x = year, y = fitted)) +
-    geom_ribbon(aes(ymax = upper, ymin = lower), alpha = 0.2) +
+fv_bs1 |>
+    ggplot(aes(x = year, y = .fitted)) +
+    geom_ribbon(aes(ymax = .upper_ci, ymin = .lower_ci), alpha = 0.2) +
     geom_line()
 
 # change the penalty
@@ -66,14 +68,15 @@ data = shrimp, knots = knots)
 
 fv_bs2 <- fitted_values(bs_2, data = ds, exclude = "s(stratum)")
 
-fv_bs1 %>%
+fv_bs1 |>
     bind_rows(fv_bs2) %>%
-    mutate(penalty = factor(rep(c(2, 1), each = 100))) %>%
-    ggplot(aes(x = year, y = fitted, group = penalty)) +
-    geom_ribbon(aes(ymax = upper, ymin = lower, fill = penalty), alpha = 0.2) +
+    mutate(penalty = factor(rep(c(2, 1), each = 100))) |>
+    ggplot(aes(x = year, y = .fitted, group = penalty)) +
+    geom_ribbon(aes(ymax = .upper_ci, ymin = .lower_ci, fill = penalty),
+        alpha = 0.2) +
     geom_line(aes(colour = penalty))
 
-# change the penalty
+# change the penalty - order 0 penalty
 bs_3 <- gam(richness ~ s(year, bs = "bs", k = 10, m = c(3, 0)) +
     s(stratum, bs = "re"),
 family = poisson,
@@ -82,14 +85,15 @@ data = shrimp, knots = knots)
 
 fv_bs3 <- fitted_values(bs_3, data = ds, exclude = "s(stratum)")
 
-fv_bs1 %>%
-    bind_rows(fv_bs2, fv_bs3) %>%
-    mutate(penalty = factor(rep(c(2, 1, 0), each = 100))) %>%
-    ggplot(aes(x = year, y = fitted, group = penalty)) +
-    geom_ribbon(aes(ymax = upper, ymin = lower, fill = penalty), alpha = 0.2) +
+fv_bs1 |>
+    bind_rows(fv_bs2, fv_bs3) |>
+    mutate(penalty = factor(rep(c(2, 1, 0), each = 100))) |>
+    ggplot(aes(x = year, y = .fitted, group = penalty)) +
+    geom_ribbon(aes(ymax = .upper_ci, ymin = .lower_ci, fill = penalty),
+        alpha = 0.2) +
     geom_line(aes(colour = penalty))
 
-# mix the penalties
+# mix the penalties mixture of 2nd and 1st order derivative penalties
 bs_4 <- gam(richness ~ s(year, bs = "bs", k = 10, m = c(3, 2, 1)) +
     s(stratum, bs = "re"),
 family = poisson,
@@ -98,9 +102,14 @@ data = shrimp, knots = knots)
 
 fv_bs4 <- fitted_values(bs_4, data = ds, exclude = "s(stratum)")
 
-fv_bs1 %>%
-    bind_rows(fv_bs2, fv_bs3, fv_bs4) %>%
-    mutate(penalty = factor(rep(c("2", "1", "0", "2,1"), each = 100))) %>%
-    ggplot(aes(x = year, y = fitted, group = penalty)) +
-    geom_ribbon(aes(ymax = upper, ymin = lower, fill = penalty), alpha = 0.2) +
+fv_bs1 |>
+    bind_rows(fv_bs2, fv_bs3, fv_bs4) |>
+    mutate(penalty = factor(rep(c("2", "1", "0", "2,1"), each = 100))) |>
+    ggplot(aes(x = year, y = .fitted, group = penalty)) +
+    geom_ribbon(aes(ymax = .upper_ci, ymin = .lower_ci, fill = penalty),
+        alpha = 0.2) +
     geom_line(aes(colour = penalty))
+
+# see https://fromthebottomoftheheap.net/2020/06/03/extrapolating-with-gams/
+
+# but see mvgam Nick Clarke & Konstens Wells 

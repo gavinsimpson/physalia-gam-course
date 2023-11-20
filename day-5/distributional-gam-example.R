@@ -74,7 +74,7 @@ pred <- pred %>%
 
 pred
 
-## now finish off by doing the mapping from the link scale to the resposne scale
+## now finish off by doing the mapping from the link scale to the response scale
 crit <- gratia:::coverage_normal(0.95)
 pred <- pred %>%
   mutate(fitted_mu = mu_ilink(fit_mu),

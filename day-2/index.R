@@ -370,7 +370,7 @@ ggplot(tibble(Fitted = fitted(crest2),
 
 
 ## ----co2-example-1, echo = TRUE-----------------------------------------------
-library("gratia")
+library("gratia"); library("readr"); library("here")
 south <- read_csv(here("data", "south_pole.csv"), col_types = "ddd")
 south
 
@@ -391,8 +391,8 @@ fv
 
 
 ## ----co2-example-5, echo = TRUE, fig.height = 5-------------------------------
-ggplot(fv, aes(x = c.month, y = fitted)) +
-    geom_ribbon(aes(ymin = lower, ymax = upper), alpha = 0.2) +
+ggplot(fv, aes(x = c.month, y = .fitted)) +
+    geom_ribbon(aes(ymin = .lower_ci, ymax = .upper_ci), alpha = 0.2) +
     geom_line(data = south, aes(c.month, co2), col = 'red') +
     geom_line(alpha = 0.4)
 
@@ -417,21 +417,21 @@ fv2
 
 
 ## ----co2-example-9, echo = TRUE, fig.height = 5-------------------------------
-ggplot(fv2, aes(x = c.month, y = fitted)) +
-    geom_ribbon(aes(ymin = lower, ymax = upper), alpha = 0.2) +
+ggplot(fv2, aes(x = c.month, y = .fitted)) +
+    geom_ribbon(aes(ymin = .lower_ci, ymax = .upper_ci), alpha = 0.2) +
     geom_line(data = south, aes(c.month, co2), col = 'red') +
     geom_line(alpha = 0.4)
 
 
 ## -----------------------------------------------------------------------------
-library("dplyr")
+library("dplyr"); library("ggplot2")
 data(mcycle, package = "MASS")
 mcycle <- as_tibble(mcycle)
 mcycle
 
 
 ## ----plot-mcycle, eval = FALSE------------------------------------------------
-## plt <- mcycle %>%
+## plt <- mcycle |>
 ##   ggplot(aes(x = times, y = accel)) +
 ##     geom_point() +
 ##     labs(x = "Milliseconds after impact",
@@ -440,7 +440,7 @@ mcycle
 
 
 ## ----plot-mcycle, fig.width = 6, fig.height = 4, echo = FALSE-----------------
-plt <- mcycle %>%
+plt <- mcycle |>
   ggplot(aes(x = times, y = accel)) +
     geom_point() +
     labs(x = "Milliseconds after impact",
@@ -470,12 +470,12 @@ draw(bfun) + facet_wrap(~ bf)
 draw(bfun) + facet_wrap(~ bf)
 
 
-## ---- out.width = "90%", fig.align = "center"---------------------------------
+## ----out.width = "90%", fig.align = "center"----------------------------------
 bfun <- basis(s(times, bs = "cr"), data = new_df)
 draw(bfun) + facet_wrap(~ bf)
 
 
-## ---- echo = FALSE, out.width = "95%", fig.align = "center"-------------------
+## ----echo = FALSE, out.width = "95%", fig.align = "center"--------------------
 K <- 7
 knots <- with(mcycle, list(times = evenly(times, n = K)))
 bfun <- basis(s(times, bs = "cr", k = K), data = new_df, knots = knots)
@@ -586,7 +586,7 @@ m <- gam(y ~ s(x0) + s(x1) + s(x2, bs = "bs") + s(x3),
 
 
 ## ----whole-basis-proces-2-model-draw, fig.height = 5, fig.width = 1.777777 * 6----
-draw(m) + plot_layout(ncol = 4)
+draw(m) + plot_layout(nrow = 1, ncol = 4)
 
 
 ## ----whole-basis-proces-2, echo = FALSE, fig.height = 6, fig.width = 1.777777 * 6----
@@ -617,21 +617,21 @@ pts <- x2_bs |>
 x2_bs |>
     ggplot(aes(x = x2, y = value, colour = bf, group = bf)) +
     geom_line(show.legend = FALSE) +
-    geom_ribbon(aes(x = x2, ymin = lower_ci, ymax = upper_ci),
+    geom_ribbon(aes(x = x2, ymin = .lower_ci, ymax = .upper_ci),
                 data = x2_sm,
                 inherit.aes = FALSE, alpha = 0.2) +
-    geom_line(aes(x = x2, y = est), data = x2_sm,
+    geom_line(aes(x = x2, y = .estimate), data = x2_sm,
               linewidth = 1.5, inherit.aes = FALSE) +
     geom_vline(xintercept = c(ds$x2[take]), linetype = "dashed",
         alpha = 1) +
     geom_point(data = pts, aes(x = x2, y = value, colour = bf, group = bf),
         size = 2, show.legend = FALSE) +
-    geom_point(data = slice(x2_sm, take), aes(x = x2, y = est),
+    geom_point(data = slice(x2_sm, take), aes(x = x2, y = .estimate),
         size = 3, colour = "red", inherit.aes = FALSE) +
     labs(y = expression(f(x2)), x = "x2")
 
 
-## ---- out.width = "85%", fig.align = "center"---------------------------------
+## ----out.width = "85%", fig.align = "center"----------------------------------
 new_df <- with(mcycle, tibble(times = evenly(times, n = 100)))
 bfun <- basis(s(times), data = new_df, constraints = TRUE)
 draw(bfun) + facet_wrap(~ bf)
@@ -643,7 +643,7 @@ S <- penalty(m, smooth = "s(times)")
 S
 
 
-## ---- echo = FALSE, dev = "png", out.width = "100%", dpi = 300----------------
+## ----echo = FALSE, dev = "png", out.width = "100%", dpi = 300-----------------
 library("patchwork")
 p1 <- draw(bfun) + facet_wrap(~ bf)
 p2 <- draw(S)
@@ -656,7 +656,7 @@ S <- penalty(m, smooth = "s(times)")
 # draw(S)
 
 
-## ---- echo = FALSE, dev = "png", out.width = "100%", dpi = 300----------------
+## ----echo = FALSE, dev = "png", out.width = "100%", dpi = 300-----------------
 library("patchwork")
 bfun_cc <- basis(s(times, bs = "cr"), data = new_df, constraints = TRUE)
 p1 <- draw(bfun_cc) + facet_wrap(~ bf)

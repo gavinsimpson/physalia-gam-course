@@ -102,8 +102,8 @@ draw(crest, n = 75, rug = FALSE) +
 ds <- data_slice(crest3, e = evenly(e, n = 75), n = evenly(n, n = 75))
 fv <- fitted_values(crest3, data = ds, scale = "response")
 
-fv %>%
-ggplot(aes(x = e, y = n, fill = fitted)) +
+fv |>
+ggplot(aes(x = e, y = n, fill = .fitted)) +
   geom_tile() +
   scale_fill_viridis_c(option = "plasma") +
   coord_equal()

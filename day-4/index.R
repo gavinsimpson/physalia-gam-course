@@ -225,7 +225,7 @@ rats %>%
     count(n, name = "n_rats")
 
 
-## ---- fig.align = "center", out.width = "95%", echo = FALSE-------------------
+## ----fig.align = "center", out.width = "95%", echo = FALSE--------------------
 knitr::include_graphics("resources/lawton-et-al-hgam-locust-paper-fig.svg")
 
 
@@ -352,8 +352,8 @@ ti_pred2 <- fitted_values(m_ti, data = ti_new,
                           scale = "response",
                           exclude = c("ti(x,y,year)", "s(x,y)")) #<<
 
-ggplot(ti_pred2, aes(x = year)) + geom_ribbon(aes(ymin = lower, ymax = upper), alpha = 0.3) +
-  geom_line(aes(y = fitted)) + labs(y = "Biomass", x = NULL)
+ggplot(ti_pred2, aes(x = year)) + geom_ribbon(aes(ymin = .lower_ci, ymax = .upper_ci), alpha = 0.3) +
+  geom_line(aes(y = .fitted)) + labs(y = "Biomass", x = NULL)
 
 
 ## ----echo = FALSE, out.width = "80%"------------------------------------------
@@ -417,7 +417,7 @@ draw(sm_post)
 ## ----posterior-sim-model, dependson=-1----------------------------------------
 beta <- coef(m_rich)   # vector of model parameters
 Vb <- vcov(m_rich)     # default is the bayesian covariance matrix
-Xp <- predict(m_rich, type = 'lpmatrix')
+Xp <- predict(m_rich, type = "lpmatrix")
 set.seed(42)
 beta_sim <- rmvn(n = 1000, beta, Vb) # simulate parameters
 eta_p <- Xp %*% t(beta_sim)        # form linear predictor values
@@ -433,8 +433,8 @@ ggplot(tibble(richness = mu_p[587, ]), aes(x = richness)) +
 
 
 ## ----richness-fitted-samples, fig.height = 4.5, dependson=-1------------------
-rich_post <- fitted_samples(m_rich, n = 1000, newdata = shrimp, seed = 42)
-ggplot(filter(rich_post, row == 587), aes(x = fitted)) +
+rich_post <- fitted_samples(m_rich, n = 1000, data = shrimp, seed = 42)
+ggplot(filter(rich_post, .row == 587), aes(x = .fitted)) +
     geom_histogram() + labs(title = "Posterior richness for obs #587", x = "Richness")
 
 
@@ -470,10 +470,10 @@ ggplot(tibble(biomass = total_biomass), aes(x = biomass)) +
 
 ## ----biomass-fitted-samples-example, dependson=-1-----------------------------
 bio_post <- fitted_samples(m_spt, n = 1000,
-                           newdata = sp_new[!too_far, ],
+                           data = sp_new[!too_far, ],
                            seed = 42) %>%
-    group_by(draw) %>%
-    summarise(total = sum(fitted),
+    group_by(.draw) %>%
+    summarise(total = sum(.fitted),
               .groups = "drop_last")
 
 with(bio_post, mean(total))

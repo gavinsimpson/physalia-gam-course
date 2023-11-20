@@ -483,12 +483,12 @@ fv <- fitted_values(m, data = pdata)
 ind <- too_far(pdata$LONGITUDE, pdata$LATITUDE,
                galveston$LONGITUDE, galveston$LATITUDE, dist = 0.1)
 fv <- fv %>%
-  mutate(fitted = if_else(ind, NA_real_, fitted))
+  mutate(fitted = if_else(ind, NA_real_, .fitted))
 
 
 ## ----galveston-full-predict-plot, fig.show = 'hide', fig.height = 10, fig.width = 1.777777*10----
 plt <- ggplot(fv, aes(x = LONGITUDE, y = LATITUDE)) +
-    geom_raster(aes(fill = fitted)) + facet_wrap(~ YEAR, ncol = 12) +
+    geom_raster(aes(fill = .fitted)) + facet_wrap(~ YEAR, ncol = 12) +
     scale_fill_viridis(name = expression(degree*C), option = "plasma",
       na.value = "transparent") +
     coord_quickmap() +
@@ -500,7 +500,7 @@ plt
 
 ## ----galveston-full-predict-plot, echo = FALSE, fig.height = 10, fig.width = 1.777777*10----
 plt <- ggplot(fv, aes(x = LONGITUDE, y = LATITUDE)) +
-    geom_raster(aes(fill = fitted)) + facet_wrap(~ YEAR, ncol = 12) +
+    geom_raster(aes(fill = .fitted)) + facet_wrap(~ YEAR, ncol = 12) +
     scale_fill_viridis(name = expression(degree*C), option = "plasma",
       na.value = "transparent") +
     coord_quickmap() +
@@ -512,7 +512,7 @@ plt
 
 ## ----galveston-animation, echo = FALSE, results = 'hide'----------------------
 p <- ggplot(fv, aes(x = LONGITUDE, y = LATITUDE, frame = YEAR)) +
-    geom_raster(aes(fill = fitted)) +
+    geom_raster(aes(fill = .fitted)) +
     scale_fill_viridis(name = expression(degree*C), option = "plasma",
                        na.value = "transparent") +
     coord_quickmap() +
@@ -535,8 +535,8 @@ ds <- data_slice(m, ToD = 12, DoY = c(1, 90, 180, 270),
   LONGITUDE = -94.8751, LATITUDE  = 29.50866)
 fv <- fitted_values(m, data = ds, scale = "response")
 
-plt2 <- ggplot(fv, aes(x = YEAR, y = fitted, group = factor(DoY))) +
-    geom_ribbon(aes(ymin = lower, ymax = upper), fill = "black", alpha = 0.2) +
+plt2 <- ggplot(fv, aes(x = YEAR, y = .fitted, group = factor(DoY))) +
+    geom_ribbon(aes(ymin = .lower_ci, ymax = .upper_ci), fill = "black", alpha = 0.2) +
     geom_line() + facet_wrap(~ DoY, scales = "free_y") +
     labs(x = NULL, y = expression(Temperature ~ (degree * C)))
 plt2
@@ -548,8 +548,8 @@ ds <- data_slice(m, ToD = 12, DoY = c(1, 90, 180, 270),
   LONGITUDE = -94.8751, LATITUDE  = 29.50866)
 fv <- fitted_values(m, data = ds, scale = "response")
 
-plt2 <- ggplot(fv, aes(x = YEAR, y = fitted, group = factor(DoY))) +
-    geom_ribbon(aes(ymin = lower, ymax = upper), fill = "black", alpha = 0.2) +
+plt2 <- ggplot(fv, aes(x = YEAR, y = .fitted, group = factor(DoY))) +
+    geom_ribbon(aes(ymin = .lower_ci, ymax = .upper_ci), fill = "black", alpha = 0.2) +
     geom_line() + facet_wrap(~ DoY, scales = "free_y") +
     labs(x = NULL, y = expression(Temperature ~ (degree * C)))
 plt2

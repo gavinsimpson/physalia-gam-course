@@ -60,7 +60,7 @@ summary(m)
 plot(m, pages = 1, scheme = 2, shade = TRUE)
 
 # draw() output
-draw(m, scales = "free")
+draw(m, scales = "free", n = 50)
 
 # spatial predictions over time
 pdata <- data_slice(m, ToD = 12, DoY = 180,
@@ -72,12 +72,12 @@ fv <- fitted_values(m, data = pdata)
 ind <- too_far(pdata$LONGITUDE, pdata$LATITUDE,
                galveston$LONGITUDE, galveston$LATITUDE, dist = 0.1)
 fv <- fv %>%
-  mutate(fitted = if_else(ind, NA_real_, fitted))
+  mutate(.fitted = if_else(ind, NA_real_, .fitted))
 
 # plot the estimated spatial field over time
 ggplot(fv, aes(x = LONGITUDE, y = LATITUDE)) +
-  geom_raster(aes(fill = fitted)) + facet_wrap(~ YEAR, ncol = 12) +
-  scale_fill_viridis(name = expression(degree*C), option = "plasma",
+  geom_raster(aes(fill = .fitted)) + facet_wrap(~ YEAR, ncol = 12) +
+  scale_fill_viridis_c(name = expression(degree*C), option = "plasma",
                      na.value = "transparent") +
   coord_quickmap() +
   scale_x_continuous(guide = guide_axis(n.dodge = 2,
@@ -91,7 +91,7 @@ ds <- data_slice(m, ToD = 12, DoY = c(1, 90, 180, 270),
                  LONGITUDE = -94.8751, LATITUDE  = 29.50866)
 fv2 <- fitted_values(m, data = ds, scale = "response")
 
-ggplot(fv2, aes(x = YEAR, y = fitted, group = factor(DoY))) +
-  geom_ribbon(aes(ymin = lower, ymax = upper), fill = "black", alpha = 0.2) +
+ggplot(fv2, aes(x = YEAR, y = .fitted, group = factor(DoY))) +
+  geom_ribbon(aes(ymin = .lower_ci, ymax = .upper_ci), fill = "black", alpha = 0.2) +
   geom_line() + facet_wrap(~ DoY, scales = "free_y") +
   labs(x = NULL, y = expression(Temperature ~ (degree * C)))

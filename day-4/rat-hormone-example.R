@@ -48,6 +48,10 @@ m1_lmer <- lmer(response ~ treatment:transf_time +
                     (1 | subject) + (0 + transf_time | subject),
                 data = rats)
 
+m0_lmer <- lmer(response ~ treatment:transf_time +
+                  (1 + transf_time | subject),
+                data = rats)
+
 m1_gam <- gam(response ~ treatment:transf_time +
                   s(subject, bs = "re") +
                   s(subject, transf_time, bs = "re"),
@@ -72,7 +76,7 @@ new_data <- tidyr::expand(rats, nesting(subject, treatment),
 
 m1_pred <- fitted_values(m1_gam, data = new_data, scale = "response")
 
-ggplot(m1_pred, aes(x = transf_time, y = fitted, group = subject,
+ggplot(m1_pred, aes(x = transf_time, y = .fitted, group = subject,
                     colour = treatment)) +
     geom_line() +
     facet_wrap(~ treatment) +

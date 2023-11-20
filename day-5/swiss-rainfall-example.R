@@ -1,4 +1,3 @@
-
 library("gratia")
 library("mgcv")
 
@@ -15,7 +14,6 @@ m <- gam(list(exra ~ s(nao) + s(elevation) + climate.region + s(N, E),
          family = gevlss(),
          data = swiss)
 
-draw(m)
+draw(m, overall_uncertainty = FALSE) + plot_layout(widths = 1)
 
 appraise(m)
-

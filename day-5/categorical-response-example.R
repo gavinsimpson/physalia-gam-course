@@ -15,13 +15,14 @@ fitted_values(m_ocat)
 draw(m_ocat, scales = "fixed")
 
 ds <- data_slice(m_ocat, x2 = evenly(x2))
-fv_ocat <- fitted_values(m_ocat, data = ds)
+fv_ocat <- fitted_values(m_ocat, data = ds, exclude = "s(individual)")
 
 fv_ocat |>
-  ggplot(aes(x = x2, y = fitted, colour = category, group = category)) +
-  geom_ribbon(aes(ymin = lower, ymax = upper, x = x2,
-                  fill = category, colour = NULL),
+  ggplot(aes(x = x2, y = .fitted, colour = .category, group = .category)) +
+  geom_ribbon(aes(ymin = .lower_ci, ymax = .upper_ci, x = x2,
+                  fill = .category, colour = NULL),
               alpha = 0.2) +
   geom_line()
 
-head(predict(m_ocat, type = "response", exclude = "s(individual)"))
+head(predict(m_ocat, newdata = ds, type = "response",
+  exclude = "s(individual)"))

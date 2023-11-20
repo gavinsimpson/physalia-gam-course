@@ -89,10 +89,10 @@ fv_gcv <- fitted_values(m_gcv)
 
 # plot
 plt + geom_line(data = fv_reml,
-               aes(x = time, y = fitted),
+               aes(x = time, y = .fitted),
                col = "red") +
   geom_line(data = fv_gcv,
-            aes(x = time, y = fitted),
+            aes(x = time, y = .fitted),
             col = "darkgreen")
 
 
@@ -109,10 +109,10 @@ fv_gcv <- fitted_values(m_gcv)
 
 # plot
 plt + geom_line(data = fv_reml,
-               aes(x = time, y = fitted),
+               aes(x = time, y = .fitted),
                col = "red") +
   geom_line(data = fv_gcv,
-            aes(x = time, y = fitted),
+            aes(x = time, y = .fitted),
             col = "darkgreen")
 
 
@@ -128,11 +128,11 @@ fv_ar1 <- fitted_values(m_ar1$gam)
 # plot
 plt +
   geom_ribbon(data = fv_ar1,
-              aes(ymin = lower, ymax = upper,
+              aes(ymin = .lower_ci, ymax = .upper_ci,
                   y = NULL),
               alpha = 0.2, fill = "hotpink") +
   geom_line(data = fv_ar1,
-            aes(x = time, y = fitted),
+            aes(x = time, y = .fitted),
             col = "hotpink", lwd = 1.5)
 
 
@@ -148,11 +148,11 @@ fv_ar1 <- fitted_values(m_ar1$gam)
 # plot
 plt +
   geom_ribbon(data = fv_ar1,
-              aes(ymin = lower, ymax = upper,
+              aes(ymin = .lower_ci, ymax = .upper_ci,
                   y = NULL),
               alpha = 0.2, fill = "hotpink") +
   geom_line(data = fv_ar1,
-            aes(x = time, y = fitted),
+            aes(x = time, y = .fitted),
             col = "hotpink", lwd = 1.5)
 
 
@@ -207,7 +207,7 @@ new_df <- with(mcycle,
 pred <- predict(m_q, newdata = new_df, se.fit = TRUE) %>%
   as.data.frame() %>%
   as_tibble() %>%
-  setNames(c("est", "se")) %>%
+  setNames(c(".estimate", ".se")) %>%
   add_confint() %>%
   bind_cols(new_df)
 
@@ -215,6 +215,6 @@ pred <- predict(m_q, newdata = new_df, se.fit = TRUE) %>%
 pred %>%
   ggplot(aes(x = times)) +
     geom_point(data = mcycle, aes(x = times, y = accel)) +
-    geom_ribbon(aes(ymin = lower_ci, ymax = upper_ci), alpha = 0.2) +
-    geom_line(aes(y = est))
+    geom_ribbon(aes(ymin = .lower_ci, ymax = .upper_ci), alpha = 0.2) +
+    geom_line(aes(y = .estimate))
 

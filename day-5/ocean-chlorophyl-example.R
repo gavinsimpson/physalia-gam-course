@@ -48,7 +48,7 @@ ocean %>%
 # fit a simple model for space only
 m <- gam(chl ~ s(latitude, longitude, bs = "sos"),
     family = tw(),
-    data = chl, method = "REML")
+    data = ocean, method = "REML")
 
 # model summary
 summary(m)
@@ -63,11 +63,11 @@ ind <- too_far(new_df$longitude, new_df$latitude,
     ocean$longitude, ocean$latitude, dist = 0.1)
 
 fv <- fitted_values(m, data = new_df) %>%
-    mutate(fitted = if_else(ind, NA_real_, fitted))
+    mutate(.fitted = if_else(ind, NA_real_, .fitted))
 
 # plot on the response scale
-ggplot(chl, aes(x = longitude, y = latitude)) +
-    geom_tile(data = fv, aes(fill = fitted)) +
+ggplot(ocean, aes(x = longitude, y = latitude)) +
+    geom_tile(data = fv, aes(fill = .fitted)) +
     geom_point() +
     scale_fill_viridis_c(option = "plasma") +
     coord_map("orthographic", orientation = c(20, 0, 0)) +

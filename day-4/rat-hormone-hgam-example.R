@@ -60,17 +60,44 @@ m4_hgam <- gam(response ~ treatment + s(time, k = K) +
                   s(subject, bs = "re"),
                data = rats, method = "REML")
 
+new_data <- tidyr::expand(rats, nesting(subject, treatment),
+                          time = evenly(time, n = 100))
+
+fv <- fitted_values(m4_hgam, data = new_data)
+
+ggplot(fv, aes(x = time, y = .fitted,
+               group = subject, colour = treatment)) +
+  geom_line() +
+  facet_wrap(~ treatment, ncol = 3) +
+  plt_labs
+
 ## this is Model GS at the treatment level
 m5_hgam <- gam(response ~ s(time, k = K) +
                   s(time, treatment, bs = "fs", k = K) +
                   s(subject, bs = "re"),
                data = rats, method = "REML")
 
+fv <- fitted_values(m5_hgam, data = new_data)
+
+ggplot(fv, aes(x = time, y = .fitted,
+               group = subject, colour = treatment)) +
+  geom_line() +
+  facet_wrap(~ treatment, ncol = 3) +
+  plt_labs
+
 ## This is Model GS as the rat/subject level (GSS if you will)
 m6_hgam <- gam(response ~ s(time, k = K) +
                   s(time, treatment, bs = "fs", k = K) +
                   s(time, subject, bs = "fs", k = 4), # not enough data for more
                data = rats, method = "REML")
+
+fv <- fitted_values(m6_hgam, data = new_data)
+
+ggplot(fv, aes(x = time, y = .fitted,
+               group = subject, colour = treatment)) +
+  geom_line() +
+  facet_wrap(~ treatment, ncol = 3) +
+  plt_labs
 
 ## This is Model GS at the subject/rat level (SGS if you will)
 ## no top level common smooth effect
@@ -79,7 +106,7 @@ m7_hgam <- gam(response ~ s(time, treatment, bs = "fs", k = K) +
                data = rats, method = "REML")
 
 ## This is Model S smooths only at the lowest subject level
-m8_hgam <- gam(response ~ s(time, subject, bs = "fs", k =5), # not enough data for more
+m8_hgam <- gam(response ~ s(time, subject, bs = "fs", k = 5), # not enough data for more
                data = rats, method = "REML")
 
 AIC(m1_hgam, m2_hgam, m3_hgam, m4_hgam, m5_hgam, m6_hgam, m7_hgam, m8_hgam) %>%

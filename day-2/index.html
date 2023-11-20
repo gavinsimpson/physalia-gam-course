@@ -95,11 +95,11 @@ How would you model the trend in these data?
 Assumptions
 
 1. linear effects of covariates are good approximation of the true effects
-2. conditional on the values of covariates, `\(y_i | \mathbf{X} \sim \mathcal{N}(0, \sigma^2)\)`
+2. conditional on the values of covariates, `\(y_i | \mathbf{X} \sim \mathcal{N}(\mu_i, \sigma^2)\)`
 3. this implies all observations have the same *variance*
-4. `\(y_i | \mathbf{X}\)` are *independent*
+4. `\(y_i | \mathbf{X} = \mathbf{x}\)` are *independent*
 
-An **additive** model address the first of these
+An **additive** model addresses the first of these
 
 ---
 class: inverse center middle subsection
@@ -169,7 +169,7 @@ gtemp
 ##  8  1857      -0.405
 ##  9  1858      -0.4  
 ## 10  1859      -0.215
-## # … with 162 more rows
+## # ℹ 162 more rows
 ```
 
 ---
@@ -681,7 +681,7 @@ class: inverse middle center subsection
 
 
 ```r
-library("gratia")
+library("gratia"); library("readr"); library("here")
 south &lt;- read_csv(here("data", "south_pole.csv"), col_types = "ddd")
 south
 ```
@@ -700,7 +700,7 @@ south
 ##  8   NA        8     8
 ##  9  314.       9     9
 ## 10   NA       10    10
-## # … with 497 more rows
+## # ℹ 497 more rows
 ```
 
 ---
@@ -764,20 +764,20 @@ fv
 ```
 
 ```
-## # A tibble: 543 × 5
-##    c.month fitted     se lower upper
-##      &lt;int&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-##  1       1   312. 0.290   311.  313.
-##  2       2   312. 0.247   312.  313.
-##  3       3   312. 0.205   312.  313.
-##  4       4   313. 0.164   312.  313.
-##  5       5   313. 0.125   313.  313.
-##  6       6   313. 0.0901  313.  313.
-##  7       7   313. 0.0677  313.  314.
-##  8       8   314. 0.0662  314.  314.
-##  9       9   314. 0.0759  314.  314.
-## 10      10   314. 0.0807  314.  314.
-## # … with 533 more rows
+## # A tibble: 543 × 6
+##     .row c.month .fitted    .se .lower_ci .upper_ci
+##    &lt;int&gt;   &lt;int&gt;   &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+##  1     1       1    312. 0.290       311.      313.
+##  2     2       2    312. 0.247       312.      313.
+##  3     3       3    312. 0.205       312.      313.
+##  4     4       4    313. 0.164       312.      313.
+##  5     5       5    313. 0.125       313.      313.
+##  6     6       6    313. 0.0901      313.      313.
+##  7     7       7    313. 0.0677      313.      314.
+##  8     8       8    314. 0.0662      314.      314.
+##  9     9       9    314. 0.0759      314.      314.
+## 10    10      10    314. 0.0807      314.      314.
+## # ℹ 533 more rows
 ```
 
 ---
@@ -786,8 +786,8 @@ fv
 
 
 ```r
-ggplot(fv, aes(x = c.month, y = fitted)) +
-    geom_ribbon(aes(ymin = lower, ymax = upper), alpha = 0.2) +
+ggplot(fv, aes(x = c.month, y = .fitted)) +
+    geom_ribbon(aes(ymin = .lower_ci, ymax = .upper_ci), alpha = 0.2) +
     geom_line(data = south, aes(c.month, co2), col = 'red') +
     geom_line(alpha = 0.4)
 ```
@@ -861,20 +861,20 @@ fv2
 ```
 
 ```
-## # A tibble: 543 × 6
-##    c.month month fitted     se lower upper
-##      &lt;int&gt; &lt;int&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-##  1       1     1   313. 0.296   312.  314.
-##  2       2     2   313. 0.255   312.  313.
-##  3       3     3   313. 0.214   312.  313.
-##  4       4     4   313. 0.176   312.  313.
-##  5       5     5   313. 0.137   313.  313.
-##  6       6     6   313. 0.103   313.  313.
-##  7       7     7   313. 0.0827  313.  314.
-##  8       8     8   314. 0.0747  314.  314.
-##  9       9     9   314. 0.0785  314.  314.
-## 10      10    10   314. 0.0845  314.  314.
-## # … with 533 more rows
+## # A tibble: 543 × 7
+##     .row c.month month .fitted    .se .lower_ci .upper_ci
+##    &lt;int&gt;   &lt;int&gt; &lt;int&gt;   &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+##  1     1       1     1    313. 0.296       312.      314.
+##  2     2       2     2    313. 0.255       312.      313.
+##  3     3       3     3    313. 0.214       312.      313.
+##  4     4       4     4    313. 0.176       312.      313.
+##  5     5       5     5    313. 0.137       313.      313.
+##  6     6       6     6    313. 0.103       313.      313.
+##  7     7       7     7    313. 0.0827      313.      314.
+##  8     8       8     8    314. 0.0747      314.      314.
+##  9     9       9     9    314. 0.0785      314.      314.
+## 10    10      10    10    314. 0.0845      314.      314.
+## # ℹ 533 more rows
 ```
 
 ---
@@ -883,8 +883,8 @@ fv2
 
 
 ```r
-ggplot(fv2, aes(x = c.month, y = fitted)) +
-    geom_ribbon(aes(ymin = lower, ymax = upper), alpha = 0.2) +
+ggplot(fv2, aes(x = c.month, y = .fitted)) +
+    geom_ribbon(aes(ymin = .lower_ci, ymax = .upper_ci), alpha = 0.2) +
     geom_line(data = south, aes(c.month, co2), col = 'red') +
     geom_line(alpha = 0.4)
 ```
@@ -1000,7 +1000,7 @@ A data frame giving a series of measurements of head acceleration in a simulated
 
 
 ```r
-library("dplyr")
+library("dplyr"); library("ggplot2")
 data(mcycle, package = "MASS")
 mcycle &lt;- as_tibble(mcycle)
 mcycle
@@ -1020,7 +1020,7 @@ mcycle
 ##  8   6.8  -1.3
 ##  9   7.8  -2.7
 ## 10   8.2  -2.7
-## # … with 123 more rows
+## # ℹ 123 more rows
 ```
 ---
 
@@ -1030,7 +1030,7 @@ mcycle
 .col-6[
 
 ```r
-plt &lt;- mcycle %&gt;%
+plt &lt;- mcycle |&gt;
   ggplot(aes(x = times, y = accel)) +
     geom_point() +
     labs(x = "Milliseconds after impact",
@@ -1056,20 +1056,20 @@ bfun
 ```
 
 ```
-## # A tibble: 1,000 × 5
-##    smooth   by_variable bf     value times
-##    &lt;chr&gt;    &lt;chr&gt;       &lt;fct&gt;  &lt;dbl&gt; &lt;dbl&gt;
-##  1 s(times) &lt;NA&gt;        1     -1.64    2.4
-##  2 s(times) &lt;NA&gt;        2     -0.769   2.4
-##  3 s(times) &lt;NA&gt;        3     -1.81    2.4
-##  4 s(times) &lt;NA&gt;        4     -1.04    2.4
-##  5 s(times) &lt;NA&gt;        5     -1.95    2.4
-##  6 s(times) &lt;NA&gt;        6     -1.15    2.4
-##  7 s(times) &lt;NA&gt;        7      2.02    2.4
-##  8 s(times) &lt;NA&gt;        8     -1.22    2.4
-##  9 s(times) &lt;NA&gt;        9      1       2.4
-## 10 s(times) &lt;NA&gt;        10    -1.71    2.4
-## # … with 990 more rows
+## # A tibble: 1,000 × 6
+##    smooth   type  by_variable bf     value times
+##    &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt;       &lt;fct&gt;  &lt;dbl&gt; &lt;dbl&gt;
+##  1 s(times) TPRS  &lt;NA&gt;        1     -1.64    2.4
+##  2 s(times) TPRS  &lt;NA&gt;        2     -0.769   2.4
+##  3 s(times) TPRS  &lt;NA&gt;        3     -1.81    2.4
+##  4 s(times) TPRS  &lt;NA&gt;        4     -1.04    2.4
+##  5 s(times) TPRS  &lt;NA&gt;        5     -1.95    2.4
+##  6 s(times) TPRS  &lt;NA&gt;        6     -1.15    2.4
+##  7 s(times) TPRS  &lt;NA&gt;        7      2.02    2.4
+##  8 s(times) TPRS  &lt;NA&gt;        8     -1.22    2.4
+##  9 s(times) TPRS  &lt;NA&gt;        9      1       2.4
+## 10 s(times) TPRS  &lt;NA&gt;        10    -1.71    2.4
+## # ℹ 990 more rows
 ```
 
 ---
@@ -1216,7 +1216,7 @@ m &lt;- gam(y ~ s(x0) + s(x1) + s(x2, bs = "bs") + s(x3),
 
 
 ```r
-draw(m) + plot_layout(ncol = 4)
+draw(m) + plot_layout(nrow = 1, ncol = 4)
 ```
 
 ![](index_files/figure-html/whole-basis-proces-2-model-draw-1.svg)&lt;!-- --&gt;
@@ -1284,7 +1284,7 @@ S
 ##  8 s(times) TPRS  s(times) F1    F8     0.450
 ##  9 s(times) TPRS  s(times) F1    F9     0    
 ## 10 s(times) TPRS  s(times) F2    F1     2.71 
-## # … with 71 more rows
+## # ℹ 71 more rows
 ```
 
 ---
@@ -1379,7 +1379,7 @@ df
 ##  8  4.03   0.135 0.720  0.843 0.774  5.50 0.821  4.22 0.459           0
 ##  9  8.95   0.657 0.236  0.160 0.213 10.5  1.76   1.60 7.15            0
 ## 10 13.2    0.705 0.812  0.364 0.204 12.1  1.60   5.07 5.43            0
-## # … with 990 more rows
+## # ℹ 990 more rows
 ```
 
 ```r

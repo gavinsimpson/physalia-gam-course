@@ -226,7 +226,7 @@ Rewrite linear model as
 
 `\begin{align*}
 y_i &amp; \sim \text{Normal}(\mu_i, \sigma^2) \\
-\eta_i &amp; = \alpha + \beta_1 x_{1i} + \beta_2 x_{2i} + \cdots + \beta_j x_{ij}
+\mu_i = \eta_i &amp; = \alpha + \beta_1 x_{1i} + \beta_2 x_{2i} + \cdots + \beta_j x_{ij}
 \end{align*}`
 
 This now matches the general form for the GLM
@@ -685,11 +685,11 @@ How would you model the trend in these data?
 Assumptions
 
 1. linear effects of covariates are good approximation of the true effects
-2. conditional on the values of covariates, `\(y_i | \mathbf{X} \sim \mathcal{N}(0, \sigma^2)\)`
+2. conditional on the values of covariates, `\(y_i | \mathbf{X} \sim \mathcal{N}(\mu_i, \sigma^2)\)`
 3. this implies all observations have the same *variance*
-4. `\(y_i | \mathbf{X}\)` are *independent*
+4. `\(y_i | \mathbf{X} = \mathbf{x}\)` are *independent*
 
-An **additive** model address the first of these
+An **additive** model addresses the first of these
 
 ---
 class: inverse center middle subsection

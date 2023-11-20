@@ -122,11 +122,11 @@ $$\mu_i = \beta_0 + \beta_1 \mathtt{year}_{i} + \beta_2 \mathtt{year}^2_{1i} + \
 Assumptions
 
 1. linear effects of covariates are good approximation of the true effects
-2. conditional on the values of covariates, $y_i | \mathbf{X} \sim \mathcal{N}(0, \sigma^2)$
+2. conditional on the values of covariates, $y_i | \mathbf{X} \sim \mathcal{N}(\mu_i, \sigma^2)$
 3. this implies all observations have the same *variance*
-4. $y_i | \mathbf{X}$ are *independent*
+4. $y_i | \mathbf{X} = \mathbf{x}$ are *independent*
 
-An **additive** model address the first of these
+An **additive** model addresses the first of these
 
 ---
 class: inverse center middle subsection
@@ -815,7 +815,7 @@ class: inverse middle center subsection
 # Atmospheric CO<sub>2</sub>
 
 ```{r co2-example-1, echo = TRUE}
-library("gratia")
+library("gratia"); library("readr"); library("here")
 south <- read_csv(here("data", "south_pole.csv"), col_types = "ddd")
 south
 ```
@@ -856,8 +856,8 @@ fv
 # Atmospheric CO<sub>2</sub> &mdash; predict
 
 ```{r co2-example-5, echo = TRUE, fig.height = 5}
-ggplot(fv, aes(x = c.month, y = fitted)) +
-    geom_ribbon(aes(ymin = lower, ymax = upper), alpha = 0.2) +
+ggplot(fv, aes(x = c.month, y = .fitted)) +
+    geom_ribbon(aes(ymin = .lower_ci, ymax = .upper_ci), alpha = 0.2) +
     geom_line(data = south, aes(c.month, co2), col = 'red') +
     geom_line(alpha = 0.4)
 ```
@@ -905,8 +905,8 @@ fv2
 # Atmospheric CO<sub>2</sub> &mdash; predict
 
 ```{r co2-example-9, echo = TRUE, fig.height = 5}
-ggplot(fv2, aes(x = c.month, y = fitted)) +
-    geom_ribbon(aes(ymin = lower, ymax = upper), alpha = 0.2) +
+ggplot(fv2, aes(x = c.month, y = .fitted)) +
+    geom_ribbon(aes(ymin = .lower_ci, ymax = .upper_ci), alpha = 0.2) +
     geom_line(data = south, aes(c.month, co2), col = 'red') +
     geom_line(alpha = 0.4)
 ```
@@ -1019,7 +1019,7 @@ Fit the GAM with those new basis functions
 A data frame giving a series of measurements of head acceleration in a simulated motorcycle accident, used to test crash helmets
 
 ```{r}
-library("dplyr")
+library("dplyr"); library("ggplot2")
 data(mcycle, package = "MASS")
 mcycle <- as_tibble(mcycle)
 mcycle
@@ -1031,7 +1031,7 @@ mcycle
 .row[
 .col-6[
 ```{r plot-mcycle, eval = FALSE}
-plt <- mcycle %>%
+plt <- mcycle |>
   ggplot(aes(x = times, y = accel)) +
     geom_point() +
     labs(x = "Milliseconds after impact",
@@ -1253,7 +1253,7 @@ m <- gam(y ~ s(x0) + s(x1) + s(x2, bs = "bs") + s(x3),
 ```
 
 ```{r whole-basis-proces-2-model-draw, fig.height = 5, fig.width = 1.777777 * 6}
-draw(m) + plot_layout(ncol = 4)
+draw(m) + plot_layout(nrow = 1, ncol = 4)
 ```
 
 ---
@@ -1288,16 +1288,16 @@ pts <- x2_bs |>
 x2_bs |>
     ggplot(aes(x = x2, y = value, colour = bf, group = bf)) +
     geom_line(show.legend = FALSE) +
-    geom_ribbon(aes(x = x2, ymin = lower_ci, ymax = upper_ci),
+    geom_ribbon(aes(x = x2, ymin = .lower_ci, ymax = .upper_ci),
                 data = x2_sm,
                 inherit.aes = FALSE, alpha = 0.2) +
-    geom_line(aes(x = x2, y = est), data = x2_sm,
+    geom_line(aes(x = x2, y = .estimate), data = x2_sm,
               linewidth = 1.5, inherit.aes = FALSE) +
     geom_vline(xintercept = c(ds$x2[take]), linetype = "dashed",
         alpha = 1) +
     geom_point(data = pts, aes(x = x2, y = value, colour = bf, group = bf),
         size = 2, show.legend = FALSE) +
-    geom_point(data = slice(x2_sm, take), aes(x = x2, y = est),
+    geom_point(data = slice(x2_sm, take), aes(x = x2, y = .estimate),
         size = 3, colour = "red", inherit.aes = FALSE) +
     labs(y = expression(f(x2)), x = "x2")
 ```

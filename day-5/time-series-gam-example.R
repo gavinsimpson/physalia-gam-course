@@ -14,7 +14,7 @@ gtemp <- read_table(URL, col_types = 'nnnnnnnnnnnn',
 
 # Plot
 gtemp_plt <- ggplot(gtemp, aes(x = Year, y = Temperature)) +
-    geom_line() +
+    #geom_line() +
     geom_point() +
     labs(x = 'Year', y = expression(Temeprature ~ degree * C))
 gtemp_plt
@@ -38,6 +38,12 @@ m_0 <- gamm(Temperature ~ s(Year, k = 20),
 
 ## GLRT
 anova(m_0$lme, m_ar1$lme)
+
+intervals(m_ar1$lme)$corStruct
+
+compare_smooths(m_0, m_ar1, smooths = "s(Year)") %>% draw()
+
+acf(resid(m_0$lme))
 
 ## yes!
 
