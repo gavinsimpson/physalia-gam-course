@@ -203,12 +203,12 @@ new_df <- tibble(year = seq(1981, 1993, length = 100)) %>%
 pred_gam <- fitted_values(m_gam2, data = new_df, scale = "response")
 
 plt <- pred_gam %>%
-  ggplot(aes(x = year, y = fitted)) +
-    geom_ribbon(aes(ymin = lower, ymax = upper), alpha = 0.2) +
+  ggplot(aes(x = year, y = .fitted)) +
+    geom_ribbon(aes(ymin = .lower_ci, ymax = .upper_ci), alpha = 0.2) +
     geom_line() +
     geom_point(data = belgium, aes(x = year, y = cases))
 plt
 
 # compare with the GLM fits
-plt + geom_line(data = pdat2, aes(colour = model))
+plt + geom_line(data = pdat2, aes(colour = model, y = fitted))
 ```
