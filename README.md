@@ -6,7 +6,7 @@ https://www.physalia-courses.org/
 
 ### Gavin Simpson
 
-#### 20&ndash;24th November, 2023
+#### 22&ndash;26th April, 2024
 
 ## Overview
 
@@ -27,7 +27,9 @@ Participants should be familiar with RStudio and have some fluency in programmin
 
 ## Pre-course preparation
 
-Please be sure to have at least version 4.2 &mdash; *and preferably version 4.3* &mdash; of R installed (the version of my gratia package we will be using depends on you having at least version 4.1 installed and some slides might contain code that requires version 4.3). Note that R and RStudio are two different things: it is not sufficient to just update RStudio, you also need to update R by installing new versions as they are release.
+### Instal an up-to-date version of R
+
+Please be sure to have at least version 4.3.0 of R installed (the version of my gratia package we will be using depends on you having at least version 4.1.0 installed and some slides might contain code that requires version 4.3.x). Note that R and RStudio are two different things: it is not sufficient to just update RStudio, you also need to update R by installing new versions as they are release.
 
 To download R go to the [CRAN Download](https://cran.r-project.org/) page and follow the links to download R for your operating system:
 
@@ -41,7 +43,18 @@ To check what version of R you have installed, you can run
 version
 ```
 
-in R and look at the `version.string` entry (or the `major` and `minor` entries).
+in R and look at the `version.string` entry (or the `major` and `minor` entries). For example, on my system I see:
+
+```
+# ... output not shown ...
+major          4                           
+minor          3.3 
+# ... output not shown ...
+R version 4.3.3 (2024-02-29)
+# ... output not shown ...
+```
+
+### Update your R packages, and instal the required R packages
 
 We will make use of several R packages that you'll need to have installed. Prior to the start of the course, please run the following code to update your installed packages and then install the required packages:
 
@@ -51,13 +64,61 @@ update.packages(ask = FALSE, checkBuilt = TRUE)
 
 # packages to install
 pkgs <- c("mgcv",  "brms", "qgam", "gamm4", "tidyverse", "readxl",
-          "rstan", "mgcViz", "DHARMa")
+          "rstan", "mgcViz", "DHARMa", "cmdstanr", "gratia")
 
 # install those packages
-install.packages(pkgs, Ncpus = 4) # set Ncpus to # of CPU cores you have
+install.packages(pkgs, Ncpus = 4) # set Ncpus to # of *physical* CPU cores you have
 ```
 
-Finally, we will make use of the development version of the gratia package as it is not quite ready for CRAN. You can install this package using the binaries provided by the [rOpenSci](https://ropensci.org/) build service [R-Universe](https://r-universe.dev). To install from my R-Universe, you need  to tell R to also install packages from my R-Universe package repo:
+Now we must check that we actually do have recent versions of the packages installed; if your R is not reasonably new (gratia requires R>= 4.1.0, but some of the *tidyverse* packages may need an R that is newer than this) then you may be stuck on out-dated versions of the packages listed above. This is why I recommend that you install the latest version of R. If you choose to use an older version of R than version 4.3.x (where *x* is 0, 1, 2, or 3, currently) then you do so at your own risk and you cannot expect support with setup problems during the course.
+
+```r
+vapply(pkgs, packageDescription, character(1), drop = TRUE, fields = "Version")
+```
+
+On my system I see:
+
+```r
+> vapply(head(pkgs, -1), packageDescription, character(1), drop = TRUE, fields
+     = "Version")                                                               
+     mgcv      brms      qgam     gamm4 tidyverse    readxl     rstan    mgcViz 
+  "1.9-1"  "2.21.0"   "1.3.4"   "0.2-6"   "2.0.0"   "1.4.3"  "2.32.6"  "0.1.11" 
+   DHARMa  cmdstanr    gratia
+  "0.4.6"   "0.4.0"   "0.9.0"
+```
+
+The key ones are to be sure that *gratia* is version "0.9.0", *mgcv* is at least "1.9-0" (preferably "0.9-1"), and *tidyverse* is "2.0.0".
+
+### Installing the *cmndstan* backend (optional)
+
+Fitting GAMs with Stan is quite time consuming if we use the standard *rstan* interface. To speed things up significantly, we can use the *cmdstan* backend, however this requires a little more setup. If you can't get this to work don't worry, it's not an integral part of the course, as you can still use the *rstan* backend with `brm()`.
+
+*cmdstan* requires a working C++ compiler on your system. Typically, Windows and MacOS X machines do not come with one installed by default. To install the C++ toolchain required you should follow the instructions [here](https://mc-stan.org/docs/cmdstan-guide/installation.html#cpp-toolchain), only the bits in the **C++ Toolchain** section that is linked to. If you're on a recent MacOS X system, installation of the required toolchain is relatively simple, requiring only installation of some parts of *xcode*. On Windows, things are slightly more complicated as you need to install the version of RTools for your version of R and then add some details to your `PATH` to allow the toolchain to be run from the command line. There are slightly different instructions (versions of RTools) to install depending on your version of R. *If any of this sounds too complicated for you, just stop here and don't proceed; you don't need to run the `brm()` code when I am working through some examples and we won't spend a lot of time on fully Bayesian GAMs anyway.*
+
+Once you have the toolchain installed, to do the actual installation of the *cmdstan* backend we need to load the *cmndstanr* package and complete some steps. Give yourself some time to do this as the options below will download the backend and start to compile it for your computer.
+
+```r
+# load the R package interface to cmndstan
+library(cmdstanr)
+
+# check the your toolchain is configured correctly and working
+check_cmdstan_toolchain()
+# if this says anything other than that the toolchain is configured properly
+# stop(!) and go back to the C++ Toolchain instructions and make sure you
+# have completed all the steps for your OS
+
+# install cmndstan backend
+# You can increase `cores` if you have more cores available on your system
+# if in doubt, just leave it as shown below
+install_cmdstan(cores = 2)
+# wait for some time...
+
+# you can confirm that cmndstan is installed and what version you have with
+cmdstan_path()
+cmdstan_version()
+```
+
+<!-- Finally, we will make use of the development version of the gratia package as it is not quite ready for CRAN. You can install this package using the binaries provided by the [rOpenSci](https://ropensci.org/) build service [R-Universe](https://r-universe.dev). To install from my R-Universe, you need  to tell R to also install packages from my R-Universe package repo:
 
 ```r
 # Download and install gratia
@@ -65,6 +126,7 @@ install.packages("gratia",
     repos = c("https://gavinsimpson.r-universe.dev", "https://cloud.r-project.org"))
 
 ```
+-->
 
 ## Programme
 
