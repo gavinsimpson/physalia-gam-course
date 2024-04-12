@@ -37,13 +37,13 @@ To download R go to the [CRAN Download](https://cran.r-project.org/) page and fo
 * [MacOS X](https://cran.r-project.org/bin/macosx/)
 * [Linux](https://cran.r-project.org/bin/linux/)
 
-To check what version of R you have installed, you can run
+To check what version of R you have installed, from within R, you can run
 
 ```r
 version
 ```
 
-in R and look at the `version.string` entry (or the `major` and `minor` entries). For example, on my system I see:
+then look at the `version.string` entry (or the `major` and `minor` entries). For example, on my system I see:
 
 ```
 # ... output not shown ...
@@ -54,7 +54,7 @@ R version 4.3.3 (2024-02-29)
 # ... output not shown ...
 ```
 
-### Update your R packages, and instal the required R packages
+### Update your R packages, and install the required R packages
 
 We will make use of several R packages that you'll need to have installed. Prior to the start of the course, please run the following code to update your installed packages and then install the required packages:
 
