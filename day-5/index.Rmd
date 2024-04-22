@@ -3,7 +3,7 @@ title: "Generalized Additive Models"
 subtitle: "a data-driven approach to estimating regression models"
 institute: "Department of Animal & Veterinary Sciences · Aarhus University"
 author: "Gavin Simpson"
-date: "1400&ndash;1900 CET (1300&ndash;1800 UTC) Friday 24th November, 2023"
+date: "1400&ndash;1900 CET (1300&ndash;1800 UTC) Friday 26th April, 2024"
 output:
   xaringan::moon_reader:
     css: ["default", "https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css", "slides.css"]

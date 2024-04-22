@@ -3,7 +3,7 @@ title: "Generalized Additive Models"
 subtitle: "a data-driven approach to estimating regression models"
 institute: "Department of Animal & Veterinary Sciences · Aarhus University"
 author: "Gavin Simpson"
-date: "1400&ndash;2000 CET (1300&ndash;1900 UTC) Thursday 23rd November, 2023"
+date: "1400&ndash;2000 CET (1300&ndash;1900 UTC) Thursday 25th April, 2024"
 output:
   xaringan::moon_reader:
     css: ['default', 'https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css', 'slides.css']
@@ -192,7 +192,7 @@ layout(matrix(1:9, ncol = 3, byrow = TRUE))
 curve(f1)
 curve(f2)
 curve(f3)
-plot(b, shade=TRUE)
+plot(b, shade = TRUE)
 plot(b, shade = TRUE, seWithMean = TRUE) ## better coverage intervals
 layout(1)
 par(op)
@@ -296,8 +296,8 @@ class: inverse center middle subsection
 n <- 200
 dat <- data_sim("eg1", n = n, scale = .15, dist = "poisson", seed = 3)
 set.seed(22)
-dat <- dat %>% mutate(x4 = runif(n, 0, 1), x5 = runif(n, 0, 1),
-                      f4 = rep(0, n), f5 = rep(0, n))   ## spurious
+dat <- dat |> mutate(x4 = runif(n, 0, 1), x5 = runif(n, 0, 1),
+                     f4 = rep(0, n), f5 = rep(0, n))   ## spurious
 ```
 
 .row[
@@ -1372,7 +1372,7 @@ See `?mgcv::gam.mh` for an example where Gaussian approximation fails badly
 
 --
 
-`fitted_samples()`, `smooth_samples()` etc default to Gaussian approximation, but the Metropolis Hastings sampler is now an option in the development version
+`fitted_samples()`, `smooth_samples()` etc default to Gaussian approximation, but the Metropolis Hastings sampler is now an option in the released version
 
 ---
 

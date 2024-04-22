@@ -25,7 +25,7 @@ class: inverse, middle, left, my-title-slide, title-slide
 ### Department of Animal &amp; Veterinary Sciences · Aarhus University
 ]
 .date[
-### 1400–2000 CET (1300–1900 UTC) Tuesday 21st November, 2023
+### 1400–2000 CET (1300–1900 UTC) Tuesday 23rd April, 2024
 ]
 
 ---
@@ -137,10 +137,10 @@ class: inverse middle center subsection
 
 
 ```r
-library('readr')
-library('dplyr')
+library("readr")
+library("dplyr")
 URL &lt;-  "https://bit.ly/hadcrutv4"
-gtemp &lt;- read_table(URL, col_types = 'nnnnnnnnnnnn', col_names = FALSE) %&gt;%
+gtemp &lt;- read_table(URL, col_types = 'nnnnnnnnnnnn', col_names = FALSE) |&gt;
     select(num_range('X', 1:2)) %&gt;% setNames(nm = c('Year', 'Temperature'))
 ```
 
@@ -178,7 +178,7 @@ gtemp
 
 
 ```r
-library('mgcv')
+library("mgcv")
 m &lt;- gam(Temperature ~ s(Year), data = gtemp, method = 'REML')
 summary(m)
 ```
@@ -295,7 +295,7 @@ model &lt;- gam(y ~ s(x1) + s(x2) + te(x3, x4), # formuala describing model
 `$$\eta_i = \beta_0 + f(\mathtt{Year}_i)$$`
 
 ```r
-library(mgcv)
+library("mgcv")
 gam(Temperature ~ s(Year, k = 10), data = gtemp, method = 'REML')
 ```
 
@@ -926,6 +926,7 @@ Simon Wood &amp; colleagues (2016) have extended the *mgcv* methods to some non-
 * `gumbls()`
 * `cnorm()`
 * `ziP()`
+* `gfam()`
 ]
 ]
 
@@ -1057,18 +1058,18 @@ bfun
 
 ```
 ## # A tibble: 1,000 × 6
-##    smooth   type  by_variable bf     value times
-##    &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt;       &lt;fct&gt;  &lt;dbl&gt; &lt;dbl&gt;
-##  1 s(times) TPRS  &lt;NA&gt;        1     -1.64    2.4
-##  2 s(times) TPRS  &lt;NA&gt;        2     -0.769   2.4
-##  3 s(times) TPRS  &lt;NA&gt;        3     -1.81    2.4
-##  4 s(times) TPRS  &lt;NA&gt;        4     -1.04    2.4
-##  5 s(times) TPRS  &lt;NA&gt;        5     -1.95    2.4
-##  6 s(times) TPRS  &lt;NA&gt;        6     -1.15    2.4
-##  7 s(times) TPRS  &lt;NA&gt;        7      2.02    2.4
-##  8 s(times) TPRS  &lt;NA&gt;        8     -1.22    2.4
-##  9 s(times) TPRS  &lt;NA&gt;        9      1       2.4
-## 10 s(times) TPRS  &lt;NA&gt;        10    -1.71    2.4
+##    .smooth  .type .by   .bf   .value times
+##    &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt; &lt;fct&gt;  &lt;dbl&gt; &lt;dbl&gt;
+##  1 s(times) TPRS  &lt;NA&gt;  1     -1.64    2.4
+##  2 s(times) TPRS  &lt;NA&gt;  2     -0.769   2.4
+##  3 s(times) TPRS  &lt;NA&gt;  3     -1.81    2.4
+##  4 s(times) TPRS  &lt;NA&gt;  4     -1.04    2.4
+##  5 s(times) TPRS  &lt;NA&gt;  5     -1.95    2.4
+##  6 s(times) TPRS  &lt;NA&gt;  6     -1.15    2.4
+##  7 s(times) TPRS  &lt;NA&gt;  7      2.02    2.4
+##  8 s(times) TPRS  &lt;NA&gt;  8     -1.22    2.4
+##  9 s(times) TPRS  &lt;NA&gt;  9      1       2.4
+## 10 s(times) TPRS  &lt;NA&gt;  10    -1.71    2.4
 ## # ℹ 990 more rows
 ```
 
@@ -1090,7 +1091,7 @@ draw(bfun)
 
 
 ```r
-draw(bfun) + facet_wrap(~ bf)
+draw(bfun) + facet_wrap(~ .bf)
 ```
 .center[
 &lt;img src="index_files/figure-html/draw-tprs-basis-facetted-1.svg" width="90%" /&gt;
@@ -1115,7 +1116,7 @@ In {mgcv} the knot location are at evenly-spaced *quantiles* of the covariate &a
 
 ```r
 bfun &lt;- basis(s(times, bs = "cr"), data = new_df)
-draw(bfun) + facet_wrap(~ bf)
+draw(bfun) + facet_wrap(~ .bf)
 ```
 
 &lt;img src="index_files/figure-html/unnamed-chunk-3-1.svg" width="90%" style="display: block; margin: auto;" /&gt;
@@ -1171,7 +1172,7 @@ bfun &lt;- basis(s(month, bs = "cc"), data = month_df)
 
 
 ```r
-draw(bfun) + facet_wrap(~ bf)
+draw(bfun) + facet_wrap(~ .bf)
 ```
 
 &lt;img src="index_files/figure-html/draw-crs-basis-facetted-1.svg" width="95%" style="display: block; margin: auto;" /&gt;
@@ -1188,7 +1189,7 @@ Set the outer knots
 ```r
 knots &lt;- list(month = c(0.5, 12.5))
 bfun &lt;- basis(s(month, bs = "cc"), data = month_df, knots = knots)
-draw(bfun) + facet_wrap(~ bf)
+draw(bfun) + facet_wrap(~ .bf)
 ```
 
 ---
@@ -1254,7 +1255,7 @@ As long as we can write `\(\mathbf{S}\)` so that it measures the complexity of s
 ```r
 new_df &lt;- with(mcycle, tibble(times = evenly(times, n = 100)))
 bfun &lt;- basis(s(times), data = new_df, constraints = TRUE)
-draw(bfun) + facet_wrap(~ bf)
+draw(bfun) + facet_wrap(~ .bf)
 ```
 
 &lt;img src="index_files/figure-html/unnamed-chunk-6-1.svg" width="85%" style="display: block; margin: auto;" /&gt;
@@ -1272,7 +1273,7 @@ S
 
 ```
 ## # A tibble: 81 × 6
-##    smooth   type  penalty  row   col    value
+##    .smooth  .type .penalty .row  .col  .value
 ##    &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;
 ##  1 s(times) TPRS  s(times) F1    F1    13.1  
 ##  2 s(times) TPRS  s(times) F1    F2     2.71 

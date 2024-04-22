@@ -64,14 +64,15 @@ library("dplyr")
 test_df2 <- test_fun2(seed = 42)
 bfun <- basis(s(x, z), data = test_df2)
 
-bfun %>%
-  ggplot(aes(x = x, y = z, fill = value, group = bf)) +
-  geom_raster() +
-  facet_wrap(~ bf) +
-  scale_fill_distiller(palette = "RdBu", type = "div") +
-  scale_x_continuous(guide = guide_axis(n.dodge = 2,
-                                        check.overlap = TRUE)) +
-  theme_bw(base_size = 12, base_family = 'Fira Sans')
+bfun |>
+  draw()
+  # ggplot(aes(x = x, y = z, fill = .value, group = .bf)) +
+  # geom_raster() +
+  # facet_wrap(~ .bf) +
+  # scale_fill_distiller(palette = "RdBu", type = "div") +
+  # scale_x_continuous(guide = guide_axis(n.dodge = 2,
+  #                                       check.overlap = TRUE)) +
+  # theme_bw(base_size = 12, base_family = 'Fira Sans')
 
 
 ## ----include-simons-tprs-2d-image, out.width = "45%", echo = FALSE------------
@@ -524,7 +525,7 @@ anim <- p + transition_time(YEAR) +
 
 anim <- animate(anim,
                 nframes = 200, height = anim_height, width = anim_width,
-                res = 100, dev = anim_dev)
+                res = 100, dev = anim_dev, units = "px")
 
 anim_save('./resources/galveston-animation.gif', anim)
 

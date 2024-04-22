@@ -27,7 +27,7 @@ class: inverse, middle, left, my-title-slide, title-slide
 ### Department of Animal &amp; Veterinary Sciences · Aarhus University
 ]
 .date[
-### 1400–2000 CET (1300–1900 UTC) Thursday 23rd November, 2023
+### 1400–2000 CET (1300–1900 UTC) Thursday 25th April, 2024
 ]
 
 ---
@@ -514,10 +514,10 @@ variance_comp(m_gam)
 
 ```
 ## # A tibble: 2 × 5
-##   component variance std_dev lower_ci upper_ci
-##   &lt;chr&gt;        &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
-## 1 s(Rail)      615.    24.8     13.3     46.4 
-## 2 scale         16.2    4.02     2.70     6.00
+##   .component .variance .std_dev .lower_ci .upper_ci
+##   &lt;chr&gt;          &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+## 1 s(Rail)        615.     24.8      13.3      46.4 
+## 2 scale           16.2     4.02      2.70      6.00
 ```
 ]
 ]
@@ -1490,7 +1490,7 @@ with(bio_post, mean(total))
 ```
 
 ```
-## [1] 1564741
+## [1] 1561014
 ```
 
 ```r
@@ -1499,7 +1499,7 @@ with(bio_post, quantile(total, probs = c(0.025, 0.975)))
 
 ```
 ##    2.5%   97.5% 
-## 1394264 1757706
+## 1403512 1753195
 ```
 ]
 
@@ -1579,7 +1579,7 @@ See `?mgcv::gam.mh` for an example where Gaussian approximation fails badly
 
 --
 
-`fitted_samples()`, `smooth_samples()` etc default to Gaussian approximation, but the Metropolis Hastings sampler is now an option in the development version
+`fitted_samples()`, `smooth_samples()` etc default to Gaussian approximation, but the Metropolis Hastings sampler is now an option in the released version
 
 ---
 

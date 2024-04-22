@@ -24,7 +24,7 @@ theme_set(theme_bw(base_size = 16, base_family = 'Fira Sans'))
 ## constants
 anim_width <- 1000
 anim_height <- anim_width / 1.77777777
-anim_dev <- 'png'
+anim_dev <- "png"
 anim_res <- 200
 
 
@@ -80,10 +80,10 @@ gtemp_plt +
 
 
 ## ----read-hadcrut, echo = TRUE------------------------------------------------
-library('readr')
-library('dplyr')
+library("readr")
+library("dplyr")
 URL <-  "https://bit.ly/hadcrutv4"
-gtemp <- read_table(URL, col_types = 'nnnnnnnnnnnn', col_names = FALSE) %>%
+gtemp <- read_table(URL, col_types = 'nnnnnnnnnnnn', col_names = FALSE) |>
     select(num_range('X', 1:2)) %>% setNames(nm = c('Year', 'Temperature'))
 
 
@@ -92,13 +92,13 @@ gtemp
 
 
 ## ----hadcrutemp-fitted-gam, echo = TRUE, results = 'hide'---------------------
-library('mgcv')
+library("mgcv")
 m <- gam(Temperature ~ s(Year), data = gtemp, method = 'REML')
 summary(m)
 
 
 ## ----hadcrutemp-fitted-gam, echo = FALSE--------------------------------------
-library('mgcv')
+library("mgcv")
 m <- gam(Temperature ~ s(Year), data = gtemp, method = 'REML')
 summary(m)
 
@@ -160,6 +160,7 @@ weight_basis <- function(bf, x, n = 1, k, ...) {
 
 random_bases <- function(bf, x, draws = 10, k, ...) {
     out <- rerun(draws, weight_basis(bf, x = x, k = k, ...))
+    # out <- map(seq_len(draws), \(bf, x, k) weight_basis(bf, x = x, k = k))
     out <- bind_rows(out)
     out <- add_column(out, draw = rep(seq_len(draws), each = length(x) * k),
                       .before = 1L)
@@ -202,7 +203,7 @@ bfuns <- random_bases(sm, data$x, draws = 20, k = k)
 
 smooth <- bfuns %>%
     group_by(draw, x) %>%
-    summarise(spline = sum(y)) %>%
+    summarise(spline = sum(y), .groups = "drop") %>%
     ungroup()
 
 p1 <- ggplot(smooth) +
@@ -211,18 +212,20 @@ p1 <- ggplot(smooth) +
     theme_minimal(base_size = 16, base_family = 'Fira Sans')
 
 smooth_funs <- animate(
-    p1 + transition_states(draw, transition_length = 4, state_length = 2) + 
-    ease_aes('cubic-in-out'),
-    nframes = 200, height = anim_height, width = anim_width, res = anim_res, dev = anim_dev)
+  p1 + transition_states(draw, transition_length = 4, state_length = 2) +
+    ease_aes("cubic-in-out"),
+  nframes = 200, height = anim_height, width = anim_width, res = anim_res,
+  device = anim_dev, units = "px"
+)
 
-anim_save('resources/spline-anim.gif', smooth_funs)
+anim_save("./resources/spline-anim.gif", smooth_funs)
 
 
 ## ----basis-functions, fig.height=6, fig.width = 1.777777*6, echo = FALSE------
 ggplot(basis,
        aes(x = x, y = value, colour = bf)) +
     geom_line(lwd = 2, alpha = 0.5) +
-    guides(colour = FALSE) +
+    guides(colour = "none") +
     labs(x = 'x', y = 'b(x)') +
     theme_minimal(base_size = 20, base_family = 'Fira Sans')
 
@@ -237,9 +240,11 @@ bfun_plt <- plot(bfuns) +
 bfun_anim <- animate(
     bfun_plt + transition_states(draw, transition_length = 4, state_length = 2) + 
     ease_aes('cubic-in-out'),
-    nframes = 200, height = anim_height, width = anim_width, res = anim_res, dev = anim_dev)
+    nframes = 200, height = anim_height, width = anim_width, res = anim_res,
+    dev = anim_dev, units = "px"
+)
 
-anim_save('resources/basis-fun-anim.gif', bfun_anim)
+anim_save(here("./resources/basis-fun-anim.gif"), bfun_anim)
 
 
 ## ----example-data-figure, fig.height=6, fig.width = 1.777777*6, echo = FALSE----
@@ -280,12 +285,18 @@ p3 <- ggplot(data, aes(x = x, y = ycent)) +
     labs(y = 'f(x)', x = 'x') +
     theme_minimal(base_size = 16, base_family = 'Fira Sans')
 
-crs_fit <- animate(p3 + transition_states(type, transition_length = 4, state_length = 2) + 
-                   ease_aes('cubic-in-out'),
-                   nframes = 100, height = anim_height, width = anim_width, res = anim_res,
-                   dev = anim_dev)
+crs_fit <- animate(p3 +
+    transition_states(type, transition_length = 4, state_length = 2) +
+    ease_aes("cubic-in-out"),
+nframes = 100,
+height = anim_height,
+width = anim_width,
+res = anim_res,
+dev = anim_dev,
+units = "px"
+)
 
-anim_save('./resources/gam-crs-animation.gif', crs_fit)
+anim_save(here("./resources/gam-crs-animation.gif"), crs_fit)
 
 
 ## ----hadcrut-temp-penalty, echo = FALSE---------------------------------------
@@ -463,23 +474,23 @@ draw(bfun)
 
 
 ## ----draw-tprs-basis-facetted, fig.show = "hide"------------------------------
-draw(bfun) + facet_wrap(~ bf)
+draw(bfun) + facet_wrap(~ .bf)
 
 
 ## ----draw-tprs-basis-facetted, out.width = "90%", echo = FALSE----------------
-draw(bfun) + facet_wrap(~ bf)
+draw(bfun) + facet_wrap(~ .bf)
 
 
 ## ----out.width = "90%", fig.align = "center"----------------------------------
 bfun <- basis(s(times, bs = "cr"), data = new_df)
-draw(bfun) + facet_wrap(~ bf)
+draw(bfun) + facet_wrap(~ .bf)
 
 
 ## ----echo = FALSE, out.width = "95%", fig.align = "center"--------------------
 K <- 7
 knots <- with(mcycle, list(times = evenly(times, n = K)))
 bfun <- basis(s(times, bs = "cr", k = K), data = new_df, knots = knots)
-draw(bfun) + facet_wrap(~ bf) +
+draw(bfun) + facet_wrap(~ .bf) +
   geom_rug(data = as.data.frame(knots), aes(x = times), sides = "b", inherit.aes = FALSE) +
   geom_hline(yintercept = 0, alpha = 0.5)
 
@@ -506,19 +517,19 @@ bfun <- basis(s(month, bs = "cc"), data = month_df)
 
 
 ## ----draw-crs-basis-facetted, fig.align = "center", out.width = "95%"---------
-draw(bfun) + facet_wrap(~ bf)
+draw(bfun) + facet_wrap(~ .bf)
 
 
 ## ----plot-cc-basis, eval = FALSE----------------------------------------------
 ## knots <- list(month = c(0.5, 12.5))
 ## bfun <- basis(s(month, bs = "cc"), data = month_df, knots = knots)
-## draw(bfun) + facet_wrap(~ bf)
+## draw(bfun) + facet_wrap(~ .bf)
 
 
 ## ----plot-cc-basis, echo = FALSE----------------------------------------------
 knots <- list(month = c(0.5, 12.5))
 bfun <- basis(s(month, bs = "cc"), data = month_df, knots = knots)
-draw(bfun) + facet_wrap(~ bf)
+draw(bfun) + facet_wrap(~ .bf)
 
 
 ## ----whole-basis-proces, echo = FALSE, fig.height = 4, fig.width = 1.777777 * 6----
@@ -530,7 +541,7 @@ bs <- basis(s(x, bs = "ps", k = K), data = df,
 
 # let's weight the basis functions (simulating model coefs)
 set.seed(1)
-betas <- data.frame(bf = factor(seq_len(K)), beta = rnorm(K))
+betas <- data.frame(.bf = factor(seq_len(K)), beta = rnorm(K))
 
 unwtd_bs_plt <- bs |>
     draw() +
@@ -539,12 +550,12 @@ unwtd_bs_plt <- bs |>
 
 # we need to merge the weights for each basis function with the basis object
 bs <- bs |>
-    left_join(betas, by = join_by("bf" == "bf")) |>
-    mutate(value_w = value * beta)
+    left_join(betas, by = join_by(".bf" == ".bf")) |>
+    mutate(value_w = .value * beta)
 
 # weighted basis
 wtd_bs_plt <- bs |>
-    ggplot(aes(x = x, y = value_w, colour = bf, group = bf)) +
+    ggplot(aes(x = x, y = value_w, colour = .bf, group = .bf)) +
     geom_line(show.legend = FALSE) +
     geom_vline(aes(xintercept = x), data = knots, linetype = "dotted",
         alpha = 0.5) +
@@ -557,12 +568,12 @@ spl <- bs |>
 
 take <- c(83, 115)
 pts <- bs |>
-    group_by(bf) |>
+    group_by(.bf) |>
     slice(take)
 
 # now plot
 bs_plt <- bs |>
-    ggplot(aes(x = x, y = value_w, colour = bf, group = bf)) +
+    ggplot(aes(x = x, y = value_w, colour = .bf, group = .bf)) +
     geom_line(show.legend = FALSE) +
     geom_line(aes(x = x, y = spline), data = spl, linewidth = 1.25,
               inherit.aes = FALSE) +
@@ -570,7 +581,7 @@ bs_plt <- bs |>
         alpha = 0.5) +
     geom_vline(xintercept = c(df$x[take]), linetype = "dashed",
         alpha = 1) +
-    geom_point(data = pts, aes(x = x, y = value_w, colour = bf, group = bf),
+    geom_point(data = pts, aes(x = x, y = value_w, colour = .bf, group = .bf),
         size = 2, show.legend = FALSE) +
     geom_point(data = slice(spl, take), aes(x = x, y = spline),
         size = 3, colour = "red", inherit.aes = FALSE) +
@@ -602,7 +613,7 @@ x2_bs <- basis(m, term = "s(x2)", data = ds)
 # compute values of the spline by summing basis functions at each x2
 x2_spl <- x2_bs |>
     group_by(x2) |>
-    summarise(spline = sum(value))
+    summarise(spline = sum(.value))
 
 # evaluate the spline at the same values as we evaluated the basis functions
 x2_sm <- smooth_estimates(m, "s(x2)", data = ds) |>
@@ -610,12 +621,12 @@ x2_sm <- smooth_estimates(m, "s(x2)", data = ds) |>
 
 take <- c(65, 175)
 pts <- x2_bs |>
-    group_by(bf) |>
+    group_by(.bf) |>
     slice(take)
 
 # now plot
 x2_bs |>
-    ggplot(aes(x = x2, y = value, colour = bf, group = bf)) +
+    ggplot(aes(x = x2, y = .value, colour = .bf, group = .bf)) +
     geom_line(show.legend = FALSE) +
     geom_ribbon(aes(x = x2, ymin = .lower_ci, ymax = .upper_ci),
                 data = x2_sm,
@@ -624,7 +635,7 @@ x2_bs |>
               linewidth = 1.5, inherit.aes = FALSE) +
     geom_vline(xintercept = c(ds$x2[take]), linetype = "dashed",
         alpha = 1) +
-    geom_point(data = pts, aes(x = x2, y = value, colour = bf, group = bf),
+    geom_point(data = pts, aes(x = x2, y = .value, colour = .bf, group = .bf),
         size = 2, show.legend = FALSE) +
     geom_point(data = slice(x2_sm, take), aes(x = x2, y = .estimate),
         size = 3, colour = "red", inherit.aes = FALSE) +
@@ -634,7 +645,7 @@ x2_bs |>
 ## ----out.width = "85%", fig.align = "center"----------------------------------
 new_df <- with(mcycle, tibble(times = evenly(times, n = 100)))
 bfun <- basis(s(times), data = new_df, constraints = TRUE)
-draw(bfun) + facet_wrap(~ bf)
+draw(bfun) + facet_wrap(~ .bf)
 
 
 ## -----------------------------------------------------------------------------
@@ -645,7 +656,7 @@ S
 
 ## ----echo = FALSE, dev = "png", out.width = "100%", dpi = 300-----------------
 library("patchwork")
-p1 <- draw(bfun) + facet_wrap(~ bf)
+p1 <- draw(bfun) + facet_wrap(~ .bf)
 p2 <- draw(S)
 p1 + p2 + plot_layout(ncol = 2)
 
@@ -659,7 +670,7 @@ S <- penalty(m, smooth = "s(times)")
 ## ----echo = FALSE, dev = "png", out.width = "100%", dpi = 300-----------------
 library("patchwork")
 bfun_cc <- basis(s(times, bs = "cr"), data = new_df, constraints = TRUE)
-p1 <- draw(bfun_cc) + facet_wrap(~ bf)
+p1 <- draw(bfun_cc) + facet_wrap(~ .bf)
 p2 <- draw(S)
 p1 + p2 + plot_layout(ncol = 2)
 

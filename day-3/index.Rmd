@@ -3,7 +3,7 @@ title: "Generalized Additive Models"
 subtitle: "a data-driven approach to estimating regression models"
 institute: "Department of Animal & Veterinary Sciences · Aarhus University"
 author: "Gavin Simpson"
-date: "1400&ndash;2000 CET (1300&ndash;1900 UTC) Wednesday 22nd November, 2023"
+date: "1400&ndash;2000 CET (1300&ndash;1900 UTC) Wednesday 24th April, 2024"
 output:
   xaringan::moon_reader:
     css: ['default', 'https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css', 'slides.css']
@@ -119,14 +119,15 @@ library("dplyr")
 test_df2 <- test_fun2(seed = 42)
 bfun <- basis(s(x, z), data = test_df2)
 
-bfun %>%
-  ggplot(aes(x = x, y = z, fill = value, group = bf)) +
-  geom_raster() +
-  facet_wrap(~ bf) +
-  scale_fill_distiller(palette = "RdBu", type = "div") +
-  scale_x_continuous(guide = guide_axis(n.dodge = 2,
-                                        check.overlap = TRUE)) +
-  theme_bw(base_size = 12, base_family = 'Fira Sans')
+bfun |>
+  draw()
+  # ggplot(aes(x = x, y = z, fill = .value, group = .bf)) +
+  # geom_raster() +
+  # facet_wrap(~ .bf) +
+  # scale_fill_distiller(palette = "RdBu", type = "div") +
+  # scale_x_continuous(guide = guide_axis(n.dodge = 2,
+  #                                       check.overlap = TRUE)) +
+  # theme_bw(base_size = 12, base_family = 'Fira Sans')
 ```
 ]
 
@@ -1248,7 +1249,7 @@ anim <- p + transition_time(YEAR) +
 
 anim <- animate(anim,
                 nframes = 200, height = anim_height, width = anim_width,
-                res = 100, dev = anim_dev)
+                res = 100, dev = anim_dev, units = "px")
 
 anim_save('./resources/galveston-animation.gif', anim)
 ```

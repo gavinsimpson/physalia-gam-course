@@ -71,7 +71,7 @@ layout(matrix(1:9, ncol = 3, byrow = TRUE))
 curve(f1)
 curve(f2)
 curve(f3)
-plot(b, shade=TRUE)
+plot(b, shade = TRUE)
 plot(b, shade = TRUE, seWithMean = TRUE) ## better coverage intervals
 layout(1)
 par(op)
@@ -111,8 +111,8 @@ p1 + p2 + plot_layout(ncol = 2)
 n <- 200
 dat <- data_sim("eg1", n = n, scale = .15, dist = "poisson", seed = 3)
 set.seed(22)
-dat <- dat %>% mutate(x4 = runif(n, 0, 1), x5 = runif(n, 0, 1),
-                      f4 = rep(0, n), f5 = rep(0, n))   ## spurious
+dat <- dat |> mutate(x4 = runif(n, 0, 1), x5 = runif(n, 0, 1),
+                     f4 = rep(0, n), f5 = rep(0, n))   ## spurious
 
 
 ## ----shrinkage-example-summary, results = "hide"------------------------------
