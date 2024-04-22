@@ -64,7 +64,7 @@ update.packages(ask = FALSE, checkBuilt = TRUE)
 
 # packages to install
 pkgs <- c("mgcv",  "brms", "qgam", "gamm4", "tidyverse", "readxl",
-          "rstan", "mgcViz", "DHARMa", "cmdstanr", "gratia")
+          "rstan", "mgcViz", "DHARMa", "gratia")
 
 # install those packages
 install.packages(pkgs, Ncpus = 4) # set Ncpus to # of *physical* CPU cores you have
@@ -83,8 +83,8 @@ On my system I see:
      = "Version")                                                               
      mgcv      brms      qgam     gamm4 tidyverse    readxl     rstan    mgcViz 
   "1.9-1"  "2.21.0"   "1.3.4"   "0.2-6"   "2.0.0"   "1.4.3"  "2.32.6"  "0.1.11" 
-   DHARMa  cmdstanr    gratia
-  "0.4.6"   "0.4.0"   "0.9.0"
+   DHARMa   gratia
+  "0.4.6"  "0.9.0"
 ```
 
 The key ones are to be sure that *gratia* is version "0.9.0", *mgcv* is at least "1.9-0" (preferably "0.9-1"), and *tidyverse* is "2.0.0".
@@ -98,7 +98,11 @@ Fitting GAMs with Stan is quite time consuming if we use the standard *rstan* in
 Once you have the toolchain installed, to do the actual installation of the *cmdstan* backend we need to load the *cmndstanr* package and complete some steps. Give yourself some time to do this as the options below will download the backend and start to compile it for your computer.
 
 ```r
-# load the R package interface to cmndstan
+# install cmdstanr
+install.packages("cmdstanr",
+  repos = c("https://mc-stan.org/r-packages/", getOption("repos")))
+
+# load the R package interface to cmdstan
 library(cmdstanr)
 
 # check the your toolchain is configured correctly and working
