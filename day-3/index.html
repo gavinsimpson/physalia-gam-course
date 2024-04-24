@@ -282,6 +282,44 @@ fd_plt + fd2_plt + plot_layout(ncol = 2)
 
 ---
 
+# Change indicators
+
+
+```r
+fds &lt;- derivatives(m, type = "central", unconditional = TRUE,
+* interval = "simultaneous")
+m |&gt;                                               # take the model, and
+  smooth_estimates(select = "s(times)") |&gt;         # evaluate the smooth
+  add_sizer(derivatives = fds, type = "change") |&gt; # add change indicator
+  draw()                                           # plot
+```
+
+&lt;img src="index_files/figure-html/change-indicators-1.svg" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Change indicators
+
+
+```r
+m |&gt;                                               # take the model, and
+  smooth_estimates(select = "s(times)") |&gt;         # evaluate the smooth
+  add_sizer(derivatives = fds, type = "sizer") |&gt;  # add sizer change indicator
+  draw()                                           # plot
+```
+
+&lt;img src="index_files/figure-html/change-indicators-2-1.svg" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Defining change points
+
+Significant change is where the simultaneous interval on derivative *excludes* 0
+
+&lt;img src="index_files/figure-html/change-indicators-3-1.svg" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+
 # Today's topics
 
 * Model checking, selection, and visualisation.
