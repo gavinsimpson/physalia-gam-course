@@ -16,7 +16,20 @@ m_q <- qgam(accel ~ s(times, k = 20, bs = "ad"),
 check(m_q$calibr, nbin = 2)
 ## if the optimisation worked, this should have a minimum
 
-# summary as usuaul
+# Can also
+set.seed(6436)
+cal <- tuneLearn(accel ~ s(times, k = 20, bs = "ad"),
+  data = mcycle,
+  qu = 0.8,
+  lsig = seq(1, 3, length.out = 20), #<- sequence of values for learning rate
+  control = list("progress" = "none")
+)
+
+layout(matrix(1:2, ncol = 2))
+check(cal)
+layout(1)
+
+# summary as usual
 summary(m_q)
 
 ## we can use draw() and appraise() as for a single quantile the fits are GAM
@@ -34,12 +47,12 @@ new_df <- data_slice(mcycle, times = evenly(times, n = 200))
 fv <- fitted_values(m_q, data = new_df) # I broke this - FIXME!
 
 ## plot
-fv %>%
+fv |>
   ggplot() +
     geom_point(data = mcycle, aes(x = times, y = accel)) +
-    geom_ribbon(aes(x =, ymin = .lower_ci, ymax = .upper_ci),
+    geom_ribbon(aes(x = times, ymin = .lower_ci, ymax = .upper_ci),
     alpha = 0.2) +
-    geom_line(aes(y = .fitted))
+    geom_line(aes(y = .fitted, x = times))
 
 ## Repeat the exercise but for a lower quantile, say the 0.2 probability
 ##   quantile
@@ -50,4 +63,9 @@ m_mq <- mqgam(accel ~ s(times, k = 20, bs = "ad"),
 
 invisible( qdo(m_mq, 0.2, plot, pages = 1) )
 
-qdo(m_mq, 0.8, draw)
+p_80 <- qdo(m_mq, 0.8, draw) +
+  labs(subtitle = "0.8 quantile")
+p_20 <- qdo(m_mq, 0.2, draw) +
+  labs(subtitle = "0.2 quantile")
+
+p_20 + p_80 + plot_layout(ncol = 2, nrow = 1)
