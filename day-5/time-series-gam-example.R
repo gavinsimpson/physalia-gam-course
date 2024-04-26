@@ -1,4 +1,4 @@
-# Analyse the Global temperature anomaly record with BRMS
+# Analyse the Global temperature anomaly record with GAM and GAMM
 pkgs <- c("mgcv", "ggplot2", "readr", "dplyr", "gratia")
 vapply(pkgs, library, logical(1), character.only = TRUE, logical.return = TRUE,
        quietly = TRUE)
@@ -73,6 +73,17 @@ intervals(m_ar1$lme, which = "var-cov")
 intervals(m_arma_p1$lme, which = "var-cov")
 intervals(m_arma_p2$lme, which = "var-cov")
 intervals(m_arma_p3$lme, which = "var-cov")
+
+## What about bam() - we can fit an AR(1), but need to provide rho
+m_bam <- bam(Temperature ~ s(Year, k = 20),
+    data = gtemp,
+    method = "fREML",
+    rho = 0.2 # <-- have to state a value of rho
+)
+
+acf(m_bam$std.rsd)
+
+draw(m_bam)
 
 ## What do you do if the data aren't evenly spaced?
 ##
