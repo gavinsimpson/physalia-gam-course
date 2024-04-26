@@ -127,6 +127,26 @@ fd2_plt <- draw(fd2) + labs(title = "Second derivative s(times)")
 fd_plt + fd2_plt + plot_layout(ncol = 2)
 
 
+## ----change-indicators, fig.align = "center", out.width = "80%"---------------
+fds <- derivatives(m, type = "central", unconditional = TRUE,
+  interval = "simultaneous") #<<
+m |>                                               # take the model, and
+  smooth_estimates(select = "s(times)") |>         # evaluate the smooth
+  add_sizer(derivatives = fds, type = "change") |> # add change indicator
+  draw()                                           # plot
+
+
+## ----change-indicators-2, fig.align = "center", out.width = "80%"-------------
+m |>                                               # take the model, and
+  smooth_estimates(select = "s(times)") |>         # evaluate the smooth
+  add_sizer(derivatives = fds, type = "sizer") |>  # add sizer change indicator
+  draw()                                           # plot
+
+
+## ----change-indicators-3, fig.align = "center", out.width = "80%", echo = FALSE----
+fd_plt
+
+
 ## ----tprs-vs-tensor-product-setup, echo = FALSE-------------------------------
 # following shows how tensor pruduct deals nicely with 
 # badly scaled covariates (range of x 5% of range of z )
