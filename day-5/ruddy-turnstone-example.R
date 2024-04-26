@@ -11,7 +11,7 @@ vapply(pkgs, library, logical(1), character.only = TRUE, logical.return = TRUE,
 # load data
 ruddy_url <- "https://bit.ly/gam-ruddy"
 
-ruddy <- read_table(here("data", "ruddy.txt"), col_types = "ddddcdddddd") %>%
+ruddy <- read_table(here("data", "ruddy.txt"), col_types = "ddddcdddddd") |>
     mutate(TideState = factor(TideState, levels = c("Low", "High")),
         FlockID = factor(FlockID))
 
@@ -26,11 +26,11 @@ ruddy <- read_table(here("data", "ruddy.txt"), col_types = "ddddcdddddd") %>%
 # * `TimeOfDay` proportion of daylight period elapsed at time of observation
 # * `TimeHighTide` time to the nearest high tide
 # * `DaysStartWinter` number of days since November 1,
-# * `Temperature` temperature in degrees celcius
+# * `Temperature` temperature in degrees celsius
 
-plts <- ruddy %>%
+plts <- ruddy |>
     select(Temperature, DaysStartWinter, TimeHighTide, TimeOfDay, FlockSize,
-        NumPecks) %>%
+        NumPecks) |>
     imap(~ ggplot(ruddy, aes(x = ..1, y = HeadUps)) +
         geom_point() +
         geom_smooth(method = "loess", formula = y ~ x) +
@@ -58,7 +58,7 @@ appraise(m1, method = "simulate")
 
 rg_m1 <- rootogram(m1)
 draw(rg_m1)
-# some underestimations of the zeros
+# some underestimation of the zeros
 
 # plot the fitted functions
 draw(m1, parametric = TRUE)
@@ -111,9 +111,9 @@ summary(m1)
 # are in the models for each set of training data.
 
 # Alternatively, I would only consider fitting separate models if there was
-# strong a priori evidence or discussion suggestions two different hypotheses
+# strong a priori evidence or discussion suggesting two different hypotheses
 # as to controls on the response and I wanted to test those hypotheses. In
-# which case I would the models corresponding to the known hyoptheses and
+# which case I would the models corresponding to the known hypotheses and
 # compare their properties in terms of ability to replicate the data, predict
 # new observations, etc.
 
@@ -125,7 +125,7 @@ appraise(m1a, method = "simulate")
 draw(m1a)
 
 # compare the smooths of temperature
-c_temp <- compare_smooths(m1, m1a, m3, smooths = "s(Temperature)")
+c_temp <- compare_smooths(m1, m1a, m3, select = "s(Temperature)")
 draw(c_temp)
 
 # As a scientist, would you treat these two estimated effects as different even
