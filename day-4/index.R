@@ -284,7 +284,7 @@ pred
 
 
 ## ----plot-predictions-richness, fig.height = 4--------------------------------
-ggplot(pred, aes(x = year)) +
+ggplot(pred, aes(x = year)) + scale_x_continuous(breaks = 2005:2014) +
     geom_ribbon(aes(ymin = lwr, ymax = upr), alpha = 0.2) +
     geom_line(aes(y = richness)) + labs(y = "Species richness", x = NULL)
 
