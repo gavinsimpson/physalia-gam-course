@@ -10,26 +10,28 @@ https://www.physalia-courses.org/
 
 ## Overview
 
-Most of the statistical methods you are likely to have encountered will have specified fixed functional forms for the relationships between covariates and the response, either implicitly or explicitly. These might be linear effects or involve polynomials, such as x + x<sup>2</sup> + x<sup>3</sup>. Generalised additive models (GAMs) are different; they build upon the generalised linear model by allowing the shapes of the relationships between response and covariates to be learned from the data using splines. Modern GAMs, it turns out, are a very general framework for data analysis, encompassing many models as special cases, including GLMs and GLMMs, and the variety of types of splines available to users allows GAMs to be used in a surprisingly large number of situations. In this course we’ll show you how to leverage the power and flexibility of splines to go beyond parametric modelling techniques like GLMs.
+Most of the statistical methods you are likely to have encountered will have specified fixed functional forms for the relationships between covariates and the response, either implicitly or explicitly. These might be linear effects or involve polynomials, such as x + x<sup>2</sup> + x<sup>3</sup>. Generalized additive models (GAMs) are different; they build upon the generalized linear model (GLM) by allowing the shapes of the relationships between response and covariates to be learned from the data using splines. Modern GAMs, it turns out, are a very general framework for data analysis, encompassing many models as special cases, including GLMs and GLMMs, and the variety of types of splines available to users allows GAMs to be used in a surprisingly large number of situations. In this course we’ll show you how to leverage the power and flexibility of splines to go beyond parametric modelling techniques like GLMs.
 
 ## Target audience and assumed background
+The course is aimed at at graduate students and researchers with limited statistical knowledge; ideally you’d know something about generalized linear models, but we’ll recap what GLMs are, so if you’re a little rusty or not everything mentioned in a GLM course made sense, we have you covered.
 
-The course is aimed at graduate students and researchers with limited statistical knowledge; ideally you’d know something about generalised linear models. But we’ll recap what GLMs are so if you’re a little rusty or not everything mentioned in the GLM course makes sense, we have you covered. From running the course previously, knowing the difference between "fixed" and "random" effects, and what the terms "random intercepts" and "random slopes" are, will be helpful for the Hierarchical GAM topic, but we don't expect you to be an expert in mixed effects or hierarchical models to take this course.
-
-Participants should be familiar with RStudio and have some fluency in programming R code, including being able to import, manipulate (e.g. modify variables) and visualise data. There will be a mix of lectures, in-class discussion, and hands-on practical exercises along the course.
+Participants should be familiar with RStudio and have some fluency in programming R code, including being able to import, manipulate (e.g. modify variables) and visualise data. There will be a mix of lectures, in-class discussion, and hands-on practical exercises along the course. From running the course previously, knowing the difference between "fixed" and "random" effects, and what the terms "random intercepts" and "random slopes" are, will be helpful for the Hierarchical GAM topic, but we don't expect you to be an expert in mixed effects or hierarchical models to take this course.
 
 ## Learning outcomes
 
- 1. Understand how GAMs work from a practical view point to learn relationships between covariates and response from the data
- 2. Be able to fit GAMs in R using the mgcv and brms packages
- 3. Know the differences between the types of splines and when to use them in your models
- 4. Know how to visualise fitted GAMs and to check the assumptions of the model
+1. Understand how GAMs work from a practical view point to learn relationships between covariates and response from the data,
+
+2. Be able to fit GAMs in R using the mgcv package,
+
+3. Know the differences between the types of splines and when to use them in your models,
+
+4. Know how to visualise fitted GAMs and to check the assumptions of the model.
 
 ## Pre-course preparation
 
-### Instal an up-to-date version of R
+### Install an up-to-date version of R
 
-Please be sure to have at least version 4.3.0 of R installed (the version of my gratia package we will be using depends on you having at least version 4.1.0 installed and some slides might contain code that requires version 4.3.x). Note that R and RStudio are two different things: it is not sufficient to just update RStudio, you also need to update R by installing new versions as they are release.
+Please be sure to have at least version 4.4.0 of R installed (the version of my gratia package we will be using depends on you having at least version 4.1.0 installed and some slides might contain code that requires version 4.4.x). Note that R and RStudio are two different things: it is not sufficient to just update RStudio, you also need to update R by installing new versions as they are release.
 
 To download R go to the [CRAN Download](https://cran.r-project.org/) page and follow the links to download R for your operating system:
 
@@ -48,9 +50,9 @@ then look at the `version.string` entry (or the `major` and `minor` entries). Fo
 ```
 # ... output not shown ...
 major          4                           
-minor          3.3 
+minor          4.2 
 # ... output not shown ...
-R version 4.3.3 (2024-02-29)
+version.string R version 4.4.2 (2024-10-31)
 # ... output not shown ...
 ```
 
@@ -63,14 +65,13 @@ We will make use of several R packages that you'll need to have installed. Prior
 update.packages(ask = FALSE, checkBuilt = TRUE)
 
 # packages to install
-pkgs <- c("mgcv",  "brms", "qgam", "gamm4", "tidyverse", "readxl",
-          "rstan", "mgcViz", "DHARMa", "gratia")
+pkgs <- c("mgcv",  "gamm4", "tidyverse", "readxl", "mgcViz", "DHARMa", "gratia")
 
 # install those packages
 install.packages(pkgs, Ncpus = 4) # set Ncpus to # of *physical* CPU cores you have
 ```
 
-Now we must check that we actually do have recent versions of the packages installed; if your R is not reasonably new (gratia requires R>= 4.1.0, but some of the *tidyverse* packages may need an R that is newer than this) then you may be stuck on out-dated versions of the packages listed above. This is why I recommend that you install the latest version of R. If you choose to use an older version of R than version 4.3.x (where *x* is 0, 1, 2, or 3, currently) then you do so at your own risk and you cannot expect support with setup problems during the course.
+Now we must check that we actually do have recent versions of the packages installed; if your R is not reasonably new (gratia requires R>= 4.1.0, but some of the *tidyverse* packages may need an R that is newer than this) then you may be stuck on out-dated versions of the packages listed above. This is why I recommend that you install the latest version of R. If you choose to use an older version of R than version 4.4.x (where *x* is 0, 1, or 2 currently) then you do so at your own risk and you cannot expect support with setup problems during the course.
 
 ```r
 vapply(pkgs, packageDescription, character(1), drop = TRUE, fields = "Version")
@@ -79,17 +80,14 @@ vapply(pkgs, packageDescription, character(1), drop = TRUE, fields = "Version")
 On my system I see:
 
 ```r
-> vapply(head(pkgs, -1), packageDescription, character(1), drop = TRUE, fields
-     = "Version")                                                               
-     mgcv      brms      qgam     gamm4 tidyverse    readxl     rstan    mgcViz 
-  "1.9-1"  "2.21.0"   "1.3.4"   "0.2-6"   "2.0.0"   "1.4.3"  "2.32.6"  "0.1.11" 
-   DHARMa   gratia
-  "0.4.6"  "0.9.0"
+> vapply(pkgs, packageDescription, character(1), drop = TRUE, fields = "Version")
+     mgcv     gamm4 tidyverse    readxl    mgcViz    DHARMa    gratia
+  "1.9-1"   "0.2-6"   "2.0.0"   "1.4.3"  "0.1.11"   "0.4.7"  "0.10.0"
 ```
 
-The key ones are to be sure that *gratia* is version "0.9.0", *mgcv* is at least "1.9-0" (preferably "0.9-1"), and *tidyverse* is "2.0.0".
+The key ones are to be sure that *gratia* is version "0.10.0", *mgcv* is at least "1.9-0" (preferably "0.9-1"), and *tidyverse* is "2.0.0".
 
-### Installing the *cmndstan* backend (optional)
+<!-- ### Installing the *cmndstan* backend (optional)
 
 Fitting GAMs with Stan is quite time consuming if we use the standard *rstan* interface. To speed things up significantly, we can use the *cmdstan* backend, however this requires a little more setup. If you can't get this to work don't worry, it's not an integral part of the course, as you can still use the *rstan* backend with `brm()`.
 
@@ -121,6 +119,7 @@ install_cmdstan(cores = 2)
 cmdstan_path()
 cmdstan_version()
 ```
+-->
 
 <!-- Finally, we will make use of the development version of the gratia package as it is not quite ready for CRAN. You can install this package using the binaries provided by the [rOpenSci](https://ropensci.org/) build service [R-Universe](https://r-universe.dev). To install from my R-Universe, you need  to tell R to also install packages from my R-Universe package repo:
 
@@ -173,5 +172,6 @@ We’ll dig under the hood a bit to understand how GAMs work at a practical leve
 
 [Slides](https://gavinsimpson.github.io/physalia-gam-course/day-5/index.html)
 
-* Going beyond the mean; fitting distributional models and quantile GAMs
-* Fitting Bayesian GAMs with brms
+* Going beyond the mean; fitting distributional models
+
+* Worked examples
