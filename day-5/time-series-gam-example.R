@@ -23,7 +23,7 @@ gtemp_plt
 m_ar1 <- gamm(Temperature ~ s(Year, k = 20),
               data = gtemp,
               method = "REML",
-              correlation = corAR1(form = ~ 1))
+              correlation = corAR1(form = ~ Year))
 
 # model summary
 summary(m_ar1$gam)
@@ -41,9 +41,10 @@ anova(m_0$lme, m_ar1$lme)
 
 intervals(m_ar1$lme)$corStruct
 
-compare_smooths(m_0, m_ar1, smooths = "s(Year)") %>% draw()
+compare_smooths(m_0, m_ar1, select = "s(Year)") %>% draw()
 
 acf(resid(m_0$lme))
+acf(resid(m_ar1$lme, type = "normalized"))
 
 ## yes!
 
@@ -53,18 +54,20 @@ acf(resid(m_0$lme))
 m_arma_p1 <- gamm(Temperature ~ s(Year, k = 20),
                   data = gtemp,
                   method = "REML",
-                  correlation = corARMA(form = ~ 1, p = 1))
+                  correlation = corARMA(form = ~ Year, p = 1))
 m_arma_p2 <- gamm(Temperature ~ s(Year, k = 20),
                   data = gtemp,
                   method = "REML",
-                  correlation = corARMA(form = ~ 1, p = 2))
+                  correlation = corARMA(form = ~ Year, p = 2))
 m_arma_p3 <- gamm(Temperature ~ s(Year, k = 20),
                   data = gtemp,
                   method = "REML",
-                  correlation = corARMA(form = ~ 1, p = 3))
+                  correlation = corARMA(form = ~ Year, p = 3))
 
 ## GLRT
 anova(m_0$lme, m_arma_p1$lme, m_arma_p2$lme, m_arma_p3$lme)
+
+AIC(m_0$gam, m_arma_p1$gam, m_arma_p2$gam, m_arma_p3$gam)
 
 ## Do we need AR(p > 1)? Depends which metric you use
 
@@ -91,7 +94,7 @@ draw(m_bam)
 m_car1 <- gamm(Temperature ~ s(Year, k = 20),
                data = gtemp,
                method = "REML",
-               correlation = corCAR1(form = ~ 1))
+               correlation = corCAR1(form = ~ Year))
 ## estimated value of Phi, the CAR(1) term
 intervals(m_car1$lme, which = "var-cov")
 ## should be close to the AR(1) value

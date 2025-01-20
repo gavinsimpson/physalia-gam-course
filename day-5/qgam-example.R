@@ -37,7 +37,7 @@ summary(m_q)
 draw(m_q)
 
 ## model diagnostics
-appraise(m_q)
+appraise(m_q, use_worm = TRUE)
 
 ## predict to visualise the estimated quantile
 ## new data to predict at
@@ -69,3 +69,14 @@ p_20 <- qdo(m_mq, 0.2, draw) +
   labs(subtitle = "0.2 quantile")
 
 p_20 + p_80 + plot_layout(ncol = 2, nrow = 1)
+
+sm_80 <- qdo(m_mq, 0.8, smooth_estimates)
+sm_20 <- qdo(m_mq, 0.2, smooth_estimates)
+
+sm_q <- sm_20 |>
+  bind_rows(sm_80) |>
+  mutate(.q = rep(c(0.2, 0.8), each = 100))
+
+sm_q |>
+  ggplot(aes(x = times, y = .estimate, colour = .q, group = .q)) +
+  geom_line()

@@ -4,6 +4,7 @@
     <title>Generalized Additive Models</title>
     <meta charset="utf-8" />
     <meta name="author" content="Gavin Simpson" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
     <link href="libs/remark-css/default.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" type="text/css" />
     <link rel="stylesheet" href="slides.css" type="text/css" />
@@ -25,7 +26,7 @@ class: inverse, middle, left, my-title-slide, title-slide
 ### Department of Animal &amp; Veterinary Sciences · Aarhus University
 ]
 .date[
-### 1400–2000 CET (1300–1900 UTC) Wednesday 24th April, 2024
+### 1400–2000 CET (1300–1900 UTC) Wednesday 22nd January, 2025
 ]
 
 ---
@@ -1398,7 +1399,7 @@ fv &lt;- fv %&gt;%
 # Galveston Bay &amp;mdash; plot
 
 
-```r
+``` r
 plt &lt;- ggplot(fv, aes(x = LONGITUDE, y = LATITUDE)) +
     geom_raster(aes(fill = .fitted)) + facet_wrap(~ YEAR, ncol = 12) +
     scale_fill_viridis(name = expression(degree*C), option = "plasma",
@@ -1429,7 +1430,7 @@ plt
 # Galveston Bay &amp;mdash; plot trends
 
 
-```r
+``` r
 ds &lt;- data_slice(m, ToD = 12, DoY = c(1, 90, 180, 270),
   YEAR = evenly(YEAR, n = 250),
   LONGITUDE = -94.8751, LATITUDE  = 29.50866)

@@ -4,6 +4,7 @@
     <title>Generalized Additive Models</title>
     <meta charset="utf-8" />
     <meta name="author" content="Gavin Simpson" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
     <link href="libs/remark-css/default.css" rel="stylesheet" />
     <link href="libs/tile-view/tile-view.css" rel="stylesheet" />
     <script src="libs/tile-view/tile-view.js"></script>
@@ -27,7 +28,7 @@ class: inverse, middle, left, my-title-slide, title-slide
 ### Department of Animal &amp; Veterinary Sciences · Aarhus University
 ]
 .date[
-### 1400–2000 CET (1300–1900 UTC) Thursday 25th April, 2024
+### 1400–2000 CET (1300–1900 UTC) Thursday 23rd January, 2025
 ]
 
 ---
@@ -220,7 +221,7 @@ Data has a known unrelated effect &amp; 2 spurious effects
 
 .smaller[
 
-```r
+``` r
 m &lt;- gam(y ~ s(x0) + s(x1) + s(x2) + s(x3) +
            s(x4) + s(x5),
          data = dat,
@@ -530,7 +531,7 @@ variance_comp(m_gam)
 
 .col-7[
 
-```r
+``` r
 pm &lt;- penalty(m_gam, smooth = "s(Rail)")
 draw(pm)
 ```
@@ -729,7 +730,7 @@ If there are common (non-linear) effects that explain variation for all subjects
 ---
 class: inverse center middle subsection
 
-# Posterior prediction
+# Posteriors and prediction
 
 ---
 
@@ -1269,7 +1270,7 @@ Result is a matrix where each row is a set of new model parameters, each consist
 Form `\(\boldsymbol{\hat{\eta}}_p\)`, the posterior draws for the smooth
 
 
-```r
+``` r
 sm_draws &lt;- Xp %*% t(beta_sim)
 dim(sm_draws)
 ```
@@ -1278,7 +1279,7 @@ dim(sm_draws)
 ## [1] 100  20
 ```
 
-```r
+``` r
 matplot(sm_draws, type = 'l')
 ```
 
@@ -1300,7 +1301,7 @@ Or use `smooth_samples()`
 # Posterior sim for a smooth &amp;mdash; steps 1&amp;ndash;6
 
 
-```r
+``` r
 sm_post &lt;- smooth_samples(m_rich, 's(year)', n = 20, seed = 42)
 draw(sm_post)
 ```
@@ -1324,7 +1325,7 @@ Additionally, we could simulate *new response data* from the model and the simul
 # Posterior simulation from the model
 
 
-```r
+``` r
 beta &lt;- coef(m_rich)   # vector of model parameters
 Vb &lt;- vcov(m_rich)     # default is the bayesian covariance matrix
 Xp &lt;- predict(m_rich, type = "lpmatrix")
@@ -1340,7 +1341,7 @@ mean(mu_p[1, ]) # mean of posterior for the first observation in the data
 ## [1] 21.10123
 ```
 
-```r
+``` r
 quantile(mu_p[1, ], probs = c(0.025, 0.975))
 ```
 
@@ -1354,7 +1355,7 @@ quantile(mu_p[1, ], probs = c(0.025, 0.975))
 # Posterior simulation from the model
 
 
-```r
+``` r
 ggplot(tibble(richness = mu_p[587, ]), aes(x = richness)) +
     geom_histogram() + labs(title = "Posterior richness for obs #587")
 ```
@@ -1368,7 +1369,7 @@ ggplot(tibble(richness = mu_p[587, ]), aes(x = richness)) +
 Or easier using `fitted_samples()`
 
 
-```r
+``` r
 rich_post &lt;- fitted_samples(m_rich, n = 1000, data = shrimp, seed = 42)
 ggplot(filter(rich_post, .row == 587), aes(x = .fitted)) +
     geom_histogram() + labs(title = "Posterior richness for obs #587", x = "Richness")
@@ -1418,7 +1419,7 @@ But what if you also wanted the uncertainty in that estimate?
 # Let's do it
 
 
-```r
+``` r
 sp_new &lt;- with(shrimp, expand.grid(x = evenly(x, n = 100), y = evenly(y, n = 100),
                                    year = 2007))
 Xp &lt;- predict(m_spt, newdata = sp_new, type = "lpmatrix")
@@ -1443,7 +1444,7 @@ Sum the columns of `mu_p` and summarize
 # Summarize the expected biomass
 
 
-```r
+``` r
 mu_copy &lt;- mu_p              # copy mu_p
 mu_copy[too_far, ] &lt;- NA     # set cells too far from data to be NA
 total_biomass &lt;- colSums(mu_copy, na.rm = TRUE)  # total biomass over the region
@@ -1455,7 +1456,7 @@ mean(total_biomass)
 ## [1] 1561014
 ```
 
-```r
+``` r
 quantile(total_biomass, probs = c(0.025, 0.975))
 ```
 
@@ -1478,7 +1479,7 @@ quantile(total_biomass, probs = c(0.025, 0.975))
 
 .col-7[
 
-```r
+``` r
 bio_post &lt;- fitted_samples(m_spt, n = 1000,
                            data = sp_new[!too_far, ],
                            seed = 42) %&gt;%
@@ -1493,7 +1494,7 @@ with(bio_post, mean(total))
 ## [1] 1561014
 ```
 
-```r
+``` r
 with(bio_post, quantile(total, probs = c(0.025, 0.975)))
 ```
 
@@ -1505,7 +1506,7 @@ with(bio_post, quantile(total, probs = c(0.025, 0.975)))
 
 .col-5[
 
-```r
+``` r
 ggplot(bio_post, aes(x = total)) +
     geom_histogram() +
     labs(x = "Total biomass")

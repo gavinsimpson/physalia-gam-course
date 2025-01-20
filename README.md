@@ -6,7 +6,7 @@ https://www.physalia-courses.org/
 
 ### Gavin Simpson
 
-#### 22&ndash;26th April, 2024
+#### 20&ndash;24th January, 2025
 
 ## Overview
 
@@ -65,7 +65,8 @@ We will make use of several R packages that you'll need to have installed. Prior
 update.packages(ask = FALSE, checkBuilt = TRUE)
 
 # packages to install
-pkgs <- c("mgcv",  "gamm4", "tidyverse", "readxl", "mgcViz", "DHARMa", "gratia")
+pkgs <- c("mgcv",  "gamm4", "tidyverse", "readxl", "mgcViz", "DHARMa", "gratia",
+  "ggforce", "marginaleffects")
 
 # install those packages
 install.packages(pkgs, Ncpus = 4) # set Ncpus to # of *physical* CPU cores you have
@@ -170,7 +171,7 @@ We’ll dig under the hood a bit to understand how GAMs work at a practical leve
 
 ### Friday
 
-[Slides](https://gavinsimpson.github.io/physalia-gam-course/day-5/index.html)
+<!-- [Slides](https://gavinsimpson.github.io/physalia-gam-course/day-5/index.html) -->
 
 * Going beyond the mean; fitting distributional models
 

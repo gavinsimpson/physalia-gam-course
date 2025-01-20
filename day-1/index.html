@@ -4,6 +4,7 @@
     <title>Generalized Additive Models</title>
     <meta charset="utf-8" />
     <meta name="author" content="Gavin Simpson" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
     <link href="libs/remark-css/default.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" type="text/css" />
     <link rel="stylesheet" href="slides.css" type="text/css" />
@@ -25,7 +26,7 @@ class: inverse, middle, left, my-title-slide, title-slide
 ### Department of Animal &amp; Veterinary Sciences · Aarhus University
 ]
 .date[
-### 1400–2000 CET (1300–1900 UTC) Monday 22nd April, 2024
+### 1400–2000 CET (1300–1900 UTC) Monday 20th January, 2025
 ]
 
 ---
@@ -104,7 +105,7 @@ Not necessary to transform data as this is handled as part of the GLM process
 Flip a coin 10 times with *p* = 0.7, the probability of 7 heads is `\(\sim Bin(n = 10, p = 0.7)\)`, ~ 0.27
 
 
-```r
+``` r
 dbinom(x = 7, size = 10, prob = 0.7)
 ```
 
@@ -188,7 +189,7 @@ Characteristics of common GLM probability distributions
 
 ---
 
-# Ecologically-relevant probability distributions
+# Common probability distributions
 
 Gaussian distribution is rarely adequate in ecology; GLMs offer ecologically meaningful alternatives
 
@@ -240,6 +241,12 @@ g(\mu_i) &amp; = \alpha + \beta_1 x_{1i} + \beta_2 x_{2i} + \cdots + \beta_j x_{
 
 # New notation
 
+&lt;img src="resources/fig-gaussian-lm-descriptive-figure-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# New notation
+
 Binomial GLM
 
 `\begin{align*}
@@ -253,6 +260,18 @@ Poisson GLM
 y_i &amp; \sim \text{Poisson}(\lambda_i) \\
 \log(\lambda_i) &amp; = \alpha + \beta_1 x_{1i} + \beta_2 x_{2i} + \cdots + \beta_j x_{ij}
 \end{align*}`
+
+---
+
+# New notation
+
+&lt;img src="resources/fig-poisson-lm-descriptive-figure-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# New notation
+
+&lt;img src="resources/fig-other-dist-descr-1.png" width="80%" style="display: block; margin: auto;" /&gt;
 
 ---
 class: inverse middle center subsection
@@ -295,7 +314,7 @@ Timed censuses at 42 randomly-chosen leaves of the cobra lily
 # Logistic regression &amp;mdash; *Darlingtonia*
 
 
-```r
+``` r
 wasp &lt;- read_csv(here("data", "darlingtonia.csv"), comment = "#",
                  col_types = "dl")
 ```
@@ -305,7 +324,7 @@ wasp &lt;- read_csv(here("data", "darlingtonia.csv"), comment = "#",
 # Logistic regression &amp;mdash; *Darlingtonia*
 
 
-```r
+``` r
 m &lt;- glm(visited ~ leafHeight, data = wasp, family = binomial)
 m
 ```
@@ -329,7 +348,7 @@ m
 
 .smaller[
 
-```r
+``` r
 summary(m)
 ```
 
@@ -363,7 +382,7 @@ summary(m)
 .col-6[
 .smaller[
 
-```r
+``` r
 # data to predict at
 pdat &lt;- with(wasp,
              tibble(leafHeight = seq(min(leafHeight),
@@ -445,7 +464,7 @@ Fit mid-depth &amp; mid-calibrated age points
 # A Gamma GLM &amp;mdash; simple age-depth modelling
 
 
-```r
+``` r
 maddy &lt;- read_csv(here("data", "maddy-peat.csv"), col_types = "cdddddd")
 maddy &lt;- mutate(maddy, midDepth = upperDepth - (0.5 * abs(upperDepth - lowerDepth)),
                 calMid = calUpper - (0.5 * abs(calUpper - calLower)))
@@ -478,7 +497,7 @@ maddy
 
 .col-6[
 
-```r
+``` r
 ggplot(maddy, aes(x = midDepth, y = calMid)) +
     geom_point() +
     labs(y = "Calibrated Age", x = "Depth")
@@ -497,7 +516,7 @@ ggplot(maddy, aes(x = midDepth, y = calMid)) +
 
 .smaller[
 
-```r
+``` r
 m_gamma &lt;- glm(calMid ~ midDepth, data = maddy, family = Gamma(link = "identity"))
 summary(m_gamma)
 ```
@@ -534,7 +553,7 @@ summary(m_gamma)
 .col-6[
 .smaller[
 
-```r
+``` r
 # data to predict at
 pdat &lt;- with(maddy,
              tibble(midDepth = seq(min(midDepth),
@@ -579,7 +598,7 @@ p1
 .col-6[
 .smaller[
 
-```r
+``` r
 # fit gaussian GLM
 m_gaus &lt;- glm(calMid ~ midDepth, data = maddy,
               family = gaussian)
@@ -618,7 +637,7 @@ p2
 ---
 
 
-```r
+``` r
 library("patchwork")
 p1 + p2
 ```
@@ -643,6 +662,368 @@ These models are different
 $$
 \log(\mathbb{E}(y_i)) \neq \mathbb{E}(\log(y_i))
 $$
+
+Jensen's inequality
+
+---
+
+# Biological control of diamondback moths
+
+.small[
+Uefune et al (2020) studied the use of synthetic herbivory-induced plant volatiles (HIPVs) to attract larval parasitoid wasps (*Cotesia vestalis*) to control diamondback moths (DBM: *Plutella xylostella*), a global pest of cruciferous vegetables, in greenhouses growing mizuna (Japanese mustard) in Japan.
+
+They used two groups of greenhouses, the treated group having dispensers for the HIPVs as well as honeyfeeders to attract *C. vestalis* and a second untreated group. In each greenhouse, a single sticky trap, replaced weekly over 6 months, was used to catch both DBMs and *C. vestalis* and the numbers of both counted.
+
+We will model numbers of *C. vestalis* against numbers of DBM and treatment using each trap as the units of analysis. The study was done in 2006 and 2008 but we only analyze the 2008 data.
+]
+
+???
+
+While greenhouse ID could have been included as a random effect in a mixed model analysis, the available data did not record individual greenhouses.
+
+---
+
+# Biological control of diamondback moths
+
+&gt; We will model numbers of *C. vestalis* against numbers of DBM and treatment using each trap as the units of analysis.
+
+What distribution would you expect the response variable `parasitoid` to follow?
+
+---
+
+# Diamondback moths &amp;mdash; data
+
+
+``` r
+moth &lt;- readr::read_csv("data/uefunex.csv")
+```
+
+
+---
+
+# Diamondback moths &amp;mdash; summary stats
+
+
+``` r
+library("dplyr")
+moth |&gt;
+    group_by(treatment) |&gt;
+    summarise(n = n(), mean = mean(parasitoid), median = median(parasitoid),
+        sd = sd(parasitoid))
+```
+
+```
+## # A tibble: 2 × 5
+##   treatment     n  mean median    sd
+##   &lt;chr&gt;     &lt;int&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
+## 1 control     177 1.10       0  4.06
+## 2 treated     242 0.938      0  2.87
+```
+
+---
+
+# Diamondback moths &amp;mdash; plot data
+
+
+``` r
+library("ggplot2")
+moth |&gt;
+    ggplot(aes(x = treatment, y = parasitoid)) +
+    geom_violin(aes(fill = treatment))
+```
+
+&lt;img src="index_files/figure-html/plot-moth-1-1.svg" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Diamondback moths
+
+
+``` r
+moth |&gt;
+    ggplot(aes(x = treatment, y = parasitoid)) +
+    geom_violin(aes(fill = treatment)) +
+    scale_y_sqrt()
+```
+
+&lt;img src="index_files/figure-html/plot-moth-sqrt-1.svg" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Diamondback moths
+
+
+``` r
+# install.packages("ggforce")
+moth |&gt;
+    ggplot(aes(x = treatment, y = parasitoid)) +
+    geom_violin(aes(fill = treatment)) +
+    scale_y_continuous(trans = ggforce::power_trans((1/4)))
+```
+
+&lt;img src="index_files/figure-html/plot-moth-root-root-1.svg" width="70%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Biological control of diamondback moths
+
+What do you conclude about the response variable?
+
+What distribution would you expect the response variable parasitoid to follow?
+
+---
+
+# Fit Poisson GLM
+
+
+``` r
+moth_glm1 &lt;- glm(parasitoid ~ moth + treatment + moth:treatment,
+    family = poisson, data = moth)
+```
+
+---
+
+# Poisson GLM summary
+
+
+``` r
+summary(moth_glm1)
+```
+
+```
+## 
+## Call:
+## glm(formula = parasitoid ~ moth + treatment + moth:treatment, 
+##     family = poisson, data = moth)
+## 
+## Coefficients:
+##                       Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)           -0.30106    0.08804  -3.420 0.000627 ***
+## moth                   0.22652    0.01433  15.804  &lt; 2e-16 ***
+## treatmenttreated      -0.13617    0.11899  -1.144 0.252463    
+## moth:treatmenttreated  0.18471    0.02597   7.111 1.15e-12 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## (Dispersion parameter for poisson family taken to be 1)
+## 
+##     Null deviance: 1600.0  on 418  degrees of freedom
+## Residual deviance: 1220.5  on 415  degrees of freedom
+## AIC: 1551.3
+## 
+## Number of Fisher Scoring iterations: 6
+```
+
+---
+
+# Analysis of deviance table
+
+
+``` r
+anova(moth_glm1, test = "LRT")
+```
+
+```
+## Analysis of Deviance Table
+## 
+## Model: poisson, link: log
+## 
+## Response: parasitoid
+## 
+## Terms added sequentially (first to last)
+## 
+## 
+##                Df Deviance Resid. Df Resid. Dev  Pr(&gt;Chi)    
+## NULL                             418     1600.0              
+## moth            1   328.17       417     1271.9 &lt; 2.2e-16 ***
+## treatment       1     5.78       416     1266.1   0.01623 *  
+## moth:treatment  1    45.62       415     1220.5 1.434e-11 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+
+---
+
+# Plot the estimated model
+
+.row[
+
+.col-6[
+.small[
+
+``` r
+moth |&gt;
+    ggplot(aes(y = parasitoid, x = moth, color = treatment)) +
+    geom_jitter(stat = "identity", width = 0.05, height = 0.05) +
+    geom_smooth(method = "glm", method.args = list(family = "poisson")) +
+    theme(legend.position = "bottom")
+```
+]
+]
+
+.col-6[
+![](index_files/figure-html/plot-moth-glm1-1.svg)&lt;!-- --&gt;
+]
+]
+
+---
+
+# Problems
+
+
+``` r
+library("dplyr")
+moth |&gt;
+    group_by(treatment) |&gt;
+    summarise(n = n(), mean = mean(parasitoid), median = median(parasitoid),
+        sd = sd(parasitoid))
+```
+
+```
+## # A tibble: 2 × 5
+##   treatment     n  mean median    sd
+##   &lt;chr&gt;     &lt;int&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
+## 1 control     177 1.10       0  4.06
+## 2 treated     242 0.938      0  2.87
+```
+
+---
+
+# Overdispersion
+
+
+``` r
+presid &lt;- resid(moth_glm1, type = "pearson")
+n &lt;- nrow(moth)
+params &lt;- length(coef(moth_glm1))
+disp &lt;- sum(presid^2) / (n - params)
+disp
+```
+
+```
+## [1] 7.711486
+```
+
+---
+
+# Overdispersion
+
+.small[
+
+``` r
+moth_glm2 &lt;- glm(parasitoid ~ moth + treatment + moth:treatment,
+    family = quasipoisson, data = moth)
+
+summary(moth_glm2)
+```
+
+```
+## 
+## Call:
+## glm(formula = parasitoid ~ moth + treatment + moth:treatment, 
+##     family = quasipoisson, data = moth)
+## 
+## Coefficients:
+##                       Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)           -0.30106    0.24450  -1.231   0.2189    
+## moth                   0.22652    0.03981   5.691  2.4e-08 ***
+## treatmenttreated      -0.13617    0.33046  -0.412   0.6805    
+## moth:treatmenttreated  0.18471    0.07214   2.561   0.0108 *  
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## (Dispersion parameter for quasipoisson family taken to be 7.71271)
+## 
+##     Null deviance: 1600.0  on 418  degrees of freedom
+## Residual deviance: 1220.5  on 415  degrees of freedom
+## AIC: NA
+## 
+## Number of Fisher Scoring iterations: 6
+```
+]
+
+---
+
+# Negative binomial
+
+.small[
+
+``` r
+library("mgcv")
+moth_glm3 &lt;- gam(parasitoid ~ moth + treatment + moth:treatment,
+    family = nb(), method = "ML", data = moth)
+summary(moth_glm3)
+```
+
+```
+## 
+## Family: Negative Binomial(0.263) 
+## Link function: log 
+## 
+## Formula:
+## parasitoid ~ moth + treatment + moth:treatment
+## 
+## Parametric coefficients:
+##                       Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)            -0.7326     0.1897  -3.861 0.000113 ***
+## moth                    0.5445     0.0731   7.448 9.44e-14 ***
+## treatmenttreated        0.1632     0.2460   0.663 0.507015    
+## moth:treatmenttreated   0.0400     0.1379   0.290 0.771761    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## 
+## R-sq.(adj) =   -116   Deviance explained = 22.5%
+## -ML = 458.89  Scale est. = 1         n = 419
+```
+]
+
+---
+
+# Negative binomial
+
+
+``` r
+library("glmmTMB")
+moth_glm4 &lt;- glmmTMB(parasitoid ~ moth + treatment + moth:treatment,
+    family = nbinom2("log"), REML = FALSE, data = moth)
+summary(moth_glm4)
+```
+
+```
+##  Family: nbinom2  ( log )
+## Formula:          parasitoid ~ moth + treatment + moth:treatment
+## Data: moth
+## 
+##      AIC      BIC   logLik deviance df.resid 
+##    927.8    948.0   -458.9    917.8      414 
+## 
+## 
+## Dispersion parameter for nbinom2 family (): 0.263 
+## 
+## Conditional model:
+##                       Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)            -0.7326     0.2175  -3.369 0.000754 ***
+## moth                    0.5445     0.1543   3.529 0.000417 ***
+## treatmenttreated        0.1632     0.2698   0.605 0.545237    
+## moth:treatmenttreated   0.0400     0.2195   0.182 0.855416    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+
+---
+
+# Visualising the model fit???
+
+
+``` r
+library("marginaleffects")
+moth_glm4 |&gt;
+    plot_predictions(condition = c("moth", "treatment"),
+        vcov = TRUE, type = "response")
+```
+
+![](index_files/figure-html/unnamed-chunk-7-1.svg)&lt;!-- --&gt;
 
 ---
 class: inverse middle center huge-subsection
@@ -718,7 +1099,7 @@ class: inverse middle center subsection
 # HadCRUT data set
 
 
-```r
+``` r
 library('readr')
 library('dplyr')
 URL &lt;-  "https://bit.ly/hadcrutv4"
@@ -733,7 +1114,7 @@ gtemp &lt;- read_table(URL, col_types = 'nnnnnnnnnnnn', col_names = FALSE) %&gt;
 # HadCRUT data set
 
 
-```r
+``` r
 gtemp
 ```
 
@@ -759,7 +1140,7 @@ gtemp
 # Fitting a GAM
 
 
-```r
+``` r
 library('mgcv')
 m &lt;- gam(Temperature ~ s(Year), data = gtemp, method = 'REML')
 summary(m)

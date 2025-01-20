@@ -3,7 +3,7 @@ title: "Generalized Additive Models"
 subtitle: "a data-driven approach to estimating regression models"
 institute: "Department of Animal & Veterinary Sciences · Aarhus University"
 author: "Gavin Simpson"
-date: "1400&ndash;2000 CET (1300&ndash;1900 UTC) Monday 22nd April, 2024"
+date: "1400&ndash;2000 CET (1300&ndash;1900 UTC) Monday 20th January, 2025"
 output:
   xaringan::moon_reader:
     css: ['default', 'https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css', 'slides.css']
@@ -222,7 +222,7 @@ $\phi$ is the dispersion parameter; $\mu_i$ is the expectation of $y_i$. In the 
 
 ---
 
-# Ecologically-relevant probability distributions
+# Common probability distributions
 
 Gaussian distribution is rarely adequate in ecology; GLMs offer ecologically meaningful alternatives
 
@@ -274,6 +274,14 @@ g(\mu_i) & = \alpha + \beta_1 x_{1i} + \beta_2 x_{2i} + \cdots + \beta_j x_{ij}
 
 # New notation
 
+```{r dist-fig-1, fig.align = "center", out.width = "80%", echo = FALSE}
+knitr::include_graphics("resources/fig-gaussian-lm-descriptive-figure-1.png")
+```
+
+---
+
+# New notation
+
 Binomial GLM
 
 \begin{align*}
@@ -287,6 +295,22 @@ Poisson GLM
 y_i & \sim \text{Poisson}(\lambda_i) \\
 \log(\lambda_i) & = \alpha + \beta_1 x_{1i} + \beta_2 x_{2i} + \cdots + \beta_j x_{ij}
 \end{align*}
+
+---
+
+# New notation
+
+```{r dist-fig-2, fig.align = "center", out.width = "80%", echo = FALSE}
+knitr::include_graphics("resources/fig-poisson-lm-descriptive-figure-1.png")
+```
+
+---
+
+# New notation
+
+```{r dist-fig-3, fig.align = "center", out.width = "80%", echo = FALSE}
+knitr::include_graphics("resources/fig-other-dist-descr-1.png")
+```
 
 ---
 class: inverse middle center subsection
@@ -593,6 +617,213 @@ These models are different
 $$
 \log(\mathbb{E}(y_i)) \neq \mathbb{E}(\log(y_i))
 $$
+
+Jensen's inequality
+
+---
+
+# Biological control of diamondback moths
+
+.small[
+Uefune et al (2020) studied the use of synthetic herbivory-induced plant volatiles (HIPVs) to attract larval parasitoid wasps (*Cotesia vestalis*) to control diamondback moths (DBM: *Plutella xylostella*), a global pest of cruciferous vegetables, in greenhouses growing mizuna (Japanese mustard) in Japan.
+
+They used two groups of greenhouses, the treated group having dispensers for the HIPVs as well as honeyfeeders to attract *C. vestalis* and a second untreated group. In each greenhouse, a single sticky trap, replaced weekly over 6 months, was used to catch both DBMs and *C. vestalis* and the numbers of both counted.
+
+We will model numbers of *C. vestalis* against numbers of DBM and treatment using each trap as the units of analysis. The study was done in 2006 and 2008 but we only analyze the 2008 data.
+]
+
+???
+
+While greenhouse ID could have been included as a random effect in a mixed model analysis, the available data did not record individual greenhouses.
+
+---
+
+# Biological control of diamondback moths
+
+> We will model numbers of *C. vestalis* against numbers of DBM and treatment using each trap as the units of analysis.
+
+What distribution would you expect the response variable `parasitoid` to follow?
+
+---
+
+# Diamondback moths &mdash; data
+
+```{r load-moth-show, eval = FALSE}
+moth <- readr::read_csv("data/uefunex.csv")
+```
+```{r load-moth-hide, echo = FALSE}
+moth <- readr::read_csv("../data/uefunex.csv")
+```
+
+---
+
+# Diamondback moths &mdash; summary stats
+
+```{r moth-summary}
+library("dplyr")
+moth |>
+    group_by(treatment) |>
+    summarise(n = n(), mean = mean(parasitoid), median = median(parasitoid),
+        sd = sd(parasitoid))
+```
+
+---
+
+# Diamondback moths &mdash; plot data
+
+```{r plot-moth-1, out.width = "80%", fig.align = "center"}
+library("ggplot2")
+moth |>
+    ggplot(aes(x = treatment, y = parasitoid)) +
+    geom_violin(aes(fill = treatment))
+```
+
+---
+
+# Diamondback moths
+
+```{r plot-moth-sqrt, out.width = "80%", fig.align = "center"}
+moth |>
+    ggplot(aes(x = treatment, y = parasitoid)) +
+    geom_violin(aes(fill = treatment)) +
+    scale_y_sqrt()
+```
+
+---
+
+# Diamondback moths
+
+```{r plot-moth-root-root, out.width = "70%", fig.align = "center"}
+# install.packages("ggforce")
+moth |>
+    ggplot(aes(x = treatment, y = parasitoid)) +
+    geom_violin(aes(fill = treatment)) +
+    scale_y_continuous(trans = ggforce::power_trans((1/4)))
+```
+
+---
+
+# Biological control of diamondback moths
+
+What do you conclude about the response variable?
+
+What distribution would you expect the response variable parasitoid to follow?
+
+---
+
+# Fit Poisson GLM
+
+```{r fit-poisson-glm-moth}
+moth_glm1 <- glm(parasitoid ~ moth + treatment + moth:treatment,
+    family = poisson, data = moth)
+```
+
+---
+
+# Poisson GLM summary
+
+```{r summary-poisson-glm-moth}
+summary(moth_glm1)
+```
+
+---
+
+# Analysis of deviance table
+
+```{r}
+anova(moth_glm1, test = "LRT")
+```
+
+---
+
+# Plot the estimated model
+
+.row[
+
+.col-6[
+.small[
+```{r plot-moth-glm1, eval=FALSE}
+moth |>
+    ggplot(aes(y = parasitoid, x = moth, color = treatment)) +
+    geom_jitter(stat = "identity", width = 0.05, height = 0.05) +
+    geom_smooth(method = "glm", method.args = list(family = "poisson")) +
+    theme(legend.position = "bottom")
+```
+]
+]
+
+.col-6[
+```{r plot-moth-glm1, echo = FALSE, fig.width = 7, fig.height = 5}
+```
+]
+]
+
+---
+
+# Problems
+
+```{r moth-summary}
+```
+
+---
+
+# Overdispersion
+
+```{r}
+presid <- resid(moth_glm1, type = "pearson")
+n <- nrow(moth)
+params <- length(coef(moth_glm1))
+disp <- sum(presid^2) / (n - params)
+disp
+```
+
+---
+
+# Overdispersion
+
+.small[
+```{r}
+moth_glm2 <- glm(parasitoid ~ moth + treatment + moth:treatment,
+    family = quasipoisson, data = moth)
+
+summary(moth_glm2)
+```
+]
+
+---
+
+# Negative binomial
+
+.small[
+```{r}
+library("mgcv")
+moth_glm3 <- gam(parasitoid ~ moth + treatment + moth:treatment,
+    family = nb(), method = "ML", data = moth)
+summary(moth_glm3)
+```
+]
+
+---
+
+# Negative binomial
+
+```{r glmmtmb-negbin-version}
+library("glmmTMB")
+moth_glm4 <- glmmTMB(parasitoid ~ moth + treatment + moth:treatment,
+    family = nbinom2("log"), REML = FALSE, data = moth)
+summary(moth_glm4)
+```
+
+---
+
+# Visualising the model fit???
+
+```{r}
+library("marginaleffects")
+moth_glm4 |>
+    plot_predictions(condition = c("moth", "treatment"),
+        vcov = TRUE, type = "response")
+```
 
 ---
 class: inverse middle center huge-subsection

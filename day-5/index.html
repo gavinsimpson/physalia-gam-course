@@ -4,6 +4,7 @@
     <title>Generalized Additive Models</title>
     <meta charset="utf-8" />
     <meta name="author" content="Gavin Simpson" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
     <link href="libs/remark-css/default.css" rel="stylesheet" />
     <link href="libs/tile-view/tile-view.css" rel="stylesheet" />
     <script src="libs/tile-view/tile-view.js"></script>
@@ -27,7 +28,7 @@ class: inverse, middle, left, my-title-slide, title-slide
 ### Department of Animal &amp; Veterinary Sciences · Aarhus University
 ]
 .date[
-### 1400–1900 CET (1300–1800 UTC) Friday 26th April, 2024
+### 1400–1900 CET (1300–1800 UTC) Friday 24th January, 2025
 ]
 
 ---
@@ -75,7 +76,7 @@ Smoothing temporally autocorrelated data can `--&gt;` over fitting
 
 .smaller[
 
-```r
+``` r
 set.seed(321)
 n &lt;- 100
 time &lt;- 1:n
@@ -109,7 +110,7 @@ plt
 .col-6[
 .smaller[
 
-```r
+``` r
 # standard fit
 m_reml &lt;- gam(y ~ s(time, k = 20), data = df,
               method = "REML")
@@ -212,7 +213,7 @@ Fit with `gamm()` using `correlation` argument
 .col-6[
 .smaller[
 
-```r
+``` r
 # standard fit
 m_ar1 &lt;- gamm(y ~ s(time, k = 20), data = df,
               correlation = corAR1(form = ~ 1),
@@ -358,7 +359,7 @@ In {mgcv} 📦 special `family` functions are provided for some distributions wh
 Provide a list of formulas, 1 per linear predictor
 
 
-```r
+``` r
 gam(list(accel ~ s(times, k = 20, bs = "ad"),
                ~ s(times, k = 10)),
          data = mcycle,
@@ -420,7 +421,7 @@ Implemented in the {qgam} 📦 that builds upon {mgcv} so stuff just works
 # Quantile GAMs
 
 
-```r
+``` r
 ## Load the mcycle data
 data(mcycle, package = "MASS")
 

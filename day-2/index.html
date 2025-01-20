@@ -4,6 +4,7 @@
     <title>Generalized Additive Models</title>
     <meta charset="utf-8" />
     <meta name="author" content="Gavin Simpson" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
     <link href="libs/remark-css/default.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" type="text/css" />
     <link rel="stylesheet" href="slides.css" type="text/css" />
@@ -25,7 +26,7 @@ class: inverse, middle, left, my-title-slide, title-slide
 ### Department of Animal &amp; Veterinary Sciences · Aarhus University
 ]
 .date[
-### 1400–2000 CET (1300–1900 UTC) Tuesday 23rd April, 2024
+### 1400–2000 CET (1300–1900 UTC) Tuesday 21st January, 2025
 ]
 
 ---
@@ -177,7 +178,7 @@ gtemp
 # Fitting a GAM
 
 
-```r
+``` r
 library("mgcv")
 m &lt;- gam(Temperature ~ s(Year), data = gtemp, method = 'REML')
 summary(m)
@@ -1030,7 +1031,7 @@ mcycle
 .row[
 .col-6[
 
-```r
+``` r
 plt &lt;- mcycle |&gt;
   ggplot(aes(x = times, y = accel)) +
     geom_point() +
@@ -1078,7 +1079,7 @@ bfun
 # TPRS basis
 
 
-```r
+``` r
 draw(bfun)
 ```
 .center[
@@ -1090,7 +1091,7 @@ draw(bfun)
 # TPRS basis
 
 
-```r
+``` r
 draw(bfun) + facet_wrap(~ .bf)
 ```
 .center[
@@ -1186,7 +1187,7 @@ A problem for `month` as we don't expect December &amp; January to be *exactly* 
 Set the outer knots
 
 
-```r
+``` r
 knots &lt;- list(month = c(0.5, 12.5))
 bfun &lt;- basis(s(month, bs = "cc"), data = month_df, knots = knots)
 draw(bfun) + facet_wrap(~ .bf)

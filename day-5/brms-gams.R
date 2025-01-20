@@ -1,8 +1,10 @@
 # Analyse the Global temperature anomaly record with BRMS
 
 # packages
-pkgs <- c("mgcv", "brms", "ggplot2", "readr", "dplyr", "tidyr", "gratia")
-vapply(pkgs, library, logical(1), character.only = TRUE, logical.return = TRUE,
+pkgs <- c("mgcv", "brms", "ggplot2", "readr", "dplyr", "tidyr", "gratia",
+          "tibble")
+vapply(pkgs, library, logical(1), character.only = TRUE,
+       logical.return = TRUE,
        quietly = TRUE)
 
 # load temperature record
@@ -18,23 +20,30 @@ gtemp <- read_table(URL, col_types = "nnnnnnnnnnnn",
 gtemp_plt <- ggplot(gtemp, aes(x = Year, y = Temperature)) +
     geom_line() +
     geom_point() +
-    labs(x = "Year", y = expression(Temeprature ~ degree * C))
+    labs(x = "Year", y = expression(Temperature ~ degree * C))
 gtemp_plt
 
 # fit the model, default everything; adjust cores to reflect the number of
-#   phsyical cores on your machine
+#   physical cores on your machine
 m <- brm(bf(Temperature ~ s(Year)), # <== formula wrapped in bf()
             data = gtemp,
             family = gaussian(),
-            cores = 4, # <== adjust me
+            cores = 3, # <== adjust me
             seed = 17,
-            control = list(adapt_delta = 0.95))
+            control = list(adapt_delta = 0.95),
+         backend = "cmdstanr")
+
+# s(f, bs = "re") x No!
+# (1 | f) Yes!
+# te() x No
+# t2() Yes!
 
 # Model summary
 summary(m)
 
 # The equivalent of draw.gam / plot.gam is
 c_sm <- conditional_smooths(m)
+plot(c_sm)
 
 # posterior predictive checks; can we reproduce the data with samples from
 #   the posterior?
@@ -82,7 +91,8 @@ m_prior1 <- brm(bf(Temperature ~ s(Year)),
                 sample_prior = "only", # <== only prior samples
                 cores = 4,
                 seed = 17,
-                control = list(adapt_delta = 0.95))
+                control = list(adapt_delta = 0.95),
+                backend = "cmdstanr")
 
 ## If you want to look at draws from the prior for the smooth (think equivalent
 ##   of draw.gam but sampling coefficients for the smooths from the prior only,
@@ -121,9 +131,9 @@ pp_check(m_prior1, type = "ecdf_overlay")
 
 ## Now lets change the priors for the variance of the random effect / wiggliness
 ##   of the smooth as well as the other terms
-pr <- c(prior(student_t(10, 0, 2.5), class = "b"),
-        prior(student_t(10, 0, 2), class = "b", coef = "sYear_1"),
-        prior(student_t(10, 0, 2), class = "sds"))
+pr <- c(prior(student_t(10, 0, 1), class = "b"),
+        prior(student_t(10, 0, 1), class = "b", coef = "sYear_1"),
+        prior(student_t(10, 0, 1), class = "sds"))
 
 # prior sampling, default everything
 m_prior2 <- brm(bf(Temperature ~ 0 + Intercept + s(Year)), # <== alt version
@@ -133,7 +143,8 @@ m_prior2 <- brm(bf(Temperature ~ 0 + Intercept + s(Year)), # <== alt version
                 sample_prior = "only", # <== sample from prior only
                 cores = 4, # <== change me
                 seed = 17,
-                control = list(adapt_delta = 0.95))
+                control = list(adapt_delta = 0.95),
+                backend = "cmdstanr")
 
 ## posterior (prior!!) smooths for this new prior
 p_year2 <- posterior_smooths(m_prior2, smooth = "s(Year)")
@@ -150,7 +161,7 @@ pr_draws2
 # plot a sample of the draws
 n_take <- 50                                       # how many draws to plot?
 n <- nrow(gtemp)                                   # how many data?
-set.seed(3)                                        # repeatible
+set.seed(3)                                        # repeatable
 pr_draws2 %>%
   filter(draw %in% sample(seq_len(n), n_take)) %>% # sample draws
   ggplot(aes(x = Year, y = value, group = draw)) + # plot
@@ -193,7 +204,7 @@ prior_pred %>%
 ## Still not good
 
 ##   If you want draws from the prior distribution of Y, use
-pr_draws_y <- predict(m_prior2, summary + FALSE)
+pr_draws_y <- predict(m_prior2, summary = FALSE)
 ## This is a matrix which you can wrangle as we did for pr_draws2 above if you
 ## want to extract and plot an actual draw from the prior against the observed
 ## Y.
@@ -201,8 +212,11 @@ pr_draws_y <- predict(m_prior2, summary + FALSE)
 ## Task: alter the priors above to give prior draws that are more like the data
 ##
 ## * copy the code for pr below
-pr2 <-                                              # <== your prior code here
+#pr2 <-                                              # <== your prior code here
 
+pr2 <- c(prior(normal(0, 2), class = "b"),
+         prior(normal(0, 2), class = "b", coef = "sYear_1"),
+         prior(normal(0, 2), class = "sds"))
 ## modify the priors so that we get data that looks more like the data
 ## you could change the df and/or the scale of the student_t() priors, e.g.
 ##
