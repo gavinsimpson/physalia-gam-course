@@ -72,6 +72,16 @@ pkgs <- c("mgcv",  "gamm4", "tidyverse", "readxl", "mgcViz", "DHARMa", "gratia",
 install.packages(pkgs, Ncpus = 4) # set Ncpus to # of *physical* CPU cores you have
 ```
 
+We might need the development version of *gratia*; you can install this with
+
+```r
+# Install gratia in R
+install.packages("gratia", repos = c(
+  "https://gavinsimpson.r-universe.dev",
+  "https://cloud.r-project.org"
+))
+```
+
 Now we must check that we actually do have recent versions of the packages installed; if your R is not reasonably new (gratia requires R>= 4.1.0, but some of the *tidyverse* packages may need an R that is newer than this) then you may be stuck on out-dated versions of the packages listed above. This is why I recommend that you install the latest version of R. If you choose to use an older version of R than version 4.4.x (where *x* is 0, 1, or 2 currently) then you do so at your own risk and you cannot expect support with setup problems during the course.
 
 ```r
@@ -83,7 +93,7 @@ On my system I see:
 ```r
 > vapply(pkgs, packageDescription, character(1), drop = TRUE, fields = "Version")
      mgcv     gamm4 tidyverse    readxl    mgcViz    DHARMa    gratia
-  "1.9-1"   "0.2-6"   "2.0.0"   "1.4.3"  "0.1.11"   "0.4.7"  "0.10.0"
+  "1.9-1"   "0.2-6"   "2.0.0"   "1.4.3"  "0.1.11"   "0.4.7"  "0.10.0.9001"
 ```
 
 The key ones are to be sure that *gratia* is version "0.10.0", *mgcv* is at least "1.9-0" (preferably "0.9-1"), and *tidyverse* is "2.0.0".
