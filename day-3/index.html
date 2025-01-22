@@ -419,7 +419,7 @@ There are multiple ways to build tensor products in *mgcv*
 
 1. `te(x, z)`
 2. `t2(x, z)`
-3. `s(x) + s(z) + ti(x, z)`
+3. `ti(x) + ti(z) + ti(x, z)`
 
 `te()` is the most general form but not usable in `gamm4::gamm4()` or *brms*
 
@@ -452,6 +452,164 @@ Two ways for factor smooth interactions
 	* fully penalized; include group means
 	* closer to random effects
 	* `y ~ s(x, f, bs = 'fs')`
+
+---
+
+# `by` smooths
+
+Three options for the `by` argument
+
+1. a continuous vector &amp;mdash; varying coefficient model
+
+2. a factor vector &amp;mdash; a factor-smooth interaction
+
+3. an ordered factor vector &amp;mdash; an ANOVA-like factor-smooth interaction
+
+---
+
+# Numeric `by`
+
+In a parametric model we have terms like
+
+`$$\beta_j x_{ij}$$`
+
+With a fixed, parametric effect of `\(\mathbf{x}\)` on `\(\mathbf{y}\)`
+
+With a numeric `by` we can make the effect of `\(\mathbf{x}\)` on `\(\mathbf{y}\)` vary smoothly as a function of other covariates
+
+`$$f_j(z_i) x_{ij}$$`
+
+---
+
+# Factor `by`
+
+Two options for factor `by` models
+
+1. a factor vector &amp;mdash; a factor-smooth interaction, and
+
+2. an ordered factor vector &amp;mdash; an ANOVA-like factor-smooth interaction
+
+---
+
+# Factor `by`
+
+A factor `by` variable results in a smooth being created for each level of the factor `f`
+
+
+``` r
+gam(y ~ f + s(x, by = f), data = data, ....)
+```
+
+Each of the smooths is still centred about 0 so doesn't include the group mean
+
+Must include the parametric factor effect of `f` to model those group means
+
+---
+
+# Ordered factor `by`
+
+This form also results in a smooth being created for each level of `f`, but it does so as:
+
+1. the smooth effect of `\(x\)` for the reference group, plus
+
+2. difference smooths for each other level of the factor (groups), where difference is with respect to the ference group's smooth
+
+
+``` r
+data$o &lt;- ordered(data$f)
+contrasts(data$o) &lt;- "contr.treatment"
+gam(y ~ o + s(x) + s(x, by = o), data = data, ....)
+```
+
+---
+
+# Constrained factor interactions
+
+This is like the factor `by` variant, but fits
+
+1. and average or global smooth of `\(x\)`, plus
+
+2. a difference smooth for each level of factor `f`
+
+It also includes the group means, so you don't need to add the parametric effects
+
+
+``` r
+gam(y ~ s(x) + s(x, f, bs = "sz"), data = data, ....)
+```
+
+---
+
+# Example
+
+Weights of chicks and effect of diet
+
+
+``` r
+data(ChickWeight)
+cw &lt;- ChickWeight |&gt;
+  as_tibble() |&gt;
+  janitor::clean_names()
+cw 
+```
+
+```
+## # A tibble: 578 × 4
+##    weight  time chick diet 
+##     &lt;dbl&gt; &lt;dbl&gt; &lt;ord&gt; &lt;fct&gt;
+##  1     42     0 1     1    
+##  2     51     2 1     1    
+##  3     59     4 1     1    
+##  4     64     6 1     1    
+##  5     76     8 1     1    
+##  6     93    10 1     1    
+##  7    106    12 1     1    
+##  8    125    14 1     1    
+##  9    149    16 1     1    
+## 10    171    18 1     1    
+## # ℹ 568 more rows
+```
+
+---
+
+# Factor `by`
+
+
+``` r
+m_cw_f &lt;- gam(weight ~ diet + s(time, by = diet),
+  data = cw, family = tw(), method = "REML")
+draw(m_cw_f)
+```
+
+&lt;img src="index_files/figure-html/chick-factor-by-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Ordered factor `by`
+
+
+``` r
+cw &lt;- cw |&gt; mutate(dieto = ordered(diet))
+contrasts(cw$dieto) &lt;- "contr.treatment"
+m_cw_o &lt;- gam(weight ~ dieto + s(time) + s(time, by = dieto),
+  data = cw, family = tw(), method = "REML")
+draw(m_cw_o)
+```
+
+&lt;img src="index_files/figure-html/chick-ordered-factor-by-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Constrained Factor Interaction
+
+
+``` r
+m_cw_z &lt;- gam(weight ~ s(time) + s(time, diet, bs = "sz"),
+  data = cw, family = tw(), method = "REML")
+draw(m_cw_z)
+```
+
+&lt;img src="index_files/figure-html/chick-factor-sz-1.svg" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -913,6 +1071,44 @@ plot(resids)
 
 &lt;img src="index_files/figure-html/dharma-plots-negbin-1.svg" width="90%" style="display: block; margin: auto;" /&gt;
 
+---
+
+# Larks revisited
+
+
+```
+## # A tibble: 6 × 8
+##   QUADRICULA TET   crestlark linnet      x       y     e     n
+##   &lt;chr&gt;      &lt;chr&gt; &lt;fct&gt;     &lt;fct&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 NG56       E     &lt;NA&gt;      &lt;NA&gt;   551000 4669000   551  4669
+## 2 NG56       J     &lt;NA&gt;      &lt;NA&gt;   553000 4669000   553  4669
+## 3 NG56       P     &lt;NA&gt;      &lt;NA&gt;   555000 4669000   555  4669
+## 4 NG56       U     &lt;NA&gt;      &lt;NA&gt;   557000 4669000   557  4669
+## 5 NG56       Z     &lt;NA&gt;      &lt;NA&gt;   559000 4669000   559  4669
+## 6 NG66       E     &lt;NA&gt;      &lt;NA&gt;   561000 4669000   561  4669
+```
+
+
+``` r
+crest &lt;- gam(crestlark ~ s(e, n, k = 100),
+             data = larks,
+             family = binomial,
+             method = "REML")
+```
+
+---
+
+# Larks revisited
+
+
+``` r
+resids &lt;- simulateResiduals(fittedModel = crest, plot = FALSE)
+plot(resids)
+```
+
+![](index_files/figure-html/dharma-larks-sim-residuals-1.svg)&lt;!-- --&gt;
+
+Look's pretty good to me 🤩
 
 ---
 class: inverse center middle subsection

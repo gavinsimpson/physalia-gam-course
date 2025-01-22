@@ -1232,92 +1232,6 @@ draw(m) + plot_layout(nrow = 1, ncol = 4)
 ---
 class: inverse middle center big-subsection
 
-# Penalties
-
----
-
-# How wiggly?
-
-$$
-\int_{\mathbb{R}} [f^{\prime\prime}]^2 dx = \boldsymbol{\beta}^{\mathsf{T}}\mathbf{S}\boldsymbol{\beta}
-$$
-
-`\(\mathbf{S}\)` is known as the penalty matrix
-
-Penalty matrix doesn't have to be derivative based &amp;mdash; *P-splines*
-
-As long as we can write `\(\mathbf{S}\)` so that it measures the complexity of smooth as a function of the parameters of the smooth we're OK
-
----
-
-# TPRS basis
-
-
-```r
-new_df &lt;- with(mcycle, tibble(times = evenly(times, n = 100)))
-bfun &lt;- basis(s(times), data = new_df, constraints = TRUE)
-draw(bfun) + facet_wrap(~ .bf)
-```
-
-&lt;img src="index_files/figure-html/unnamed-chunk-6-1.svg" width="85%" style="display: block; margin: auto;" /&gt;
-
----
-
-# TPRS basis
-
-
-```r
-m &lt;-  gam(accel ~ s(times), dat = mcycle, method = "REML")
-S &lt;- penalty(m, smooth = "s(times)")
-S
-```
-
-```
-## # A tibble: 81 × 6
-##    .smooth  .type .penalty .row  .col  .value
-##    &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;
-##  1 s(times) TPRS  s(times) F1    F1    13.1  
-##  2 s(times) TPRS  s(times) F1    F2     2.71 
-##  3 s(times) TPRS  s(times) F1    F3     6.61 
-##  4 s(times) TPRS  s(times) F1    F4     2.05 
-##  5 s(times) TPRS  s(times) F1    F5     6.49 
-##  6 s(times) TPRS  s(times) F1    F6    -2.38 
-##  7 s(times) TPRS  s(times) F1    F7     7.97 
-##  8 s(times) TPRS  s(times) F1    F8     0.450
-##  9 s(times) TPRS  s(times) F1    F9     0    
-## 10 s(times) TPRS  s(times) F2    F1     2.71 
-## # ℹ 71 more rows
-```
-
----
-
-# TPRS basis &amp; penalty
-
-.center[
-&lt;img src="index_files/figure-html/unnamed-chunk-8-1.png" width="100%" /&gt;
-]
----
-
-# CRS basis &amp; penalty
-
-
-```r
-m &lt;-  gam(accel ~ s(times, bs = "cr"), data = mcycle, method = "REML")
-S &lt;- penalty(m, smooth = "s(times)")
-# draw(S)
-```
-
----
-
-# CRS basis &amp; penalty
-
-.center[
-&lt;img src="index_files/figure-html/unnamed-chunk-10-1.png" width="100%" /&gt;
-]
-
----
-class: inverse middle center big-subsection
-
 # gratia 📦
 
 ---
@@ -1417,6 +1331,92 @@ draw(m_sim,
 
 .center[
 &lt;img src="index_files/figure-html/draw-mcycle-options-plot-1.svg" width="95%" /&gt;
+]
+
+---
+class: inverse middle center big-subsection
+
+# Penalties
+
+---
+
+# How wiggly?
+
+$$
+\int_{\mathbb{R}} [f^{\prime\prime}]^2 dx = \boldsymbol{\beta}^{\mathsf{T}}\mathbf{S}\boldsymbol{\beta}
+$$
+
+`\(\mathbf{S}\)` is known as the penalty matrix
+
+Penalty matrix doesn't have to be derivative based &amp;mdash; *P-splines*
+
+As long as we can write `\(\mathbf{S}\)` so that it measures the complexity of smooth as a function of the parameters of the smooth we're OK
+
+---
+
+# TPRS basis
+
+
+```r
+new_df &lt;- with(mcycle, tibble(times = evenly(times, n = 100)))
+bfun &lt;- basis(s(times), data = new_df, constraints = TRUE)
+draw(bfun) + facet_wrap(~ .bf)
+```
+
+&lt;img src="index_files/figure-html/unnamed-chunk-6-1.svg" width="85%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# TPRS basis
+
+
+```r
+m &lt;-  gam(accel ~ s(times), dat = mcycle, method = "REML")
+S &lt;- penalty(m, smooth = "s(times)")
+S
+```
+
+```
+## # A tibble: 81 × 6
+##    .smooth  .type .penalty .row  .col  .value
+##    &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;
+##  1 s(times) TPRS  s(times) F1    F1    13.1  
+##  2 s(times) TPRS  s(times) F1    F2     2.71 
+##  3 s(times) TPRS  s(times) F1    F3     6.61 
+##  4 s(times) TPRS  s(times) F1    F4     2.05 
+##  5 s(times) TPRS  s(times) F1    F5     6.49 
+##  6 s(times) TPRS  s(times) F1    F6    -2.38 
+##  7 s(times) TPRS  s(times) F1    F7     7.97 
+##  8 s(times) TPRS  s(times) F1    F8     0.450
+##  9 s(times) TPRS  s(times) F1    F9     0    
+## 10 s(times) TPRS  s(times) F2    F1     2.71 
+## # ℹ 71 more rows
+```
+
+---
+
+# TPRS basis &amp; penalty
+
+.center[
+&lt;img src="index_files/figure-html/unnamed-chunk-8-1.png" width="100%" /&gt;
+]
+---
+
+# CRS basis &amp; penalty
+
+
+```r
+m &lt;-  gam(accel ~ s(times, bs = "cr"), data = mcycle, method = "REML")
+S &lt;- penalty(m, smooth = "s(times)")
+# draw(S)
+```
+
+---
+
+# CRS basis &amp; penalty
+
+.center[
+&lt;img src="index_files/figure-html/unnamed-chunk-10-1.png" width="100%" /&gt;
 ]
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>

@@ -350,6 +350,31 @@ $$\log_e \left( \frac{\pi}{1-\pi} \right) = \beta_0 + \beta_1 X_i$$
 
 ---
 
+# Link function
+
+```{r logit-transformation, echo = FALSE, fig.align = "center"}
+wasp <- read_csv(here("data", "darlingtonia.csv"), comment = "#",
+                 col_types = "dl")
+# plot
+p1 <- ggplot(wasp,
+  aes(x = leafHeight, y = as.numeric(visited))
+) +
+  geom_point() +
+  labs(
+    x = "Leaf Height [cm]",
+    y = "Probability of visitation"
+  )
+df <- data.frame(p = (1:999) / 1000)
+df <- transform(df, logitp = qlogis(p))
+p2 <- p1 + geom_smooth(method = "lm", se = FALSE)
+p3 <- ggplot(df, aes(x = p, y = logitp)) + geom_line() +
+  ylab(expression("Log Odds" ~~~ log * bgroup("(", frac(p, 1 - p),")"))) +
+  xlab("Probability of visitation") + coord_flip() # ? flip this
+p2 + p3
+```
+
+---
+
 # Logistic regression &mdash; *Darlingtonia*
 
 ```{r load-darl-data, echo = TRUE}

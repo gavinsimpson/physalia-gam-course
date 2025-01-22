@@ -433,7 +433,7 @@ There are multiple ways to build tensor products in *mgcv*
 
 1. `te(x, z)`
 2. `t2(x, z)`
-3. `s(x) + s(z) + ti(x, z)`
+3. `ti(x) + ti(z) + ti(x, z)`
 
 `te()` is the most general form but not usable in `gamm4::gamm4()` or *brms*
 
@@ -468,6 +468,134 @@ Two ways for factor smooth interactions
 	* fully penalized; include group means
 	* closer to random effects
 	* `y ~ s(x, f, bs = 'fs')`
+
+---
+
+# `by` smooths
+
+Three options for the `by` argument
+
+1. a continuous vector &mdash; varying coefficient model
+
+2. a factor vector &mdash; a factor-smooth interaction
+
+3. an ordered factor vector &mdash; an ANOVA-like factor-smooth interaction
+
+---
+
+# Numeric `by`
+
+In a parametric model we have terms like
+
+$$\beta_j x_{ij}$$
+
+With a fixed, parametric effect of $\mathbf{x}$ on $\mathbf{y}$
+
+With a numeric `by` we can make the effect of $\mathbf{x}$ on $\mathbf{y}$ vary smoothly as a function of other covariates
+
+$$f_j(z_i) x_{ij}$$
+
+---
+
+# Factor `by`
+
+Two options for factor `by` models
+
+1. a factor vector &mdash; a factor-smooth interaction, and
+
+2. an ordered factor vector &mdash; an ANOVA-like factor-smooth interaction
+
+---
+
+# Factor `by`
+
+A factor `by` variable results in a smooth being created for each level of the factor `f`
+
+```{r, eval = FALSE}
+gam(y ~ f + s(x, by = f), data = data, ....)
+```
+
+Each of the smooths is still centred about 0 so doesn't include the group mean
+
+Must include the parametric factor effect of `f` to model those group means
+
+---
+
+# Ordered factor `by`
+
+This form also results in a smooth being created for each level of `f`, but it does so as:
+
+1. the smooth effect of $x$ for the reference group, plus
+
+2. difference smooths for each other level of the factor (groups), where difference is with respect to the ference group's smooth
+
+```{r, eval = FALSE}
+data$o <- ordered(data$f)
+contrasts(data$o) <- "contr.treatment"
+gam(y ~ o + s(x) + s(x, by = o), data = data, ....)
+```
+
+---
+
+# Constrained factor interactions
+
+This is like the factor `by` variant, but fits
+
+1. and average or global smooth of $x$, plus
+
+2. a difference smooth for each level of factor `f`
+
+It also includes the group means, so you don't need to add the parametric effects
+
+```{r, eval = FALSE}
+gam(y ~ s(x) + s(x, f, bs = "sz"), data = data, ....)
+```
+
+---
+
+# Example
+
+Weights of chicks and effect of diet
+
+```{r chick-load-data}
+data(ChickWeight)
+cw <- ChickWeight |>
+  as_tibble() |>
+  janitor::clean_names()
+cw 
+```
+
+---
+
+# Factor `by`
+
+```{r chick-factor-by, fig.align = "center"}
+m_cw_f <- gam(weight ~ diet + s(time, by = diet),
+  data = cw, family = tw(), method = "REML")
+draw(m_cw_f)
+```
+
+---
+
+# Ordered factor `by`
+
+```{r chick-ordered-factor-by, fig.align = "center"}
+cw <- cw |> mutate(dieto = ordered(diet))
+contrasts(cw$dieto) <- "contr.treatment"
+m_cw_o <- gam(weight ~ dieto + s(time) + s(time, by = dieto),
+  data = cw, family = tw(), method = "REML")
+draw(m_cw_o)
+```
+
+---
+
+# Constrained Factor Interaction
+
+```{r chick-factor-sz, fig.align = "center"}
+m_cw_z <- gam(weight ~ s(time) + s(time, diet, bs = "sz"),
+  data = cw, family = tw(), method = "REML")
+draw(m_cw_z)
+```
 
 ---
 
@@ -881,6 +1009,40 @@ resids <- simulateResiduals(fittedModel = negbin_model, plot = FALSE)
 plot(resids)
 ```
 
+---
+
+# Larks revisited
+
+```{r birds-1, echo = FALSE, cache = FALSE}
+library("here"); library("readr"); library("dplyr"); library("mgcv")
+larks <-  read_csv(here("data", "larks.csv"),
+                   col_types = "ccdddd")
+
+larks <- larks %>%
+  mutate(crestlark = factor(crestlark),
+         linnet = factor(linnet),
+         e = x / 1000,
+         n = y / 1000)
+head(larks)
+```
+
+```{r birds-gam-1, echo = TRUE, cache = TRUE}
+crest <- gam(crestlark ~ s(e, n, k = 100),
+             data = larks,
+             family = binomial,
+             method = "REML")
+```
+
+---
+
+# Larks revisited
+
+```{r dharma-larks-sim-residuals}
+resids <- simulateResiduals(fittedModel = crest, plot = FALSE)
+plot(resids)
+```
+
+Look's pretty good to me 🤩
 
 ---
 class: inverse center middle subsection
