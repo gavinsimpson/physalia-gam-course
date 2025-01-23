@@ -115,7 +115,7 @@ knitr::include_graphics("resources/miller-bayesian-gam-interpretation-fig.svg")
 ]
 
 .smaller[
-Miller (2021) Bayesian Views of Generalized Additive Modelling. [*arXiv*:1902.01330v3](http://arxiv.org/abs/1902.01330v3)
+Miller (2025) Bayesian Views of Generalized Additive Modelling. [*arXiv*:1902.01330](https://doi.org/10.48550/arXiv.1902.01330)
 ]
 
 ---
@@ -310,8 +310,7 @@ Data has a known unrelated effect & 2 spurious effects
 m <- gam(y ~ s(x0) + s(x1) + s(x2) + s(x3) +
            s(x4) + s(x5),
          data = dat,
-         method = "REML",
-         select = TRUE)
+         method = "REML")
 
 summary(m) # ==>
 ```

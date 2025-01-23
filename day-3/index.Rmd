@@ -1214,9 +1214,9 @@ knitr::include_graphics("resources/cross-validated.png")
 
 .small[
 ```{r load-galveston}
-galveston <- read_csv("https://bit.ly/gam-galveston") %>%
+galveston <- read_csv("https://bit.ly/gam-galveston") |>
     mutate(datetime = as.POSIXct(paste(DATE, TIME),
-                                 format = '%m/%d/%y %H:%M', tz = "CDT"),
+                                 format = '%m/%d/%y %H:%M', tz = "CST6CDT"),
            STATION_ID = factor(STATION_ID),
            DoY = as.numeric(format(datetime, format = '%j')),
            ToD = as.numeric(format(datetime, format = '%H')) +
@@ -1400,8 +1400,8 @@ fv <- fitted_values(m, data = pdata)
 # set fitted values to NA for grid points that are too far from the data
 ind <- too_far(pdata$LONGITUDE, pdata$LATITUDE,
                galveston$LONGITUDE, galveston$LATITUDE, dist = 0.1)
-fv <- fv %>%
-  mutate(fitted = if_else(ind, NA_real_, .fitted))
+fv <- fv |>
+  mutate(.fitted = if_else(ind, NA_real_, .fitted))
 ```
 
 ---
@@ -1411,7 +1411,7 @@ fv <- fv %>%
 ```{r galveston-full-predict-plot, fig.show = 'hide', fig.height = 10, fig.width = 1.777777*10}
 plt <- ggplot(fv, aes(x = LONGITUDE, y = LATITUDE)) +
     geom_raster(aes(fill = .fitted)) + facet_wrap(~ YEAR, ncol = 12) +
-    scale_fill_viridis(name = expression(degree*C), option = "plasma",
+    scale_fill_viridis_c(name = expression(degree*C), option = "plasma",
       na.value = "transparent") +
     coord_quickmap() +
     scale_x_continuous(guide = guide_axis(n.dodge = 2,
@@ -1434,8 +1434,8 @@ plt
 ```{r galveston-animation, echo = FALSE, results = 'hide'}
 p <- ggplot(fv, aes(x = LONGITUDE, y = LATITUDE, frame = YEAR)) +
     geom_raster(aes(fill = .fitted)) +
-    scale_fill_viridis(name = expression(degree*C), option = "plasma",
-                       na.value = "transparent") +
+    scale_fill_viridis_c(name = expression(degree*C), option = "plasma",
+      na.value = "transparent") +
     coord_quickmap() +
     theme(legend.position = "right") +
     labs(x = "Longitude", y = "Latitude")

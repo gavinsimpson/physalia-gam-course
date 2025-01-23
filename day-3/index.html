@@ -1302,10 +1302,10 @@ Cross Validated question
 
 .small[
 
-```r
-galveston &lt;- read_csv("https://bit.ly/gam-galveston") %&gt;%
+``` r
+galveston &lt;- read_csv("https://bit.ly/gam-galveston") |&gt;
     mutate(datetime = as.POSIXct(paste(DATE, TIME),
-                                 format = '%m/%d/%y %H:%M', tz = "CDT"),
+                                 format = '%m/%d/%y %H:%M', tz = "CST6CDT"),
            STATION_ID = factor(STATION_ID),
            DoY = as.numeric(format(datetime, format = '%j')),
            ToD = as.numeric(format(datetime, format = '%H')) +
@@ -1577,7 +1577,7 @@ draw(m, scales = "free", rug = FALSE, n = 50) +  plot_layout(widths = 1) &amp;
 # Galveston Bay &amp;mdash; predict
 
 
-```r
+``` r
 pdata &lt;- data_slice(m, ToD = 12, DoY = 180,
                     YEAR = evenly(YEAR, by = 1),
                     LONGITUDE = evenly(LONGITUDE, n = 50),
@@ -1586,8 +1586,8 @@ fv &lt;- fitted_values(m, data = pdata)
 # set fitted values to NA for grid points that are too far from the data
 ind &lt;- too_far(pdata$LONGITUDE, pdata$LATITUDE,
                galveston$LONGITUDE, galveston$LATITUDE, dist = 0.1)
-fv &lt;- fv %&gt;%
-  mutate(fitted = if_else(ind, NA_real_, .fitted))
+fv &lt;- fv |&gt;
+  mutate(.fitted = if_else(ind, NA_real_, .fitted))
 ```
 
 ---
@@ -1598,7 +1598,7 @@ fv &lt;- fv %&gt;%
 ``` r
 plt &lt;- ggplot(fv, aes(x = LONGITUDE, y = LATITUDE)) +
     geom_raster(aes(fill = .fitted)) + facet_wrap(~ YEAR, ncol = 12) +
-    scale_fill_viridis(name = expression(degree*C), option = "plasma",
+    scale_fill_viridis_c(name = expression(degree*C), option = "plasma",
       na.value = "transparent") +
     coord_quickmap() +
     scale_x_continuous(guide = guide_axis(n.dodge = 2,

@@ -93,7 +93,7 @@ When *averaged* over the range of covariate, 1 - &amp;alpha; coverage is approxi
 ]
 
 .smaller[
-Miller (2021) Bayesian Views of Generalized Additive Modelling. [*arXiv*:1902.01330v3](http://arxiv.org/abs/1902.01330v3)
+Miller (2025) Bayesian Views of Generalized Additive Modelling. [*arXiv*:1902.01330](https://doi.org/10.48550/arXiv.1902.01330)
 ]
 
 ---
@@ -225,8 +225,7 @@ Data has a known unrelated effect &amp; 2 spurious effects
 m &lt;- gam(y ~ s(x0) + s(x1) + s(x2) + s(x3) +
            s(x4) + s(x5),
          data = dat,
-         method = "REML",
-         select = TRUE)
+         method = "REML")
 
 summary(m) # ==&gt;
 ```
@@ -246,23 +245,23 @@ summary(m) # ==&gt;
 ## 
 ## Parametric coefficients:
 ##             Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)   3.9300     0.1601   24.54   &lt;2e-16 ***
+## (Intercept)   3.9300     0.1603   24.51   &lt;2e-16 ***
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
 ## Approximate significance of smooth terms:
-##             edf Ref.df      F p-value    
-## s(x0) 1.6991607      9  0.520  0.0539 .  
-## s(x1) 2.0925386      9  5.343  &lt;2e-16 ***
-## s(x2) 6.5698557      9 15.066  &lt;2e-16 ***
-## s(x3) 0.0000762      9  0.000  0.7022    
-## s(x4) 0.3056471      9  0.049  0.2289    
-## s(x5) 0.6950587      9  0.253  0.0711 .  
+##         edf Ref.df      F p-value    
+## s(x0) 2.336  2.919  2.181  0.0982 .  
+## s(x1) 2.312  2.862 17.105  &lt;2e-16 ***
+## s(x2) 7.093  8.128 16.402  &lt;2e-16 ***
+## s(x3) 1.403  1.697  0.218  0.8158    
+## s(x4) 1.000  1.000  1.495  0.2230    
+## s(x5) 1.000  1.000  2.994  0.0852 .  
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
-## R-sq.(adj) =  0.512   Deviance explained =   54%
-## -REML = 466.22  Scale est. = 5.1285    n = 200
+## R-sq.(adj) =  0.511   Deviance explained = 54.8%
+## -REML = 462.71  Scale est. = 5.1416    n = 200
 ```
 ]
 ]
