@@ -41,6 +41,7 @@ library("viridis")
 library("readr")
 library("dplyr")
 library("sf")
+library("gglm")
 
 ## plot defaults
 theme_set(theme_bw(base_size = 16, base_family = "Fira Sans"))
@@ -223,11 +224,11 @@ That process could be ARMA(*p*, *q*) or a continuous time AR(1)
 
 --
 
-Fit with `gamm()` using `correlation` argument
+Fit with `gamm()` using `correlation` argument, or `bam()` (AR(1) only)
 
 ---
 
-# Smoothing autocorrelated data
+# Smoothing autocorrelated data &mdash; `gamm()`
 
 .row[
 
@@ -236,21 +237,22 @@ Fit with `gamm()` using `correlation` argument
 ```{r fit-correlated-data-gamm, fig.show = "hide"}
 # standard fit
 m_ar1 <- gamm(y ~ s(time, k = 20), data = df,
-              correlation = corAR1(form = ~ 1),
+              correlation = corAR1(form = ~ 1), #<--
               method = "REML")
 
 # fitted values
 fv_ar1 <- fitted_values(m_ar1$gam)
 
 # plot
-plt +
+gamm_plt <- plt +
   geom_ribbon(data = fv_ar1,
-              aes(ymin = .lower_ci, ymax = .upper_ci,
-                  y = NULL),
-              alpha = 0.2, fill = "hotpink") +
+    aes(ymin = .lower_ci, ymax = .upper_ci,
+      y = NULL),
+    alpha = 0.2, fill = "hotpink") +
   geom_line(data = fv_ar1,
-            aes(x = time, y = .fitted),
-            col = "hotpink", lwd = 1.5)
+    aes(x = time, y = .fitted),
+    col = "hotpink", lwd = 1.5)
+gamm_plt
 ```
 ]
 ]
@@ -261,6 +263,120 @@ plt +
 ```
 ]
 ]
+
+---
+
+# Smoothing autocorrelated data &mdash; `bam()`
+
+Estimate an AR(1) term in the covariance with `bam()`
+
+Provide a value of $\rho$ (`rho`) &mdash; use (P)ACF
+
+```{r fit-correlated-data-bam-0}
+m <- bam(y ~ s(time, k = 10), data = df, method = "fREML")
+```
+.row[
+
+.col-6[
+
+ACF
+
+```{r bam-acf}
+acf(resid(m))
+```
+]
+
+.col-6[
+
+Partial ACF
+
+```{r bam-pacf}
+pacf(resid(m))
+```
+]
+
+]
+
+---
+
+# Smoothing autocorrelated data &mdash; `bam()`
+
+Use estimate of $\rho$, say `rho = 0.35`
+
+```{r fit-correlated-data-bam-1, fig.show = "hide"}
+# standard fit
+b_ar1 <- bam(
+  y ~ s(time, k = 20), data = df,
+  rho = 0.35, #<--
+  method = "fREML"
+)
+
+```
+
+---
+
+# Smoothing autocorrelated data &mdash; `bam()`
+
+.row[
+
+.col-6[
+```{r fit-correlated-data-bam-plot, fig.show = "hide"}
+# fitted values
+fv_bar1 <- fitted_values(b_ar1)
+
+# plot
+bar1_plt <- plt +
+  geom_ribbon(data = fv_bar1,
+    aes(ymin = .lower_ci, ymax = .upper_ci,
+      y = NULL),
+    alpha = 0.2, fill = "hotpink") +
+  geom_line(data = fv_bar1,
+    aes(x = time, y = .fitted),
+    col = "hotpink", lwd = 1.5)
+bar1_plt
+```
+]
+.col-6[
+
+```{r fit-correlated-data-bam-plot, echo = FALSE, fig.width = 6, fig.height = 6}
+```
+]
+]
+
+---
+
+# Compare the fits
+
+```{r autocorrel-compare-fits-plots, fig.align = "center", echo = FALSE}
+(gamm_plt + ggtitle("GAMM")) + (bar1_plt + ggtitle("BAM"))
+```
+
+---
+
+# Compare fits
+
+```{r}
+model_edf(m_ar1, b_ar1)
+
+## GAMM AR(1) rho
+nlme::intervals(m_ar1$lme, which = "var-cov")$corStruct
+```
+
+---
+
+# Irregularly spaced data
+
+Intervals between observation are irregular? Things get much harder
+
+Two main options
+
+1. Fit a continuous time AR(1) (CAR(1)) using `gamm()` &mdash; `correlation = corCAR1(form ~ 1)`
+
+2. Fit a 1-D spatial correlation function using `gamm()` &mdash; `correlation = corExp(form ~ time)`
+
+3. Or use *brms* or *glmmTMB*
+
+4. Consider *mvgam* &mdash; but the trend is a stochastic process, not a smooth
 
 ---
 
@@ -275,6 +391,532 @@ Or you are willing to impose constraints on one of
 * specify the parameters of the autocorrelation process
 
 See [Simpson (2018)](https://doi.org/10.3389/fevo.2018.00149) for a brief discussion on this plus examples & the cited references therein
+
+---
+
+# Non-normal data?
+
+What if you have non-Gaussian data?
+
+* `bam()` & AR(1) &mdash; GEE-like approach, working correlation matrix
+
+* `gamm()` & `correlation` &mdash; fits via `MASS::glmmPQL()`, works it **hard** --> fitting problems are common, plus PQL is bad for count data with low means
+
+* `brms::brm()` &mdash; Bayesian so you have to work harder, no CAR(1), but has spatial correlation functions
+
+* `mvgam` &mdash; Bayesian so *ditto*, the trend is a stochastic process, not a smooth
+
+---
+
+# Or use Neighbourhood CV
+
+.row[
+
+.col-9[
+
+New smoothness selection method
+
+`method = "NCV"`
+
+Not super user friendly
+
+Basically, for _each_ observation in the data, we specify
+
+1. the neighbourhood of samples to use for estimating $\lambda_j$, and
+2. the neighbourhood of samples to use for out-of-sample prediction
+
+This gets tricky to do easily for complex settings
+
+]
+
+.col-3[
+
+```{r danger-will-robinson, fig.align = "center", echo = FALSE}
+knitr::include_graphics("resources/dangerwillrobinson-1.png")
+```
+
+.smaller[
+([Linda Essig](https://creativeinfrastructure.org/2013/01/19/danger-will-robinson/))
+]
+
+]
+
+] 
+
+---
+
+# NCV
+
+We need to define two things: `k`, the indices of observations to drop for each neighbourhood, and `m`, the end points of each neighbourhood
+
+Plus their counterparts for prediction neighbourhoods: `i` and `mi`
+
+.row[
+
+.col-6[
+```{r setup-nei}
+nei <- list()
+start <- pmax(1, (1:100) - 5)
+end <- pmin(100, (0:99) + 5)
+nt <- lapply(1:100, \(x) start[x]:end[x])
+nei$k <- unlist(nt)
+nei$m <- cumsum(lapply(nt, length))
+nei$i <- nei$k
+nei$mi <- nei$m
+```
+
+]
+
+.col-6[
+
+```{r ncv-vis-nei, fig.align = "center"}
+mgcvUtils::vis_nei(nei)
+```
+]
+]
+
+.smaller[
+  Code modified from https://calgary.converged.yt/articles/ncv_timeseries.html
+]
+
+---
+
+# NCV model fitting
+
+
+.row[
+
+.col-6[
+```{r ncv-fitted-plot}
+m_ncv <- gam(y ~ s(time, k = 20),
+  data = df, method = "NCV",
+  nei = nei)
+
+fv_ncv <- fitted_values(m_ncv)
+ncv_plt <- plt +
+  geom_ribbon(data = fv_ncv,
+    aes(ymin = .lower_ci, ymax = .upper_ci,
+      y = NULL),
+    alpha = 0.2, fill = "hotpink") +
+  geom_line(data = fv_ncv,
+    aes(x = time, y = .fitted),
+    col = "hotpink", lwd = 1.5)
+ncv_plt
+```
+]
+
+.col-6[
+```{r ncv-fitted-plot, fig.align = "center", echo = FALSE}
+```
+]
+]
+
+---
+
+# Compare
+
+```{r compare-all-methods, fig.align = "center", echo = FALSE, fig.height = 4, out.width = "98%"}
+(gamm_plt + ggtitle("GAMM")) +
+  (bar1_plt + ggtitle("BAM")) +
+  (ncv_plt + ggtitle("NCV")) + plot_layout(ncol = 3, nrow = 1)
+```
+
+---
+
+# NCV
+
+NCV shows huge promise
+
+Pain in the butt to setup
+
+No R tooling to do the setup for you
+
+Read more about it in Simon's preprint [Wood (2024)](https://doi.org/10.48550/arXiv.2404.16490) and Dave Miller's Yes! [You can do that in mgcv](https://calgary.converged.yt/) site
+
+Focus with NCV is in estimating the smooths in the presence of local dependence
+
+I have no idea what it does to the interpretation of credible intervals or *p* values as the data aren't conditionally independent
+
+---
+class: inverse center middle subsection
+
+# Prediction intervals
+
+---
+
+# Prediction intervals
+
+One use for posterior simulation is to generate prediction intervals for a fitted model
+
+Prediction intervals include two sources of uncertainty
+
+1. that from the estimated model itself, plus
+
+2. the sampling uncertainty or error that arises from drawing observations from the conditional distribution of the response
+
+---
+
+# Prediction intervals
+
+As an example, we'll use simulated data from Gu & Wabha's $f_2$ test function
+
+```{r pint-sim-data, echo = FALSE, fig.align = "center"}
+df <- data_sim("gwf2", n = 400, scale = 1, dist = "normal", seed = 8)
+df |>
+  ggplot(aes(x = x, y = y)) +
+  geom_point() +
+  geom_function(fun = gw_f2, colour = "#0072B2", linewidth = 1.5)
+```
+
+---
+
+# Prediction intervals
+
+Fit a Gaussian GAM as I simulated Gaussian data
+
+```{r pint-fit-model}
+m <- gam(y ~ s(x), data = df, method = "REML", family = gaussian())
+```
+
+.small[
+The idea described in the next few slides works for any distribution, but in practice it depends on whether the distribution has a built-in RNG function or for specialist families that return non-standard responses (e.g. `ocat()`, `multinom()`, `mvn()`) whether the infrastructure in *gratia* has been written to handle those familes [Ed: it hasn't, yet]
+]
+
+---
+
+# Prediction intervals
+
+In this model, we have two sources of uncertainty
+
+1. the uncertainty in $\hat{\boldsymbol{\beta}}$ and $\hat{\boldsymbol{\lambda}}$
+
+2. the stochastic nature of the data as random draws from $y_i \sim \mathcal{D}(\mu_i, \phi)$
+
+---
+
+# Prediction intervals
+
+Uncertainty in $\hat{\boldsymbol{\beta}}$ and $\hat{\boldsymbol{\lambda}}$ is what we see in the credible interval around the fitted smooth (response)
+
+```{r pint-fitted-model, echo = FALSE, fig.align = "center"}
+m |> conditional_values(condition = "x", unconditional = TRUE) |>
+  draw() + geom_point(data = df, aes(x = x, y = y))
+```
+
+---
+
+# Prediction intervals
+
+Also what we see when we take posterior draws using `fitted_samples()`
+
+```{r pint-fitted-model-with-fs, echo = FALSE, fig.align = "center"}
+ds <- data_slice(m, x = evenly(x, n = 200)) |>
+  mutate(.row = row_number())
+fs <- fitted_samples(m, n = 50, data = ds, seed = 24, unconditional = TRUE) |>
+  left_join(ds)
+m |> conditional_values(condition = "x", unconditional = TRUE) |>
+  draw() + geom_point(data = df, aes(x = x, y = y)) +
+  geom_line(data = fs, aes(x = x, y = .fitted, group = .draw), alpha = 0.3, colour = "#0072B2")
+```
+---
+
+# Prediction intervals
+
+The scatter about the points is due to the data being a random draw from their conditional distribution
+
+```{r pint-sampling-uncertainty, echo = FALSE, fig.align = "center"}
+library("distributional")
+library("ggdist")
+mu <- predict(m, newdata = data.frame(x = 0.5))
+sigma <- m$scale
+df |>
+  ggplot(aes(x = x, y = y)) +
+  stat_halfeye(aes(ydist = dist_normal(mean = mu, sd = sigma)),
+    x = 0.5, scale = 0.2, slab_fill = "#E69F00", slab_alpha = 0.7
+  ) +
+  geom_point() +
+  geom_function(fun = gw_f2, colour = "#0072B2", linewidth = 1.5) +
+  geom_point(x = 0.5, y = mu, colour = "red")
+```
+
+---
+
+# Prediction intervals
+
+To compute a prediction interval over `x` for our GAM, we being by creating a set of data evenly over the range of `x` observed in the data used to fit the model
+
+Also, compute the fitted values so see the interval when we only consider uncertainty in $\hat{\boldsymbol{\beta}}$ and $\hat{\boldsymbol{\lambda}}$
+
+```{r pint-prediction-data}
+ds <- data_slice(m, x = evenly(x, n = 200)) |>
+  mutate(.row = row_number())
+fv <- fitted_values(m, data = ds)
+```
+
+---
+
+# Prediction intervals
+
+We sample from the posterior distribution of the model and the sampling distribution of the response
+
+```{r pint-posterior-samples}
+ps <- posterior_samples(m, n = 10000, data = ds, seed = 24,
+  unconditional = TRUE) |>
+  left_join(ds, by = join_by(.row == .row))
+ps
+```
+
+---
+
+# Prediction intervals
+
+Compute the prediction interval as a quantile-based interval from the posterior distribution of each data point
+
+```{r setup-pint}
+quantile_fun <- function(x, probs = c(0.025, 0.5, 0.975), ...) {
+  tibble::tibble(
+    .value = quantile(x, probs = probs, ...),
+    .q = probs * 100
+  )
+}
+
+library("tidyr")
+p_int <- ps |>
+  group_by(.row) |>
+  reframe(quantile_fun(.response)) |>
+  pivot_wider(
+    id_cols = .row, names_from = .q, values_from = .value,
+    names_prefix = ".q"
+  ) |>
+  left_join(ds, by = join_by(.row == .row))
+```
+
+---
+
+# Prediction intervals
+
+```{r print-pint}
+p_int
+```
+---
+
+# Prediction intervals &mdash plot it
+
+```{r pint-example-plot, fig.show = "hide"}
+fv |>
+  ggplot(aes(x = x, y = .fitted)) +
+  # summarise the posterior samples
+  geom_hex(
+    data = ps, aes(x = x, y = .response, fill = after_stat(count)),
+    bins = 50, alpha = 0.7
+  ) +
+  # add the lower and upper prediction intervals
+  geom_line(data = p_int, aes(y = .q2.5), colour = "#56B4E9",
+    linewidth = 1.5) +
+  geom_line(data = p_int, aes(y = .q97.5), colour = "#56B4E9",
+    linewidth = 1.5) +
+  # add the lower and upper credible intervals
+  geom_line(aes(y = .lower_ci), colour = "#56B4E9", linewidth = 1) +
+  geom_line(aes(y = .upper_ci), colour = "#56B4E9", linewidth = 1) +
+  # add the fitted model
+  geom_line() +
+  # add the observed data
+  geom_point(data = df, aes(x = x, y = y)) +
+  scale_fill_viridis_c(option = "plasma") +
+  labs(y = "Response", fill = "n")
+```
+
+---
+
+# Prediction intervals
+
+Prediction interval is the outer set of light blue lines
+
+Hexes show the density of the posterior samples
+
+```{r pint-example-plot, fig.align = "center", echo = FALSE}
+```
+
+---
+class: inverse center middle subsection
+
+# When the Gaussain approximation goes wrong
+
+---
+
+# When the Gaussain approx. goes wrong
+
+Posterior sampling thus far has used a **Gaussian approximation**
+
+Can fail, esp. when there $y_i = 0$ over a significant range of the space *and* link function includes the $\log()$
+
+```{r ga-fail-setup, echo = FALSE, fig.align = "center"}
+ga_fail <- function(seed) {
+  df <- tibble(y = c(
+    rep(0, 89), 1, 0, 1, 0, 0, 1, rep(0, 13), 1, 0, 0, 1,
+    rep(0, 10), 1, 0, 0, 1, 1, 0, 1, rep(0, 4), 1, rep(0, 3),
+    1, rep(0, 3), 1, rep(0, 10), 1, rep(0, 4), 1, 0, 1, 0, 0,
+    rep(1, 4), 0, rep(1, 5), rep(0, 4), 1, 1, rep(0, 46)
+  )) |>
+    mutate(
+      x = withr::with_seed(
+        seed,
+        sort(c(0:10 * 5, rnorm(length(y) - 11) * 20 + 100))
+      ),
+      .row = row_number()
+    ) |>
+    relocate(.row, .before = 1L)
+  df
+}
+df <- ga_fail(3)
+
+df |>
+  ggplot(aes(x = x, y = y)) +
+  geom_point()
+```
+
+---
+
+# When the Gaussain approx. goes wrong
+
+This is a simple Binomial model
+
+Data don't provide much information as they are mostly **0**
+
+```{r ga-fail-model}
+m_logit <- gam(
+  y ~ s(x, k = 15),
+  data = df,
+  method = "REML",
+  family = binomial(link = "logit")
+)
+```
+
+---
+
+# When the Gaussain approx. goes wrong
+
+.row[
+
+.col-6[
+.smaller[
+```{r ga-fail-plot-ga-int, fig.show = "hide"}
+# posterior draws using Gaussian approx
+fs_ga <- fitted_samples(m_logit, n = 2000, seed = 2)
+# ignore these columns when summarising
+excl_col <- c(".draw", ".parameter", ".row")
+
+# compute the Gaussian approx credible interval
+int_ga <- fs_ga |>
+  group_by(.row) |>
+  median_qi(
+    .width = c(0.5, 0.8, 0.95),
+    .exclude = excl_col
+  ) |>
+  left_join(df, by = join_by(.row == .row))
+
+# plot this
+plt_ga <- df |>
+  ggplot(aes(x = x, y = y)) +
+  geom_point() +
+  geom_lineribbon( # uses ggdist
+    data = int_ga,
+    aes(x = x, y = .fitted, ymin = .lower, ymax = .upper)
+  ) +
+  scale_fill_brewer() +
+  labs(title = "Gaussian approximation")
+plt_ga
+```
+]
+]
+
+.col-6[
+```{r ga-fail-plot-ga-int, fig.align = "center", echo = FALSE}
+```
+]
+]
+
+---
+
+# Metropolis Hasting sampler
+
+Instead of simulating from posterior via a Gaussian apprimxation we can use a simpler Metropolis Hastings sampler
+
+See `?gam.mh`
+
+---
+
+# Metropolis Hasting sampler
+
+Alternates
+
+1. fixed proposals from a Gaussian (or $t$) approximation,
+2. random walk proposals that uses a shrunken version of the posterior $\mathbf{V}_{b}$
+
+Proposals are accepted with probability in proportion to posterior density
+
+* Proposals from 1. tends to lead to rapid mixing of the Markov chain
+* Proposals from 2. work to stop the sampler getting stuck in regions where the GA is bad
+
+---
+
+# Metropolis Hasting sampler
+
+Turn on the MH sampler with `method = "mh"`
+
+* `thin`: keep only every `thin` samples from the Markov chain
+* `rw_scale`: fraction to shrink $\mathbf{V}_{b}$
+* `burnin = 1000`: throw away the first `burnin` samples
+* `t_df = 40`: *df* for the $t$ approximation (default = Gaussian)
+
+```{r}
+fs_mh <- fitted_samples(m_logit,
+  n = 2000, seed = 2, method = "mh", thin = 2, rw_scale = 0.4
+)
+```
+
+--
+
+Should check acceptance probability of RW proposals &mdash; if larger than 25% (0.25) then `rw_scale` needs to be increased
+
+---
+
+# Metropolis Hasting sampler
+
+.row[
+
+.col-6[
+.smaller[
+```{r ga-fail-plot-mh-int, fig.show = "hide"}
+# compute the MH credible interval
+int_mh <- fs_mh |>
+  group_by(.row) |>
+  median_qi(
+    .width = c(0.5, 0.8, 0.95),
+    .exclude = excl_col
+  ) |>
+  left_join(df, by = join_by(.row == .row))
+
+# plot this
+plt_mh <- df |>
+  ggplot(aes(x = x, y = y)) +
+  geom_point() +
+  geom_lineribbon(
+    data = int_mh,
+    aes(x = x, y = .fitted, ymin = .lower, ymax = .upper)
+  ) +
+  scale_fill_brewer() +
+  labs(title = "Metropolis Hasting sampler")
+plt_mh
+```
+]
+]
+
+.col-6[
+```{r ga-fail-plot-mh-int, fig.align = "center", echo = FALSE}
+```
+]
+]
 
 ---
 class: inverse center middle subsection
@@ -420,166 +1062,710 @@ class: inverse center middle subsection
 
 # Example
 
-
----
-class: inverse center middle subsection
-
-# Quantile GAMs
-
 ---
 
-# Quantile GAMs
+# Sampling new data from a GAM
 
-Briefly, estimating the entire conditional distribution of $\mathbf{y}$ may not be necessary
+The remaining function in the `samples` family is `predicted_samples()`
 
---
-
-Or even wasteful
-
---
-
-Instead, if our focus is on a particular part (**quantile**) of the distribution may be better to try to estimate that instead of the whole distribution
-
---
-
-Quantile regression methods do this
+Use it to sample new data from a model &mdash; excludes model uncertainty
 
 ---
 
-# Quantile GAMs
+# Sampling new data from a GAM
 
-Smoothers for quantile regression models have been available for a long time in the {quantreg} 📦
+Simulated motorcycle example (again!)
 
-These models are estimated using the *pinball loss*
-
-This is suboptimal for model fitting especially with smoothness selection and the ideas implemented in {mgcv} 📦
-
-Instead, [Fasiolo *et al* (2020)](https://doi.org/10.1080/01621459.2020.1725521) ([arXiv version](https://arxiv.org/abs/1707.03307)) developed a well-calibrated way of estimating QGAMs with smoothness selection, good inference properties, etc, using a Bayesian belief updating technique
-
-Implemented in the {qgam} 📦 that builds upon {mgcv} so stuff just works
-
----
-
-# Quantile GAMs
-
-```{r qgam-example, results = "hide"}
-## Load the mcycle data
+```{r psamples-setup}
 data(mcycle, package = "MASS")
+mcycle <- mcycle |>
+  mutate(
+    .row = row_number() # adding a row number for later joining
+  ) |>
+  relocate(.row, .before = 1L)
 
-## Fit QGAM using an adaptive smoother
-m_q <- qgam(accel ~ s(times, k = 20, bs = "ad"),
-            data = mcycle, # <== no family either
-            qu = 0.8) #<<
+# fit the standard GAM
+m_gau <- gam(accel ~ s(times, k = 20),
+  data = mcycle, method = "REML"
+)
 ```
 
-```{r qgam-example-plt, echo = FALSE, out.width = "70%", fig.align = "center"}
-## predict to visualise the estimated quantile
-## new data to predict at
-new_df <- with(mcycle,
-               tibble(times = seq(round(min(times)), round(max(times)),
-                                  length.out = 200)))
-pred <- predict(m_q, newdata = new_df, se.fit = TRUE) %>%
-  as.data.frame() %>%
-  as_tibble() %>%
-  setNames(c(".estimate", ".se")) %>%
-  add_confint() %>%
-  bind_cols(new_df)
+---
 
-## plot
-pred %>%
+# Sampling new data from a GAM
+
+```{r psamples-gau-gam}
+n_sim <- 10                           # how many samples per data point?
+n_data <- nrow(mcycle)                # how many data?
+
+# simulate new data
+sim_gau <- predicted_samples(m_gau, n = n_sim, seed = 10) |>
+  left_join(mcycle |> select(-accel), # join on the observed data for times
+    by = ".row"
+  ) |>
+  rename(accel = .response) |>        # rename
+  bind_rows(mcycle |>
+    relocate(.after = last_col())) |> # bind on observed data
+  mutate(                             # add indicator: simulated or observed
+    type = rep(c("simulated", "observed"),
+      times = c(n_sim * n_data, n_data)
+    ),
+    .alpha = rep(                     # set alpha values for sims & observed
+      c(0.2, 1), time = c(n_sim * n_data, n_data)
+    )
+  )
+```
+
+---
+
+# Sampling new data from a GAM
+
+```{r psamples-plot-gau-gam, fig.show = "hide"}
+library("ggokabeito"); library("patchwork")
+plt_labs <- labs(
+  x = "Time after impact [ms]",
+  y = "Acceleration [g]"
+)
+
+plt_gau <- sim_gau |>
   ggplot(aes(x = times)) +
-    geom_point(data = mcycle, aes(x = times, y = accel)) +
-    geom_ribbon(aes(ymin = .lower_ci, ymax = .upper_ci), alpha = 0.2) +
-    geom_line(aes(y = .estimate))
+  geom_point(aes(y = accel, colour = type, alpha = .alpha)) +
+  plt_labs +
+  scale_colour_okabe_ito(order = c(6, 5)) +
+  scale_alpha_identity()
+plt_gau
+```
+
+
+# Sampling new data from a GAM
+
+```{r psamples-plot-gau-gam, fig.align = "center", echo = FALSE}
 ```
 
 ---
-class: inverse center middle subsection
 
-# Example
+# Sampling new data from a GAM
+
+Fit the distributional GAM, modelling
+
+1. mean, and
+2. variance of the data (SD actually)
+
+```{r psamples-gaulss-gam}
+m_gaulss <- gam(
+  list(
+    accel ~ s(times, k = 20, bs = "tp"), # linear predictor for mu
+    ~ s(times, bs = "tp")                # linear predictor for sd
+  ),
+  data = mcycle,
+  family = gaulss()
+)
+```
+
+---
+
+# Sampling new data from a GAM
+
+```{r psamples-gaulss-gam-predicted-samples}
+sim_gaulss <- predicted_samples(m_gaulss, n = n_sim, seed = 20) |>
+  left_join(mcycle |> select(-accel),    # join on the observed data for times
+    by = ".row"
+  ) |>
+  rename(accel = .response) |>           # rename
+  bind_rows(mcycle |>
+    relocate(.after = last_col())) |>    # bind on observed data
+  mutate( # add indicator: simulated or observed
+    type = rep(c("simulated", "observed"),
+      times = c(n_sim * n_data, n_data)
+    ),                                   # set alpha values for sims & observed
+    .alpha = rep(c(0.2, 1), time = c(n_sim * n_data, n_data))
+  )
+```
+
+---
+
+# Sampling new data from a GAM
+
+```{r psamples-plot-both, fig.align = "center", fig.width = 1.777777 * 7}
+plt_gaulss <- plt_gau %+% sim_gaulss # replaces the data
+
+plt_gau + ggtitle("Mean-only GAM") +
+  plt_gaulss + ggtitle("Distributional GAM") +
+  plot_layout(guides = "collect", ncol = 2)
+```
+
+???
+
+Can use this as a posterior predictive check, combined with `conditional_values()`
 
 ---
 class: inverse center middle subsection
 
-# Bayesian GAMs
+# Big additive models
 
 ---
 
-# Bayesian GAMs
+# Big additive models
 
-Briefly (see [Miller 2021](http://arxiv.org/abs/1902.01330) & Wood 2017 for the gory details)&hellip;
+Fitting GAMs involves turning individual covariates into multiple new variables &mdash; basis functions
 
-$$\mathcal{L}_{p}(\boldsymbol{\beta}, \boldsymbol{\lambda}) = \mathcal{L}(\boldsymbol{\beta})\exp(-\boldsymbol{\beta}^{\mathsf{T}}\boldsymbol{S}_{\boldsymbol{\lambda}}\boldsymbol{\beta})$$
+If you have many covariates whose effects are smooth, then model matrix can get big
 
-The exponential term is proportional to a mean zero MVN with prior precision matrix $\boldsymbol{S}_{\boldsymbol{\lambda}}$
+Esp. if you have many data
 
-This implies
+--
 
-$$\boldsymbol{\beta} \sim \mathcal{N}(\boldsymbol{0}, \boldsymbol{S}_{\boldsymbol{\lambda}}^{-})$$
+Modelling fit can grind to a halt, esp. if you don't have much RAM
 
-where $\boldsymbol{S}_{\boldsymbol{\lambda}}^{-}$ is a (pseudo)inverse of $\boldsymbol{S}_{\boldsymbol{\lambda}}$
+--
 
----
-
-# Baysian GAMs
-
-Large entries in $\boldsymbol{S}$ correspond to more wiggly basis functions
-
-We want to penalize these wiggly functions more strongly as we think smoother functions are more likely than wiggly functions
-
-When we invert $\boldsymbol{S}$, these large values turn into small variances
-
-Our prior is that that basis function's coefficient is close to zero
+Enter `bam()`
 
 ---
 
-# Bayesian GAMs
+# `bam()`
 
-REML and ML methods are *empirical Bayes* methods
+`bam()` includes algorithms that can fit big models using much less RAM than `gam()`
 
-Treating smooths as random effects implies the (improper) Gaussian priors on $\boldsymbol{\beta}$
+Main restriction currently is that it can't fit distributional GAMs
 
-We fit by maximising the likelihood given this implied prior
+With `bam()` we can do
 
-*empirical* because we do not have priors for the $\boldsymbol{\lambda}$
+1. `method = "fREML"`, and
+2. `discrete = TRUE`
 
----
+We can also parallelise the fitting over mutliple CPUs or a cluster (only bullet 1.)
 
-# Priors
-
-It can be very hard to come up with good priors for smoothing parameters themselves
-
-* the true value may be $\infty$ for a linear effect
-* making an informed decision (guess) is hard because the $\boldsymbol{\lambda}$ are not directly interpretable in terms of something a user is familiar with
-
-Fully Bayesian approach would use
-
-* a vague gamma prior on the each element of $\boldsymbol{\lambda}$, or
-* uniform priors on each element of $\log(\boldsymbol{\lambda})$
+This also means you can speed up model fitting, often massively so, if you have a multi-core machine and a bit of RAM
 
 ---
 
-# Obtaining posteriors
+# `bam()` &mdash; fast REML
 
-In the fully Bayesian approach we attach priors to the $\boldsymbol{\lambda}$ and $\boldsymbol{\beta}$
+The first optimization is `method = "fREML"`; don't use `bam()` without it
 
-Then use MCMC to obtain posterior draws for all the parameters and the response data
+Uses theory from [Wood *et al* (2015)](https://academic.oup.com/jrsssc/article/64/1/139/7067572)
 
-* `mgcv:::jagam()` writes out a *JAGS* code/model file for a specified GAM, edit it, then do the sampling in `JAGS`
-* `brms::brm()` takes a formula using {mgcv} notation (`t2()` & `s()` only) for smooths and fits the model using `Stan`
-* `BayesX` is a specialised software for fitting Bayesian GAMs. R interface via `BayesX` 📦
-* `bamlss::bamlss()` fits GAMs with {mgcv} notation & smooths via a range of *engines* (`JAGS`, `BayesX`,  internal code, &hellip;)
+1. Setup smooths using representative sample of the data
+2. Model matrix, $\mathbf{X}$, is formed in blocks
+3. Uses updates to do the QR decomposition block-wise
+4. Once blocks are processed, fitting takes place without ever forming full $\mathbf{X}$
+
+Can use a `cluster` built using the *parallel* package, but this uses more RAM
+
+---
+
+# `bam()` &mdash; discretizing covariates
+
+You can fit models to even larger data if you are willing to discretize the covariates
+
+Use `discrete = TRUE`
+
+For each (marginal) smooth in turn covariates are discretized
+
+Discretization involves reducing the precision of the covariate values, thus multiple unique $x_i$ will now have the same $x_i$
+
+This is often OK as in big data many data are not unique
+
+This approximation often results in only small differences in estimated effect
 
 ---
 
-# Obtaining posteriors
+# `bam()` &mdash; discretizing covariates
 
-In the empirical Bayes world we set priors (implied or otherwise) on the $\boldsymbol{\beta}$ but not the $\boldsymbol{\lambda}$ &mdash; posterior for $\boldsymbol{\beta}$ is conditional on $\boldsymbol{\lambda}$
+With `discrete = TRUE` can no longer use a cluster
+
+Instead we can fit in parallel using `nthreads` (but MacOS / Linux)
+
+Can also use `samfrac`; for *very* big data, take a random sample of `samfrac`*100% of the data fit model to the sample with sloppy convergence tolerances
+
+This gives rough starting values of all the parameters, which can be optimized by then fitting with all of the data
+
 
 ---
-class: inverse center middle subsection
+class: inverse middle center subsection
 
-# Example
+# Marginal effects
+
+---
+
+# Regression coefficients
+
+```{r, echo = FALSE}
+knitr::include_graphics("resources/slider-switch-annotated-80.jpg")
+```
+
+Terms in models are like sliders and switches
+
+* *sliders* represent continuous variables
+* *switches* represent categorical variables
+
+---
+
+# Regression coefficients
+
+```{r}
+# install.packages("palmerpenguins")
+library("palmerpenguins")
+library("tidyr")
+penguins <- penguins |> drop_na()
+
+model_slider <- lm(body_mass_g ~ flipper_length_mm, data = penguins)
+model_switch <- lm(body_mass_g ~ species, data = penguins)
+```
+
+1. `model_slider` includes the effect of a continuous variable
+2. `model_switch` includes the effect of a categorical variable
+
+---
+
+# Regression coefficients
+
+```{r}
+library("broom")
+tidy(model_slider)
+tidy(model_switch)
+```
+
+---
+
+# Regression coefficients
+
+```{r}
+tidy(model_slider)
+```
+
+`flipper_length_mm` is a continuous variable, so it's a slider
+
+As `flipper_length_mm` increases by 1 mm, penguin `body_mass_g` increases by `r round(coef(model_slider)[2], 1)` grams
+
+---
+
+# Regression coefficients
+
+```{r}
+tidy(model_switch)
+```
+
+`Species` is a categorical variable, so it's a switch
+
+There are three possible values: `Adelie`, `Chinstrap`, `Gentoo`
+
+`Adelie` is the reference category
+
+`Chinstrap` penguins are `r round(coef(model_switch)[2], 1)` grams heavier than `Adelie`
+
+`Gentoo` penguins are `r round(coef(model_switch)[3], 1)` grams heavier than `Adelie`!
+
+---
+
+```{r}
+gglm(model_slider)
+```
+
+---
+
+```{r}
+gglm(model_switch)
+```
+
+---
+
+# What about GLM?
+
+```{r glm-penguins}
+glm_slider <- glm(body_mass_g ~ flipper_length_mm, data = penguins, family = Gamma("log"))
+glm_switch <- glm(body_mass_g ~ species, data = penguins, family = Gamma("log"))
+```
+
+---
+
+# What about GLM?
+
+```{r}
+gglm(glm_slider)
+```
+
+---
+
+# What about GLM?
+
+```{r}
+gglm(glm_switch)
+```
+
+---
+
+# What about GLM?
+
+Coefficients are on the *link* scale! &mdash; here that's the log scale
+
+```{r, dependson = "glm-penguins"}
+tidy(glm_slider)
+```
+
+`flipper_length_mm` is a continuous variable, so it's a slider
+
+As `flipper_length_mm` increases by 1 mm, penguin `body_mass_g` is multiplied by `r round(exp(coef(glm_slider)[2]), 3)` grams
+
+```{r}
+exp(0.0115)
+```
+
+---
+
+# Mixers
+
+```{r, echo = FALSE}
+knitr::include_graphics("resources/mixer-board-annotated-80.jpg")
+```
+
+Most models aren't so simple
+
+We're often working with multiple variables combining switches and sliders
+
+---
+
+# Mixers
+
+.small[
+```{r}
+model_mixer <- lm(body_mass_g ~ flipper_length_mm + bill_depth_mm + species + sex,
+                  data = penguins)
+tidy(model_mixer)
+```
+]
+
+The values in `estimate` are partial effects showing what happens when we change the value of the variable
+
+* for continuous variables the change is 1 unit; 1mm
+* for categorical variables the change is moving *from* the reference category by flicking the switch
+
+As these are partial effects (changes), we need to add "holding all other variables constant"
+
+---
+
+# Damned terminology
+
+A *marginal effect* is a partial derivative from a regression equation
+
+* the change in $y$ for a unit change in one of the model terms
+
+This also applies to categorical terms as formally (with treatment coding) we're changing 1 unit (0 to 1) when we flick the switch
+
+Others use the *conditional effect* or *group constrast* for the effects concerning categorical variables
+
+---
+
+# Load marginaleffects
+
+```{r}
+library("marginaleffects")
+```
+
+---
+
+# Chick weight example
+
+Weights of chicks and effect of diet
+
+```{r chick-load-data}
+data(ChickWeight)
+cw <- ChickWeight |>
+  as_tibble() |>
+  janitor::clean_names() |>
+  mutate(
+    chick = factor(chick, ordered = FALSE)
+  )
+cw
+```
+
+# Chick weight example
+
+```{r fit-sz-gam-to-chicks, cache = TRUE}
+ctrl <- gam.control(nthreads = 6)
+m_cw <- gam(
+  weight ~ s(time) +
+    s(time, diet, bs = "sz") +
+    s(time, chick, bs = "fs", k = 5),
+  data = cw, family = tw(), method = "REML", control = ctrl)
+```
+
+# Chick weight example
+
+```{r}
+broom::tidy(m_cw)
+```
+
+What is the effect of `diet`?
+
+---
+
+# Averaging
+
+We could average the partial derivatives (slopes) for the observed data where for each observation we compare the predicted value with the `diet` switch flicked into different positions
+
+.row[
+
+.col-6[
+
+.small[
+```{r}
+cw
+```
+]
+
+]
+
+.col-6[
+
+.small[
+```{r}
+m_cw |> slopes(variable = "diet")
+```
+]
+]
+]
+
+---
+
+# Averaging: step 1
+
+Create the data we need; three copies of the observed data, with `diet` set to 1, 2, 3 respectively
+
+.row[
+
+.col-6[
+
+.small[
+```{r}
+(df_diet1 <- datagrid(model = m_cw, diet = "1", grid_type = "counterfactual"))
+```
+]
+
+]
+
+.col-6[
+
+.small[
+```{r}
+(df_diet2 <- datagrid(model = m_cw, diet = "2", grid_type = "counterfactual"))
+```
+]
+
+]
+
+]
+
+---
+
+# Averaging: step 2
+
+Predict from the model for both data sets `type = "response"`
+
+```{r predict-diets}
+df_diet3 <- datagrid(model = m_cw, diet = "3", grid_type = "counterfactual")
+p_diet1 <- fitted_values(m_cw, data = df_diet1)
+p_diet2 <- fitted_values(m_cw, data = df_diet2)
+p_diet3 <- fitted_values(m_cw, data = df_diet3)
+
+```
+
+---
+# Averaging: step 2
+
+.row[
+.col-6[
+.small[
+
+```{r show-p-diet-1}
+p_diet2
+```
+]
+]
+.col-6[
+.small[
+```{r show-p-diet-2}
+p_diet2
+```
+]
+]
+]
+
+---
+
+# Averaging: step 3
+
+Flick the switch!
+
+Subtracting one set of predictions from the other tells us the effect of moving from `death == "Predation"` to `death == "Other"`
+
+```{r}
+head(p_diet1 |> pull(.fitted) - p_diet2 |> pull(.fitted))
+```
+
+---
+
+# Averaging: step 4
+
+Take the mean (average) of the effects of moving from `diet == "1"` to `diet == "2"`, etc
+
+```{r}
+mean(p_diet1 |> pull(.fitted) - p_diet2 |> pull(.fitted))
+```
+
+---
+
+# The heck!
+
+Thankfully the *marginaleffects* package has us covered
+
+```{r}
+library("marginaleffects")
+m_cw |> avg_slopes(variable = "diet")
+```
+---
+
+# Comparisons
+
+Can also call this a comparison if you prefer
+
+```{r}
+m_cw |> avg_comparisons(variables = "diet")
+```
+
+---
+
+# Comparisons
+
+.small[
+```{r}
+m_cw |> comparisons(variable = "diet")
+```
+]
+
+---
+
+# All variables at once
+
+```{r}
+m_cw |> avg_slopes()
+```
+
+We are **averaging** over the effects of the other variables in the model when we do this
+
+---
+
+# Marginal effect at the mean
+
+Another way to estimate the "effect" of `diet` is to ask
+
+> What is the effect of changing from `"1"` to `"2"` if we hold the other variables at their means?
+
+(For a categorical variable this means at their modal value)
+
+This is what *emmeans* does with `emtrends()`
+
+(`emmeans()` averages predictions as per above)
+
+---
+
+# Marginal effect at the mean
+
+Can obtain what `emtrends()` would give us by setting all variable not mentioned to their mean (mode)
+
+```{r}
+m_cw |> avg_predictions(newdata = "mean", variable = "diet")
+```
+
+---
+
+# Marginal effect at the mean
+
+```{r}
+m_cw |> avg_comparisons(newdata = "mean", variable = "diet")
+```
+
+That's quite different!
+
+???
+
+The average marginal effect is ~6 but the marginal effect at the mean is 20!
+
+---
+
+# Marginal effect at the mean
+
+The previous marginal effects / comparisons were obtained with
+
+```{r}
+datagrid(model = m_cw, diet = c("1", "2", "3", "4"))
+```
+
+---
+
+# Comparisons
+
+We often want to compare one level of a treatment with another
+
+* pairwise comparisons
+* treatment vs reference (control)
+
+With a single categorical variable this is fine, but what do you want when the model includes multiple effects and interactions?
+
+---
+
+# Comparisons
+
+Niavely we could do:
+
+.small[
+```{r}
+m_cw |> avg_comparisons(variables = list(diet = "pairwise"))
+```
+]
+
+What are we comparing here?
+
+--
+
+We are averaging the comparisons of the levels of `diet` over the other variables in the model (`chick`, `time`)
+---
+
+# Comparisons
+
+We get different answers if we condition on `time` say
+
+.small[
+```{r}
+m_cw |> avg_comparisons(variables = list(diet = "pairwise"), by = "time")
+```
+]
+
+This makes total sense; the model includes interactions
+
+Both are correct
+
+You need to specify what it is that you mean by a comparison
+
+---
+
+# Comparisons
+
+With so many comparisons, we should adjust the $p$ values
+
+.small[
+```{r}
+m_cw |> avg_comparisons(variables = list(diet = "pairwise"),
+    by = "time", p_adjust = "fdr")
+```
+]
+
+--
+
+Adjustment here controls the false discovery rate (FDR)
+
+Other options available, but FDR is a reasonable choice
 
 ---
 class: inverse center middle subsection
@@ -628,15 +1814,15 @@ class: inverse center middle subsection
 
 * GAMs should be fitted with `method = "REML"` or `"ML"`
 
-* Then they are an empirical Bayesian model
+* Then they are an empirical Bayesian model (MAP)
 
-* Can explore uncertainty in estimates by smapling from the posterior of smooths or the model
+* Can explore uncertainty in estimates by sampling from the posterior of smooths or the model
 
 ---
 
 # Overview
 
-* The default basis is the low-rank thin plate spline
+* The default basis is the low-rank thin plate regression spline
 
 * Good properties but can be slow to set up &mdash; use `bs = "cr"` with big data
 
@@ -646,7 +1832,7 @@ class: inverse center middle subsection
 
 * `s()` can be used for multivariate smooths, but assumes isotropy
 
-* Use `s(x) + s(z) + ti(x,z)` to test for an interaction
+* Use `ti(x) + ti(z) + ti(x,z)` to test for an interaction &mdash; but note different default for `k`!
 
 ---
 
@@ -666,11 +1852,9 @@ class: inverse center middle subsection
 
 * {mgcv} smooths can be used in other software
 
-* Bayesian GAMs well catered for with {brms}
+* Bayesian GAMs (reaosnably) well catered for with {brms} & {bamlss}
 
 * Consider more than the mean parameter &mdash; distributional GAMs
-
-* Consider modeling empirical quantiles using quantile GAMs
 
 ---
 
