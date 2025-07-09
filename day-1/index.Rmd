@@ -932,7 +932,7 @@ newd <- cbind(newd, pred)
 polyDat <- gather(newd, Degree, Fitted, - Year)
 polyDat <- mutate(polyDat, Degree = ordered(Degree, levels = p))
 gtemp_plt + geom_line(data = polyDat, mapping = aes(x = Year, y = Fitted, colour = Degree),
-                      size = 1.5, alpha = 0.9) +
+                      linewidth = 1.5, alpha = 0.9) +
     scale_color_brewer(name = "Degree", palette = "PuOr") +
     theme(legend.position = "right")
 ```

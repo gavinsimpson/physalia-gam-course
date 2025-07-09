@@ -487,7 +487,7 @@ mgcvUtils::vis_nei(nei)
 .row[
 
 .col-6[
-```{r ncv-fitted-plot}
+```{r ncv-fitted-plot, fig.show = "hide"}
 m_ncv <- gam(y ~ s(time, k = 20),
   data = df, method = "NCV",
   nei = nei)
@@ -1373,7 +1373,7 @@ gglm(model_switch)
 
 # What about GLM?
 
-```{r glm-penguins}
+```{r glm-penguins, cache = TRUE}
 glm_slider <- glm(body_mass_g ~ flipper_length_mm, data = penguins, family = Gamma("log"))
 glm_switch <- glm(body_mass_g ~ species, data = penguins, family = Gamma("log"))
 ```
@@ -1429,7 +1429,7 @@ We're often working with multiple variables combining switches and sliders
 # Mixers
 
 .small[
-```{r}
+```{r, cache = TRUE}
 model_mixer <- lm(body_mass_g ~ flipper_length_mm + bill_depth_mm + species + sex,
                   data = penguins)
 tidy(model_mixer)

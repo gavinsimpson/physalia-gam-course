@@ -36,7 +36,11 @@ ozone <- read_csv("https://bit.ly/gam-ozone-data")
 # analysis
 
 # plot the data
-o3_lab <- expression(O[3])
+o3_lab <- expression(
+  O[3]
+)
+
+
 temp_lab <- expression(Temperature ~ (degree * F))
 
 ozone |> # %>%
@@ -132,7 +136,7 @@ draw(m6)
 
 # a full model
 m_full <- gam(O3 ~ s(temp) + s(ibh) + s(ibt) + s(humidity) + s(vh) +
-        s(wind) + s(dpg) + s(vis) + s(doy),
+        s(wind) + s(dpg) + s(vis),
     data = ozone, method = "REML", family = tw(), select = TRUE)
 
 summary(m_full)

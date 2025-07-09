@@ -562,7 +562,7 @@ data(ChickWeight)
 cw <- ChickWeight |>
   as_tibble() |>
   janitor::clean_names()
-cw 
+cw
 ```
 
 ---
