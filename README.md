@@ -6,7 +6,7 @@ https://www.physalia-courses.org/
 
 ### Gavin Simpson
 
-#### 20&ndash;24th January, 2025
+#### 8&ndash;11th December, 2025
 
 ## Overview
 
@@ -31,7 +31,7 @@ Participants should be familiar with RStudio and have some fluency in programmin
 
 ### Install an up-to-date version of R
 
-Please be sure to have at least version 4.4.0 of R installed (the version of my gratia package we will be using depends on you having at least version 4.1.0 installed and some slides might contain code that requires version 4.4.x). Note that R and RStudio are two different things: it is not sufficient to just update RStudio, you also need to update R by installing new versions as they are release.
+Please be sure to have at least version 4.5.0 of R installed (the version of my gratia package we will be using depends on you having at least version 4.1.0 installed and some slides might contain code that requires version 4.4.x). Note that R and RStudio are two different things: it is not sufficient to just update RStudio, you also need to update R by installing new versions as they are release.
 
 To download R go to the [CRAN Download](https://cran.r-project.org/) page and follow the links to download R for your operating system:
 
@@ -50,9 +50,9 @@ then look at the `version.string` entry (or the `major` and `minor` entries). Fo
 ```
 # ... output not shown ...
 major          4                           
-minor          4.2 
+minor          5.0 
 # ... output not shown ...
-version.string R version 4.4.2 (2024-10-31)
+version.string R version 4.5.0 (2025-04-11)
 # ... output not shown ...
 ```
 
@@ -82,7 +82,7 @@ install.packages("gratia", repos = c(
 ))
 ```
 
-Now we must check that we actually do have recent versions of the packages installed; if your R is not reasonably new (gratia requires R>= 4.1.0, but some of the *tidyverse* packages may need an R that is newer than this) then you may be stuck on out-dated versions of the packages listed above. This is why I recommend that you install the latest version of R. If you choose to use an older version of R than version 4.4.x (where *x* is 0, 1, or 2 currently) then you do so at your own risk and you cannot expect support with setup problems during the course.
+Now we must check that we actually do have recent versions of the packages installed; if your R is not reasonably new (gratia requires R>= 4.1.0, but some of the *tidyverse* packages may need an R that is newer than this) then you may be stuck on out-dated versions of the packages listed above. This is why I recommend that you install the latest version of R. If you choose to use an older version of R than version 4.5.x (where *x* is 0, 1, or 2 currently) then you do so at your own risk and you cannot expect support with setup problems during the course.
 
 ```r
 vapply(pkgs, packageDescription, character(1), drop = TRUE, fields = "Version")
@@ -92,11 +92,13 @@ On my system I see:
 
 ```r
 > vapply(pkgs, packageDescription, character(1), drop = TRUE, fields = "Version")
-     mgcv     gamm4 tidyverse    readxl    mgcViz    DHARMa    gratia
-  "1.9-1"   "0.2-6"   "2.0.0"   "1.4.3"  "0.1.11"   "0.4.7"  "0.10.0.9001"
+  mgcv      gamm4       tidyverse    readxl    mgcViz   DHARMa 
+  "1.9-3"   "0.2-7"         "2.0.0"   "1.4.5"   "0.2.1"  "0.4.7" 
+  gratia    ggforce marginaleffects 
+  "0.10.0"  "0.5.0"        "0.28.0"
 ```
 
-The key ones are to be sure that *gratia* is version "0.10.0", *mgcv* is at least "1.9-0" (preferably "0.9-1"), and *tidyverse* is "2.0.0".
+The key ones are to be sure that *gratia* is version "0.10.1", *mgcv* is at least "1.9-3", and *tidyverse* is "2.0.0".
 
 <!-- ### Installing the *cmndstan* backend (optional)
 
@@ -144,7 +146,7 @@ install.packages("gratia",
 
 ## Programme
 
-Sessions from 14:00 to 20:00 (Monday to Thursday), 14:00 to 19:00 on Friday (Berlin time). From Tuesday to Friday, the first hour will be dedicated to Q&A and working through practical exercises or students’ own analyses over Slack and Zoom. Sessions will interweave mix lectures, in-class discussion/ Q&A, and practical exercises.
+Sessions from 14:00 to 20:00 (Monday to Thursday), Berlin time. Sessions will interweave mix lectures, in-class discussion/ Q&A, and practical exercises.
 
 ### Monday
 
@@ -178,11 +180,12 @@ We’ll dig under the hood a bit to understand how GAMs work at a practical leve
 
 * Hierarchical GAMs; introducing random smooths and how to model data with both group and individual smooth effects.
 * Doing more with your models; introducing posterior simulation.
+* Worked examples
 
-### Friday
+<!-- ### Friday
 
-<!-- [Slides](https://gavinsimpson.github.io/physalia-gam-course/day-5/index.html) -->
+[Slides](https://gavinsimpson.github.io/physalia-gam-course/day-5/index.html)
 
 * Going beyond the mean; fitting distributional models
 
-* Worked examples
+* Worked examples -->
