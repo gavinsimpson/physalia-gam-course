@@ -50,9 +50,9 @@ then look at the `version.string` entry (or the `major` and `minor` entries). Fo
 ```
 # ... output not shown ...
 major          4                           
-minor          5.0 
+minor          5.1
 # ... output not shown ...
-version.string R version 4.5.0 (2025-04-11)
+version.string R version 4.5.1 (2025-06-13)
 # ... output not shown ...
 ```
 
@@ -65,8 +65,8 @@ We will make use of several R packages that you'll need to have installed. Prior
 update.packages(ask = FALSE, checkBuilt = TRUE)
 
 # packages to install
-pkgs <- c("mgcv",  "gamm4", "tidyverse", "readxl", "mgcViz", "DHARMa", "gratia",
-  "ggforce", "marginaleffects")
+pkgs <- c("gamm4", "tidyverse", "readxl", "mgcViz", "DHARMa", "gratia",
+  "marginaleffects")
 
 # install those packages
 install.packages(pkgs, Ncpus = 4) # set Ncpus to # of *physical* CPU cores you have
@@ -85,20 +85,22 @@ install.packages("gratia", repos = c(
 Now we must check that we actually do have recent versions of the packages installed; if your R is not reasonably new (gratia requires R>= 4.1.0, but some of the *tidyverse* packages may need an R that is newer than this) then you may be stuck on out-dated versions of the packages listed above. This is why I recommend that you install the latest version of R. If you choose to use an older version of R than version 4.5.x (where *x* is 0, 1, or 2 currently) then you do so at your own risk and you cannot expect support with setup problems during the course.
 
 ```r
-vapply(pkgs, packageDescription, character(1), drop = TRUE, fields = "Version")
+vapply(c("mgcv", pkgs), packageDescription, character(1), drop = TRUE,
+  fields = "Version")
 ```
 
 On my system I see:
 
 ```r
-> vapply(pkgs, packageDescription, character(1), drop = TRUE, fields = "Version")
-  mgcv      gamm4       tidyverse    readxl    mgcViz   DHARMa 
-  "1.9-3"   "0.2-7"         "2.0.0"   "1.4.5"   "0.2.1"  "0.4.7" 
-  gratia    ggforce marginaleffects 
-  "0.10.0"  "0.5.0"        "0.28.0"
+> vapply(c("mgcv", pkgs), packageDescription, character(1), drop = TRUE,
+    fields = "Version")
+         mgcv           gamm4       tidyverse          readxl          mgcViz
+      "1.9-4"         "0.2-7"         "2.0.0"         "1.4.5"         "0.2.1"
+       DHARMa          gratia marginaleffects
+      "0.4.7"        "0.11.1"        "0.31.0"
 ```
 
-The key ones are to be sure that *gratia* is version "0.10.1", *mgcv* is at least "1.9-3", and *tidyverse* is "2.0.0".
+The key ones are to be sure that *gratia* is version "0.11.1", *mgcv* is at least "1.9-4", and *tidyverse* is "2.0.0".
 
 <!-- ### Installing the *cmndstan* backend (optional)
 
