@@ -64,7 +64,12 @@ Sources: [bit.ly/physalia-gam](https://bit.ly/physalia-gam)
 
 Direct download a ZIP of everything: [bit.ly/physalia-gam-zip](https://bit.ly/physalia-gam-zip)
 
-Unpack the zip & remember where you put it
+Alternatively:
+
+```r
+# install.packages("usethis")
+usethis::use_course("https://bit.ly/physalia-gam-zip", destdir = "./")
+```
 
 ---
 
