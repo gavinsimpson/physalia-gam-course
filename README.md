@@ -66,7 +66,7 @@ update.packages(ask = FALSE, checkBuilt = TRUE)
 
 # packages to install
 pkgs <- c("gamm4", "tidyverse", "readxl", "mgcViz", "DHARMa", "gratia",
-  "marginaleffects")
+  "marginaleffects", "ggforce")
 
 # install those packages
 install.packages(pkgs, Ncpus = 4) # set Ncpus to # of *physical* CPU cores you have

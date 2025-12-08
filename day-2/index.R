@@ -442,12 +442,12 @@ mcycle
 
 
 ## ----plot-mcycle, eval = FALSE------------------------------------------------
-## plt <- mcycle |>
-##   ggplot(aes(x = times, y = accel)) +
-##     geom_point() +
-##     labs(x = "Milliseconds after impact",
-##          y = expression(italic(g)))
-## plt
+# plt <- mcycle |>
+#   ggplot(aes(x = times, y = accel)) +
+#     geom_point() +
+#     labs(x = "Milliseconds after impact",
+#          y = expression(italic(g)))
+# plt
 
 
 ## ----plot-mcycle, fig.width = 6, fig.height = 4, echo = FALSE-----------------
@@ -521,9 +521,9 @@ draw(bfun) + facet_wrap(~ .bf)
 
 
 ## ----plot-cc-basis, eval = FALSE----------------------------------------------
-## knots <- list(month = c(0.5, 12.5))
-## bfun <- basis(s(month, bs = "cc"), data = month_df, knots = knots)
-## draw(bfun) + facet_wrap(~ .bf)
+# knots <- list(month = c(0.5, 12.5))
+# bfun <- basis(s(month, bs = "cc"), data = month_df, knots = knots)
+# draw(bfun) + facet_wrap(~ .bf)
 
 
 ## ----plot-cc-basis, echo = FALSE----------------------------------------------
@@ -642,6 +642,36 @@ x2_bs |>
     labs(y = expression(f(x2)), x = "x2")
 
 
+## ----draw-mcycle, out.width = "90%", fig.align = "center"---------------------
+m <- gam(accel ~ s(times), data = mcycle, method = "REML")
+draw(m)
+
+
+## ----draw-four-fun-sim, fig.show = "hide"-------------------------------------
+df <- data_sim("eg1", n = 1000, seed = 42)
+df
+m_sim <- gam(y ~ s(x0) + s(x1) + s(x2) + s(x3),
+             data = df, method = "REML")
+draw(m_sim)
+
+
+## ----draw-four-fun-sim-plot, echo = FALSE, out.width = "95%"------------------
+draw(m_sim)
+
+
+## ----draw-mcycle-options, fig.show = "hide"-----------------------------------
+draw(m_sim,
+     residuals = TRUE,           # add partial residuals
+     overall_uncertainty = TRUE, # include uncertainty due to constant
+     unconditional = TRUE,       # correct for smoothness selection
+     rug = FALSE)                # turn off rug plot
+
+
+## ----draw-mcycle-options-plot, out.width = "95%", echo = FALSE----------------
+draw(m_sim, residuals = TRUE, overall_uncertainty = TRUE,
+     unconditional = TRUE, rug = FALSE)
+
+
 ## ----out.width = "85%", fig.align = "center"----------------------------------
 new_df <- with(mcycle, tibble(times = evenly(times, n = 100)))
 bfun <- basis(s(times), data = new_df, constraints = TRUE)
@@ -673,34 +703,4 @@ bfun_cc <- basis(s(times, bs = "cr"), data = new_df, constraints = TRUE)
 p1 <- draw(bfun_cc) + facet_wrap(~ .bf)
 p2 <- draw(S)
 p1 + p2 + plot_layout(ncol = 2)
-
-
-## ----draw-mcycle, out.width = "90%", fig.align = "center"---------------------
-m <- gam(accel ~ s(times), data = mcycle, method = "REML")
-draw(m)
-
-
-## ----draw-four-fun-sim, fig.show = "hide"-------------------------------------
-df <- data_sim("eg1", n = 1000, seed = 42)
-df
-m_sim <- gam(y ~ s(x0) + s(x1) + s(x2) + s(x3),
-             data = df, method = "REML")
-draw(m_sim)
-
-
-## ----draw-four-fun-sim-plot, echo = FALSE, out.width = "95%"------------------
-draw(m_sim)
-
-
-## ----draw-mcycle-options, fig.show = "hide"-----------------------------------
-draw(m_sim,
-     residuals = TRUE,           # add partial residuals
-     overall_uncertainty = TRUE, # include uncertainty due to constant
-     unconditional = TRUE,       # correct for smoothness selection
-     rug = FALSE)                # turn off rug plot
-
-
-## ----draw-mcycle-options-plot, out.width = "95%", echo = FALSE----------------
-draw(m_sim, residuals = TRUE, overall_uncertainty = TRUE,
-     unconditional = TRUE, rug = FALSE)
 

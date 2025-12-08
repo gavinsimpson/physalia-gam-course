@@ -61,6 +61,39 @@ plt.poisson <- ggplot(poisson.pmf, aes(x = x, y = pmf, colour = params)) +
 plt.poisson
 
 
+## ----dist-fig-1, fig.align = "center", out.width = "80%", echo = FALSE--------
+knitr::include_graphics("resources/fig-gaussian-lm-descriptive-figure-1.png")
+
+
+## ----dist-fig-2, fig.align = "center", out.width = "80%", echo = FALSE--------
+knitr::include_graphics("resources/fig-poisson-lm-descriptive-figure-1.png")
+
+
+## ----dist-fig-3, fig.align = "center", out.width = "80%", echo = FALSE--------
+knitr::include_graphics("resources/fig-other-dist-descr-1.png")
+
+
+## ----logit-transformation, echo = FALSE, fig.align = "center"-----------------
+wasp <- read_csv(here("data", "darlingtonia.csv"), comment = "#",
+                 col_types = "dl")
+# plot
+p1 <- ggplot(wasp,
+  aes(x = leafHeight, y = as.numeric(visited))
+) +
+  geom_point() +
+  labs(
+    x = "Leaf Height [cm]",
+    y = "Probability of visitation"
+  )
+df <- data.frame(p = (1:999) / 1000)
+df <- transform(df, logitp = qlogis(p))
+p2 <- p1 + geom_smooth(method = "lm", se = FALSE)
+p3 <- ggplot(df, aes(x = p, y = logitp)) + geom_line() +
+  ylab(expression("Log Odds" ~~~ log * bgroup("(", frac(p, 1 - p),")"))) +
+  xlab("Probability of visitation") + coord_flip() # ? flip this
+p2 + p3
+
+
 ## ----load-darl-data, echo = TRUE----------------------------------------------
 wasp <- read_csv(here("data", "darlingtonia.csv"), comment = "#",
                  col_types = "dl")
@@ -76,29 +109,29 @@ summary(m)
 
 
 ## ----predict-darlingtonia, echo = TRUE, eval = FALSE--------------------------
-## # data to predict at
-## pdat <- with(wasp,
-##              tibble(leafHeight = seq(min(leafHeight),
-##                                      max(leafHeight),
-##                                      length = 100)))
-## # predict
-## pred <- predict(m, pdat, type = "link", se.fit = TRUE)
-## ilink <- family(m)$linkinv # g-1()
-## pdat <- pdat %>%
-##   bind_cols(data.frame(pred)) %>%
-##   mutate(fitted = ilink(fit),
-##          upper = ilink(fit + (2 * se.fit)),
-##          lower = ilink(fit - (2 * se.fit)))
-## # plot
-## ggplot(wasp, aes(x = leafHeight,
-##                  y = as.numeric(visited))) +
-##     geom_point() +
-##     geom_ribbon(aes(ymin = lower, ymax = upper,
-##                     x = leafHeight), data = pdat,
-##                 inherit.aes = FALSE, alpha = 0.2) +
-##     geom_line(data = pdat, aes(y = fitted)) +
-##     labs(x = "Leaf Height [cm]",
-##          y = "Probability of visitation")
+# # data to predict at
+# pdat <- with(wasp,
+#              tibble(leafHeight = seq(min(leafHeight),
+#                                      max(leafHeight),
+#                                      length = 100)))
+# # predict
+# pred <- predict(m, pdat, type = "link", se.fit = TRUE)
+# ilink <- family(m)$linkinv # g-1()
+# pdat <- pdat %>%
+#   bind_cols(data.frame(pred)) %>%
+#   mutate(fitted = ilink(fit),
+#          upper = ilink(fit + (2 * se.fit)),
+#          lower = ilink(fit - (2 * se.fit)))
+# # plot
+# ggplot(wasp, aes(x = leafHeight,
+#                  y = as.numeric(visited))) +
+#     geom_point() +
+#     geom_ribbon(aes(ymin = lower, ymax = upper,
+#                     x = leafHeight), data = pdat,
+#                 inherit.aes = FALSE, alpha = 0.2) +
+#     geom_line(data = pdat, aes(y = fitted)) +
+#     labs(x = "Leaf Height [cm]",
+#          y = "Probability of visitation")
 
 
 ## ----predict-darlingtonia, eval = TRUE, echo = FALSE, fig.height = 6, fig.width = 6----
@@ -139,9 +172,9 @@ maddy
 
 
 ## ----plot-maddy, echo = TRUE, eval = FALSE------------------------------------
-## ggplot(maddy, aes(x = midDepth, y = calMid)) +
-##     geom_point() +
-##     labs(y = "Calibrated Age", x = "Depth")
+# ggplot(maddy, aes(x = midDepth, y = calMid)) +
+#     geom_point() +
+#     labs(y = "Calibrated Age", x = "Depth")
 
 
 ## ----plot-maddy, echo = FALSE, eval = TRUE, fig.height = 6, fig.width = 6-----
@@ -156,31 +189,31 @@ summary(m_gamma)
 
 
 ## ----plot-maddy-fitted-gamma, eval=FALSE--------------------------------------
-## # data to predict at
-## pdat <- with(maddy,
-##              tibble(midDepth = seq(min(midDepth),
-##                                    max(midDepth),
-##                                    length = 100)))
-## # predict
-## p_gamma <- predict(m_gamma, pdat, type = "link",
-##                    se.fit = TRUE)
-## ilink <- family(m_gamma)$linkinv
-## # confidence interval
-## p_gamma <- pdat %>%
-##   bind_cols(data.frame(p_gamma)) %>%
-##   mutate(fitted = ilink(fit),
-##          upper = ilink(fit + (2 * se.fit)),
-##          lower = ilink(fit - (2 * se.fit)))
-## # plot
-## p1 <- ggplot(maddy, aes(x = midDepth, y = calMid)) +
-##     geom_ribbon(aes(ymin = lower, ymax = upper,
-##                     x = midDepth), data = p_gamma,
-##                 inherit.aes = FALSE, alpha = 0.2) +
-##     geom_line(data = p_gamma, aes(y = fitted)) +
-##     geom_point() +
-##     labs(y = "Calibrated Age", x = "Depth",
-##          title = "Gamma GLM")
-## p1
+# # data to predict at
+# pdat <- with(maddy,
+#              tibble(midDepth = seq(min(midDepth),
+#                                    max(midDepth),
+#                                    length = 100)))
+# # predict
+# p_gamma <- predict(m_gamma, pdat, type = "link",
+#                    se.fit = TRUE)
+# ilink <- family(m_gamma)$linkinv
+# # confidence interval
+# p_gamma <- pdat %>%
+#   bind_cols(data.frame(p_gamma)) %>%
+#   mutate(fitted = ilink(fit),
+#          upper = ilink(fit + (2 * se.fit)),
+#          lower = ilink(fit - (2 * se.fit)))
+# # plot
+# p1 <- ggplot(maddy, aes(x = midDepth, y = calMid)) +
+#     geom_ribbon(aes(ymin = lower, ymax = upper,
+#                     x = midDepth), data = p_gamma,
+#                 inherit.aes = FALSE, alpha = 0.2) +
+#     geom_line(data = p_gamma, aes(y = fitted)) +
+#     geom_point() +
+#     labs(y = "Calibrated Age", x = "Depth",
+#          title = "Gamma GLM")
+# p1
 
 
 ## ----plot-maddy-fitted-gamma, echo = FALSE, eval = TRUE, fig.height = 6, fig.width = 6----
@@ -212,30 +245,30 @@ p1
 
 
 ## ----plot-maddy-fitted-gaussian, eval = FALSE---------------------------------
-## # fit gaussian GLM
-## m_gaus <- glm(calMid ~ midDepth, data = maddy,
-##               family = gaussian)
-## # predict
-## p_gaus <- predict(m_gaus, pdat, type = "link",
-##                   se.fit = TRUE)
-## ilink <- family(m_gaus)$linkinv
-## # prep confidence interval
-## p_gaus <- pdat %>%
-##   bind_cols(data.frame(p_gaus)) %>%
-##   mutate(fitted = ilink(fit),
-##          upper = ilink(fit + (2 * se.fit)),
-##          lower = ilink(fit - (2 * se.fit)))
-## # plot
-## p2 <- ggplot(maddy, aes(x = midDepth, y = calMid)) +
-##     geom_ribbon(aes(ymin = lower, ymax = upper,
-##                     x = midDepth), data = p_gaus,
-##                 inherit.aes = FALSE, alpha = 0.2) +
-##     geom_line(data = p_gaus, aes(y = fitted)) +
-##     geom_point() +
-##     labs(y = "Calibrated Age",
-##          x = "Depth",
-##          title = "Linear Model")
-## p2
+# # fit gaussian GLM
+# m_gaus <- glm(calMid ~ midDepth, data = maddy,
+#               family = gaussian)
+# # predict
+# p_gaus <- predict(m_gaus, pdat, type = "link",
+#                   se.fit = TRUE)
+# ilink <- family(m_gaus)$linkinv
+# # prep confidence interval
+# p_gaus <- pdat %>%
+#   bind_cols(data.frame(p_gaus)) %>%
+#   mutate(fitted = ilink(fit),
+#          upper = ilink(fit + (2 * se.fit)),
+#          lower = ilink(fit - (2 * se.fit)))
+# # plot
+# p2 <- ggplot(maddy, aes(x = midDepth, y = calMid)) +
+#     geom_ribbon(aes(ymin = lower, ymax = upper,
+#                     x = midDepth), data = p_gaus,
+#                 inherit.aes = FALSE, alpha = 0.2) +
+#     geom_line(data = p_gaus, aes(y = fitted)) +
+#     geom_point() +
+#     labs(y = "Calibrated Age",
+#          x = "Depth",
+#          title = "Linear Model")
+# p2
 
 
 ## ----plot-maddy-fitted-gaussian, echo = FALSE, eval = TRUE, fig.height = 6, fig.width = 6----
@@ -268,6 +301,116 @@ p2
 ## -----------------------------------------------------------------------------
 library("patchwork")
 p1 + p2
+
+
+## ----load-moth-show, eval = FALSE---------------------------------------------
+# moth <- readr::read_csv("data/uefunex.csv")
+
+## ----load-moth-hide, echo = FALSE---------------------------------------------
+moth <- readr::read_csv("../data/uefunex.csv")
+
+
+## ----moth-summary-------------------------------------------------------------
+library("dplyr")
+moth |>
+    group_by(treatment) |>
+    summarise(n = n(), mean = mean(parasitoid), median = median(parasitoid),
+        sd = sd(parasitoid))
+
+
+## ----plot-moth-1, out.width = "80%", fig.align = "center"---------------------
+library("ggplot2")
+moth |>
+    ggplot(aes(x = treatment, y = parasitoid)) +
+    geom_violin(aes(fill = treatment))
+
+
+## ----plot-moth-sqrt, out.width = "80%", fig.align = "center"------------------
+moth |>
+    ggplot(aes(x = treatment, y = parasitoid)) +
+    geom_violin(aes(fill = treatment)) +
+    scale_y_sqrt()
+
+
+## ----plot-moth-root-root, out.width = "70%", fig.align = "center"-------------
+# install.packages("ggforce")
+moth |>
+    ggplot(aes(x = treatment, y = parasitoid)) +
+    geom_violin(aes(fill = treatment)) +
+    scale_y_continuous(trans = ggforce::power_trans((1/4)))
+
+
+## ----fit-poisson-glm-moth-----------------------------------------------------
+moth_glm1 <- glm(parasitoid ~ moth + treatment + moth:treatment,
+    family = poisson, data = moth)
+
+
+## ----summary-poisson-glm-moth-------------------------------------------------
+summary(moth_glm1)
+
+
+## -----------------------------------------------------------------------------
+anova(moth_glm1, test = "LRT")
+
+
+## ----plot-moth-glm1, eval=FALSE-----------------------------------------------
+# moth |>
+#     ggplot(aes(y = parasitoid, x = moth, color = treatment)) +
+#     geom_jitter(stat = "identity", width = 0.05, height = 0.05) +
+#     geom_smooth(method = "glm", method.args = list(family = "poisson")) +
+#     theme(legend.position = "bottom")
+
+
+## ----plot-moth-glm1, echo = FALSE, fig.width = 7, fig.height = 5--------------
+moth |>
+    ggplot(aes(y = parasitoid, x = moth, color = treatment)) +
+    geom_jitter(stat = "identity", width = 0.05, height = 0.05) +
+    geom_smooth(method = "glm", method.args = list(family = "poisson")) +
+    theme(legend.position = "bottom")
+
+
+## ----moth-summary-------------------------------------------------------------
+library("dplyr")
+moth |>
+    group_by(treatment) |>
+    summarise(n = n(), mean = mean(parasitoid), median = median(parasitoid),
+        sd = sd(parasitoid))
+
+
+## -----------------------------------------------------------------------------
+presid <- resid(moth_glm1, type = "pearson")
+n <- nrow(moth)
+params <- length(coef(moth_glm1))
+disp <- sum(presid^2) / (n - params)
+disp
+
+
+## -----------------------------------------------------------------------------
+moth_glm2 <- glm(parasitoid ~ moth + treatment + moth:treatment,
+    family = quasipoisson, data = moth)
+
+summary(moth_glm2)
+
+
+## -----------------------------------------------------------------------------
+library("mgcv")
+moth_glm3 <- gam(parasitoid ~ moth + treatment + moth:treatment,
+    family = nb(), method = "ML", data = moth)
+summary(moth_glm3)
+
+
+## ----glmmtmb-negbin-version---------------------------------------------------
+library("glmmTMB")
+moth_glm4 <- glmmTMB(parasitoid ~ moth + treatment + moth:treatment,
+    family = nbinom2("log"), REML = FALSE, data = moth)
+summary(moth_glm4)
+
+
+## -----------------------------------------------------------------------------
+library("marginaleffects")
+moth_glm4 |>
+    plot_predictions(condition = c("moth", "treatment"),
+        vcov = TRUE, type = "response")
 
 
 ## ----hadcrut-temp-example, echo = FALSE---------------------------------------
@@ -314,7 +457,7 @@ newd <- cbind(newd, pred)
 polyDat <- gather(newd, Degree, Fitted, - Year)
 polyDat <- mutate(polyDat, Degree = ordered(Degree, levels = p))
 gtemp_plt + geom_line(data = polyDat, mapping = aes(x = Year, y = Fitted, colour = Degree),
-                      size = 1.5, alpha = 0.9) +
+                      linewidth = 1.5, alpha = 0.9) +
     scale_color_brewer(name = "Degree", palette = "PuOr") +
     theme(legend.position = "right")
 
