@@ -79,10 +79,11 @@ ck <- ck %>%
 
 8. Modify your model to account for the identified problem
 
-    Hint: use ploynomials of `ck`
+    Hint: use polynomials of `ck`
 
 9. Look at the model summary, model diagnostic plots, and perform the goodness of fit test on the residual deviance. Are there any problems with this model?
 
 10. Compare the two models using AIC and a generalized likelihood ratio test (GLRT). Which model is to be preferred?
 
     Hint: the `anova()` function is used to do the GLRT
+
