@@ -137,7 +137,7 @@ class: inverse middle center subsection
 # HadCRUT data set
 
 
-```r
+``` r
 library("readr")
 library("dplyr")
 URL &lt;-  "https://bit.ly/hadcrutv4"
@@ -152,7 +152,7 @@ gtemp &lt;- read_table(URL, col_types = 'nnnnnnnnnnnn', col_names = FALSE) |&gt;
 # HadCRUT data set
 
 
-```r
+``` r
 gtemp
 ```
 
@@ -517,7 +517,7 @@ class: middle center inverse subsection
 .col-7[
 
 
-```r
+``` r
 library("here"); library("readr"); library("dplyr")
 larks &lt;-  read_csv(here("data", "larks.csv"),
                    col_types = "ccdddd")
@@ -556,7 +556,7 @@ head(larks)
 .row[
 .col-6[
 
-```r
+``` r
 crest &lt;- gam(crestlark ~ s(e, n, k = 100),
              data = larks,
              family = binomial,
@@ -575,7 +575,7 @@ Smoothness parameters estimated via REML
 .col-6[
 .smaller[
 
-```r
+``` r
 summary(crest)
 ```
 
@@ -610,13 +610,46 @@ summary(crest)
 
 # Portugese larks &amp;mdash; binomial GAM
 
-Model checking with binary data is a pain &amp;mdash; residuals look weird
+Model checking with binary data is a pain &amp;mdash; usual residuals look weird
+
+Alternatively, for some families, we can use Probability Integral Transform or Quantile residuals
+
+.pull-left[
+.smaller[
+
+
+``` r
+residuals_linpred_plot(crest, type = "deviance")
+```
+
+![](index_files/figure-html/model-check-larks-1-1.svg)&lt;!-- --&gt;
+]
+]
+
+
+.pull-right[
+.smaller[
+
+
+``` r
+residuals_linpred_plot(crest, type = "quantile")
+```
+
+![](index_files/figure-html/model-check-larks-2-1.svg)&lt;!-- --&gt;
+]
+]
+
+Also: DHARMa 📦
+
+---
+
+# Portugese larks &amp;mdash; binomial GAM
 
 Alternatively we can aggregate data at the `QUADRICULA` level &amp; fit a binomial count model
 
 .smaller[
 
-```r
+``` r
 larks2 &lt;- larks %&gt;%
   mutate(crestlark = as.numeric(as.character(crestlark)),  # to numeric
          linnet = as.numeric(as.character(linnet)),
@@ -641,7 +674,7 @@ crest2 &lt;- gam(cbind(crestlark, N - crestlark) ~ s(e, n, k = 100),
 .pull-left[
 .smaller[
 
-```r
+``` r
 crest3 &lt;- gam(cbind(crestlark, N - crestlark) ~
                 s(e, n, k = 100),
               data = larks2, family = quasibinomial,
@@ -663,7 +696,7 @@ Some overdispersion &amp;mdash; &amp;phi; = 1.73
 
 .pull-right[
 
-```r
+``` r
 ggplot(tibble(Fitted = fitted(crest2),
               Resid = resid(crest2)),
        aes(Fitted, Resid)) + geom_point()
@@ -681,7 +714,7 @@ class: inverse middle center subsection
 # Atmospheric CO&lt;sub&gt;2&lt;/sub&gt;
 
 
-```r
+``` r
 library("gratia"); library("readr"); library("here")
 south &lt;- read_csv(here("data", "south_pole.csv"), col_types = "ddd")
 south
@@ -709,7 +742,7 @@ south
 # Atmospheric CO&lt;sub&gt;2&lt;/sub&gt;
 
 
-```r
+``` r
 ggplot(south, aes(x = c.month, y = co2)) + geom_line()
 ```
 
@@ -721,7 +754,7 @@ ggplot(south, aes(x = c.month, y = co2)) + geom_line()
 
 .smaller[
 
-```r
+``` r
 m_co2 &lt;- gam(co2 ~ s(c.month, k = 300, bs = "cr"), data = south, method = 'REML')
 summary(m_co2)
 ```
@@ -758,7 +791,7 @@ summary(m_co2)
 Predict the next 36 months
 
 
-```r
+``` r
 new_df &lt;- with(south, tibble(c.month = 1:(nrow(south) + 36)))
 fv &lt;- fitted_values(m_co2, data = new_df, scale = "response")
 fv
@@ -786,7 +819,7 @@ fv
 # Atmospheric CO&lt;sub&gt;2&lt;/sub&gt; &amp;mdash; predict
 
 
-```r
+``` r
 ggplot(fv, aes(x = c.month, y = .fitted)) +
     geom_ribbon(aes(ymin = .lower_ci, ymax = .upper_ci), alpha = 0.2) +
     geom_line(data = south, aes(c.month, co2), col = 'red') +
@@ -805,7 +838,7 @@ Decompose into
 2. a long term trend
 
 
-```r
+``` r
 m2_co2 &lt;- gam(co2 ~ s(month, bs = "cc") + s(c.month, bs = "cr", k = 300),
               data = south, method = 'REML',
               knots = list(month = c(0.5, 12.5)))
@@ -817,7 +850,7 @@ m2_co2 &lt;- gam(co2 ~ s(month, bs = "cc") + s(c.month, bs = "cr", k = 300),
 
 .smaller[
 
-```r
+``` r
 summary(m2_co2)
 ```
 
@@ -852,7 +885,7 @@ summary(m2_co2)
 # Atmospheric CO&lt;sub&gt;2&lt;/sub&gt; &amp;mdash; predict
 
 
-```r
+``` r
 nr &lt;- nrow(south)
 new_df &lt;- with(south,
                tibble(c.month = 1:(nr + 36),
@@ -883,7 +916,7 @@ fv2
 # Atmospheric CO&lt;sub&gt;2&lt;/sub&gt; &amp;mdash; predict
 
 
-```r
+``` r
 ggplot(fv2, aes(x = c.month, y = .fitted)) +
     geom_ribbon(aes(ymin = .lower_ci, ymax = .upper_ci), alpha = 0.2) +
     geom_line(data = south, aes(c.month, co2), col = 'red') +
@@ -1001,7 +1034,7 @@ Fit the GAM with those new basis functions
 A data frame giving a series of measurements of head acceleration in a simulated motorcycle accident, used to test crash helmets
 
 
-```r
+``` r
 library("dplyr"); library("ggplot2")
 data(mcycle, package = "MASS")
 mcycle &lt;- as_tibble(mcycle)
@@ -1051,7 +1084,7 @@ plt
 # TPRS basis
 
 
-```r
+``` r
 new_df &lt;- with(mcycle, tibble(times = evenly(times, n = 100)))
 bfun &lt;- basis(s(times), data = new_df)
 bfun
@@ -1061,16 +1094,16 @@ bfun
 ## # A tibble: 1,000 × 6
 ##    .smooth  .type .by   .bf   .value times
 ##    &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt; &lt;fct&gt;  &lt;dbl&gt; &lt;dbl&gt;
-##  1 s(times) TPRS  &lt;NA&gt;  1     -1.64    2.4
-##  2 s(times) TPRS  &lt;NA&gt;  2     -0.769   2.4
-##  3 s(times) TPRS  &lt;NA&gt;  3     -1.81    2.4
-##  4 s(times) TPRS  &lt;NA&gt;  4     -1.04    2.4
-##  5 s(times) TPRS  &lt;NA&gt;  5     -1.95    2.4
-##  6 s(times) TPRS  &lt;NA&gt;  6     -1.15    2.4
-##  7 s(times) TPRS  &lt;NA&gt;  7      2.02    2.4
-##  8 s(times) TPRS  &lt;NA&gt;  8     -1.22    2.4
-##  9 s(times) TPRS  &lt;NA&gt;  9      1       2.4
-## 10 s(times) TPRS  &lt;NA&gt;  10    -1.71    2.4
+##  1 s(times) TPRS  &lt;NA&gt;  1      -1.60   2.4
+##  2 s(times) TPRS  &lt;NA&gt;  2      -1.66   2.4
+##  3 s(times) TPRS  &lt;NA&gt;  3      -1.84   2.4
+##  4 s(times) TPRS  &lt;NA&gt;  4      -1.95   2.4
+##  5 s(times) TPRS  &lt;NA&gt;  5      -1.98   2.4
+##  6 s(times) TPRS  &lt;NA&gt;  6       2.08   2.4
+##  7 s(times) TPRS  &lt;NA&gt;  7       2.06   2.4
+##  8 s(times) TPRS  &lt;NA&gt;  8      -2.15   2.4
+##  9 s(times) TPRS  &lt;NA&gt;  9       1      2.4
+## 10 s(times) TPRS  &lt;NA&gt;  10     -1.71   2.4
 ## # ℹ 990 more rows
 ```
 
@@ -1115,7 +1148,7 @@ In {mgcv} the knot location are at evenly-spaced *quantiles* of the covariate &a
 # Cubic regression splines
 
 
-```r
+``` r
 bfun &lt;- basis(s(times, bs = "cr"), data = new_df)
 draw(bfun) + facet_wrap(~ .bf)
 ```
@@ -1137,7 +1170,7 @@ Use can specify the knot locations using the `knots` argument to the `gam()` fun
 `knots` takes a named list, with names equal to the covariate(s) you want to set the knot locations for
 
 
-```r
+``` r
 ## how many basis functions?
 K &lt;- 7
 
@@ -1162,7 +1195,7 @@ Cyclic cubic regression splines are CRS but with the additional constraint that 
 Specify the basis with `bs = "cc"`
 
 
-```r
+``` r
 month_df &lt;- with(south, tibble(month = evenly(month, n = 100)))
 bfun &lt;- basis(s(month, bs = "cc"), data = month_df)
 ```
@@ -1172,7 +1205,7 @@ bfun &lt;- basis(s(month, bs = "cc"), data = month_df)
 # Cyclic cubic regression splines
 
 
-```r
+``` r
 draw(bfun) + facet_wrap(~ .bf)
 ```
 
@@ -1210,14 +1243,14 @@ draw(bfun) + facet_wrap(~ .bf)
 # The whole process 2
 
 
-```r
+``` r
 dat &lt;- data_sim("eg1", seed = 4)
 m &lt;- gam(y ~ s(x0) + s(x1) + s(x2, bs = "bs") + s(x3),
          data = dat, method = "REML")
 ```
 
 
-```r
+``` r
 draw(m) + plot_layout(nrow = 1, ncol = 4)
 ```
 
@@ -1263,7 +1296,7 @@ Has methods for many of the function outputs in {gratia} and for models
 # Plotting smooths
 
 
-```r
+``` r
 m &lt;- gam(accel ~ s(times), data = mcycle, method = "REML")
 draw(m)
 ```
@@ -1276,7 +1309,7 @@ draw(m)
 # Plotting smooths
 
 
-```r
+``` r
 df &lt;- data_sim("eg1", n = 1000, seed = 42)
 df
 ```
@@ -1298,7 +1331,7 @@ df
 ## # ℹ 990 more rows
 ```
 
-```r
+``` r
 m_sim &lt;- gam(y ~ s(x0) + s(x1) + s(x2) + s(x3),
              data = df, method = "REML")
 draw(m_sim)
@@ -1317,7 +1350,7 @@ draw(m_sim)
 # Plotting smooths
 
 
-```r
+``` r
 draw(m_sim,
      residuals = TRUE,           # add partial residuals
      overall_uncertainty = TRUE, # include uncertainty due to constant
@@ -1357,7 +1390,7 @@ As long as we can write `\(\mathbf{S}\)` so that it measures the complexity of s
 # TPRS basis
 
 
-```r
+``` r
 new_df &lt;- with(mcycle, tibble(times = evenly(times, n = 100)))
 bfun &lt;- basis(s(times), data = new_df, constraints = TRUE)
 draw(bfun) + facet_wrap(~ .bf)
@@ -1370,7 +1403,7 @@ draw(bfun) + facet_wrap(~ .bf)
 # TPRS basis
 
 
-```r
+``` r
 m &lt;-  gam(accel ~ s(times), dat = mcycle, method = "REML")
 S &lt;- penalty(m, smooth = "s(times)")
 S
@@ -1405,7 +1438,7 @@ S
 # CRS basis &amp; penalty
 
 
-```r
+``` r
 m &lt;-  gam(accel ~ s(times, bs = "cr"), data = mcycle, method = "REML")
 S &lt;- penalty(m, smooth = "s(times)")
 # draw(S)

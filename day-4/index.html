@@ -334,7 +334,7 @@ Neither of these are the default, so remember to use `method = "ML"` or `method 
 # AIC for GAMs
 
 
-```r
+``` r
 b0 &lt;- gam(y ~ s(x0) + s(x1) + s(x2),
           data = dat, family = poisson, method = "REML")
 b1 &lt;- gam(y ~ s(x0) + s(x1) + s(x2) + s(x3) + s(x4) + s(x5),
@@ -350,7 +350,7 @@ b2 &lt;- gam(y ~ s(x0) + s(x1) + s(x2) + s(x3) + s(x4) + s(x5),
 In this example, `\(x_3\)`, `\(x_4\)`, and `\(x_5\)` have no effects on `\(y\)`
 
 
-```r
+``` r
 AIC(b0, b1, b2)
 ```
 
@@ -364,7 +364,7 @@ AIC(b0, b1, b2)
 When there is *no difference* in compared models, accepts larger model ~16% of the time: consistent with probability AIC chooses a model with 1 extra spurious parameter `\(Pr(\chi^2_1 &gt; 2)\)`
 
 
-```r
+``` r
 pchisq(2, 1, lower.tail = FALSE)
 ```
 
@@ -413,7 +413,7 @@ If you have simple random effects you can fit those in `gam()` and `bam()` witho
 These two models are equivalent
 
 
-```r
+``` r
 m_nlme &lt;- lme(travel ~ 1, data = Rail, ~ 1 | Rail, method = "REML")
 
 m_gam  &lt;- gam(travel ~ s(Rail, bs = "re"), data = Rail, method = "REML")
@@ -426,7 +426,7 @@ m_gam  &lt;- gam(travel ~ s(Rail, bs = "re"), data = Rail, method = "REML")
 Evaluation of Stress in Railway Rails. Data from Devore (2000) citing data on a study of travel time for a certain type of wave that results from longitudinal stress of rails used for railroad track.
 
 
-```r
+``` r
 head(Rail)
 ```
 
@@ -450,7 +450,7 @@ Devore (2000) Probability and Statistics for Engineering and the Sciences (5th e
 # Random effects &amp;mdash; Rails
 
 
-```r
+``` r
 m_nlme &lt;- lme(travel ~ 1, data = Rail, ~ 1 | Rail, method = "REML")
 
 m_gam  &lt;- gam(travel ~ s(Rail, bs = "re", k = 2), data = Rail, method = "REML")
@@ -465,7 +465,7 @@ unlist(c(fixef(m_nlme), ranef(m_nlme)))
 ##     29.24388
 ```
 
-```r
+``` r
 coef(m_gam)
 ```
 
@@ -484,7 +484,7 @@ coef(m_gam)
 
 .col-6[
 
-```r
+``` r
 m_nlme
 ```
 
@@ -508,7 +508,7 @@ m_nlme
 
 .col-6[
 
-```r
+``` r
 variance_comp(m_gam)
 ```
 
@@ -748,12 +748,12 @@ The example comes from trawl data from off the coast of Newfoundland and Labrado
 .row[
 .col-6[
 
-```r
+``` r
 shrimp &lt;- read.csv(here("data", "trawl_nl.csv"))
 ```
 
 
-```r
+``` r
 m_rich &lt;- gam(richness ~ s(year),
               family = poisson,
               method = "REML",
@@ -770,7 +770,7 @@ m_rich &lt;- gam(richness ~ s(year),
 # 🐡🐠🐟🦐 Species richness
 
 
-```r
+``` r
 draw(m_rich)
 ```
 
@@ -788,7 +788,7 @@ draw(m_rich)
 # Spatio-temporal model
 
 
-```r
+``` r
 m_spt &lt;- gam(shrimp ~ te(x, y, year, d = c(2,1),
                          bs = c('tp', 'cr'), k = c(20, 5)),
              data = shrimp,
@@ -813,7 +813,7 @@ Provide `newdata` with a data frame of values of covariates
 # `predict()`
 
 
-```r
+``` r
 new_year &lt;- with(shrimp, tibble(year = seq(min(year), max(year), length.out = 100)))
 pred &lt;- predict(m_rich, newdata = new_year, se.fit = TRUE, type = 'link')
 pred &lt;- bind_cols(new_year, as_tibble(as.data.frame(pred)))
@@ -842,7 +842,7 @@ pred
 # `predict()` &amp;rarr; response scale
 
 
-```r
+``` r
 ilink &lt;- inv_link(m_rich)                         # inverse link function
 crit &lt;- qnorm((1 - 0.89) / 2, lower.tail = FALSE) # or just `crit &lt;- 2`
 pred &lt;- mutate(pred, richness = ilink(fit),
@@ -875,7 +875,7 @@ pred
 Tidy objects like this are easy to plot with `ggplot()`
 
 
-```r
+``` r
 ggplot(pred, aes(x = year)) + scale_x_continuous(breaks = 2005:2014) +
     geom_ribbon(aes(ymin = lwr, ymax = upr), alpha = 0.2) +
     geom_line(aes(y = richness)) + labs(y = "Species richness", x = NULL)
@@ -890,7 +890,7 @@ ggplot(pred, aes(x = year)) + scale_x_continuous(breaks = 2005:2014) +
 This idea is very general;  spatiotemporal model needs a grid of x,y coordinates for each year
 
 
-```r
+``` r
 sp_new &lt;- with(shrimp, expand.grid(x = evenly(x, n = 100), y = evenly(y, n = 100),
                                    year = unique(year)))
 sp_pred &lt;- predict(m_spt, newdata = sp_new, se.fit = TRUE) # link scale is default
@@ -920,7 +920,7 @@ sp_pred
 # `predict()` &amp;rarr; response scale
 
 
-```r
+``` r
 ilink &lt;- inv_link(m_spt)
 too_far &lt;- exclude.too.far(sp_pred$x, sp_pred$y, shrimp$x, shrimp$y, dist = 0.1)
 sp_pred &lt;- sp_pred %&gt;% mutate(biomass = ilink(fit),
@@ -951,7 +951,7 @@ sp_pred
 # `predict()` &amp;rarr; plot
 
 
-```r
+``` r
 ggplot(sp_pred, aes(x = x, y = y, fill = biomass)) + geom_raster() +
     scale_fill_viridis_c(option = "plasma") + facet_wrap(~ year, ncol = 5) + coord_equal()
 ```
@@ -966,7 +966,7 @@ We have this model
 
 .smaller[
 
-```r
+``` r
 m_spt
 ```
 
@@ -995,7 +995,7 @@ How would you visualize the average change in biomass over time?
 One way is to  decompose the spatio-temporal function in main effects plus interaction
 
 
-```r
+``` r
 m_ti &lt;- gam(shrimp ~ ti(x, y, year, d = c(2, 1), bs = c("tp", "cr"), k = c(20, 5)) +
                 s(x, y, bs = "tp", k = 20) +
                 s(year, bs = "cr", k = 5),
@@ -1017,7 +1017,7 @@ We can exclude the spatial &amp; spatiotemporal terms from predictions using `ex
 .col-6[
 .smaller[
 
-```r
+``` r
 smooths(m_ti)
 ```
 
@@ -1035,7 +1035,7 @@ smooths(m_ti)
 Prediction data only need dummy values for `x` and `y`
 
 
-```r
+``` r
 ti_new &lt;- with(shrimp, expand.grid(x = mean(x), y = mean(y), year = evenly(year, n = 100)))
 
 ti_pred &lt;- predict(m_ti, newdata = ti_new, se.fit = TRUE,
@@ -1052,7 +1052,7 @@ ti_pred &lt;- bind_cols(as_tibble(ti_new), as_tibble(as.data.frame(ti_pred))) %&
 Could also use `terms = "s(year)"` to select only the named smooths
 
 
-```r
+``` r
 predict(m_ti, newdata = ti_new, se.fit = TRUE, terms = "s(year)")
 ```
 
@@ -1061,7 +1061,7 @@ predict(m_ti, newdata = ti_new, se.fit = TRUE, terms = "s(year)")
 # `predict()` with `exclude`&amp;mdash; Step 3 *plot it!*
 
 
-```r
+``` r
 ggplot(ti_pred, aes(x = year)) + geom_ribbon(aes(ymin = lwr, ymax = upr), alpha = 0.3) +
     geom_line(aes(y = biomass)) + labs(y = "Biomass", x = NULL)
 ```
@@ -1073,7 +1073,7 @@ ggplot(ti_pred, aes(x = year)) + geom_ribbon(aes(ymin = lwr, ymax = upr), alpha 
 # Using `fitted_values()`
 
 
-```r
+``` r
 ti_pred2 &lt;- fitted_values(m_ti, data = ti_new,
                           scale = "response",
 *                         exclude = c("ti(x,y,year)", "s(x,y)"))
@@ -1153,7 +1153,7 @@ Let's do this for `m_rich`
 The vector of model parameters for the smooth, `\(\boldsymbol{\hat{\beta}}\)`
 
 
-```r
+``` r
 sm_year &lt;- get_smooth(m_rich, "s(year)") # extract the smooth object from model
 idx &lt;- gratia:::smooth_coef_indices(sm_year) # indices of the coefs for this smooth
 idx
@@ -1163,7 +1163,7 @@ idx
 ## [1]  2  3  4  5  6  7  8  9 10
 ```
 
-```r
+``` r
 beta &lt;- coef(m_rich)                     # vector of model parameters
 beta[idx]                                # coefs for this smooth
 ```
@@ -1182,7 +1182,7 @@ beta[idx]                                # coefs for this smooth
 The covariance matrix of the model parameters, `\(\boldsymbol{\hat{V}}_{\beta}\)`
 
 
-```r
+``` r
 Vb &lt;- vcov(m_rich) # default is the bayesian covariance matrix
 Vb
 ```
@@ -1213,7 +1213,7 @@ A matrix `\(\boldsymbol{X}_p\)` that maps parameters to the linear predictor for
 We get `\(\boldsymbol{X}_p\)` using the `predict()` method with `type = "lpmatrix"`
 
 
-```r
+``` r
 new_year &lt;- with(shrimp, tibble(year = evenly(year, n = 100)))
 Xp &lt;- predict(m_rich, newdata = new_year, type = 'lpmatrix')
 dim(Xp)
@@ -1230,7 +1230,7 @@ dim(Xp)
 Take only the columns of `\(\boldsymbol{X}_p\)` that are involved in the smooth of `year`
 
 
-```r
+``` r
 Xp &lt;- Xp[, idx, drop = FALSE]
 dim(Xp)
 ```
@@ -1246,7 +1246,7 @@ dim(Xp)
 Simulate parameters from the posterior distribution of the smooth of `year`
 
 
-```r
+``` r
 set.seed(42)
 beta_sim &lt;- rmvn(n = 20, beta[idx], Vb[idx, idx, drop = FALSE])
 dim(beta_sim)
@@ -1452,7 +1452,7 @@ mean(total_biomass)
 ```
 
 ```
-## [1] 1561014
+## [1] 1561644
 ```
 
 ``` r
@@ -1461,7 +1461,7 @@ quantile(total_biomass, probs = c(0.025, 0.975))
 
 ```
 ##    2.5%   97.5% 
-## 1403512 1753195
+## 1404871 1750293
 ```
 
 ---
@@ -1490,7 +1490,7 @@ with(bio_post, mean(total))
 ```
 
 ```
-## [1] 1561014
+## [1] 1561644
 ```
 
 ``` r
@@ -1499,7 +1499,7 @@ with(bio_post, quantile(total, probs = c(0.025, 0.975)))
 
 ```
 ##    2.5%   97.5% 
-## 1403512 1753195
+## 1404871 1750293
 ```
 ]
 
@@ -1529,7 +1529,7 @@ class: inverse middle center subsection
 We have measurements of the abundance of a particular species along an environmental gradient
 
 
-```r
+``` r
 spp_url &lt;- "https://bit.ly/spp-gradient"
 gradient &lt;- read_csv(spp_url, col_types = "dd")
 gradient

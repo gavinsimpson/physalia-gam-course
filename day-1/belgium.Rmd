@@ -1,7 +1,7 @@
 ---
 title: "Belgium AIDS epidemic"
 author: "Gavin Simpson"
-date: "10/10/2022"
+date: "2025-12-08"
 output: html_document
 ---
 
@@ -41,7 +41,7 @@ belgium
 Create a variable `t` (for time) in the `belgium` data frame, which contains the time point of observation by subtracting `1980` from each `year`:
 
 ```{r wrangling}
-belgium <- belgium %>%
+belgium <- belgium |>
   mutate(t = year - 1980)
 ```
 
@@ -53,20 +53,18 @@ belgium <- belgium %>%
 
 3. Produce the model summary using `summary()`
 
-4. Calculate a quick goodness of fit test for the model using the information provided on the residual deviance
+4. Plot the model diagnostics
 
-5. Plot the model diagnostics
+5. Add fitted values of the model as a line on to the plot you created earlier. Add a confidence interval to the fitted value line.
 
-6. Add fitted values of the model as a line on to the plot you created earlier. Add a confidence interval to the fitted value line.
+6. Looking at the model diagnostics and the plot of the fitted values versus the data, identify a problem with this model. Describe the problem in a few words.
 
-7. Looking at the model diagnostics and the plot of the fitted values versus the data, identify a problem with this model. Describe the problem in a few words.
-
-8. Modify your model to account for the identified problem
+7. Modify your model to account for the identified problem
 
     Hint: use polynomials of `t` using `poly()`
 
-9. Look at the model summary, model diagnostic plots, and perform the goodness of fit test on the residual deviance. Are there any problems with this model?
+8. Look at the model summary, model diagnostic plots, and perform the goodness of fit test on the residual deviance. Are there any problems with this model?
 
-10. Compare the two models using AIC and a generalized likelihood ratio test (GLRT). Which model is to be preferred?
+9. Compare the two models using AIC and a generalized likelihood ratio test (GLRT). Which model is to be preferred?
 
     Hint: the `anova()` function is used to do the GLRT

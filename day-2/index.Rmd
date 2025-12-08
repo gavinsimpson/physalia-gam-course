@@ -764,7 +764,34 @@ summary(crest)
 
 # Portugese larks &mdash; binomial GAM
 
-Model checking with binary data is a pain &mdash; residuals look weird
+Model checking with binary data is a pain &mdash; usual residuals look weird
+
+Alternatively, for some families, we can use Probability Integral Transform or Quantile residuals
+
+.pull-left[
+.smaller[
+
+```{r model-check-larks-1}
+residuals_linpred_plot(crest, type = "deviance")
+```
+]
+]
+
+
+.pull-right[
+.smaller[
+
+```{r model-check-larks-2}
+residuals_linpred_plot(crest, type = "quantile")
+```
+]
+]
+
+Also: DHARMa 📦
+
+---
+
+# Portugese larks &mdash; binomial GAM
 
 Alternatively we can aggregate data at the `QUADRICULA` level & fit a binomial count model
 

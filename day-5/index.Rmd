@@ -20,7 +20,7 @@ class: inverse middle center big-subsection
 
 ```{r setup, include=FALSE, cache=FALSE}
 options(htmltools.dir.version = FALSE)
-knitr::opts_chunk$set(cache = FALSE, dev = "svg", echo = TRUE, message = FALSE,
+knitr::opts_chunk$set(cache = TRUE, dev = "svg", echo = TRUE, message = FALSE,
                       warning = FALSE,
                       fig.height = 6, fig.width = 1.777777 * 6)
 
@@ -447,9 +447,9 @@ knitr::include_graphics("resources/dangerwillrobinson-1.png")
 
 # NCV
 
-We need to define two things: `k`, the indices of observations to drop for each neighbourhood, and `m`, the end points of each neighbourhood
+We need to define two things: `a`, the indices of observations to drop for each neighbourhood, and `ma`, the end points of each neighbourhood
 
-Plus their counterparts for prediction neighbourhoods: `i` and `mi`
+Plus their counterparts for prediction neighbourhoods: `d` and `md`
 
 .row[
 
@@ -459,10 +459,10 @@ nei <- list()
 start <- pmax(1, (1:100) - 5)
 end <- pmin(100, (0:99) + 5)
 nt <- lapply(1:100, \(x) start[x]:end[x])
-nei$k <- unlist(nt)
-nei$m <- cumsum(lapply(nt, length))
-nei$i <- nei$k
-nei$mi <- nei$m
+nei$a <- unlist(nt)
+nei$ma <- cumsum(lapply(nt, length))
+nei$d <- nei$a
+nei$md <- nei$ma
 ```
 
 ]
@@ -1757,7 +1757,8 @@ With so many comparisons, we should adjust the $p$ values
 .small[
 ```{r}
 m_cw |> avg_comparisons(variables = list(diet = "pairwise"),
-    by = "time", p_adjust = "fdr")
+  by = "time") |>
+  hypotheses(multcomp = "fdr")
 ```
 ]
 

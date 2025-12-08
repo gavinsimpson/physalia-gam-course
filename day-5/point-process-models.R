@@ -11,7 +11,7 @@ data(gorillas, package = "spatstat.data")
 pp <- data.frame(gorillas,
   lapply(gorillas.extra, function(x) {
     x[gorillas]
-  }), pt = 1, wt = 1e-6) 
+  }), pt = 1, wt = 1e-6)
 
 q_xy <- data.frame(gorillas.extra[[1]])[, c("x", "y")] # extract x and y from window
 
@@ -27,24 +27,30 @@ dat <- merge(pp, quad, all = TRUE, sort = FALSE)
 # center and scale covariates
 dat <- dat |>
   mutate(
-    elevation <- scale(elevation),
-    slopeangle <- scale(slopeangle),
-    waterdist <- scale(waterdist)
+    elevation = scale(elevation),
+    slopeangle = scale(slopeangle),
+    waterdist = scale(waterdist)
   )
 
-ctrl <- gam.control(trace = FALSE, nthreads = 2)
+ctrl <- gam.control(trace = FALSE, nthreads = 4)
+tic()
 m_k200 <- gam(pt / wt ~ elevation + waterdist + slopeangle + heat +
   slopetype + vegetation + s(x, y, bs = "gp", k = 200),
 data =  dat, family = poisson(), weights = wt, method = "REML",
 control = ctrl)
+toc()
 
+tic()
 m_k400 <- gam(pt / wt ~ elevation + waterdist + slopeangle + heat +
   slopetype + vegetation + s(x, y, bs = "gp", k = 400),
 data = dat, family = poisson(), weights = wt, method = "REML",
 control = ctrl)
+toc()
 
+# might be broken - used plot.gam(m_k200, all.terms = TRUE)
 draw(m_k200, parametric = TRUE, rug = FALSE)
 
+# might be broken - used plot.gam(m_k400, all.terms = TRUE)
 draw(m_k400, parametric = TRUE, rug = FALSE)
 
 sum(m_k200$edf) / m_k200$smooth[[1]]$bs.dim

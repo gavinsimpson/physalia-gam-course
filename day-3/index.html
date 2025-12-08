@@ -112,7 +112,7 @@ Null space is the set of functions in the basis that the penalty doesn't affect
 .col-6[
 
 
-```r
+``` r
 n &lt;- 100
 set.seed(2)
 df &lt;- tibble(x = runif(n),
@@ -125,7 +125,7 @@ model &lt;- gam(y ~ x + s(x, m = c(2, 0)),
 .col-6[
 .small[
 
-```r
+``` r
 summary(model)
 ```
 
@@ -162,7 +162,7 @@ summary(model)
 # Beyond linearity
 
 
-```r
+``` r
 draw(model, parametric = TRUE)
 ```
 
@@ -206,7 +206,7 @@ And set the finite difference `eps` to a much larger value than the default
 Simulated motorcycle collision data
 
 
-```r
+``` r
 data(mcycle, package = "MASS")
 m &lt;- gam(accel ~ s(times), data = mcycle, method = "REML")
 sm_plt &lt;- draw(m, residuals = TRUE)
@@ -220,7 +220,7 @@ sm_plt
 # Derivatives of `s(times)`
 
 
-```r
+``` r
 fd &lt;- derivatives(m, type = "central", unconditional = TRUE)
 fd
 ```
@@ -247,7 +247,7 @@ fd
 # Derivatives of `s(times)`
 
 
-```r
+``` r
 fd_plt &lt;- draw(fd) + labs(title = "First derivative s(times)")
 sm_plt + fd_plt + plot_layout(ncol = 2)
 ```
@@ -259,7 +259,7 @@ sm_plt + fd_plt + plot_layout(ncol = 2)
 # Second derivative of `s(times)` &amp;mdash; wrong!
 
 
-```r
+``` r
 fd2 &lt;- derivatives(m, order = 2, eps = 0.1, type = "central", unconditional = TRUE)
 fd2_plt &lt;- draw(fd2)
 fd_plt + fd2_plt + plot_layout(ncol = 2)
@@ -272,7 +272,7 @@ fd_plt + fd2_plt + plot_layout(ncol = 2)
 # Second derivative of `s(times)` &amp;mdash; right!
 
 
-```r
+``` r
 m2 &lt;- gam(accel ~ s(times, m = 3), data = mcycle, method = "REML")
 fd2 &lt;- derivatives(m2, order = 2, eps = 0.1, type = "central", unconditional = TRUE)
 fd2_plt &lt;- draw(fd2) + labs(title = "Second derivative s(times)")
@@ -286,7 +286,7 @@ fd_plt + fd2_plt + plot_layout(ncol = 2)
 # Change indicators
 
 
-```r
+``` r
 fds &lt;- derivatives(m, type = "central", unconditional = TRUE,
 * interval = "simultaneous")
 m |&gt;                                               # take the model, and
@@ -302,7 +302,7 @@ m |&gt;                                               # take the model, and
 # Change indicators
 
 
-```r
+``` r
 m |&gt;                                               # take the model, and
   smooth_estimates(select = "s(times)") |&gt;         # evaluate the smooth
   add_sizer(derivatives = fds, type = "sizer") |&gt;  # add sizer change indicator
@@ -359,7 +359,7 @@ Two ways to fit smooth interactions
 # Smooth interactions
 
 
-```r
+``` r
 df
 ```
 
@@ -380,7 +380,7 @@ df
 ## # ℹ 490 more rows
 ```
 
-```r
+``` r
 m_tprs &lt;- gam(y ~ s(x, z), data = df, method = "REML")
 m_te   &lt;- gam(y ~ te(x, z), data = df, method = "REML")
 ```
@@ -390,7 +390,7 @@ m_te   &lt;- gam(y ~ te(x, z), data = df, method = "REML")
 # Smooth interactions
 
 
-```r
+``` r
 truth_plt + (draw(m_tprs) + coord_cartesian()) + draw(m_te) + plot_layout(ncol = 3)
 ```
 
@@ -401,7 +401,7 @@ truth_plt + (draw(m_tprs) + coord_cartesian()) + draw(m_te) + plot_layout(ncol =
 # Smooth interactions
 
 
-```r
+``` r
 layout(matrix(1:3, ncol = 3))
 persp(xs, zs, truth)
 vis.gam(m_tprs)
@@ -624,7 +624,7 @@ If you have simple random effects you can fit those in `gam()` and `bam()` witho
 These two models are equivalent
 
 
-```r
+``` r
 m_nlme &lt;- lme(travel ~ 1, data = Rail, ~ 1 | Rail, method = "REML") 
 
 m_gam  &lt;- gam(travel ~ s(Rail, bs = "re"), data = Rail, method = "REML")
@@ -684,7 +684,7 @@ class: inverse center middle subsection
 
 Simulate response data from Gaussian, negative binomial, &amp; binomial distributions
 
-```r
+``` r
 set.seed(2)
 n &lt;- 400
 x1 &lt;- rnorm(n)
@@ -733,7 +733,7 @@ class: inverse middle center subsection
 # Checking basis size
 
 
-```r
+``` r
 norm_model_1 &lt;- gam(y_norm ~ s(x1, k = 4) + s(x2, k = 4), method = 'REML')
 gam.check(norm_model_1)
 ```
@@ -762,7 +762,7 @@ gam.check(norm_model_1)
 # Checking basis size
 
 
-```r
+``` r
 norm_model_2 &lt;- gam(y_norm ~ s(x1, k = 12) + s(x2, k = 4), method = 'REML')
 gam.check(norm_model_2)
 ```
@@ -791,7 +791,7 @@ gam.check(norm_model_2)
 # Checking basis size
 
 
-```r
+``` r
 norm_model_3 &lt;- gam(y_norm ~ s(x1, k = 12) + s(x2, k = 12),method = 'REML')
 gam.check(norm_model_3)
 ```
@@ -800,7 +800,7 @@ gam.check(norm_model_3)
 ## 
 ## Method: REML   Optimizer: outer newton
 ## full convergence after 8 iterations.
-## Gradient range [-1.136192e-08,6.901146e-13]
+## Gradient range [-1.136189e-08,6.972201e-13]
 ## (score 334.2084 &amp; scale 0.2485446).
 ## Hessian positive definite, eigenvalue range [2.812271,198.6868].
 ## Model rank =  23 / 23 
@@ -836,7 +836,7 @@ Two common ways that the `k.check()` (`gam.check()`) test will reject the null h
 Model with `k` set to be too low for each smooth
 
 
-```r
+``` r
 norm_model_1 &lt;- gam(y_norm ~ s(x1, k = 4) + s(x2, k = 4), method = "REML")
 k.check(norm_model_1)
 ```
@@ -858,7 +858,7 @@ Remember we had this model where we had set `k` to be too low for each of the tw
 # Checking basis size (alt)
 
 
-```r
+``` r
 res &lt;- resid(norm_model_1, type = "deviance")
 
 res_model &lt;- gam(res ~ s(x1, k = 12) + s(x2, k = 12),
@@ -879,7 +879,7 @@ edf(res_model)
 
 # Checking basis size (alt)
 
-```r
+``` r
 draw(res_model)
 ```
 
@@ -916,7 +916,7 @@ class: inverse middle center subsection
 # Gaussian data, Gaussian model
 
 
-```r
+``` r
 norm_model &lt;- gam(y_norm ~ s(x1, k=12) + s(x2, k=12), method="REML")
 gam.check(norm_model, rep = 500)
 ```
@@ -928,7 +928,7 @@ gam.check(norm_model, rep = 500)
 # Negative binomial data, Poisson model
 
 
-```r
+``` r
 pois_model &lt;- gam(y_negbinom ~ s(x1, k=12) + s(x2, k=12), family=poisson, method="REML")
 gam.check(pois_model, rep = 500)
 ```
@@ -940,7 +940,7 @@ gam.check(pois_model, rep = 500)
 # NB data, NB model
 
 
-```r
+``` r
 negbin_model &lt;- gam(y_negbinom ~ s(x1, k=12) + s(x2, k=12), family = nb, method="REML")
 gam.check(negbin_model, rep = 500)
 ```
@@ -952,7 +952,7 @@ gam.check(negbin_model, rep = 500)
 # NB data, NB model
 
 
-```r
+``` r
 appraise(negbin_model, method = 'simulate')
 ```
 
@@ -995,7 +995,7 @@ A quick test for over dispersion is given by `testDispersion()`
 For the Poisson GAM fitted to Negative binomial data:
 
 
-```r
+``` r
 library("mgcViz")
 library("DHARMa")
 
@@ -1021,7 +1021,7 @@ A quick test for over dispersion is given by `testDispersion()`
 For the Negative binomial GAM fitted to Negative binomial data:
 
 
-```r
+``` r
 testDispersion(negbin_model, plot = FALSE)
 ```
 
@@ -1044,7 +1044,7 @@ To generate just the randomised quantile residuals we use `simulateResiduals()`
 Do this to compute and store the residuals once, rather than for each test
 
 
-```r
+``` r
 resids &lt;- simulateResiduals(fittedModel = pois_model, plot = FALSE)
 ```
 
@@ -1053,7 +1053,7 @@ resids &lt;- simulateResiduals(fittedModel = pois_model, plot = FALSE)
 # DHARMa &amp;mdash; randomised quantile residuals
 
 
-```r
+``` r
 plot(resids)
 ```
 
@@ -1064,7 +1064,7 @@ plot(resids)
 # DHARMa &amp;mdash; randomised quantile residuals
 
 
-```r
+``` r
 resids &lt;- simulateResiduals(fittedModel = negbin_model, plot = FALSE)
 plot(resids)
 ```
@@ -1194,7 +1194,7 @@ Marra &amp; Wood (2011) show that the double penalty and the shrinkage smooth ap
 - 2 spurious covariates (`runif()` &amp; not shown)
 
 
-```r
+``` r
 ## an example of automatic model selection via null space penalization
 n &lt;- 200
 dat &lt;- data_sim("eg1", n = n, scale = .15, dist = "poisson", seed = 3) ## simulate data
@@ -1203,7 +1203,7 @@ dat &lt;- dat %&gt;% mutate(x4 = runif(n, 0, 1), x5 = runif(n, 0, 1),
                       f4 = rep(0, n), f5 = rep(0, n))   ## spurious
 ```
 
-```r
+``` r
 b &lt;- gam(y ~ s(x0) + s(x1) + s(x2) + s(x3) +
              s(x4) + s(x5),
          data = dat, family = poisson, method = 'REML',
@@ -1222,7 +1222,7 @@ b &lt;- gam(y ~ s(x0) + s(x1) + s(x2) + s(x3) +
 
 .smaller[
 
-```r
+``` r
 summary(b)
 ```
 
@@ -1261,7 +1261,7 @@ summary(b)
 # Example
 
 
-```r
+``` r
 draw(b, scales = 'fixed')
 ```
 
@@ -1418,7 +1418,7 @@ whilst the remaining tensor product smooths model smooth interactions between th
 # Galveston Bay &amp;mdash; full model
 
 
-```r
+``` r
 knots &lt;- list(DoY = c(0.5, 366.5))
 m &lt;- bam(MEASUREMENT ~
              s(ToD, k = 10) +
@@ -1441,7 +1441,7 @@ m &lt;- bam(MEASUREMENT ~
 # Galveston Bay &amp;mdash; simpler model
 
 
-```r
+``` r
 m.sub &lt;- bam(MEASUREMENT ~
              s(ToD, k = 10) +
              s(DoY, k = 12, bs = "cc") +
@@ -1457,13 +1457,13 @@ m.sub &lt;- bam(MEASUREMENT ~
 # Galveston Bay &amp;mdash; simpler model?
 
 
-```r
+``` r
 AIC(m, m.sub)
 ```
 
 ```
 ##             df      AIC
-## m     484.7684 58544.03
+## m     484.8335 58547.15
 ## m.sub 238.2766 59193.50
 ```
 ---
@@ -1472,7 +1472,7 @@ AIC(m, m.sub)
 
 .smaller[
 
-```r
+``` r
 anova(m, m.sub, test = "F")
 ```
 
@@ -1492,8 +1492,8 @@ anova(m, m.sub, test = "F")
 ##     k = 30) + s(LONGITUDE, LATITUDE, k = 100, bs = "ds", m = c(1, 
 ##     0.5)) + ti(DoY, YEAR, bs = c("cc", "tp"), k = c(12, 15))
 ##   Resid. Df Resid. Dev      Df Deviance      F    Pr(&gt;F)    
-## 1     14684      38759                                      
-## 2     15022      41769 -338.25  -3009.8 3.3979 &lt; 2.2e-16 ***
+## 1     14683      38766                                      
+## 2     15022      41769 -338.65  -3002.2 3.3846 &lt; 2.2e-16 ***
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ```
@@ -1505,7 +1505,7 @@ anova(m, m.sub, test = "F")
 
 .small[
 
-```r
+``` r
 summary(m)
 ```
 
@@ -1527,25 +1527,25 @@ summary(m)
 ## 
 ## Parametric coefficients:
 ##             Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept) 21.61913    0.02078    1040   &lt;2e-16 ***
+## (Intercept) 21.61952    0.02089    1035   &lt;2e-16 ***
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
 ## Approximate significance of smooth terms:
-##                                 edf Ref.df         F p-value    
-## s(ToD)                        1.000   1.00    25.979 8.8e-07 ***
-## s(DoY)                        9.896  10.00 13430.960 &lt; 2e-16 ***
-## s(YEAR)                      28.026  28.75    75.994 &lt; 2e-16 ***
-## s(LONGITUDE,LATITUDE)        69.104  99.00     6.713 &lt; 2e-16 ***
-## ti(DoY,YEAR)                131.299 140.00    34.690 &lt; 2e-16 ***
-## ti(LONGITUDE,LATITUDE,ToD)   50.398 171.00     0.981 &lt; 2e-16 ***
-## ti(LONGITUDE,LATITUDE,DoY)   92.991 240.00     1.301 &lt; 2e-16 ***
-## ti(LONGITUDE,LATITUDE,YEAR)  91.791 287.00     1.305 &lt; 2e-16 ***
+##                                 edf Ref.df         F  p-value    
+## s(ToD)                        1.000   1.00    26.053 8.29e-07 ***
+## s(DoY)                        9.896  10.00 13426.474  &lt; 2e-16 ***
+## s(YEAR)                      28.025  28.75    75.889  &lt; 2e-16 ***
+## s(LONGITUDE,LATITUDE)        69.140  99.00     6.683  &lt; 2e-16 ***
+## ti(DoY,YEAR)                131.288 140.00    34.679  &lt; 2e-16 ***
+## ti(LONGITUDE,LATITUDE,ToD)   50.359 171.00     0.979  &lt; 2e-16 ***
+## ti(LONGITUDE,LATITUDE,DoY)   92.912 240.00     1.299  &lt; 2e-16 ***
+## ti(LONGITUDE,LATITUDE,YEAR)  91.792 329.00     1.130  &lt; 2e-16 ***
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
 ## R-sq.(adj) =   0.94   Deviance explained = 94.2%
-## fREML =  29799  Scale est. = 2.6187    n = 15276
+## fREML =  29800  Scale est. = 2.6192    n = 15276
 ```
 ]
 
@@ -1554,7 +1554,7 @@ summary(m)
 # Galveston Bay &amp;mdash; full model plot
 
 
-```r
+``` r
 plot(m, pages = 1, scheme = 2, shade = TRUE)
 ```
 
@@ -1565,7 +1565,7 @@ plot(m, pages = 1, scheme = 2, shade = TRUE)
 # Galveston Bay &amp;mdash; full model plot
 
 
-```r
+``` r
 draw(m, scales = "free", rug = FALSE, n = 50) +  plot_layout(widths = 1) &amp;
   theme(strip.text.x = element_text(size = 8))
 ```
