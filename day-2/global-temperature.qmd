@@ -1,0 +1,165 @@
+---
+title: "Global temperature record"
+format:
+  html:
+    toc: true
+    html-math-method: katex
+    embed-resources: true
+    monobackgroundcolor: white
+knitr:
+  opts_chunk: 
+    echo: true
+    fig.align: center
+highlight-style: github-dark
+---
+
+In this walk through, you will work through an analysis of the global temperature time series we encountered in the slides.
+
+Start by loading the R packages we need
+
+```{r}
+#| message: false
+# Packages
+library("readr")
+library("ggplot2")
+library("dplyr")
+library("mgcv")
+library("gratia")
+library("marginaleffects")
+```
+
+Next, we load the data directly from the internet, hence we use a URL
+```{r}
+# load the data
+# load the data from the web
+URL <- "https://bit.ly/hadcrutv4"
+# data are year, median of ensemble runs, certain quantiles in remaining cols
+# take only cols 1 and 2
+gtemp <- read_table(URL, col_types = "nnnnnnnnnnnn", col_names = FALSE) |>
+  select(num_range("X", 1:2)) |>
+  setNames(nm = c("Year", "Temperature"))
+```
+
+Next plot the data
+
+```{r}
+# plot
+plt_labs <- labs(x = "Year", y = expression(Temperature ~ degree * C))
+
+gtemp |>
+  ggplot(
+    aes(x = Year, y = Temperature)
+  ) +
+  geom_line() +
+  geom_point() +
+  plt_labs
+```
+
+Fit a Gaussian GAM to the time series
+
+```{r}
+# fit the Gaussian GAM
+m_gtemp <- gam(
+  Temperature ~ s(Year),
+  data = gtemp,
+  method = "REML",
+  family = gaussian()
+)
+```
+
+Look at the model summary or overview for a statistical test of the null hypothesis that $f(\mathtt{year}_i)$ is 0 everywhere
+
+```{r}
+# model summary
+summary(m_gtemp)
+# or overview
+m_gtemp |> overview()
+```
+
+Now we can visualise the fitted smooth, which we do using `draw()`
+```{r}
+# plot the estimate smooth
+draw(m_gtemp, residuals = TRUE, rug = FALSE)
+```
+The `rug = FALSE` turns off the rug plot on the x axis.
+
+It is often useful to plot predictions from the model on the response scale. This is less important for Gaussian models, but even there, the plot we just produced shows the smooth centred about the overall model constant (the intercept).
+
+To plot the fitted function we can follow the recipe from yesterday
+
+1. generate data to predict at,
+2. predict from the model,
+3. form the confidence interval,
+4. transform fitted values and confidence interval to the response scale,
+5. plot.
+
+This gets tedious very quickly. Thankfully, *gratia* contains some functions to make this much easier.
+
+We start by creating a *data slice*, the values of covariates we want to predict at
+
+```{r}
+# generate new data to predict at
+newd <- m_gtemp |>
+  data_slice(
+    Year = evenly(Year, n = 200)
+  )
+newd
+```
+
+Next, we complete steps 2--4 using `fitted_values()`
+
+```{r}
+# use fitted_values to get predictions on the response scale
+fv_gtemp <- m_gtemp |>
+  fitted_values(
+    data = newd, scale = "response"
+  )
+fv_gtemp
+```
+
+Finally, we plot:
+
+```{r}
+# plot
+fv_gtemp |>
+ggplot(aes(x = Year, y = .fitted)) +
+  geom_point(data = gtemp, aes(x = Year, y = Temperature)) +
+  geom_ribbon(
+    aes(
+      ymin = .lower_ci, ymax = .upper_ci, x = Year
+    ),
+    alpha = 0.4,
+    inherit.aes = FALSE,
+    fill = "#fdb338"
+  ) +
+  geom_line(linewidth = 1, colour = "#025196") +
+  plt_labs
+```
+
+The recipe is useful when you want complete control. If you just want to visualise the fitted model, we can use `conditional_values()` and its `draw()` method
+
+```{r}
+# or with conditional_values
+m_gtemp |>
+  conditional_values(
+    condition = "Year"
+  ) |>
+  draw() +
+  geom_point( # add the data
+    data = gtemp,
+    aes(x = Year, y = Temperature)
+  ) +
+  plt_labs
+```
+
+Or we can use `plot_predictions()` from the *marginaleffects* package again
+
+```{r}
+# or with plot_predictions
+m_gtemp |>
+  plot_predictions(
+    condition = "Year",
+    points = 1
+  ) +
+  plt_labs
+```

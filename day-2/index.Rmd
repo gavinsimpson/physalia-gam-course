@@ -704,6 +704,19 @@ In **mgcv**, default $k$ values are arbitrary &mdash; after choosing the model t
 
 4. Need to make sure your smooths are **wiggly enough**
 
+
+class: middle center inverse subsection
+
+# Your turn
+
+---
+
+# Exercise
+
+Complete the exercise at
+
+<https://gavinsimpson.github.io/physalia-gam-course/day-2/milk-yield.html>
+
 ---
 class: middle center inverse subsection
 
