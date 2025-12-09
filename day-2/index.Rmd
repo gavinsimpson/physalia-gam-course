@@ -321,6 +321,21 @@ $$\eta_i = \beta_0 + f(\mathtt{Year}_i)$$
 library("mgcv")
 gam(Temperature ~ s(Year, k = 10), data = gtemp, method = "REML")
 ```
+---
+
+class: middle center inverse subsection
+
+# Your turn
+
+---
+
+# Exercise
+
+Complete the exercise at
+
+<https://gavinsimpson.github.io/physalia-gam-course/day-2/global-temperature.html>
+
+You can also download the [`global-temperature.qmd`](https://github.com/gavinsimpson/physalia-gam-course/raw/refs/heads/main/day-2/global-temperature.qmd) and open it in RStudio
 
 ---
 
@@ -704,6 +719,7 @@ In **mgcv**, default $k$ values are arbitrary &mdash; after choosing the model t
 
 4. Need to make sure your smooths are **wiggly enough**
 
+---
 
 class: middle center inverse subsection
 
@@ -716,6 +732,8 @@ class: middle center inverse subsection
 Complete the exercise at
 
 <https://gavinsimpson.github.io/physalia-gam-course/day-2/milk-yield.html>
+
+You can also download the [`milk-yield.qmd`](https://github.com/gavinsimpson/physalia-gam-course/raw/refs/heads/main/day-2/milk-yield.qmd) and open it in RStudio
 
 ---
 class: middle center inverse subsection
