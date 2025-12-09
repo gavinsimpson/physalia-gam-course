@@ -49,10 +49,6 @@ Slidedeck: [bit.ly/physalia-gam-2](https://bit.ly/physalia-gam-2)
 
 Sources: [bit.ly/physalia-gam](https://bit.ly/physalia-gam)
 
-Direct download a ZIP of everything: [bit.ly/physalia-gam-zip](https://bit.ly/physalia-gam-zip)
-
-Unpack the zip &amp; remember where you put it
-
 ---
 
 # Today's topics
@@ -141,8 +137,11 @@ class: inverse middle center subsection
 library("readr")
 library("dplyr")
 URL &lt;-  "https://bit.ly/hadcrutv4"
-gtemp &lt;- read_table(URL, col_types = 'nnnnnnnnnnnn', col_names = FALSE) |&gt;
-    select(num_range('X', 1:2)) %&gt;% setNames(nm = c('Year', 'Temperature'))
+gtemp &lt;- read_table(
+  URL, col_types = "nnnnnnnnnnnn", col_names = FALSE
+) |&gt;
+  select(num_range("X", 1:2)) |&gt;
+  setNames(nm = c("Year", "Temperature"))
 ```
 
 [File format](https://www.metoffice.gov.uk/hadobs/hadcrut4/data/current/series_format.html)
@@ -180,7 +179,7 @@ gtemp
 
 ``` r
 library("mgcv")
-m &lt;- gam(Temperature ~ s(Year), data = gtemp, method = 'REML')
+m &lt;- gam(Temperature ~ s(Year), data = gtemp, method = "REML")
 summary(m)
 ```
 
@@ -264,7 +263,7 @@ A GAM is a sum of _smooth functions_ or _smooths_
 
 ---
 class: inverse
-background-image: url('./resources/rob-potter-398564.jpg')
+background-image: url("./resources/rob-potter-398564.jpg")
 background-size: contain
 
 # What magic is this?
@@ -275,7 +274,7 @@ background-size: contain
 
 ---
 class: inverse
-background-image: url('resources/wiggly-things.png')
+background-image: url("resources/wiggly-things.png")
 background-size: contain
 
 ---
@@ -283,10 +282,12 @@ background-size: contain
 # Fitting a GAM in R
 
 ```r
-model &lt;- gam(y ~ s(x1) + s(x2) + te(x3, x4), # formuala describing model
-             data = my_data_frame,           # your data
-             method = 'REML',                # or 'ML'
-             family = gaussian)              # or something more exotic
+model &lt;- gam(
+  y ~ s(x1) + s(x2) + te(x3, x4), # formula describing model
+  data = my_data_frame,           # your data
+  method = "REML",                # or "ML"
+  family = gaussian               # or something more exotic
+)
 ```
 
 `s()` terms are smooths of one or more variables
@@ -297,7 +298,7 @@ model &lt;- gam(y ~ s(x1) + s(x2) + te(x3, x4), # formuala describing model
 
 ```r
 library("mgcv")
-gam(Temperature ~ s(Year, k = 10), data = gtemp, method = 'REML')
+gam(Temperature ~ s(Year, k = 10), data = gtemp, method = "REML")
 ```
 
 ---
@@ -458,7 +459,7 @@ Two ways to think about how to optimize `\(\lambda\)`:
 Many methods: AIC, Mallow's `\(C_p\)`, GCV, ML, REML
 
 * **Practically**, use **REML**, because of numerical stability
-* Hence `gam(..., method='REML')`
+* Hence `gam(..., method="REML")`
 ]
 
 .center[
@@ -522,7 +523,7 @@ library("here"); library("readr"); library("dplyr")
 larks &lt;-  read_csv(here("data", "larks.csv"),
                    col_types = "ccdddd")
 
-larks &lt;- larks %&gt;%
+larks &lt;- larks |&gt;
   mutate(crestlark = factor(crestlark),
          linnet = factor(linnet),
          e = x / 1000,
@@ -560,7 +561,7 @@ head(larks)
 crest &lt;- gam(crestlark ~ s(e, n, k = 100),
              data = larks,
              family = binomial,
-             method = 'REML')
+             method = "REML")
 ```
 
 `\(f(e, n)\)` indicated by `s(e, n)` in the formula
@@ -650,20 +651,20 @@ Alternatively we can aggregate data at the `QUADRICULA` level &amp; fit a binomi
 .smaller[
 
 ``` r
-larks2 &lt;- larks %&gt;%
+larks2 &lt;- larks |&gt;
   mutate(crestlark = as.numeric(as.character(crestlark)),  # to numeric
          linnet = as.numeric(as.character(linnet)),
          tet_n = rep(1, nrow(larks)),                      # counter for how many grid cells (tetrads) we sum
          N = rep(1, nrow(larks)),                          # number of observations, 1 per row currently
-         N = if_else(is.na(crestlark), NA_real_, N)) %&gt;%   # set N to NA if observation taken
-  group_by(QUADRICULA) %&gt;%                                 # group by the larger grid square
+         N = if_else(is.na(crestlark), NA_real_, N)) |&gt;   # set N to NA if observation taken
+  group_by(QUADRICULA) |&gt;                                 # group by the larger grid square
   summarise(across(c(N, crestlark, linnet, tet_n, e, n),
-                   ~ sum(., na.rm = TRUE))) %&gt;%            # sum all needed variables
+                   ~ sum(., na.rm = TRUE))) |&gt;            # sum all needed variables
   mutate(e = e / tet_n, n = n / tet_n)                     # rescale to get avg E,N coords for QUADRICULA
 
 ## fit binomial GAM
 crest2 &lt;- gam(cbind(crestlark, N - crestlark) ~ s(e, n, k = 100),
-              data = larks2, family = binomial, method = 'REML')
+              data = larks2, family = binomial, method = "REML")
 ```
 ]
 
@@ -678,7 +679,7 @@ crest2 &lt;- gam(cbind(crestlark, N - crestlark) ~ s(e, n, k = 100),
 crest3 &lt;- gam(cbind(crestlark, N - crestlark) ~
                 s(e, n, k = 100),
               data = larks2, family = quasibinomial,
-              method = 'REML')
+              method = "REML")
 crest3$scale # should be == 1
 ```
 
@@ -755,7 +756,7 @@ ggplot(south, aes(x = c.month, y = co2)) + geom_line()
 .smaller[
 
 ``` r
-m_co2 &lt;- gam(co2 ~ s(c.month, k = 300, bs = "cr"), data = south, method = 'REML')
+m_co2 &lt;- gam(co2 ~ s(c.month, k = 300, bs = "cr"), data = south, method = "REML")
 summary(m_co2)
 ```
 
@@ -822,7 +823,7 @@ fv
 ``` r
 ggplot(fv, aes(x = c.month, y = .fitted)) +
     geom_ribbon(aes(ymin = .lower_ci, ymax = .upper_ci), alpha = 0.2) +
-    geom_line(data = south, aes(c.month, co2), col = 'red') +
+    geom_line(data = south, aes(c.month, co2), col = "red") +
     geom_line(alpha = 0.4)
 ```
 
@@ -840,7 +841,7 @@ Decompose into
 
 ``` r
 m2_co2 &lt;- gam(co2 ~ s(month, bs = "cc") + s(c.month, bs = "cr", k = 300),
-              data = south, method = 'REML',
+              data = south, method = "REML",
               knots = list(month = c(0.5, 12.5)))
 ```
 
@@ -919,7 +920,7 @@ fv2
 ``` r
 ggplot(fv2, aes(x = c.month, y = .fitted)) +
     geom_ribbon(aes(ymin = .lower_ci, ymax = .upper_ci), alpha = 0.2) +
-    geom_line(data = south, aes(c.month, co2), col = 'red') +
+    geom_line(data = south, aes(c.month, co2), col = "red") +
     geom_line(alpha = 0.4)
 ```
 
@@ -933,6 +934,9 @@ A GAM is just a fancy GLM
 
 Simon Wood &amp; colleagues (2016) have extended the *mgcv* methods to some non-exponential family distributions
 
+As of *mgcv* 📦 v 1.9.4:
+
+.small[
 .row[
 .col-5[
 * `binomial()`
@@ -942,25 +946,29 @@ Simon Wood &amp; colleagues (2016) have extended the *mgcv* methods to some non-
 * `nb()`
 * `tw()`
 * `mvn()`
+* `multinom()`
 ]
 .col-4[
-* `multinom()`
 * `betar()`
 * `scat()`
 * `gaulss()`
 * `ziplss()`
 * `twlss()`
 * `cox.ph()`
-]
-.col-3[
 * `gevlss()`
 * `gamals()`
+]
+.col-3[
 * `ocat()`
 * `shash()`
 * `gumbls()`
 * `cnorm()`
+* `clog()`
+* `cpois()`
 * `ziP()`
 * `gfam()`
+* `bcg()`
+]
 ]
 ]
 
@@ -970,7 +978,7 @@ Simon Wood &amp; colleagues (2016) have extended the *mgcv* methods to some non-
 
 The type of smoother is controlled by the `bs` argument (think *basis*)
 
-The default is a low-rank thin plate spline `bs = 'tp'`
+The default is a low-rank thin plate spline `bs = "tp"`
 
 Many others available
 
@@ -978,25 +986,26 @@ Many others available
 .row[
 .col-6[
 
-* Cubic splines `bs = 'cr'`
-* P splines `bs = 'ps'`
-* Cyclic splines `bs = 'cc'` or `bs = 'cp'`
-* Adaptive splines `bs = 'ad'`
-* Random effect `bs = 're'`
-* Factor smooths `bs = 'fs'`
+* Cubic splines `bs = "cr"`
+* P splines `bs = "ps"`
+* Cyclic splines `bs = "cc"` or `bs = "cp"`
+* Adaptive splines `bs = "ad"`
+* Random effect `bs = "re"`
+* Factor smooths `bs = "fs"`
 ]
 .col-6[
 
-* Duchon splines `bs = 'ds'`
-* Spline on the sphere `bs = 'sos'`
-* MRFs `bs = 'mrf'`
-* Soap-film smooth `bs = 'so'`
-* Gaussian process `bs = 'gp'`
-* Constrained factor smooth `bs = 'sz'`
+* Duchon splines `bs = "ds"`
+* Spline on the sphere `bs = "sos"`
+* MRFs `bs = "mrf"`
+* Soap-film smooth `bs = "so"`
+* Gaussian process `bs = "gp"`
+* Constrained factor smooth `bs = "sz"`
 ]
 ]
 ]
 
+*mgcv* also provides shape constrained smooths (`bs = "sc"`), but can only be used in the new `scasm()` function
 ---
 
 # Thin plate splines
@@ -1251,7 +1260,7 @@ m &lt;- gam(y ~ s(x0) + s(x1) + s(x2, bs = "bs") + s(x3),
 
 
 ``` r
-draw(m) + plot_layout(nrow = 1, ncol = 4)
+draw(m, rug = FALSE) + plot_layout(nrow = 1, ncol = 4)
 ```
 
 ![](index_files/figure-html/whole-basis-proces-2-model-draw-1.svg)&lt;!-- --&gt;
@@ -1261,7 +1270,117 @@ draw(m) + plot_layout(nrow = 1, ncol = 4)
 # The whole process 3
 
 ![](index_files/figure-html/whole-basis-proces-2-1.svg)&lt;!-- --&gt;
+---
 
+# Basis functions for `s(x, z)`
+
+Code for this is in `day-2/test.R`
+
+
+
+.center[
+&lt;img src="index_files/figure-html/tprs-2d-basis-1.svg" width="90%" /&gt;
+]
+
+---
+
+# Basis functions for `s(x, z)`
+
+Panels 1&amp;ndash;15 are the basis functions
+
+.center[
+&lt;img src="resources/wood-2ed-fig-5-12-2-d-tprs-basis-funs.png" width="45%" /&gt;
+]
+
+.small[
+Source: Wood SN (2017)
+]
+
+---
+class: inverse middle center big-subsection
+
+# Penalties
+
+---
+
+# How wiggly?
+
+$$
+\int_{\mathbb{R}} [f^{\prime\prime}]^2 dx = \boldsymbol{\beta}^{\mathsf{T}}\mathbf{S}\boldsymbol{\beta}
+$$
+
+`\(\mathbf{S}\)` is known as the penalty matrix
+
+Penalty matrix doesn't have to be derivative based &amp;mdash; *P-splines*
+
+As long as we can write `\(\mathbf{S}\)` so that it measures the complexity of smooth as a function of the parameters of the smooth we're OK
+
+---
+
+# TPRS basis
+
+
+``` r
+new_df &lt;- with(mcycle, tibble(times = evenly(times, n = 100)))
+bfun &lt;- basis(s(times), data = new_df, constraints = TRUE)
+draw(bfun) + facet_wrap(~ .bf)
+```
+
+&lt;img src="index_files/figure-html/unnamed-chunk-6-1.svg" width="85%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# TPRS basis
+
+
+``` r
+m &lt;-  gam(accel ~ s(times), dat = mcycle, method = "REML")
+S &lt;- penalty(m, smooth = "s(times)")
+S
+```
+
+```
+## # A tibble: 81 × 6
+##    .smooth  .type .penalty .row  .col  .value
+##    &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;
+##  1 s(times) TPRS  s(times) F1    F1    13.1  
+##  2 s(times) TPRS  s(times) F1    F2     2.71 
+##  3 s(times) TPRS  s(times) F1    F3     6.61 
+##  4 s(times) TPRS  s(times) F1    F4     2.05 
+##  5 s(times) TPRS  s(times) F1    F5     6.49 
+##  6 s(times) TPRS  s(times) F1    F6    -2.38 
+##  7 s(times) TPRS  s(times) F1    F7     7.97 
+##  8 s(times) TPRS  s(times) F1    F8     0.450
+##  9 s(times) TPRS  s(times) F1    F9     0    
+## 10 s(times) TPRS  s(times) F2    F1     2.71 
+## # ℹ 71 more rows
+```
+
+---
+
+# TPRS basis &amp; penalty
+
+.center[
+&lt;img src="index_files/figure-html/unnamed-chunk-8-1.png" width="100%" /&gt;
+]
+---
+
+# CRS basis &amp; penalty
+
+
+``` r
+m &lt;-  gam(accel ~ s(times, bs = "cr"), data = mcycle, method = "REML")
+S &lt;- penalty(m, smooth = "s(times)")
+# draw(S)
+```
+
+---
+
+# CRS basis &amp; penalty
+
+.center[
+&lt;img src="index_files/figure-html/unnamed-chunk-10-1.png" width="100%" /&gt;
+]
 ---
 class: inverse middle center big-subsection
 
@@ -1364,92 +1483,6 @@ draw(m_sim,
 
 .center[
 &lt;img src="index_files/figure-html/draw-mcycle-options-plot-1.svg" width="95%" /&gt;
-]
-
----
-class: inverse middle center big-subsection
-
-# Penalties
-
----
-
-# How wiggly?
-
-$$
-\int_{\mathbb{R}} [f^{\prime\prime}]^2 dx = \boldsymbol{\beta}^{\mathsf{T}}\mathbf{S}\boldsymbol{\beta}
-$$
-
-`\(\mathbf{S}\)` is known as the penalty matrix
-
-Penalty matrix doesn't have to be derivative based &amp;mdash; *P-splines*
-
-As long as we can write `\(\mathbf{S}\)` so that it measures the complexity of smooth as a function of the parameters of the smooth we're OK
-
----
-
-# TPRS basis
-
-
-``` r
-new_df &lt;- with(mcycle, tibble(times = evenly(times, n = 100)))
-bfun &lt;- basis(s(times), data = new_df, constraints = TRUE)
-draw(bfun) + facet_wrap(~ .bf)
-```
-
-&lt;img src="index_files/figure-html/unnamed-chunk-6-1.svg" width="85%" style="display: block; margin: auto;" /&gt;
-
----
-
-# TPRS basis
-
-
-``` r
-m &lt;-  gam(accel ~ s(times), dat = mcycle, method = "REML")
-S &lt;- penalty(m, smooth = "s(times)")
-S
-```
-
-```
-## # A tibble: 81 × 6
-##    .smooth  .type .penalty .row  .col  .value
-##    &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;
-##  1 s(times) TPRS  s(times) F1    F1    13.1  
-##  2 s(times) TPRS  s(times) F1    F2     2.71 
-##  3 s(times) TPRS  s(times) F1    F3     6.61 
-##  4 s(times) TPRS  s(times) F1    F4     2.05 
-##  5 s(times) TPRS  s(times) F1    F5     6.49 
-##  6 s(times) TPRS  s(times) F1    F6    -2.38 
-##  7 s(times) TPRS  s(times) F1    F7     7.97 
-##  8 s(times) TPRS  s(times) F1    F8     0.450
-##  9 s(times) TPRS  s(times) F1    F9     0    
-## 10 s(times) TPRS  s(times) F2    F1     2.71 
-## # ℹ 71 more rows
-```
-
----
-
-# TPRS basis &amp; penalty
-
-.center[
-&lt;img src="index_files/figure-html/unnamed-chunk-8-1.png" width="100%" /&gt;
-]
----
-
-# CRS basis &amp; penalty
-
-
-``` r
-m &lt;-  gam(accel ~ s(times, bs = "cr"), data = mcycle, method = "REML")
-S &lt;- penalty(m, smooth = "s(times)")
-# draw(S)
-```
-
----
-
-# CRS basis &amp; penalty
-
-.center[
-&lt;img src="index_files/figure-html/unnamed-chunk-10-1.png" width="100%" /&gt;
 ]
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>

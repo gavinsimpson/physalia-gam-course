@@ -17,13 +17,13 @@ south
 
 # plot the data
 ggplot(south, aes(x = c.month, y = co2)) +
-    geom_line()
+  geom_line()
 
 # Fit a naive GAM using the time step variable
 # we need really large k to capture the within and between year variability
 # in a single smooth
 m_co2 <- gam(co2 ~ s(c.month, k = 300, bs = "cr"),
-    data = south, method = "REML")
+  data = south, method = "REML")
 
 # model summary
 summary(m_co2)
@@ -44,10 +44,10 @@ fv
 
 # plot our predictions
 fv |>
-    ggplot(aes(x = c.month, y = .fitted)) +
-    geom_ribbon(aes(ymin = .lower_ci, ymax = .upper_ci), alpha = 0.2) +
-    geom_line(data = south, aes(c.month, co2), col = "red") +
-    geom_line(alpha = 0.4)
+  ggplot(aes(x = c.month, y = .fitted)) +
+  geom_ribbon(aes(ymin = .lower_ci, ymax = .upper_ci), alpha = 0.2) +
+  geom_line(data = south, aes(c.month, co2), col = "red") +
+  geom_line(alpha = 0.4)
 
 # linear extrapolation - be very careful extrapolating with splines...
 
@@ -57,8 +57,8 @@ fv |>
 # Note how we set the knots
 m2_co2 <- gam(co2 ~ s(month, bs = "cc") +
                 s(c.month, bs = "cr", k = 300),
-    data = south, method = "REML",
-    knots = list(month = c(0.5, 12.5)))
+  data = south, method = "REML",
+  knots = list(month = c(0.5, 12.5)))
 
 # model summary
 summary(m2_co2)
@@ -79,6 +79,6 @@ fv2 <- fitted_values(m2_co2, data = new_df, scale = "response")
 # and plot
 fv2 |>
 ggplot(aes(x = c.month, y = .fitted)) +
-    geom_ribbon(aes(ymin = .lower_ci, ymax = .upper_ci), alpha = 0.2) +
-    geom_line(data = south, aes(c.month, co2), col = 'red') +
-    geom_line(alpha = 0.4)
+  geom_ribbon(aes(ymin = .lower_ci, ymax = .upper_ci), alpha = 0.2) +
+  geom_line(data = south, aes(c.month, co2), col = 'red') +
+  geom_line(alpha = 0.4)

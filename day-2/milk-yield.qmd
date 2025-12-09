@@ -1,0 +1,184 @@
+---
+title: "Modelling a lactation curve"
+format:
+  html:
+    toc: true
+    html-math-method: katex
+    embed-resources: true
+    monobackgroundcolor: white
+knitr:
+  opts_chunk: 
+    echo: true
+    fig.align: center
+highlight-style: github-dark
+---
+
+The data in this example are from Henderson and McCulloch (1990)
+[*Transform or Link?*](https://ecommons.cornell.edu/server/api/core/bitstreams/285223da-0e1d-44c9-bb60-2122e3135b55/content)
+
+Start by loading the R packages we need
+
+```{r}
+#| message: false
+# Packages
+library("mgcv")
+library("gratia")
+library("ggplot2")
+library("dplyr")
+```
+
+Next, we enter the data, which is very simple so I just transcribed it from the paper directly into R code:
+
+```{r}
+# load the data
+lactation <- tibble(
+  fat = c(0.31, 0.39, 0.50, 0.58, 0.59, 0.64, 0.68, 0.66,
+          0.67, 0.70, 0.72, 0.68, 0.65, 0.64, 0.57, 0.48,
+          0.46, 0.45, 0.31, 0.33, 0.36, 0.30, 0.26, 0.34,
+          0.29, 0.31, 0.29, 0.20, 0.15, 0.18, 0.11, 0.07,
+          0.06, 0.01, 0.01),
+  week = seq_len(35)
+)
+```
+
+In this exercise you will fit a Tweedie GLM and a Tweedie GAM to model the average daily fat content of the milk in each week of lactation.
+
+## Tasks
+
+::: {.callout-note}
+## Task 1
+
+Fit a Tweedie GLM using the `gam()` function from *mgcv*.
+
+* Call your model `m_glm`
+* The response variable should be `fat` and the predictor variables are `log(week)` and `week`.
+* Use `tw()` for the conditional distribution (random component)
+* Use `method = "ML"` (for reasons)
+:::
+
+::: {.callout-tip collapse="true"}
+## Solution
+
+```{r}
+m_glm <- gam(
+  fat ~ log(week) + week,
+  data = lactation,
+  family = tw(link = "log"),
+  method = "ML"
+)
+```
+
+:::
+
+::: {.callout-note}
+## Task 2
+
+Fit a Tweedie **GAM** using the `gam()` function from *mgcv*.
+
+* Call your model `m_gam`
+* The response variable should be `fat` and the predictor variable is `week`.
+* Include a smooth effect of `week` in the model's linear predictor
+:::
+
+::: {.callout-tip collapse="true"}
+## Solution
+
+```{r}
+m_gam <- gam(
+  fat ~ s(week),
+  data = lactation,
+  method = "ML",
+  family = tw()
+)
+```
+
+:::
+
+::: {.callout-note}
+## Task 3
+
+Plot the fitted smooth
+
+:::
+
+::: {.callout-tip collapse="true"}
+## Solution
+
+```{r}
+m_gam |> draw()
+```
+
+:::
+
+
+::: {.callout-note}
+## Task 3
+
+How many effective degrees of freedom have been used by $f(\mathtt{week}_i)$?
+
+:::
+
+::: {.callout-tip collapse="true"}
+## Solution
+
+You can use `summary()` or `overview()` for this:
+
+```{r}
+m_gam |> summary()
+m_gam |> overview()
+```
+
+But *gratia* also provides a simple extractor function, `edf()`, for this task.
+
+```{r}
+m_gam |> edf()
+```
+
+:::
+
+Finally, let's compare the fits of the two models. We start by computing the conditional values for each model, conditioning on `week`
+
+```{r}
+cond_glm <- m_glm |>
+  conditional_values(
+    condition = "week"
+  )
+cond_gam <- m_gam |>
+  conditional_values(
+    condition = "week"
+  )
+```
+
+Next we need to bind these together and add a column indicating which model is which
+
+```{r}
+cond_vals <- cond_glm |>
+  bind_rows(cond_gam) |>
+  mutate(
+    model = factor(
+      rep(c("GLM", "GAM"), each = nrow(cond_glm))
+    )
+  )
+
+cond_vals
+```
+
+Finally, we can plot the two fits
+
+```{r}
+cond_vals |>
+  ggplot(
+    aes(x = week, y = .fitted, group = model, colour = model)
+  ) +
+  geom_ribbon(
+    aes(x = week, ymin = .lower_ci, ymax = .upper_ci, fill = model),
+    inherit.aes = FALSE, alpha = 0.2
+  ) +
+  geom_line() +
+  geom_point(
+    data = lactation,
+    aes(x = week, y = fat), inherit.aes = FALSE
+  ) +
+  ggokabeito::scale_colour_okabe_ito() +
+  ggokabeito::scale_fill_okabe_ito()
+```

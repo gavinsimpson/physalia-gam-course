@@ -6,40 +6,40 @@ author: "Gavin Simpson"
 date: "1400&ndash;2000 CET (1300&ndash;1900 UTC) Tuesday 9th December, 2025"
 output:
   xaringan::moon_reader:
-    css: ['default', 'https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css', 'slides.css']
+    css: ["default", "https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css", "slides.css"]
     lib_dir: libs
     nature:
-      titleSlideClass: ['inverse','middle','left',my-title-slide]
+      titleSlideClass: ["inverse","middle","left",my-title-slide]
       highlightStyle: github
       highlightLines: true
       countIncrementalSlides: false
       beforeInit: "macros.js"
-      ratio: '16:9'
+      ratio: "16:9"
 ---
 class: inverse middle center big-subsection
 
 ```{r setup, include=FALSE, cache=FALSE}
 options(htmltools.dir.version = FALSE)
-knitr::opts_chunk$set(cache = TRUE, dev = 'svg', echo = TRUE, message = FALSE, warning = FALSE,
+knitr::opts_chunk$set(cache = TRUE, dev = "svg", echo = TRUE, message = FALSE, warning = FALSE,
                       fig.height = 6, fig.width = 1.777777 * 6)
 
-library('here')
-library('mgcv')
-library('gratia')
-library('ggplot2')
-library('purrr')
-library('mvnfast')
+library("here")
+library("mgcv")
+library("gratia")
+library("ggplot2")
+library("purrr")
+library("mvnfast")
 library("tibble")
-library('patchwork')
-library('tidyr')
+library("patchwork")
+library("tidyr")
 library("knitr")
 library("viridis")
-library('readr')
-library('dplyr')
-library('gganimate')
+library("readr")
+library("dplyr")
+library("gganimate")
 
 ## plot defaultsFriday 14th
-theme_set(theme_bw(base_size = 16, base_family = 'Fira Sans'))
+theme_set(theme_bw(base_size = 16, base_family = "Fira Sans"))
 
 ## constants
 anim_width <- 1000
@@ -61,10 +61,6 @@ anim_res <- 200
 Slidedeck: [bit.ly/physalia-gam-2](https://bit.ly/physalia-gam-2)
 
 Sources: [bit.ly/physalia-gam](https://bit.ly/physalia-gam)
-
-Direct download a ZIP of everything: [bit.ly/physalia-gam-zip](https://bit.ly/physalia-gam-zip)
-
-Unpack the zip & remember where you put it
 
 ---
 
@@ -94,14 +90,14 @@ class: inverse middle center subsection
 URL <- "https://bit.ly/hadcrutv4"
 # data are year, median of ensemble runs, certain quantiles in remaining cols
 # take only cols 1 and 2
-gtemp <- read_table(URL, col_types = 'nnnnnnnnnnnn', col_names = FALSE) %>%
-    select(num_range('X', 1:2)) %>% setNames(nm = c('Year', 'Temperature'))
+gtemp <- read_table(URL, col_types = "nnnnnnnnnnnn", col_names = FALSE) |>
+    select(num_range("X", 1:2)) |> setNames(nm = c("Year", "Temperature"))
 
 ## Plot
 gtemp_plt <- ggplot(gtemp, aes(x = Year, y = Temperature)) +
     geom_line() + 
     geom_point() +
-    labs(x = 'Year', y = expression(Temeprature ~ degree * C))
+    labs(x = "Year", y = expression(Temperature ~ degree * C))
 gtemp_plt
 ```
 
@@ -186,8 +182,11 @@ class: inverse middle center subsection
 library("readr")
 library("dplyr")
 URL <-  "https://bit.ly/hadcrutv4"
-gtemp <- read_table(URL, col_types = 'nnnnnnnnnnnn', col_names = FALSE) |>
-    select(num_range('X', 1:2)) %>% setNames(nm = c('Year', 'Temperature'))
+gtemp <- read_table(
+  URL, col_types = "nnnnnnnnnnnn", col_names = FALSE
+) |>
+  select(num_range("X", 1:2)) |>
+  setNames(nm = c("Year", "Temperature"))
 ```
 
 [File format](https://www.metoffice.gov.uk/hadobs/hadcrut4/data/current/series_format.html)
@@ -204,9 +203,9 @@ gtemp
 
 # Fitting a GAM
 
-```{r hadcrutemp-fitted-gam, echo = TRUE, results = 'hide'}
+```{r hadcrutemp-fitted-gam, echo = TRUE, results = "hide"}
 library("mgcv")
-m <- gam(Temperature ~ s(Year), data = gtemp, method = 'REML')
+m <- gam(Temperature ~ s(Year), data = gtemp, method = "REML")
 summary(m)
 ```
 
@@ -224,8 +223,8 @@ N <- 300
 newd <- as_tibble(with(gtemp, data.frame(Year = seq(min(Year), max(Year), length = N))))
 pred <- as_tibble(as.data.frame(predict(m, newdata = newd, se.fit = TRUE,
                                         unconditional = TRUE)))
-pred <- bind_cols(newd, pred) %>%
-    mutate(upr = fit + 2 * se.fit, lwr = fit - 2*se.fit)
+pred <- bind_cols(newd, pred) |>
+    mutate(upr = fit + 2 * se.fit, lwr = fit - 2 * se.fit)
 
 ggplot(gtemp, aes(x = Year, y = Temperature)) +
     geom_point() +
@@ -234,7 +233,7 @@ ggplot(gtemp, aes(x = Year, y = Temperature)) +
                 fill = "#fdb338") +
     geom_line(data = pred,
               mapping = aes(y = fit, x = Year), inherit.aes = FALSE, size = 1, colour = "#025196") +
-    labs(x = 'Year', y = expression(Temeprature ~ degree*C))
+    labs(x = "Year", y = expression(Temeprature ~ degree*C))
 ```
 
 ---
@@ -285,7 +284,7 @@ $$\eta_i = \beta_0 + \sum_j \color{red}{f_j(x_{ji})}$$
 
 ---
 class: inverse
-background-image: url('./resources/rob-potter-398564.jpg')
+background-image: url("./resources/rob-potter-398564.jpg")
 background-size: contain
 
 # What magic is this?
@@ -296,7 +295,7 @@ background-size: contain
 
 ---
 class: inverse
-background-image: url('resources/wiggly-things.png')
+background-image: url("resources/wiggly-things.png")
 background-size: contain
 
 ---
@@ -304,10 +303,12 @@ background-size: contain
 # Fitting a GAM in R
 
 ```r
-model <- gam(y ~ s(x1) + s(x2) + te(x3, x4), # formuala describing model
-             data = my_data_frame,           # your data
-             method = 'REML',                # or 'ML'
-             family = gaussian)              # or something more exotic
+model <- gam(
+  y ~ s(x1) + s(x2) + te(x3, x4), # formula describing model
+  data = my_data_frame,           # your data
+  method = "REML",                # or "ML"
+  family = gaussian               # or something more exotic
+)
 ```
 
 `s()` terms are smooths of one or more variables
@@ -318,27 +319,27 @@ $$\eta_i = \beta_0 + f(\mathtt{Year}_i)$$
 
 ```r
 library("mgcv")
-gam(Temperature ~ s(Year, k = 10), data = gtemp, method = 'REML')
+gam(Temperature ~ s(Year, k = 10), data = gtemp, method = "REML")
 ```
 
 ---
 
 ```{r smooth-fun-animation, results = FALSE, echo = FALSE}
 f <- function(x) {
-    x^11 * (10 * (1 - x))^6 + ((10 * (10 * x)^3) * (1 - x)^10)
+  x^11 * (10 * (1 - x))^6 + ((10 * (10 * x)^3) * (1 - x)^10)
 }
 
 draw_beta <- function(n, k, mu = 1, sigma = 1) {
-    rmvn(n = n, mu = rep(mu, k), sigma = diag(rep(sigma, k)))
+  rmvn(n = n, mu = rep(mu, k), sigma = diag(rep(sigma, k)))
 }
 
 weight_basis <- function(bf, x, n = 1, k, ...) {
     beta <- draw_beta(n = n, k = k, ...)
-    out <- sweep(bf, 2L, beta, '*')
-    colnames(out) <- paste0('f', seq_along(beta))
+    out <- sweep(bf, 2L, beta, "*")
+    colnames(out) <- paste0("f", seq_along(beta))
     out <- as_tibble(out)
     out <- add_column(out, x = x)
-    out <- pivot_longer(out, -x, names_to = 'bf', values_to = 'y')
+    out <- pivot_longer(out, -x, names_to = "bf", values_to = "y")
     out
 }
 
@@ -379,21 +380,21 @@ k <- 10
 knots <- with(data, list(x = seq(min(x), max(x), length = k)))
 sm <- smoothCon(s(x, k = k, bs = "cr"), data = data, knots = knots)[[1]]$X
 colnames(sm) <- levs <- paste0("f", seq_len(k))
-basis <- pivot_longer(cbind(sm, data), -(x:yobs), names_to = 'bf')
+basis <- pivot_longer(cbind(sm, data), -(x:yobs), names_to = "bf")
 basis
 
 set.seed(2)
 bfuns <- random_bases(sm, data$x, draws = 20, k = k)
 
-smooth <- bfuns %>%
-    group_by(draw, x) %>%
-    summarise(spline = sum(y), .groups = "drop") %>%
+smooth <- bfuns |>
+    group_by(draw, x) |>
+    summarise(spline = sum(y), .groups = "drop") |>
     ungroup()
 
 p1 <- ggplot(smooth) +
     geom_line(data = smooth, aes(x = x, y = spline), lwd = 1.5) +
-    labs(y = 'f(x)', x = 'x') +
-    theme_minimal(base_size = 16, base_family = 'Fira Sans')
+    labs(y = "f(x)", x = "x") +
+    theme_minimal(base_size = 16, base_family = "Fira Sans")
 
 smooth_funs <- animate(
   p1 + transition_states(draw, transition_length = 4, state_length = 2) +
@@ -448,8 +449,8 @@ ggplot(basis,
        aes(x = x, y = value, colour = bf)) +
     geom_line(lwd = 2, alpha = 0.5) +
     guides(colour = "none") +
-    labs(x = 'x', y = 'b(x)') +
-    theme_minimal(base_size = 20, base_family = 'Fira Sans')
+    labs(x = "x", y = "b(x)") +
+    theme_minimal(base_size = 20, base_family = "Fira Sans")
 ```
 
 ???
@@ -464,16 +465,16 @@ We weight each basis function to get a spline. Here all the basisi functions hav
 
 # Weight basis functions &#8680; spline
 
-```{r basis-function-animation, results = 'hide', echo = FALSE}
+```{r basis-function-animation, results = "hide", echo = FALSE}
 bfun_plt <- plot(bfuns) +
     geom_line(data = smooth, aes(x = x, y = spline),
               inherit.aes = FALSE, lwd = 1.5) +
-    labs(x = 'x', y = 'f(x)') +
-    theme_minimal(base_size = 14, base_family = 'Fira Sans')
+    labs(x = "x", y = "f(x)") +
+    theme_minimal(base_size = 14, base_family = "Fira Sans")
 
 bfun_anim <- animate(
     bfun_plt + transition_states(draw, transition_length = 4, state_length = 2) + 
-    ease_aes('cubic-in-out'),
+    ease_aes("cubic-in-out"),
     nframes = 200, height = anim_height, width = anim_width, res = anim_res,
     dev = anim_dev, units = "px"
 )
@@ -495,10 +496,10 @@ Each of the splines I showed you earlier are all generated from the same basis f
 
 ```{r example-data-figure, fig.height=6, fig.width = 1.777777*6, echo = FALSE}
 data_plt <- ggplot(data, aes(x = x, y = ycent)) +
-    geom_line(col = 'goldenrod', lwd = 2) +
-    geom_point(aes(y = yobs), alpha = 0.2, size = 3) +
-    labs(x = 'x', y = 'f(x)') +
-    theme_minimal(base_size = 20, base_family = 'Fira Sans')
+  geom_line(col = "goldenrod", lwd = 2) +
+  geom_point(aes(y = yobs), alpha = 0.2, size = 3) +
+  labs(x = "x", y = "f(x)") +
+  theme_minimal(base_size = 20, base_family = "Fira Sans")
 data_plt
 ```
 
@@ -518,28 +519,38 @@ beta <- coef(lm(ycent ~ sm2 - 1, data = data))
 wtbasis <- sweep(sm2, 2L, beta, FUN = "*")
 colnames(wtbasis) <- colnames(sm2) <- paste0("F", seq_len(k))
 ## create stacked unweighted and weighted basis
-basis <- as_tibble(rbind(sm2, wtbasis)) %>%
-    add_column(x = rep(data$x, times = 2),
-               type = rep(c('unweighted', 'weighted'), each = nrow(sm2)),
-               .before = 1L)
-##data <- cbind(data, fitted = rowSums(scbasis))
+basis <- as_tibble(rbind(sm2, wtbasis)) |>
+  add_column(
+    x = rep(data$x, times = 2),
+    type = rep(c("unweighted", "weighted"), each = nrow(sm2)),
+    .before = 1L
+  )
+
 wtbasis <- as_tibble(rbind(sm2, wtbasis)) %>%
-    add_column(x      = rep(data$x, times = 2),
-               fitted = rowSums(.),
-               type   = rep(c('unweighted', 'weighted'), each = nrow(sm2))) %>%
-    pivot_longer(-(x:type), names_to = 'bf')
-basis <- pivot_longer(basis, -(x:type), names_to = 'bf')
+  add_column(
+    x = rep(data$x, times = 2),
+    fitted = rowSums(.),
+    type   = rep(c("unweighted", "weighted"), each = nrow(sm2))
+  ) |>
+  pivot_longer(-(x:type), names_to = "bf")
+
+basis <- pivot_longer(basis, -(x:type), names_to = "bf")
 
 p3 <- ggplot(data, aes(x = x, y = ycent)) +
-    geom_point(aes(y = yobs), alpha = 0.2) +
-    geom_line(data = basis,
-              mapping = aes(x = x, y = value, colour = bf),
-              lwd = 1, alpha = 0.5) +
-    geom_line(data = wtbasis,
-              mapping = aes(x = x, y = fitted), lwd = 1, colour = 'black', alpha = 0.75) +
-    guides(colour = FALSE) +
-    labs(y = 'f(x)', x = 'x') +
-    theme_minimal(base_size = 16, base_family = 'Fira Sans')
+  geom_point(aes(y = yobs), alpha = 0.2) +
+  geom_line(
+    data = basis,
+    mapping = aes(x = x, y = value, colour = bf),
+    lwd = 1, alpha = 0.5
+  ) +
+  geom_line(
+    data = wtbasis,
+    mapping = aes(x = x, y = fitted),
+    lwd = 1, colour = "black", alpha = 0.75
+  ) +
+  guides(colour = FALSE) +
+  labs(y = "f(x)", x = "x") +
+  theme_minimal(base_size = 16, base_family = "Fira Sans")
 
 crs_fit <- animate(p3 +
     transition_states(type, transition_length = 4, state_length = 2) +
@@ -647,7 +658,7 @@ Two ways to think about how to optimize $\lambda$:
 Many methods: AIC, Mallow's $C_p$, GCV, ML, REML
 
 * **Practically**, use **REML**, because of numerical stability
-* Hence `gam(..., method='REML')`
+* Hence `gam(..., method="REML")`
 ]
 
 .center[
@@ -710,7 +721,7 @@ library("here"); library("readr"); library("dplyr")
 larks <-  read_csv(here("data", "larks.csv"),
                    col_types = "ccdddd")
 
-larks <- larks %>%
+larks <- larks |>
   mutate(crestlark = factor(crestlark),
          linnet = factor(linnet),
          e = x / 1000,
@@ -723,7 +734,7 @@ head(larks)
 
 ```{r birds-2, fig.width = 5, fig.height = 6, echo = FALSE}
 ggplot(larks, aes(x = e, y = n, colour = crestlark)) + geom_point(size = 0.5) +
-  coord_fixed() + scale_colour_discrete(na.value = '#bbbbbb33') +
+  coord_fixed() + scale_colour_discrete(na.value = "#bbbbbb33") +
   labs(x = NULL, y = NULL)
 ```
 ]
@@ -739,7 +750,7 @@ ggplot(larks, aes(x = e, y = n, colour = crestlark)) + geom_point(size = 0.5) +
 crest <- gam(crestlark ~ s(e, n, k = 100),
              data = larks,
              family = binomial,
-             method = 'REML')
+             method = "REML")
 ```
 
 $f(e, n)$ indicated by `s(e, n)` in the formula
@@ -797,20 +808,20 @@ Alternatively we can aggregate data at the `QUADRICULA` level & fit a binomial c
 
 .smaller[
 ```{r munge-larks, echo = TRUE}
-larks2 <- larks %>%
+larks2 <- larks |>
   mutate(crestlark = as.numeric(as.character(crestlark)),  # to numeric
          linnet = as.numeric(as.character(linnet)),
          tet_n = rep(1, nrow(larks)),                      # counter for how many grid cells (tetrads) we sum
          N = rep(1, nrow(larks)),                          # number of observations, 1 per row currently
-         N = if_else(is.na(crestlark), NA_real_, N)) %>%   # set N to NA if observation taken
-  group_by(QUADRICULA) %>%                                 # group by the larger grid square
+         N = if_else(is.na(crestlark), NA_real_, N)) |>   # set N to NA if observation taken
+  group_by(QUADRICULA) |>                                 # group by the larger grid square
   summarise(across(c(N, crestlark, linnet, tet_n, e, n),
-                   ~ sum(., na.rm = TRUE))) %>%            # sum all needed variables
+                   ~ sum(., na.rm = TRUE))) |>            # sum all needed variables
   mutate(e = e / tet_n, n = n / tet_n)                     # rescale to get avg E,N coords for QUADRICULA
 
 ## fit binomial GAM
 crest2 <- gam(cbind(crestlark, N - crestlark) ~ s(e, n, k = 100),
-              data = larks2, family = binomial, method = 'REML')
+              data = larks2, family = binomial, method = "REML")
 ```
 ]
 
@@ -824,7 +835,7 @@ crest2 <- gam(cbind(crestlark, N - crestlark) ~ s(e, n, k = 100),
 crest3 <- gam(cbind(crestlark, N - crestlark) ~
                 s(e, n, k = 100),
               data = larks2, family = quasibinomial,
-              method = 'REML')
+              method = "REML")
 crest3$scale # should be == 1
 ```
 ]
@@ -872,7 +883,7 @@ ggplot(south, aes(x = c.month, y = co2)) + geom_line()
 
 .smaller[
 ```{r co2-example-3, echo = TRUE}
-m_co2 <- gam(co2 ~ s(c.month, k = 300, bs = "cr"), data = south, method = 'REML')
+m_co2 <- gam(co2 ~ s(c.month, k = 300, bs = "cr"), data = south, method = "REML")
 summary(m_co2)
 ```
 ]
@@ -896,7 +907,7 @@ fv
 ```{r co2-example-5, echo = TRUE, fig.height = 5}
 ggplot(fv, aes(x = c.month, y = .fitted)) +
     geom_ribbon(aes(ymin = .lower_ci, ymax = .upper_ci), alpha = 0.2) +
-    geom_line(data = south, aes(c.month, co2), col = 'red') +
+    geom_line(data = south, aes(c.month, co2), col = "red") +
     geom_line(alpha = 0.4)
 ```
 
@@ -911,7 +922,7 @@ Decompose into
 
 ```{r co2-example-6, echo = TRUE}
 m2_co2 <- gam(co2 ~ s(month, bs = "cc") + s(c.month, bs = "cr", k = 300),
-              data = south, method = 'REML',
+              data = south, method = "REML",
               knots = list(month = c(0.5, 12.5)))
 ```
 
@@ -945,7 +956,7 @@ fv2
 ```{r co2-example-9, echo = TRUE, fig.height = 5}
 ggplot(fv2, aes(x = c.month, y = .fitted)) +
     geom_ribbon(aes(ymin = .lower_ci, ymax = .upper_ci), alpha = 0.2) +
-    geom_line(data = south, aes(c.month, co2), col = 'red') +
+    geom_line(data = south, aes(c.month, co2), col = "red") +
     geom_line(alpha = 0.4)
 ```
 
@@ -957,6 +968,9 @@ A GAM is just a fancy GLM
 
 Simon Wood & colleagues (2016) have extended the *mgcv* methods to some non-exponential family distributions
 
+As of *mgcv* 📦 v 1.9.4:
+
+.small[
 .row[
 .col-5[
 * `binomial()`
@@ -966,25 +980,29 @@ Simon Wood & colleagues (2016) have extended the *mgcv* methods to some non-expo
 * `nb()`
 * `tw()`
 * `mvn()`
+* `multinom()`
 ]
 .col-4[
-* `multinom()`
 * `betar()`
 * `scat()`
 * `gaulss()`
 * `ziplss()`
 * `twlss()`
 * `cox.ph()`
-]
-.col-3[
 * `gevlss()`
 * `gamals()`
+]
+.col-3[
 * `ocat()`
 * `shash()`
 * `gumbls()`
 * `cnorm()`
+* `clog()`
+* `cpois()`
 * `ziP()`
 * `gfam()`
+* `bcg()`
+]
 ]
 ]
 
@@ -994,7 +1012,7 @@ Simon Wood & colleagues (2016) have extended the *mgcv* methods to some non-expo
 
 The type of smoother is controlled by the `bs` argument (think *basis*)
 
-The default is a low-rank thin plate spline `bs = 'tp'`
+The default is a low-rank thin plate spline `bs = "tp"`
 
 Many others available
 
@@ -1002,25 +1020,26 @@ Many others available
 .row[
 .col-6[
 
-* Cubic splines `bs = 'cr'`
-* P splines `bs = 'ps'`
-* Cyclic splines `bs = 'cc'` or `bs = 'cp'`
-* Adaptive splines `bs = 'ad'`
-* Random effect `bs = 're'`
-* Factor smooths `bs = 'fs'`
+* Cubic splines `bs = "cr"`
+* P splines `bs = "ps"`
+* Cyclic splines `bs = "cc"` or `bs = "cp"`
+* Adaptive splines `bs = "ad"`
+* Random effect `bs = "re"`
+* Factor smooths `bs = "fs"`
 ]
 .col-6[
 
-* Duchon splines `bs = 'ds'`
-* Spline on the sphere `bs = 'sos'`
-* MRFs `bs = 'mrf'`
-* Soap-film smooth `bs = 'so'`
-* Gaussian process `bs = 'gp'`
-* Constrained factor smooth `bs = 'sz'`
+* Duchon splines `bs = "ds"`
+* Spline on the sphere `bs = "sos"`
+* MRFs `bs = "mrf"`
+* Soap-film smooth `bs = "so"`
+* Gaussian process `bs = "gp"`
+* Constrained factor smooth `bs = "sz"`
 ]
 ]
 ]
 
+*mgcv* also provides shape constrained smooths (`bs = "sc"`), but can only be used in the new `scasm()` function
 ---
 
 # Thin plate splines
@@ -1291,8 +1310,8 @@ m <- gam(y ~ s(x0) + s(x1) + s(x2, bs = "bs") + s(x3),
          data = dat, method = "REML")
 ```
 
-```{r whole-basis-proces-2-model-draw, fig.height = 5, fig.width = 1.777777 * 6}
-draw(m) + plot_layout(nrow = 1, ncol = 4)
+```{r whole-basis-proces-2-model-draw, fig.height = 3.5, fig.width = 1.777777 * 6}
+draw(m, rug = FALSE) + plot_layout(nrow = 1, ncol = 4)
 ```
 
 ---
@@ -1340,7 +1359,140 @@ x2_bs |>
         size = 3, colour = "red", inherit.aes = FALSE) +
     labs(y = expression(f(x2)), x = "x2")
 ```
+---
 
+# Basis functions for `s(x, z)`
+
+Code for this is in `day-2/test.R`
+
+```{r tprs-2d-basis-setup, echo = FALSE}
+test_fun2 <- function(
+  n = 50, sx = 0.3, sz = 0.4, scale = 0.1,
+  seed = NULL
+) {
+  require("tibble")
+  if (!exists(".Random.seed", envir = .GlobalEnv, inherits = FALSE)) {
+    runif(1)
+  }
+
+  if (is.null(seed)) {
+    RNGstate <- get(".Random.seed", envir = .GlobalEnv)
+  } else {
+    R.seed <- get(".Random.seed", envir = .GlobalEnv)
+    set.seed(seed)
+    RNGstate <- structure(seed, kind = as.list(RNGkind()))
+    on.exit(assign(".Random.seed", R.seed, envir = .GlobalEnv))
+  }
+  xz <- expand.grid(x = seq(0, 1, length = n), z = seq(0, 1, length = n))
+  #take <- seq_len(n)
+  x <- xz[["x"]]
+  z <- xz[["z"]]
+  f <- 1.2 * exp(-(x - 0.2)^2 / sx^2 - (z - 0.3)^2 / sz^2) +
+    08. * exp(-(x - 0.7)^2 / sx^2 - (z - 0.8)^2 / sz^2)
+  tibble(y = f + rnorm(n) * scale, x = x, z = z)
+}
+```
+
+.center[
+```{r tprs-2d-basis, echo = FALSE, out.width = "90%"}
+test_df2 <- test_fun2(seed = 42)
+bfun <- basis(s(x, z), data = test_df2)
+
+bfun |>
+  draw()
+```
+]
+
+---
+
+# Basis functions for `s(x, z)`
+
+Panels 1&ndash;15 are the basis functions
+
+.center[
+```{r include-simons-tprs-2d-image, out.width = "45%", echo = FALSE}
+knitr::include_graphics("resources/wood-2ed-fig-5-12-2-d-tprs-basis-funs.png")
+```
+]
+
+.small[
+Source: Wood SN (2017)
+]
+
+---
+class: inverse middle center big-subsection
+
+# Penalties
+
+---
+
+# How wiggly?
+
+$$
+\int_{\mathbb{R}} [f^{\prime\prime}]^2 dx = \boldsymbol{\beta}^{\mathsf{T}}\mathbf{S}\boldsymbol{\beta}
+$$
+
+$\mathbf{S}$ is known as the penalty matrix
+
+Penalty matrix doesn't have to be derivative based &mdash; *P-splines*
+
+As long as we can write $\mathbf{S}$ so that it measures the complexity of smooth as a function of the parameters of the smooth we're OK
+
+---
+
+# TPRS basis
+
+```{r, out.width = "85%", fig.align = "center"}
+new_df <- with(mcycle, tibble(times = evenly(times, n = 100)))
+bfun <- basis(s(times), data = new_df, constraints = TRUE)
+draw(bfun) + facet_wrap(~ .bf)
+```
+
+---
+
+# TPRS basis
+
+```{r}
+m <-  gam(accel ~ s(times), dat = mcycle, method = "REML")
+S <- penalty(m, smooth = "s(times)")
+S
+```
+
+---
+
+# TPRS basis & penalty
+
+.center[
+```{r, echo = FALSE, dev = "png", out.width = "100%", dpi = 300}
+library("patchwork")
+p1 <- draw(bfun) + facet_wrap(~ .bf)
+p2 <- draw(S)
+p1 + p2 + plot_layout(ncol = 2)
+```
+]
+---
+
+# CRS basis & penalty
+
+```{r}
+m <-  gam(accel ~ s(times, bs = "cr"), data = mcycle, method = "REML")
+S <- penalty(m, smooth = "s(times)")
+# draw(S)
+```
+
+---
+
+# CRS basis & penalty
+
+.center[
+```{r, echo = FALSE, dev = "png", out.width = "100%", dpi = 300}
+library("patchwork")
+bfun_cc <- basis(s(times, bs = "cr"), data = new_df, constraints = TRUE)
+p1 <- draw(bfun_cc) + facet_wrap(~ .bf)
+p2 <- draw(S)
+p1 + p2 + plot_layout(ncol = 2)
+```
+]
 ---
 class: inverse middle center big-subsection
 
@@ -1422,80 +1574,5 @@ draw(m_sim,
 ```{r draw-mcycle-options-plot, out.width = "95%", echo = FALSE}
 draw(m_sim, residuals = TRUE, overall_uncertainty = TRUE,
      unconditional = TRUE, rug = FALSE)
-```
-]
-
----
-class: inverse middle center big-subsection
-
-# Penalties
-
----
-
-# How wiggly?
-
-$$
-\int_{\mathbb{R}} [f^{\prime\prime}]^2 dx = \boldsymbol{\beta}^{\mathsf{T}}\mathbf{S}\boldsymbol{\beta}
-$$
-
-$\mathbf{S}$ is known as the penalty matrix
-
-Penalty matrix doesn't have to be derivative based &mdash; *P-splines*
-
-As long as we can write $\mathbf{S}$ so that it measures the complexity of smooth as a function of the parameters of the smooth we're OK
-
----
-
-# TPRS basis
-
-```{r, out.width = "85%", fig.align = "center"}
-new_df <- with(mcycle, tibble(times = evenly(times, n = 100)))
-bfun <- basis(s(times), data = new_df, constraints = TRUE)
-draw(bfun) + facet_wrap(~ .bf)
-```
-
----
-
-# TPRS basis
-
-```{r}
-m <-  gam(accel ~ s(times), dat = mcycle, method = "REML")
-S <- penalty(m, smooth = "s(times)")
-S
-```
-
----
-
-# TPRS basis & penalty
-
-.center[
-```{r, echo = FALSE, dev = "png", out.width = "100%", dpi = 300}
-library("patchwork")
-p1 <- draw(bfun) + facet_wrap(~ .bf)
-p2 <- draw(S)
-p1 + p2 + plot_layout(ncol = 2)
-```
-]
----
-
-# CRS basis & penalty
-
-```{r}
-m <-  gam(accel ~ s(times, bs = "cr"), data = mcycle, method = "REML")
-S <- penalty(m, smooth = "s(times)")
-# draw(S)
-```
-
----
-
-# CRS basis & penalty
-
-.center[
-```{r, echo = FALSE, dev = "png", out.width = "100%", dpi = 300}
-library("patchwork")
-bfun_cc <- basis(s(times, bs = "cr"), data = new_df, constraints = TRUE)
-p1 <- draw(bfun_cc) + facet_wrap(~ .bf)
-p2 <- draw(S)
-p1 + p2 + plot_layout(ncol = 2)
 ```
 ]
