@@ -113,7 +113,7 @@ How would you model the trend in these data?
 
 $$y_i \sim \mathcal{N}(\mu_i, \sigma^2)$$
 
-$$\mu_i = \beta_0 + \beta_1 \mathtt{year}_{i} + \beta_2 \mathtt{year}^2_{1i} + \cdots + \beta_j \mathtt{year}^j_{i}$$
+$$\mu_i = \beta_0 + \beta_1 \mathtt{year}_{i} + \beta_2 \mathtt{year}^2_{i} + \cdots + \beta_j \mathtt{year}^j_{i}$$
 
 Assumptions
 

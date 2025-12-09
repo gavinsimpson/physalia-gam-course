@@ -2334,6 +2334,12 @@ window.Quarto = {
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>In this exercise you will fit a Tweedie GLM and a Tweedie GAM to model the average daily fat content of the milk in each week of lactation.</p>
+<p>We will fit a classica lactation model to these data, which conveniently is also a special case of a Gamma GLM (we’ll fit a Tweedie in place of the Gamma distribution but the point remains). This model is know as Wood’s model and has the form</p>
+<p><span class="math display">\begin{align*}
+\mathtt{fat}_i &amp;\sim \mathcal{T}(\mu_i, \phi) \\
+\log(\mu_i) &amp;= \beta_0 + \beta_1 \log(\mathtt{week}_i) + \beta_2 \mathtt{week}_i
+\end{align*}</span></p>
+<p>We will also fit a more flexible alternative, replacing both parametric terms with a smooth of <code>week</code>.</p>
 <section id="tasks" class="level2">
 <h2 class="anchored" data-anchor-id="tasks">Tasks</h2>
 <div class="callout callout-style-default callout-note callout-titled">

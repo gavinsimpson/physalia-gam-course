@@ -43,6 +43,15 @@ lactation <- tibble(
 
 In this exercise you will fit a Tweedie GLM and a Tweedie GAM to model the average daily fat content of the milk in each week of lactation.
 
+We will fit a classica lactation model to these data, which conveniently is also a special case of a Gamma GLM (we'll fit a Tweedie in place of the Gamma distribution but the point remains). This model is know as Wood's model and has the form
+
+\begin{align*}
+\mathtt{fat}_i &\sim \mathcal{T}(\mu_i, \phi) \\
+\log(\mu_i) &= \beta_0 + \beta_1 \log(\mathtt{week}_i) + \beta_2 \mathtt{week}_i
+\end{align*}
+
+We will also fit a more flexible alternative, replacing both parametric terms with a smooth of `week`.
+
 ## Tasks
 
 ::: {.callout-note}
