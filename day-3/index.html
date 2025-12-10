@@ -43,19 +43,23 @@ class: inverse middle center big-subsection
 
 # Logistics
 
-## Slides
-
 Slidedeck: [bit.ly/physalia-gam-3](https://bit.ly/physalia-gam-3)
 
 Sources: [bit.ly/physalia-gam](https://bit.ly/physalia-gam)
 
 ---
 
-# Matters arising
+# Today's topics
 
-1. Testing for non-linearity beyond a linear effect
+* Testing for non-linearity beyond a linear effect
 
-2. Derivatives of smooths
+* Derivatives of smooths
+
+* Model checking, selection, and visualisation
+
+* How do we do inference with GAMs?
+
+* Go beyond simple GAMs to include smooth interactions and models with multiples smooths
 
 ---
 
@@ -150,16 +154,35 @@ Derivatives of smooths are useful for a number of statistical problems
 
 # Derivatives of smooths
 
-Use the `derivatives()` function in {gratia}
+Use the `derivatives()` function in *gratia* 📦 provides
 
-Provides
+.row[
 
-* First derivative
-* Second derivative
-* Finite differences
-    * Forward
-    * Backward
-    * Central
+.col-6[
+
+.small[
+
+Estimation of first or second derivatives of smooths (on link scale) using **finite differences**
+
+* Forward
+* Backward
+* Central
+
+]
+
+]
+.col-6[
+
+![](./resources/finite_difference_method.svg)&lt;!-- --&gt;
+.smaller[
+Kakitc, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0), via Wikimedia Commons
+]
+]
+]
+
+---
+
+# Derivatives of smooths
 
 If you want to estimate the the *n*th derivative, need to have a `\(n+1\)` derivative penalty
 
@@ -289,14 +312,118 @@ Significant change is where the simultaneous interval on derivative *excludes* 0
 
 ---
 
-# Today's topics
+# Partial effect alternative
 
-* Model checking, selection, and visualisation.
+Partial effect plots are the default way of visualising component smooths of a GAM
 
-* How do we do inference with GAMs?
+They show how the response varies (on the link scale!) over the range of `\(\mathbf{x}\)` where the effect of all other terms is equal to 0
 
-* Go beyond simple GAMs to include smooth interactions and models with multiples smooths.
+Inconsistent with the interpretation of `\(\beta_j\)` in a GLM &amp;mdash; the `\(\beta_j\)` are (partial) derivatives, showing change in `\(y_i\)` for a unit (= 1) change in `\(x_i\)`
 
+Instead of partial effect plots, use derivatives
+
+---
+
+# Partial effect alternative
+
+Example multi-term GAM with non-identity link function
+
+
+``` r
+d &lt;- data_sim(seed = 2025-12-10, dist = "tweedie")
+m &lt;- gam(y ~ s(x0) + s(x1) + s(x2) + s(x3), data = d, family = tw(), method = "REML")
+```
+
+.row[
+
+.col-6[
+
+Partial effects
+
+
+``` r
+m |&gt;
+  draw()
+```
+
+![](index_files/figure-html/unnamed-chunk-2-1.svg)&lt;!-- --&gt;
+
+]
+
+.col-6[
+
+Partial derivatives
+
+
+``` r
+m |&gt; derivatives(eps = 0.01) |&gt; # 1% 𝚫 in x
+  draw()
+```
+
+![](index_files/figure-html/unnamed-chunk-3-1.svg)&lt;!-- --&gt;
+]
+
+]
+
+---
+
+# Partial effect alternative
+
+.row[
+
+.col-6[
+
+*mgcv* 📦 `plot.gam()`
+
+
+``` r
+m |&gt; plot(
+  deriv = TRUE, pages = 1,
+  scheme = 2, scale = 0
+)
+```
+
+![](index_files/figure-html/unnamed-chunk-4-1.svg)&lt;!-- --&gt;
+
+]
+
+.col-6[
+
+*marginaleffects* 📦 `plot_slopes()`
+
+
+``` r
+m |&gt; plot_slopes(
+  variables = "x2", type = "link",
+  condition = list("x2")
+)
+```
+
+![](index_files/figure-html/unnamed-chunk-5-1.svg)&lt;!-- --&gt;
+]
+
+]
+
+---
+
+# Additionally
+
+*gratia* 📦 includes additional functions for computing derivatives
+
+* `partial_derivatives()` will compute the derivative of `\(x\)` with respect to `\(z\)` &amp;mdash; useful for tensor product interactions
+
+* `response_derivatives()` is like `fitted_values()` but for derivatives &amp;mdash; it computes derivatives of the fitted values (`\(\mathbb{E}(y_i)\)`) of the model on the response or link scales
+
+    * similar to `marginaleffects::slopes()`
+
+    * uncertainty estimation is via posterior simulation (tomorrow)
+
+* `derivative_samples()` takes draws from the posterior distribution of the derivative of fitted values (`\(\mathbb{E}(y_i)\)`)
+
+---
+class: inverse middle center big-subsection
+
+# Interactions
 
 ---
 
@@ -317,6 +444,10 @@ Two ways to fit smooth interactions
 ---
 
 # Smooth interactions
+
+.smaller[
+  Note the scales of `\(x\)` and `\(z\)`!
+]
 
 
 
@@ -359,10 +490,10 @@ m_te   &lt;- gam(y ~ te(x, z), data = df, method = "REML")
 
 
 ``` r
-truth_plt + (draw(m_tprs) + coord_cartesian()) + draw(m_te) + plot_layout(ncol = 3)
+truth_plt + (draw(m_tprs) + coord_cartesian()) + draw(m_te) + plot_layout(ncol = 2, nrow = 2)
 ```
 
-&lt;img src="index_files/figure-html/draw-tprs-vs-tensor-product-1.svg" width="95%" /&gt;
+&lt;img src="index_files/figure-html/draw-tprs-vs-tensor-product-1.svg" width="70%" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -407,8 +538,19 @@ There are multiple ways to build tensor products in *mgcv*
 
 # Factor smooth interactions
 
-Two ways for factor smooth interactions
+Multiple options for factor smooth interactions
 
+1. factor `by` terms
+
+    * `by` is a factor, or
+
+    * `by` is an *ordered* factor
+
+2. random factor smooths (`bs = "fs"`)
+
+3. constrained factor smooths (`bs = "sz"`)
+
+&lt;!--
 1. `by` variable smooths
     * entirely separate smooth function for each level of the factor
 	* each has it's own smoothness parameter
@@ -420,6 +562,7 @@ Two ways for factor smooth interactions
 	* fully penalized; include group means
 	* closer to random effects
 	* `y ~ s(x, f, bs = 'fs')`
+--&gt;
 
 ---
 
@@ -427,13 +570,13 @@ Two ways for factor smooth interactions
 
 Three options for the `by` argument
 
-1. a continuous vector &amp;mdash; varying coefficient model
+1. a continuous vector &amp;mdash; varying coefficient model (skipped now)
 
 2. a factor vector &amp;mdash; a factor-smooth interaction
 
 3. an ordered factor vector &amp;mdash; an ANOVA-like factor-smooth interaction
 
----
+&lt;!--
 
 # Numeric `by`
 
@@ -447,13 +590,14 @@ With a numeric `by` we can make the effect of `\(\mathbf{x}\)` on `\(\mathbf{y}\
 
 `$$f_j(z_i) x_{ij}$$`
 
+--&gt;
 ---
 
 # Factor `by`
 
 Two options for factor `by` models
 
-1. a factor vector &amp;mdash; a factor-smooth interaction, and
+1. a factor vector &amp;mdash; a factor-smooth interaction, or
 
 2. an ordered factor vector &amp;mdash; an ANOVA-like factor-smooth interaction
 
@@ -468,9 +612,11 @@ A factor `by` variable results in a smooth being created for each level of the f
 gam(y ~ f + s(x, by = f), data = data, ....)
 ```
 
-Each of the smooths is still centred about 0 so doesn't include the group mean
+Each of the smooths is still centred about 0 so doesn't include the group means
 
-Must include the parametric factor effect of `f` to model those group means
+Must include the parametric factor effect of `f` to model the group means
+
+Simple!
 
 ---
 
@@ -478,33 +624,39 @@ Must include the parametric factor effect of `f` to model those group means
 
 This form also results in a smooth being created for each level of `f`, but it does so as:
 
-1. the smooth effect of `\(x\)` for the reference group, plus
+1. the smooth effect of `\(x\)` for the **reference** group, plus
 
-2. difference smooths for each other level of the factor (groups), where difference is with respect to the ference group's smooth
+2. difference smooths for each other level of the factor (groups), where difference is with respect to the reference group's smooth
 
 
 ``` r
-data$o &lt;- ordered(data$f)
-contrasts(data$o) &lt;- "contr.treatment"
+data$o &lt;- ordered(data$f) # convert f into an ordered factor
+contrasts(data$o) &lt;- "contr.treatment" # reset contrasts to usual
 gam(y ~ o + s(x) + s(x, by = o), data = data, ....)
 ```
+
+Useful if you have a true reference category
+
+Can be sensitive to how well the reference category is modelled
 
 ---
 
 # Constrained factor interactions
 
-This is like the factor `by` variant, but fits
+This is a newer option, provided by `bs = "sz"`
 
-1. and average or global smooth of `\(x\)`, plus
+1. an average or global smooth of `\(x\)`, plus
 
 2. a difference smooth for each level of factor `f`
 
-It also includes the group means, so you don't need to add the parametric effects
+Includes group means, so no need to add parametric effects
 
 
 ``` r
 gam(y ~ s(x) + s(x, f, bs = "sz"), data = data, ....)
 ```
+
+Advantage is that the *average* smooth is, by design, orthogonal to the difference smooths
 
 ---
 
@@ -549,8 +701,20 @@ m_cw_f &lt;- gam(weight ~ diet + s(time, by = diet),
 draw(m_cw_f)
 ```
 
-&lt;img src="index_files/figure-html/chick-factor-by-1.svg" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/chick-factor-by-1.svg" width="75%" style="display: block; margin: auto;" /&gt;
 
+---
+
+# Factor `by`
+
+
+``` r
+m_cw_f &lt;- gam(weight ~ diet + s(time, by = diet),
+  data = cw, family = tw(), method = "REML")
+draw(m_cw_f, grouped_by = TRUE)
+```
+
+&lt;img src="index_files/figure-html/chick-factor-by-grouped-1.svg" width="75%" style="display: block; margin: auto;" /&gt;
 ---
 
 # Ordered factor `by`
@@ -564,7 +728,7 @@ m_cw_o &lt;- gam(weight ~ dieto + s(time) + s(time, by = dieto),
 draw(m_cw_o)
 ```
 
-&lt;img src="index_files/figure-html/chick-ordered-factor-by-1.svg" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/chick-ordered-factor-by-1.svg" width="75%" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -577,7 +741,88 @@ m_cw_z &lt;- gam(weight ~ s(time) + s(time, diet, bs = "sz"),
 draw(m_cw_z)
 ```
 
-&lt;img src="index_files/figure-html/chick-factor-sz-1.svg" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/chick-factor-sz-1.svg" width="75%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Conditional values
+
+With
+
+1. ordered factor smooths, and
+2. constrained factor smooths
+
+a complication is that the way `\(\mathbf{y}\)` varies with `\(\mathbf{x}\)` for each level of `\(f\)` is not immediately clear
+
+Use `conditional_values()` or `marginaleffects::plot_predictions()`
+
+---
+
+# Conditional values
+
+.row[
+
+.col-6[
+
+
+``` r
+m_cw_z |&gt; conditional_values(
+  condition = c("time", "diet")
+) |&gt; draw()
+```
+
+![](index_files/figure-html/conditional-values-cw-sz-1.svg)&lt;!-- --&gt;
+]
+
+.col-6[
+
+
+``` r
+m_cw_z |&gt; plot_predictions(
+  condition = c("time", "diet")
+)
+```
+
+![](index_files/figure-html/plot-predictions-cw-sz-1.svg)&lt;!-- --&gt;
+]
+
+]
+
+.small[
+Note: No difference with this example; in models with more terms, we (auto) condition on slightly different values of the other covariates/terms
+]
+
+---
+
+# Random factor smooths
+
+The `fs` basis produces random factor smooths
+
+Smooth equivalent of random intercept *plus* slopes
+
+Most useful for *subject-specific* effects
+
+The set of smooths share a smoothing parameter for wiggliness
+
+Includes subject means and random slopes
+
+---
+
+# Random factor smooths
+
+
+``` r
+m_cw_fs &lt;- gam(
+  weight ~
+    diet + # parametric effect of treatment means
+    s(time, by = diet) + # smooths of time effect per treatment level
+    s(time, chick, bs = "fs"), # random smooths per chick
+  data = cw, family = tw(), method = "REML"
+)
+m_cw_fs |&gt; draw(grouped_by = TRUE)
+```
+
+&lt;img src="index_files/figure-html/cw-fs-plot-1.svg" width="65%" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -593,7 +838,7 @@ These two models are equivalent
 
 
 ``` r
-m_nlme &lt;- lme(travel ~ 1, data = Rail, ~ 1 | Rail, method = "REML") 
+m_nlme &lt;- lme(travel ~ 1, data = Rail, ~ 1 | Rail, method = "REML")
 
 m_gam  &lt;- gam(travel ~ s(Rail, bs = "re"), data = Rail, method = "REML")
 ```
@@ -785,7 +1030,7 @@ gam.check(norm_model_3)
 
 # Checking basis size
 
-![](index_files/figure-html/gam_check_norm4-1.svg)&lt;!-- --&gt;
+&lt;img src="index_files/figure-html/gam_check_norm4-1.svg" width="50%" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -825,13 +1070,18 @@ Remember we had this model where we had set `k` to be too low for each of the tw
 
 # Checking basis size (alt)
 
+Model the deviance residuals with same model structure but with increased `k` and special `family`
+
 
 ``` r
 res &lt;- resid(norm_model_1, type = "deviance")
 
-res_model &lt;- gam(res ~ s(x1, k = 12) + s(x2, k = 12),
+res_model &lt;- gam(
+  res ~ s(x1, k = 12) + s(x2, k = 12), # &lt;-- increased k
   method = "REML",
-  family = quasi(link = "identity", variance = "constant"))
+  family = quasi(link = "identity", variance = "constant")
+)
+
 edf(res_model)
 ```
 
@@ -843,15 +1093,22 @@ edf(res_model)
 ## 2 s(x2)    7.29
 ```
 
+.small[
+  Note the residuals contain unmodelled wiggliness
+]
+
 ---
 
 # Checking basis size (alt)
+
+Smooths show the wiggliness that was unmodlled in the *original* fit
+
 
 ``` r
 draw(res_model)
 ```
 
-&lt;img src="index_files/figure-html/alt-basis-dim-check-3-1.svg" width="95%" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/alt-basis-dim-check-3-1.svg" width="85%" style="display: block; margin: auto;" /&gt;
 
 ---
 class: inverse middle center subsection
@@ -921,10 +1178,176 @@ gam.check(negbin_model, rep = 500)
 
 
 ``` r
-appraise(negbin_model, method = 'simulate')
+appraise(negbin_model, method = "simulate")
 ```
 
 ![](index_files/figure-html/appraise-gam-check-example-1.svg)&lt;!-- --&gt;
+
+---
+
+# QQ-plots
+
+`qq.gam()` &amp; `appraise()`
+
+`method = "simulate"` simulates new data from the fitted model
+
+Used on QQ plot to generate the reference band &amp;mdash; if your model can reproduce the observed data, then the residuals should mostly lie within the reference band
+
+Band is by default a 90% reference band &amp;mdash; we expect 10% of residuals to lie outside the band
+
+.smaller[
+  N.H. Augustin, E-A Sauleaub, S.N. Wood (2012) On quantile quantile plots for generalized linear models *Computational Statistics &amp; Data Analysis*. **56**(8), 2404&amp;ndash;2409.
+]
+
+---
+
+# PIT &amp; quantile residuals
+
+Even when we have the right model, residuals patterns can persist
+
+How do we tell the difference between good and bad patterns?
+
+Randomised quantile and probability integral transform residuals can help
+
+PIT residuals &amp;mdash; should be distributed uniform if model is correct
+
+Quantile residuals &amp;mdash; should be distributed Gaussian if model is correct
+
+---
+
+# PIT &amp; quantile residuals
+
+NB data, Poisson model &amp;mdash; wrong model!
+
+.row[
+
+.col-6[
+
+
+``` r
+residuals_linpred_plot(
+  pois_model, type = "pit"
+)
+```
+
+![](index_files/figure-html/pit-gam-check-example-pois-1.svg)&lt;!-- --&gt;
+]
+
+.col-6[
+
+
+``` r
+residuals_linpred_plot(
+  pois_model, type = "quantile"
+)
+```
+
+![](index_files/figure-html/quantile-gam-check-example-pois-1.svg)&lt;!-- --&gt;
+]
+
+]
+
+---
+
+# PIT &amp; quantile residuals
+
+NB data, Poisson model &amp;mdash; wrong model!
+
+.row[
+
+.col-6[
+
+
+``` r
+residuals_hist_plot(
+  pois_model, type = "pit"
+)
+```
+
+![](index_files/figure-html/pit-gam-check-example-hist-pois-1.svg)&lt;!-- --&gt;
+]
+
+.col-6[
+
+
+``` r
+residuals_hist_plot(
+  pois_model, type = "quantile"
+)
+```
+
+![](index_files/figure-html/quantile-gam-check-example-hist-pois-1.svg)&lt;!-- --&gt;
+]
+
+]
+
+---
+
+# PIT &amp; quantile residuals
+
+NB data, NB model
+
+.row[
+
+.col-6[
+
+
+``` r
+residuals_linpred_plot(
+  negbin_model, type = "pit"
+)
+```
+
+![](index_files/figure-html/pit-gam-check-example-1.svg)&lt;!-- --&gt;
+]
+
+.col-6[
+
+
+``` r
+residuals_linpred_plot(
+  negbin_model, type = "quantile"
+)
+```
+
+![](index_files/figure-html/quantile-gam-check-example-1.svg)&lt;!-- --&gt;
+]
+
+]
+
+---
+
+# PIT &amp; quantile residuals
+
+NB data, NB model &amp;mdash; correct model!
+
+.row[
+
+.col-6[
+
+
+``` r
+residuals_hist_plot(
+  negbin_model, type = "pit"
+)
+```
+
+![](index_files/figure-html/pit-gam-check-example-hist-1.svg)&lt;!-- --&gt;
+]
+
+.col-6[
+
+
+``` r
+residuals_hist_plot(
+  negbin_model, type = "quantile"
+)
+```
+
+![](index_files/figure-html/quantile-gam-check-example-hist-1.svg)&lt;!-- --&gt;
+]
+
+]
 
 ---
 
@@ -1074,7 +1497,7 @@ resids &lt;- simulateResiduals(fittedModel = crest, plot = FALSE)
 plot(resids)
 ```
 
-![](index_files/figure-html/dharma-larks-sim-residuals-1.svg)&lt;!-- --&gt;
+&lt;img src="index_files/figure-html/dharma-larks-sim-residuals-1.svg" width="75%" style="display: block; margin: auto;" /&gt;
 
 Look's pretty good to me 🤩
 

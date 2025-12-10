@@ -43,7 +43,7 @@ o3_lab <- expression(
 
 temp_lab <- expression(Temperature ~ (degree * F))
 
-ozone |> # %>%
+ozone |>
     ggplot(aes(y = O3, x = temp)) +
     geom_point() +
     labs(y = o3_lab, x = temp_lab)
@@ -143,5 +143,6 @@ summary(m_full)
 draw(m_full)
 appraise(m_full, method = "simulate", n_simulate = 1000)
 
+# concurvity could well be an issue
 conc <- concrvity(m_full, pairwise = TRUE)
 draw(conc)

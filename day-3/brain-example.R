@@ -102,7 +102,7 @@ anova(m_sym, m_asym, test = "LRT")
 
 # compare surfaces
 
-# simulate some new data from m_gamma and peturb it
+# simulate some new data from m_gamma and perturb it
 brain_new <- brain
 mu <- fitted(m_gamma)
 n <- length(mu)
