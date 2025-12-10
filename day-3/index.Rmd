@@ -490,6 +490,22 @@ There are multiple ways to build tensor products in *mgcv*
 
 # Tensor product smooths
 
+Tensor product of $x$ and $z$ we start with the marginal bases for both covariates
+
+$f_x(x) = \sum_{i=1}^{I} \alpha_i a_i(x), \; \; f_z(z) = \sum_{l=1}^{L} \delta_l d_l(z)$
+
+For $f_x$ to vary with $z$ we need its parameters $\alpha_i$ to vary with $z$
+
+$\alpha_i(z) = \sum_{l=1}^{L} \delta_l d_l(z)$
+
+leading to
+
+$f_{xz}(x, z) = \sum_{i=1}^{I} \sum_{l=1}^{L} \delta_l d_l(z) a_i(x)$
+
+---
+
+# Tensor product smooths
+
 .center[
 ```{r echo = FALSE, out.width = "50%"}
 knitr::include_graphics("resources/wood-gams-2ed-fig-5-17-tensor-product.svg")
