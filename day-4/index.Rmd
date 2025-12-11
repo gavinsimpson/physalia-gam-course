@@ -381,6 +381,7 @@ Neither of these are the default, so remember to use `method = "ML"` or `method 
 
 # AIC for GAMs
 
+.small[
 - Comparison of GAMs by a form of AIC is an alternative frequentist approach to model selection
 
     - *Marginal AIC* integrate out all random effects; over smooths
@@ -394,6 +395,7 @@ Neither of these are the default, so remember to use `method = "ML"` or `method 
 - Wood et al (2016) suggests a correction that accounts for uncertainty in $\lambda_j$
 
 $$AIC = -2\mathcal{L}(\hat{\beta}) + 2\mathrm{tr}(\widehat{\mathcal{I}}V^{'}_{\beta})$$
+]
 
 ---
 
@@ -423,24 +425,6 @@ When there is *no difference* in compared models, accepts larger model ~16% of t
 ```{r aic-chisq, echo = TRUE}
 pchisq(2, 1, lower.tail = FALSE)
 ```
-
----
-
-# Factor smooth interactions
-
-Two ways for factor smooth interactions
-
-1. `by` variable smooths
-    * entirely separate smooth function for each level of the factor
-	* each has it's own smoothness parameter
-	* centred (no group means) so include factor as a fixed effect
-	* `y ~ f + s(x, by = f)`
-2. `bs = 'fs'` basis
-    * smooth function for each level of the function
-	* share a common smoothness parameter
-	* fully penalized; include group means
-	* closer to random effects
-	* `y ~ s(x, f, bs = 'fs')`
 
 ---
 
@@ -550,106 +534,6 @@ For non Gaussian models use `gamm4::gamm4()`
 ---
 class: inverse center middle subsection
 
-# Example
-
----
-
-# Rat hormone experiment
-
-https://bit.ly/rat-hormone
-
-Study on the effects of testosterone on the growth of rats (Molenberghs and Verbeke, 2000)
-
-50 rats randomly assigned to 1 of 3 groups:
-
-1. a control group
-2. a group receiving low doses of Decapeptyl
-3. a high Decapeptyl dose group
-
-Decapeptyl inhibits the production of testosterone
-
-Experiment started (day 1) when rats were 45 days old and from day 50 the size of each rat's head was measured via an x-ray image
-
-```{r setup-rat-hormone-example, echo = FALSE}
-rats_url <- "https://bit.ly/rat-hormone"
-rats <- read_table(rats_url, col_types = "dddddddddddd-")
-# ignore the warning - it"s due to trailing white space at the ends of each
-#   row in the file
-
-rats <- rats %>%
-    mutate(treatment = fct_recode(factor(group, levels = c(1, 2, 3)),
-                                  Low = "1",
-                                  High = "2",
-                                  Control = "3"),
-           treatment = fct_relevel(treatment, c("Control", "Low", "High")),
-           subject = factor(subject))
-
-plt_labs <- labs(y = "Head height (distance in pixels)",
-                 x = "Age in days",
-                 colour = "Treatment")
-
-rat_plt <- ggplot(rats, aes(x = time, y = response,
-                            group = subject, colour = treatment)) +
-    geom_line() +
-    facet_wrap(~ treatment, ncol = 3) +
-    plt_labs
-```
-
-???
-
-By way of an example, I'm going to use a data set from a study on the effects of testosterone on the growth of rats from Molenberghs and Verbeke (2000), which was analysed in Fahrmeir et al. (2013), from were I also obtained the data. In the experiment, 50 rats were randomly assigned to one of three groups; a control group or a group receiving low or high doses of Decapeptyl, which inhibits testosterone production. The experiment started when the rats were 45 days old and starting with the 50th day, the size of the rat's head was measured via an X-ray image. You can download the data.
-
----
-
-# Rat hormone experiment
-
-```{r plot-rat-data, echo = FALSE}
-rat_plt
-```
-
----
-
-# Rat hormone experiment
-
-To linearise the `time` variable, a transformation was applied
-
-$$\mathtt{transf\_time} = \log (1 + (\mathtt{time} - 45) / 10)$$
-
-The number of observations per rat is very variable
-
-```{r obs-per-rat, echo = FALSE}
-rats |>
-    na.omit() |>
-    count(subject) |>
-    count(n, name = "n_rats")
-```
-
-Only 22 of the 50 rats have the complete 7 measurements by day 110
-
----
-
-# Rat hormone experiment
-
-The model fitted in Fahrmeir *et al* (2013) is
-
-$$y_{ij} = \alpha + \gamma_{0i} + \beta_1 L_i \cdot t_{ij} + \beta_2 H_i \cdot t_{ij} + \beta_3 C_i \cdot t_{ij} + \gamma_{1i} \cdot t_{ij} + \varepsilon_{ij}$$
-
-where
-
-* $\alpha$ is the population mean of the response at the start of the treatment
-* $L_i$, $H_i$, $C_i$ are dummy variables coding for each treatment group
-* $\gamma_{0i}$ is the rat-specific mean (random intercept)
-* $\gamma_{qi} \cdot t_{ij}$ is the rat-specific effect of `transf_time` (random slope)
-
-Code to fit this model in `lmer()` and `gam()` is in `day-4/rat-hormone-example.R`
-
-???
-
-If this isn't very clear --- it took me a little while to grok what this meant and translate it to R speak --- note that each of $\beta_1$, $\beta_2$, and $\beta_3$ are associated with an interaction between the dummy variable coding for the treatment and the time variable. So we have a model with an intercept and three interaction terms with no "main" effects.
-
----
-class: inverse center middle subsection
-
 # HGAMs
 
 ---
@@ -729,6 +613,135 @@ If there are common (non-linear) effects that explain variation for all subjects
 * model those common effects plus subject-specific differences, instead of
 
 * modelling each subject-specific response individually
+
+---
+class: inverse center middle subsection
+
+# Your turn
+
+---
+
+# Chick weights exercise
+
+The exercise is at [chick-weights.html](https://gavinsimpson.github.io/physalia-gam-course/day-4/chick-weights.html)
+
+The Quarto file can be downloaded from here: [chick-weights.qmd](https://github.com/gavinsimpson/physalia-gam-course/raw/refs/heads/main/day-4/chick-weights.qmd)
+
+---
+class: inverse center middle subsection
+
+# Example
+
+---
+
+# Rat hormone experiment
+
+https://bit.ly/rat-hormone
+
+Study on the effects of testosterone on the growth of rats (Molenberghs and Verbeke, 2000)
+
+50 rats randomly assigned to 1 of 3 groups:
+
+1. a control group
+2. a group receiving low doses of Decapeptyl
+3. a high Decapeptyl dose group
+
+Decapeptyl inhibits the production of testosterone
+
+Experiment started (day 1) when rats were 45 days old and from day 50 the size of each rat's head was measured via an x-ray image
+
+```{r setup-rat-hormone-example, echo = FALSE}
+rats_url <- "https://bit.ly/rat-hormone"
+rats <- read_table(rats_url, col_types = "dddddddddddd-")
+# ignore the warning - it"s due to trailing white space at the ends of each
+#   row in the file
+
+rats <- rats |>
+    mutate(treatment = fct_recode(factor(group, levels = c(1, 2, 3)),
+                                  Low = "1",
+                                  High = "2",
+                                  Control = "3"),
+           treatment = fct_relevel(treatment, c("Control", "Low", "High")),
+           subject = factor(subject))
+
+plt_labs <- labs(y = "Head height (distance in pixels)",
+                 x = "Age in days",
+                 colour = "Treatment")
+
+rat_plt <- ggplot(rats, aes(x = time, y = response,
+                            group = subject, colour = treatment)) +
+    geom_line() +
+    facet_wrap(~ treatment, ncol = 3) +
+    plt_labs
+```
+
+???
+
+By way of an example, I'm going to use a data set from a study on the effects of testosterone on the growth of rats from Molenberghs and Verbeke (2000), which was analysed in Fahrmeir et al. (2013), from were I also obtained the data. In the experiment, 50 rats were randomly assigned to one of three groups; a control group or a group receiving low or high doses of Decapeptyl, which inhibits testosterone production. The experiment started when the rats were 45 days old and starting with the 50th day, the size of the rat's head was measured via an X-ray image. You can download the data.
+
+---
+
+# Rat hormone experiment
+
+```{r plot-rat-data, echo = FALSE}
+rat_plt
+```
+
+---
+
+# Rat hormone experiment
+
+To linearise the `time` variable, a transformation was applied
+
+$$\mathtt{transf\_time} = \log (1 + (\mathtt{time} - 45) / 10)$$
+
+The number of observations per rat is very variable
+
+```{r obs-per-rat, echo = FALSE}
+rats |>
+  na.omit() |>
+  count(subject) |>
+  count(n, name = "n_rats")
+```
+
+Only 22 of the 50 rats have the complete 7 measurements by day 110
+
+---
+
+# Rat hormone experiment
+
+The model fitted in Fahrmeir *et al* (2013) is
+
+$$y_{ij} = \alpha + \gamma_{0i} + \beta_1 L_i \cdot t_{ij} + \beta_2 H_i \cdot t_{ij} + \beta_3 C_i \cdot t_{ij} + \gamma_{1i} \cdot t_{ij} + \varepsilon_{ij}$$
+
+where
+
+* $\alpha$ is the population mean of the response at the start of the treatment
+* $L_i$, $H_i$, $C_i$ are dummy variables coding for each treatment group
+* $\gamma_{0i}$ is the rat-specific mean (random intercept)
+* $\gamma_{qi} \cdot t_{ij}$ is the rat-specific effect of `transf_time` (random slope)
+
+Code to fit this model in `lmer()` and `gam()` is in `day-4/rat-hormone-example.R`. HGAM equivalent is in `day-4/rat-hormone-hgam-example.R`
+
+???
+
+If this isn't very clear --- it took me a little while to grok what this meant and translate it to R speak --- note that each of $\beta_1$, $\beta_2$, and $\beta_3$ are associated with an interaction between the dummy variable coding for the treatment and the time variable. So we have a model with an intercept and three interaction terms with no "main" effects.
+
+---
+
+# Rat hormone experiment
+
+The main problem with HGAMs is that there are so many combinations over smooth types that you could use:
+
+- which type of factor smoothing?
+
+- should I allow for the same wiggliness or different wiggliness over the levels of the factor?
+
+Compounds as the number of levels of hierarchy increases
+
+The solution is to **stop** and think &mdash; you don't need to fit all the possible models
+
+Fit a maximal model that covers your hypotheses and then test assumptions of same *vs.* different wiggliness
 
 ---
 class: inverse center middle subsection
