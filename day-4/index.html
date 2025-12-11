@@ -325,9 +325,13 @@ Neither of these are the default, so remember to use `method = "ML"` or `method 
 
 - Comparison of GAMs by a form of AIC is an alternative frequentist approach to model selection
 
+    - *Marginal AIC* integrate out all random effects; over smooths
+
+    - *Conditional AIC* keep everything at MAP estimates; use appropriate *df* for the random bits
+
 - Rather than using the marginal likelihood, the likelihood of the `\(\mathbf{\beta}_j\)` *conditional* upon `\(\lambda_j\)` is used, with the EDF replacing `\(k\)`, the number of model parameters
 
-- This *conditional* AIC tends to select complex models, especially those with random effects, as the EDF ignores that `\(\lambda_j\)` are estimated
+- *Conditional* AIC tends to select complex models, especially those with random effects, as the EDF ignores that `\(\lambda_j\)` are estimated
 
 - Wood et al (2016) suggests a correction that accounts for uncertainty in `\(\lambda_j\)`
 
