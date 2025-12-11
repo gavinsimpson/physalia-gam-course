@@ -53,19 +53,23 @@ Slidedeck: [bit.ly/physalia-gam-4](https://bit.ly/physalia-gam-4)
 
 Sources: [bit.ly/physalia-gam](https://bit.ly/physalia-gam)
 
-Direct download a ZIP of everything: [bit.ly/physalia-gam-zip](https://bit.ly/physalia-gam-zip)
-
-Unpack the zip &amp; remember where you put it
-
 ---
 
-# Matters arising
+# Today's topics
 
-1. Credible intervals for smooths
+* A bit more in inference
 
-2. *p* values for smooths
+    * Credible intervals for smooths
 
-3. AIC
+    * *p* values for smooths
+
+    * AIC
+
+* Hierarchical GAMs (HGAMs)
+
+    Introducing random smooths and how to model data with both group and individual smooth effects.
+
+* Doing more with your models; introducing posterior simulation.
 
 ---
 class: inverse center middle subsection
@@ -371,16 +375,6 @@ pchisq(2, 1, lower.tail = FALSE)
 ```
 ## [1] 0.1572992
 ```
-
----
-
-# Today's topics
-
-* Hierarchical GAMs (HGAMs)
-
-    Introducing random smooths and how to model data with both group and individual smooth effects.
-
-* Doing more with your models; introducing posterior simulation.
 
 ---
 
@@ -1582,6 +1576,2596 @@ See `?mgcv::gam.mh` for an example where Gaussian approximation fails badly
 `fitted_samples()`, `smooth_samples()` etc default to Gaussian approximation, but the Metropolis Hastings sampler is now an option in the released version
 
 ---
+class: inverse center middle subsection
+
+# Temporally ordered data
+
+---
+
+# Smoothing autocorrelated data
+
+Smoothing temporally autocorrelated data can `--&gt;` over fitting
+
+.row[
+
+.col-6[
+
+`\(y\)` is contaminated with AR(1) noise
+
+.smaller[
+
+``` r
+set.seed(321)
+n &lt;- 100
+time &lt;- 1:n
+xt &lt;- time/n
+Y &lt;- (1280 * xt^4) * (1- xt)^4
+y &lt;- as.numeric(Y + arima.sim(list(ar = 0.3713),
+                              n = n))
+df &lt;- tibble(y = y, time = time, f = Y)
+
+# plot
+plt &lt;- ggplot(df, aes(x = time, y = y)) +
+  geom_point() +
+  geom_line(aes(y = f),
+            col = "steelblue", lwd = 2)
+plt
+```
+]
+]
+
+.col-6[
+![](index_files/figure-html/correlated-data-eg-1.svg)&lt;!-- --&gt;
+]
+]
+
+---
+
+# Smoothing autocorrelated data
+
+.row[
+
+.col-6[
+.smaller[
+
+``` r
+# standard fit
+m_reml &lt;- gam(y ~ s(time, k = 20), data = df,
+              method = "REML")
+# use GCV
+m_gcv &lt;- gam(y ~ s(time, k = 20), data = df)
+
+# fitted values
+fv_reml &lt;- fitted_values(m_reml)
+fv_gcv &lt;- fitted_values(m_gcv)
+
+# plot
+plt + geom_line(data = fv_reml,
+               aes(x = time, y = .fitted),
+               col = "red") +
+  geom_line(data = fv_gcv,
+            aes(x = time, y = .fitted),
+            col = "darkgreen")
+```
+]
+]
+
+.col-6[
+
+![](index_files/figure-html/fit-correlated-data-eg-1.svg)&lt;!-- --&gt;
+]
+]
+
+---
+
+# Smoothing autocorrelated data
+
+What about smoothing where `\(x\)` is time? Is this still a problem?
+
+--
+
+Yes *and* No
+
+--
+
+Depends on how you want to decompose *time* again
+
+---
+
+# Temporal dependence
+
+Temporal dependence really means that observations that are close together in time tend to be similar to one another than observations well separated in time
+
+How similar depends on the memory length of the system
+
+--
+
+Strong dependence &amp;mdash; high autocorrelatation &amp;,dash; long memory
+
+Weak dependence &amp;mdash; low autocorrelatation &amp;,dash; short memory
+
+---
+
+# Temporal dependence
+
+What does a GAM say about our data?
+
+--
+
+It says that observations near to one another (in covariate space) are more similar than observations further apart
+
+---
+
+# Temporal dependence &amp; GAMs
+
+From this perspective then
+
+Wiggly smooths = Strong dependence
+
+Smooth (!) smooths = Weak dependence
+
+---
+
+# Temporal dependence &amp; GAMs
+
+If you don't like your trend to be that wiggly, what to do?
+
+--
+
+You could decompose the temporal effect into a smooth trend *plus* an autocorrelated process in the `\(\varepsilon\)`
+
+--
+
+That process could be ARMA(*p*, *q*) or a continuous time AR(1)
+
+--
+
+Fit with `gamm()` using `correlation` argument, or `bam()` (AR(1) only)
+
+---
+
+# Smoothing autocorrelated data &amp;mdash; `gamm()`
+
+.row[
+
+.col-6[
+.smaller[
+
+``` r
+# standard fit
+m_ar1 &lt;- gamm(y ~ s(time, k = 20), data = df,
+              correlation = corAR1(form = ~ 1), #&lt;--
+              method = "REML")
+
+# fitted values
+fv_ar1 &lt;- fitted_values(m_ar1$gam)
+
+# plot
+gamm_plt &lt;- plt +
+  geom_ribbon(data = fv_ar1,
+    aes(ymin = .lower_ci, ymax = .upper_ci,
+      y = NULL),
+    alpha = 0.2, fill = "hotpink") +
+  geom_line(data = fv_ar1,
+    aes(x = time, y = .fitted),
+    col = "hotpink", lwd = 1.5)
+gamm_plt
+```
+]
+]
+
+.col-6[
+
+![](index_files/figure-html/fit-correlated-data-gamm-1.svg)&lt;!-- --&gt;
+]
+]
+
+---
+
+# Smoothing autocorrelated data &amp;mdash; `bam()`
+
+Estimate an AR(1) term in the covariance with `bam()`
+
+Provide a value of `\(\rho\)` (`rho`) &amp;mdash; use (P)ACF
+
+
+``` r
+m &lt;- bam(y ~ s(time, k = 10), data = df, method = "fREML")
+```
+.row[
+
+.col-6[
+
+ACF
+
+
+``` r
+acf(resid(m))
+```
+
+![](index_files/figure-html/bam-acf-1.svg)&lt;!-- --&gt;
+]
+
+.col-6[
+
+Partial ACF
+
+
+``` r
+pacf(resid(m))
+```
+
+![](index_files/figure-html/bam-pacf-1.svg)&lt;!-- --&gt;
+]
+
+]
+
+---
+
+# Smoothing autocorrelated data &amp;mdash; `bam()`
+
+Use estimate of `\(\rho\)`, say `rho = 0.35`
+
+
+``` r
+# standard fit
+b_ar1 &lt;- bam(
+  y ~ s(time, k = 20), data = df,
+  rho = 0.35, #&lt;--
+  method = "fREML"
+)
+```
+
+---
+
+# Smoothing autocorrelated data &amp;mdash; `bam()`
+
+.row[
+
+.col-6[
+
+``` r
+# fitted values
+fv_bar1 &lt;- fitted_values(b_ar1)
+
+# plot
+bar1_plt &lt;- plt +
+  geom_ribbon(data = fv_bar1,
+    aes(ymin = .lower_ci, ymax = .upper_ci,
+      y = NULL),
+    alpha = 0.2, fill = "hotpink") +
+  geom_line(data = fv_bar1,
+    aes(x = time, y = .fitted),
+    col = "hotpink", lwd = 1.5)
+bar1_plt
+```
+]
+.col-6[
+
+![](index_files/figure-html/fit-correlated-data-bam-plot-1.svg)&lt;!-- --&gt;
+]
+]
+
+---
+
+# Compare the fits
+
+&lt;img src="index_files/figure-html/autocorrel-compare-fits-plots-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Compare fits
+
+
+``` r
+model_edf(m_ar1, b_ar1)
+```
+
+```
+## # A tibble: 2 × 2
+##   .model  .edf
+##   &lt;chr&gt;  &lt;dbl&gt;
+## 1 m_ar1   7.07
+## 2 b_ar1   7.54
+```
+
+``` r
+## GAMM AR(1) rho
+nlme::intervals(m_ar1$lme, which = "var-cov")$corStruct
+```
+
+```
+##         lower      est.     upper
+## Phi 0.1826355 0.4279269 0.6230681
+## attr(,"label")
+## [1] "Correlation structure:"
+```
+
+---
+
+# Irregularly spaced data
+
+Intervals between observation are irregular? Things get much harder
+
+Two main options
+
+1. Fit a continuous time AR(1) (CAR(1)) using `gamm()` &amp;mdash; `correlation = corCAR1(form ~ 1)`
+
+2. Fit a 1-D spatial correlation function using `gamm()` &amp;mdash; `correlation = corExp(form ~ time)`
+
+3. Or use *brms* or *glmmTMB*
+
+4. Consider *mvgam* &amp;mdash; but the trend is a stochastic process, not a smooth
+
+---
+
+# But&amp;hellip;
+
+This can only work if the trend and the autocorrelation process are separately identifiable from the data
+
+Or you are willing to impose constraints on one of
+
+* the smooth of time (using a low `k`), or
+
+* specify the parameters of the autocorrelation process
+
+See [Simpson (2018)](https://doi.org/10.3389/fevo.2018.00149) for a brief discussion on this plus examples &amp; the cited references therein
+
+---
+
+# Non-normal data?
+
+What if you have non-Gaussian data?
+
+* `bam()` &amp; AR(1) &amp;mdash; GEE-like approach, working correlation matrix
+
+* `gamm()` &amp; `correlation` &amp;mdash; fits via `MASS::glmmPQL()`, works it **hard** --&gt; fitting problems are common, plus PQL is bad for count data with low means
+
+* `brms::brm()` &amp;mdash; Bayesian so you have to work harder, no CAR(1), but has spatial correlation functions
+
+* `mvgam` &amp;mdash; Bayesian so *ditto*, the trend is a stochastic process, not a smooth
+
+---
+
+# Or use Neighbourhood CV
+
+.row[
+
+.col-9[
+
+New smoothness selection method
+
+`method = "NCV"`
+
+Not super user friendly
+
+Basically, for _each_ observation in the data, we specify
+
+1. the neighbourhood of samples to use for estimating `\(\lambda_j\)`, and
+2. the neighbourhood of samples to use for out-of-sample prediction
+
+This gets tricky to do easily for complex settings
+
+]
+
+.col-3[
+
+&lt;img src="resources/dangerwillrobinson-1.png" width="316" style="display: block; margin: auto;" /&gt;
+
+.smaller[
+([Linda Essig](https://creativeinfrastructure.org/2013/01/19/danger-will-robinson/))
+]
+
+]
+
+] 
+
+---
+
+# NCV
+
+We need to define two things: `a`, the indices of observations to drop for each neighbourhood, and `ma`, the end points of each neighbourhood
+
+Plus their counterparts for prediction neighbourhoods: `d` and `md`
+
+.row[
+
+.col-6[
+
+``` r
+nei &lt;- list()
+start &lt;- pmax(1, (1:100) - 5)
+end &lt;- pmin(100, (0:99) + 5)
+nt &lt;- lapply(1:100, \(x) start[x]:end[x])
+nei$a &lt;- unlist(nt)
+nei$ma &lt;- cumsum(lapply(nt, length))
+nei$d &lt;- nei$a
+nei$md &lt;- nei$ma
+```
+
+]
+
+.col-6[
+
+
+``` r
+mgcvUtils::vis_nei(nei)
+```
+
+&lt;img src="index_files/figure-html/ncv-vis-nei-1.svg" style="display: block; margin: auto;" /&gt;
+]
+]
+
+.smaller[
+  Code modified from https://calgary.converged.yt/articles/ncv_timeseries.html
+]
+
+---
+
+# NCV model fitting
+
+
+.row[
+
+.col-6[
+
+``` r
+m_ncv &lt;- gam(y ~ s(time, k = 20),
+  data = df, method = "NCV",
+  nei = nei)
+
+fv_ncv &lt;- fitted_values(m_ncv)
+ncv_plt &lt;- plt +
+  geom_ribbon(data = fv_ncv,
+    aes(ymin = .lower_ci, ymax = .upper_ci,
+      y = NULL),
+    alpha = 0.2, fill = "hotpink") +
+  geom_line(data = fv_ncv,
+    aes(x = time, y = .fitted),
+    col = "hotpink", lwd = 1.5)
+ncv_plt
+```
+]
+
+.col-6[
+&lt;img src="index_files/figure-html/ncv-fitted-plot-1.svg" style="display: block; margin: auto;" /&gt;
+]
+]
+
+---
+
+# Compare
+
+&lt;img src="index_files/figure-html/compare-all-methods-1.svg" width="98%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# NCV
+
+NCV shows huge promise
+
+Pain in the butt to setup
+
+No R tooling to do the setup for you
+
+Read more about it in Simon's preprint [Wood (2024)](https://doi.org/10.48550/arXiv.2404.16490) and Dave Miller's Yes! [You can do that in mgcv](https://calgary.converged.yt/) site
+
+Focus with NCV is in estimating the smooths in the presence of local dependence
+
+I have no idea what it does to the interpretation of credible intervals or *p* values as the data aren't conditionally independent
+
+---
+class: inverse center middle subsection
+
+# Big additive models
+
+---
+
+# Big additive models
+
+Fitting GAMs involves turning individual covariates into multiple new variables &amp;mdash; basis functions
+
+If you have many covariates whose effects are smooth, then model matrix can get big
+
+Esp. if you have many data
+
+--
+
+Modelling fit can grind to a halt, esp. if you don't have much RAM
+
+--
+
+Enter `bam()`
+
+---
+
+# `bam()`
+
+`bam()` includes algorithms that can fit big models using much less RAM than `gam()`
+
+Main restriction currently is that it can't fit distributional GAMs
+
+With `bam()` we can do
+
+1. `method = "fREML"`, and
+2. `discrete = TRUE`
+
+We can also parallelise the fitting over mutliple CPUs or a cluster (only bullet 1.)
+
+This also means you can speed up model fitting, often massively so, if you have a multi-core machine and a bit of RAM
+
+---
+
+# `bam()` &amp;mdash; fast REML
+
+The first optimization is `method = "fREML"`; don't use `bam()` without it
+
+Uses theory from [Wood *et al* (2015)](https://academic.oup.com/jrsssc/article/64/1/139/7067572)
+
+1. Setup smooths using representative sample of the data
+2. Model matrix, `\(\mathbf{X}\)`, is formed in blocks
+3. Uses updates to do the QR decomposition block-wise
+4. Once blocks are processed, fitting takes place without ever forming full `\(\mathbf{X}\)`
+
+Can use a `cluster` built using the *parallel* package, but this uses more RAM
+
+---
+
+# `bam()` &amp;mdash; discretizing covariates
+
+You can fit models to even larger data if you are willing to discretize the covariates
+
+Use `discrete = TRUE`
+
+For each (marginal) smooth in turn covariates are discretized
+
+Discretization involves reducing the precision of the covariate values, thus multiple unique `\(x_i\)` will now have the same `\(x_i\)`
+
+This is often OK as in big data many data are not unique
+
+This approximation often results in only small differences in estimated effect
+
+---
+
+# `bam()` &amp;mdash; discretizing covariates
+
+With `discrete = TRUE` can no longer use a cluster
+
+Instead we can fit in parallel using `nthreads` (but MacOS / Linux)
+
+Can also use `samfrac`; for *very* big data, take a random sample of `samfrac`*100% of the data fit model to the sample with sloppy convergence tolerances
+
+This gives rough starting values of all the parameters, which can be optimized by then fitting with all of the data
+---
+class: inverse middle center subsection
+
+# Marginal effects
+
+---
+
+# Regression coefficients
+
+&lt;img src="resources/slider-switch-annotated-80.jpg" width="2561" /&gt;
+
+Terms in models are like sliders and switches
+
+* *sliders* represent continuous variables
+* *switches* represent categorical variables
+
+---
+
+# Regression coefficients
+
+
+``` r
+# install.packages("palmerpenguins")
+library("palmerpenguins")
+library("tidyr")
+penguins &lt;- penguins |&gt; drop_na()
+
+model_slider &lt;- lm(body_mass_g ~ flipper_length_mm, data = penguins)
+model_switch &lt;- lm(body_mass_g ~ species, data = penguins)
+```
+
+1. `model_slider` includes the effect of a continuous variable
+2. `model_switch` includes the effect of a categorical variable
+
+---
+
+# Regression coefficients
+
+
+``` r
+library("broom")
+tidy(model_slider)
+```
+
+```
+## # A tibble: 2 × 5
+##   term              estimate std.error statistic   p.value
+##   &lt;chr&gt;                &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+## 1 (Intercept)        -5872.     310.       -18.9 1.18e- 54
+## 2 flipper_length_mm     50.2      1.54      32.6 3.13e-105
+```
+
+``` r
+tidy(model_switch)
+```
+
+```
+## # A tibble: 3 × 5
+##   term             estimate std.error statistic   p.value
+##   &lt;chr&gt;               &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+## 1 (Intercept)        3706.       38.1    97.2   6.88e-245
+## 2 speciesChinstrap     26.9      67.7     0.398 6.91e-  1
+## 3 speciesGentoo      1386.       56.9    24.4   1.01e- 75
+```
+
+---
+
+# Regression coefficients
+
+
+``` r
+tidy(model_slider)
+```
+
+```
+## # A tibble: 2 × 5
+##   term              estimate std.error statistic   p.value
+##   &lt;chr&gt;                &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+## 1 (Intercept)        -5872.     310.       -18.9 1.18e- 54
+## 2 flipper_length_mm     50.2      1.54      32.6 3.13e-105
+```
+
+`flipper_length_mm` is a continuous variable, so it's a slider
+
+As `flipper_length_mm` increases by 1 mm, penguin `body_mass_g` increases by 50.2 grams
+
+---
+
+# Regression coefficients
+
+
+``` r
+tidy(model_switch)
+```
+
+```
+## # A tibble: 3 × 5
+##   term             estimate std.error statistic   p.value
+##   &lt;chr&gt;               &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+## 1 (Intercept)        3706.       38.1    97.2   6.88e-245
+## 2 speciesChinstrap     26.9      67.7     0.398 6.91e-  1
+## 3 speciesGentoo      1386.       56.9    24.4   1.01e- 75
+```
+
+`Species` is a categorical variable, so it's a switch
+
+There are three possible values: `Adelie`, `Chinstrap`, `Gentoo`
+
+`Adelie` is the reference category
+
+`Chinstrap` penguins are 26.9 grams heavier than `Adelie`
+
+`Gentoo` penguins are 1386.3 grams heavier than `Adelie`!
+
+---
+
+# What about GLM?
+
+
+``` r
+glm_slider &lt;- glm(body_mass_g ~ flipper_length_mm, data = penguins, family = Gamma("log"))
+glm_switch &lt;- glm(body_mass_g ~ species, data = penguins, family = Gamma("log"))
+```
+
+---
+
+# What about GLM?
+
+Coefficients are on the *link* scale! &amp;mdash; here that's the log scale
+
+
+``` r
+tidy(glm_slider)
+```
+
+```
+## # A tibble: 2 × 5
+##   term              estimate std.error statistic   p.value
+##   &lt;chr&gt;                &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+## 1 (Intercept)         6.02    0.0755        79.7 4.07e-218
+## 2 flipper_length_mm   0.0115  0.000375      30.7 9.09e- 99
+```
+
+`flipper_length_mm` is a continuous variable, so it's a slider
+
+As `flipper_length_mm` increases by 1 mm, penguin `body_mass_g` is multiplied by 1.012 grams
+
+
+``` r
+exp(0.0115)
+```
+
+```
+## [1] 1.011566
+```
+
+---
+
+# Mixers
+
+&lt;img src="resources/mixer-board-annotated-80.jpg" width="2561" /&gt;
+
+Most models aren't so simple
+
+We're often working with multiple variables combining switches and sliders
+
+---
+
+# Mixers
+
+.small[
+
+``` r
+model_mixer &lt;- lm(body_mass_g ~ flipper_length_mm + bill_depth_mm + species + sex,
+                  data = penguins)
+tidy(model_mixer)
+```
+
+```
+## # A tibble: 6 × 5
+##   term              estimate std.error statistic  p.value
+##   &lt;chr&gt;                &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+## 1 (Intercept)        -1212.     568.       -2.13 3.36e- 2
+## 2 flipper_length_mm     17.5      2.87      6.12 2.66e- 9
+## 3 bill_depth_mm         74.4     19.7       3.77 1.91e- 4
+## 4 speciesChinstrap     -78.9     45.5      -1.73 8.38e- 2
+## 5 speciesGentoo       1154.     119.        9.73 8.02e-20
+## 6 sexmale              435.      44.8       9.72 8.79e-20
+```
+]
+
+The values in `estimate` are partial effects showing what happens when we change the value of the variable
+
+* for continuous variables the change is 1 unit; 1mm
+* for categorical variables the change is moving *from* the reference category by flicking the switch
+
+As these are partial effects (changes), we need to add "holding all other variables constant"
+
+---
+
+# Damned terminology
+
+A *marginal effect* is a partial derivative from a regression equation
+
+* the change in `\(y\)` for a unit change in one of the model terms
+
+This also applies to categorical terms as formally (with treatment coding) we're changing 1 unit (0 to 1) when we flick the switch
+
+Others use the *conditional effect* or *group constrast* for the effects concerning categorical variables
+
+---
+
+# Load marginaleffects
+
+
+``` r
+library("marginaleffects")
+```
+
+---
+
+# Chick weight example
+
+Weights of chicks and effect of diet
+
+
+``` r
+data(ChickWeight)
+cw &lt;- ChickWeight |&gt;
+  as_tibble() |&gt;
+  janitor::clean_names() |&gt;
+  mutate(
+    chick = factor(chick, ordered = FALSE)
+  )
+cw
+```
+
+```
+## # A tibble: 578 × 4
+##    weight  time chick diet 
+##     &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt; &lt;fct&gt;
+##  1     42     0 1     1    
+##  2     51     2 1     1    
+##  3     59     4 1     1    
+##  4     64     6 1     1    
+##  5     76     8 1     1    
+##  6     93    10 1     1    
+##  7    106    12 1     1    
+##  8    125    14 1     1    
+##  9    149    16 1     1    
+## 10    171    18 1     1    
+## # ℹ 568 more rows
+```
+
+# Chick weight example
+
+
+``` r
+ctrl &lt;- gam.control(nthreads = 6)
+m_cw &lt;- gam(
+  weight ~ s(time) +
+    s(time, diet, bs = "sz") +
+    s(time, chick, bs = "fs", k = 5),
+  data = cw, family = tw(), method = "REML", control = ctrl)
+```
+
+# Chick weight example
+
+
+``` r
+broom::tidy(m_cw)
+```
+
+```
+## # A tibble: 3 × 5
+##   term             edf ref.df statistic   p.value
+##   &lt;chr&gt;          &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+## 1 s(time)         8.53   8.90    102.   0        
+## 2 s(time,diet)   11.5   13.2       3.35 0.0000703
+## 3 s(time,chick) 209.   239       193.   0
+```
+
+What is the effect of `diet`?
+
+---
+
+# Averaging
+
+We could average the partial derivatives (slopes) for the observed data where for each observation we compare the predicted value with the `diet` switch flicked into different positions
+
+.row[
+
+.col-6[
+
+.small[
+
+``` r
+cw
+```
+
+```
+## # A tibble: 578 × 4
+##    weight  time chick diet 
+##     &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt; &lt;fct&gt;
+##  1     42     0 1     1    
+##  2     51     2 1     1    
+##  3     59     4 1     1    
+##  4     64     6 1     1    
+##  5     76     8 1     1    
+##  6     93    10 1     1    
+##  7    106    12 1     1    
+##  8    125    14 1     1    
+##  9    149    16 1     1    
+## 10    171    18 1     1    
+## # ℹ 568 more rows
+```
+]
+
+]
+
+.col-6[
+
+.small[
+
+``` r
+m_cw |&gt; slopes(variable = "diet")
+```
+
+```
+## 
+##  Contrast Estimate Std. Error      z Pr(&gt;|z|)    S  2.5 % 97.5 %
+##     2 - 1    0.287       4.77 0.0601    0.952  0.1 -9.066   9.64
+##     2 - 1    2.332       5.07 0.4601    0.645  0.6 -7.604  12.27
+##     2 - 1    4.894       5.42 0.9035    0.366  1.4 -5.723  15.51
+##     2 - 1    8.512       6.11 1.3927    0.164  2.6 -3.467  20.49
+##     2 - 1   12.695       6.90 1.8386    0.066  3.9 -0.838  26.23
+## --- 1724 rows omitted. See ?print.marginaleffects ---
+##     4 - 1   53.002       9.88 5.3649   &lt;0.001 23.6 33.639  72.36
+##     4 - 1   62.516      12.15 5.1452   &lt;0.001 21.8 38.702  86.33
+##     4 - 1   76.009      15.10 5.0350   &lt;0.001 21.0 46.422 105.60
+##     4 - 1   87.282      18.18 4.8004   &lt;0.001 19.3 51.646 122.92
+##     4 - 1   92.180      20.03 4.6020   &lt;0.001 17.9 52.921 131.44
+## Term: diet
+## Type: response
+```
+]
+]
+]
+
+---
+
+# Averaging: step 1
+
+Create the data we need; three copies of the observed data, with `diet` set to 1, 2, 3 respectively
+
+.row[
+
+.col-6[
+
+.small[
+
+``` r
+(df_diet1 &lt;- datagrid(model = m_cw, diet = "1", grid_type = "counterfactual"))
+```
+
+```
+##     rowid rowidcf chick time weight diet
+## 1       1       1     1    0     42    1
+## 2       2       2     1    2     51    1
+## 3       3       3     1    4     59    1
+## 4       4       4     1    6     64    1
+## 5       5       5     1    8     76    1
+## 6       6       6     1   10     93    1
+## 7       7       7     1   12    106    1
+## 8       8       8     1   14    125    1
+## 9       9       9     1   16    149    1
+## 10     10      10     1   18    171    1
+## 11     11      11     1   20    199    1
+## 12     12      12     1   21    205    1
+## 13     13      13     2    0     40    1
+## 14     14      14     2    2     49    1
+## 15     15      15     2    4     58    1
+## 16     16      16     2    6     72    1
+## 17     17      17     2    8     84    1
+## 18     18      18     2   10    103    1
+## 19     19      19     2   12    122    1
+## 20     20      20     2   14    138    1
+## 21     21      21     2   16    162    1
+## 22     22      22     2   18    187    1
+## 23     23      23     2   20    209    1
+## 24     24      24     2   21    215    1
+## 25     25      25     3    0     43    1
+## 26     26      26     3    2     39    1
+## 27     27      27     3    4     55    1
+## 28     28      28     3    6     67    1
+## 29     29      29     3    8     84    1
+## 30     30      30     3   10     99    1
+## 31     31      31     3   12    115    1
+## 32     32      32     3   14    138    1
+## 33     33      33     3   16    163    1
+## 34     34      34     3   18    187    1
+## 35     35      35     3   20    198    1
+## 36     36      36     3   21    202    1
+## 37     37      37     4    0     42    1
+## 38     38      38     4    2     49    1
+## 39     39      39     4    4     56    1
+## 40     40      40     4    6     67    1
+## 41     41      41     4    8     74    1
+## 42     42      42     4   10     87    1
+## 43     43      43     4   12    102    1
+## 44     44      44     4   14    108    1
+## 45     45      45     4   16    136    1
+## 46     46      46     4   18    154    1
+## 47     47      47     4   20    160    1
+## 48     48      48     4   21    157    1
+## 49     49      49     5    0     41    1
+## 50     50      50     5    2     42    1
+## 51     51      51     5    4     48    1
+## 52     52      52     5    6     60    1
+## 53     53      53     5    8     79    1
+## 54     54      54     5   10    106    1
+## 55     55      55     5   12    141    1
+## 56     56      56     5   14    164    1
+## 57     57      57     5   16    197    1
+## 58     58      58     5   18    199    1
+## 59     59      59     5   20    220    1
+## 60     60      60     5   21    223    1
+## 61     61      61     6    0     41    1
+## 62     62      62     6    2     49    1
+## 63     63      63     6    4     59    1
+## 64     64      64     6    6     74    1
+## 65     65      65     6    8     97    1
+## 66     66      66     6   10    124    1
+## 67     67      67     6   12    141    1
+## 68     68      68     6   14    148    1
+## 69     69      69     6   16    155    1
+## 70     70      70     6   18    160    1
+## 71     71      71     6   20    160    1
+## 72     72      72     6   21    157    1
+## 73     73      73     7    0     41    1
+## 74     74      74     7    2     49    1
+## 75     75      75     7    4     57    1
+## 76     76      76     7    6     71    1
+## 77     77      77     7    8     89    1
+## 78     78      78     7   10    112    1
+## 79     79      79     7   12    146    1
+## 80     80      80     7   14    174    1
+## 81     81      81     7   16    218    1
+## 82     82      82     7   18    250    1
+## 83     83      83     7   20    288    1
+## 84     84      84     7   21    305    1
+## 85     85      85     8    0     42    1
+## 86     86      86     8    2     50    1
+## 87     87      87     8    4     61    1
+## 88     88      88     8    6     71    1
+## 89     89      89     8    8     84    1
+## 90     90      90     8   10     93    1
+## 91     91      91     8   12    110    1
+## 92     92      92     8   14    116    1
+## 93     93      93     8   16    126    1
+## 94     94      94     8   18    134    1
+## 95     95      95     8   20    125    1
+## 96     96      96     9    0     42    1
+## 97     97      97     9    2     51    1
+## 98     98      98     9    4     59    1
+## 99     99      99     9    6     68    1
+## 100   100     100     9    8     85    1
+## 101   101     101     9   10     96    1
+## 102   102     102     9   12     90    1
+## 103   103     103     9   14     92    1
+## 104   104     104     9   16     93    1
+## 105   105     105     9   18    100    1
+## 106   106     106     9   20    100    1
+## 107   107     107     9   21     98    1
+## 108   108     108    10    0     41    1
+## 109   109     109    10    2     44    1
+## 110   110     110    10    4     52    1
+## 111   111     111    10    6     63    1
+## 112   112     112    10    8     74    1
+## 113   113     113    10   10     81    1
+## 114   114     114    10   12     89    1
+## 115   115     115    10   14     96    1
+## 116   116     116    10   16    101    1
+## 117   117     117    10   18    112    1
+## 118   118     118    10   20    120    1
+## 119   119     119    10   21    124    1
+## 120   120     120    11    0     43    1
+## 121   121     121    11    2     51    1
+## 122   122     122    11    4     63    1
+## 123   123     123    11    6     84    1
+## 124   124     124    11    8    112    1
+## 125   125     125    11   10    139    1
+## 126   126     126    11   12    168    1
+## 127   127     127    11   14    177    1
+## 128   128     128    11   16    182    1
+## 129   129     129    11   18    184    1
+## 130   130     130    11   20    181    1
+## 131   131     131    11   21    175    1
+## 132   132     132    12    0     41    1
+## 133   133     133    12    2     49    1
+## 134   134     134    12    4     56    1
+## 135   135     135    12    6     62    1
+## 136   136     136    12    8     72    1
+## 137   137     137    12   10     88    1
+## 138   138     138    12   12    119    1
+## 139   139     139    12   14    135    1
+## 140   140     140    12   16    162    1
+## 141   141     141    12   18    185    1
+## 142   142     142    12   20    195    1
+## 143   143     143    12   21    205    1
+## 144   144     144    13    0     41    1
+## 145   145     145    13    2     48    1
+## 146   146     146    13    4     53    1
+## 147   147     147    13    6     60    1
+## 148   148     148    13    8     65    1
+## 149   149     149    13   10     67    1
+## 150   150     150    13   12     71    1
+## 151   151     151    13   14     70    1
+## 152   152     152    13   16     71    1
+## 153   153     153    13   18     81    1
+## 154   154     154    13   20     91    1
+## 155   155     155    13   21     96    1
+## 156   156     156    14    0     41    1
+## 157   157     157    14    2     49    1
+## 158   158     158    14    4     62    1
+## 159   159     159    14    6     79    1
+## 160   160     160    14    8    101    1
+## 161   161     161    14   10    128    1
+## 162   162     162    14   12    164    1
+## 163   163     163    14   14    192    1
+## 164   164     164    14   16    227    1
+## 165   165     165    14   18    248    1
+## 166   166     166    14   20    259    1
+## 167   167     167    14   21    266    1
+## 168   168     168    15    0     41    1
+## 169   169     169    15    2     49    1
+## 170   170     170    15    4     56    1
+## 171   171     171    15    6     64    1
+## 172   172     172    15    8     68    1
+## 173   173     173    15   10     68    1
+## 174   174     174    15   12     67    1
+## 175   175     175    15   14     68    1
+## 176   176     176    16    0     41    1
+## 177   177     177    16    2     45    1
+## 178   178     178    16    4     49    1
+## 179   179     179    16    6     51    1
+## 180   180     180    16    8     57    1
+## 181   181     181    16   10     51    1
+## 182   182     182    16   12     54    1
+## 183   183     183    17    0     42    1
+## 184   184     184    17    2     51    1
+## 185   185     185    17    4     61    1
+## 186   186     186    17    6     72    1
+## 187   187     187    17    8     83    1
+## 188   188     188    17   10     89    1
+## 189   189     189    17   12     98    1
+## 190   190     190    17   14    103    1
+## 191   191     191    17   16    113    1
+## 192   192     192    17   18    123    1
+## 193   193     193    17   20    133    1
+## 194   194     194    17   21    142    1
+## 195   195     195    18    0     39    1
+## 196   196     196    18    2     35    1
+## 197   197     197    19    0     43    1
+## 198   198     198    19    2     48    1
+## 199   199     199    19    4     55    1
+## 200   200     200    19    6     62    1
+## 201   201     201    19    8     65    1
+## 202   202     202    19   10     71    1
+## 203   203     203    19   12     82    1
+## 204   204     204    19   14     88    1
+## 205   205     205    19   16    106    1
+## 206   206     206    19   18    120    1
+## 207   207     207    19   20    144    1
+## 208   208     208    19   21    157    1
+## 209   209     209    20    0     41    1
+## 210   210     210    20    2     47    1
+## 211   211     211    20    4     54    1
+## 212   212     212    20    6     58    1
+## 213   213     213    20    8     65    1
+## 214   214     214    20   10     73    1
+## 215   215     215    20   12     77    1
+## 216   216     216    20   14     89    1
+## 217   217     217    20   16     98    1
+## 218   218     218    20   18    107    1
+## 219   219     219    20   20    115    1
+## 220   220     220    20   21    117    1
+## 221   221     221    21    0     40    1
+## 222   222     222    21    2     50    1
+## 223   223     223    21    4     62    1
+## 224   224     224    21    6     86    1
+## 225   225     225    21    8    125    1
+## 226   226     226    21   10    163    1
+## 227   227     227    21   12    217    1
+## 228   228     228    21   14    240    1
+## 229   229     229    21   16    275    1
+## 230   230     230    21   18    307    1
+## 231   231     231    21   20    318    1
+## 232   232     232    21   21    331    1
+## 233   233     233    22    0     41    1
+## 234   234     234    22    2     55    1
+## 235   235     235    22    4     64    1
+## 236   236     236    22    6     77    1
+## 237   237     237    22    8     90    1
+## 238   238     238    22   10     95    1
+## 239   239     239    22   12    108    1
+## 240   240     240    22   14    111    1
+## 241   241     241    22   16    131    1
+## 242   242     242    22   18    148    1
+## 243   243     243    22   20    164    1
+## 244   244     244    22   21    167    1
+## 245   245     245    23    0     43    1
+## 246   246     246    23    2     52    1
+## 247   247     247    23    4     61    1
+## 248   248     248    23    6     73    1
+## 249   249     249    23    8     90    1
+## 250   250     250    23   10    103    1
+## 251   251     251    23   12    127    1
+## 252   252     252    23   14    135    1
+## 253   253     253    23   16    145    1
+## 254   254     254    23   18    163    1
+## 255   255     255    23   20    170    1
+## 256   256     256    23   21    175    1
+## 257   257     257    24    0     42    1
+## 258   258     258    24    2     52    1
+## 259   259     259    24    4     58    1
+## 260   260     260    24    6     74    1
+## 261   261     261    24    8     66    1
+## 262   262     262    24   10     68    1
+## 263   263     263    24   12     70    1
+## 264   264     264    24   14     71    1
+## 265   265     265    24   16     72    1
+## 266   266     266    24   18     72    1
+## 267   267     267    24   20     76    1
+## 268   268     268    24   21     74    1
+## 269   269     269    25    0     40    1
+## 270   270     270    25    2     49    1
+## 271   271     271    25    4     62    1
+## 272   272     272    25    6     78    1
+## 273   273     273    25    8    102    1
+## 274   274     274    25   10    124    1
+## 275   275     275    25   12    146    1
+## 276   276     276    25   14    164    1
+## 277   277     277    25   16    197    1
+## 278   278     278    25   18    231    1
+## 279   279     279    25   20    259    1
+## 280   280     280    25   21    265    1
+## 281   281     281    26    0     42    1
+## 282   282     282    26    2     48    1
+## 283   283     283    26    4     57    1
+## 284   284     284    26    6     74    1
+## 285   285     285    26    8     93    1
+## 286   286     286    26   10    114    1
+## 287   287     287    26   12    136    1
+## 288   288     288    26   14    147    1
+## 289   289     289    26   16    169    1
+## 290   290     290    26   18    205    1
+## 291   291     291    26   20    236    1
+## 292   292     292    26   21    251    1
+## 293   293     293    27    0     39    1
+## 294   294     294    27    2     46    1
+## 295   295     295    27    4     58    1
+## 296   296     296    27    6     73    1
+## 297   297     297    27    8     87    1
+## 298   298     298    27   10    100    1
+## 299   299     299    27   12    115    1
+## 300   300     300    27   14    123    1
+## 301   301     301    27   16    144    1
+## 302   302     302    27   18    163    1
+## 303   303     303    27   20    185    1
+## 304   304     304    27   21    192    1
+## 305   305     305    28    0     39    1
+## 306   306     306    28    2     46    1
+## 307   307     307    28    4     58    1
+## 308   308     308    28    6     73    1
+## 309   309     309    28    8     92    1
+## 310   310     310    28   10    114    1
+## 311   311     311    28   12    145    1
+## 312   312     312    28   14    156    1
+## 313   313     313    28   16    184    1
+## 314   314     314    28   18    207    1
+## 315   315     315    28   20    212    1
+## 316   316     316    28   21    233    1
+## 317   317     317    29    0     39    1
+## 318   318     318    29    2     48    1
+## 319   319     319    29    4     59    1
+## 320   320     320    29    6     74    1
+## 321   321     321    29    8     87    1
+## 322   322     322    29   10    106    1
+## 323   323     323    29   12    134    1
+## 324   324     324    29   14    150    1
+## 325   325     325    29   16    187    1
+## 326   326     326    29   18    230    1
+## 327   327     327    29   20    279    1
+## 328   328     328    29   21    309    1
+## 329   329     329    30    0     42    1
+## 330   330     330    30    2     48    1
+## 331   331     331    30    4     59    1
+## 332   332     332    30    6     72    1
+## 333   333     333    30    8     85    1
+## 334   334     334    30   10     98    1
+## 335   335     335    30   12    115    1
+## 336   336     336    30   14    122    1
+## 337   337     337    30   16    143    1
+## 338   338     338    30   18    151    1
+## 339   339     339    30   20    157    1
+## 340   340     340    30   21    150    1
+## 341   341     341    31    0     42    1
+## 342   342     342    31    2     53    1
+## 343   343     343    31    4     62    1
+## 344   344     344    31    6     73    1
+## 345   345     345    31    8     85    1
+## 346   346     346    31   10    102    1
+## 347   347     347    31   12    123    1
+## 348   348     348    31   14    138    1
+## 349   349     349    31   16    170    1
+## 350   350     350    31   18    204    1
+## 351   351     351    31   20    235    1
+## 352   352     352    31   21    256    1
+## 353   353     353    32    0     41    1
+## 354   354     354    32    2     49    1
+## 355   355     355    32    4     65    1
+## 356   356     356    32    6     82    1
+## 357   357     357    32    8    107    1
+## 358   358     358    32   10    129    1
+## 359   359     359    32   12    159    1
+## 360   360     360    32   14    179    1
+## 361   361     361    32   16    221    1
+## 362   362     362    32   18    263    1
+## 363   363     363    32   20    291    1
+## 364   364     364    32   21    305    1
+## 365   365     365    33    0     39    1
+## 366   366     366    33    2     50    1
+## 367   367     367    33    4     63    1
+## 368   368     368    33    6     77    1
+## 369   369     369    33    8     96    1
+## 370   370     370    33   10    111    1
+## 371   371     371    33   12    137    1
+## 372   372     372    33   14    144    1
+## 373   373     373    33   16    151    1
+## 374   374     374    33   18    146    1
+## 375   375     375    33   20    156    1
+## 376   376     376    33   21    147    1
+## 377   377     377    34    0     41    1
+## 378   378     378    34    2     49    1
+## 379   379     379    34    4     63    1
+## 380   380     380    34    6     85    1
+## 381   381     381    34    8    107    1
+## 382   382     382    34   10    134    1
+## 383   383     383    34   12    164    1
+## 384   384     384    34   14    186    1
+## 385   385     385    34   16    235    1
+## 386   386     386    34   18    294    1
+## 387   387     387    34   20    327    1
+## 388   388     388    34   21    341    1
+## 389   389     389    35    0     41    1
+## 390   390     390    35    2     53    1
+## 391   391     391    35    4     64    1
+## 392   392     392    35    6     87    1
+## 393   393     393    35    8    123    1
+## 394   394     394    35   10    158    1
+## 395   395     395    35   12    201    1
+## 396   396     396    35   14    238    1
+## 397   397     397    35   16    287    1
+## 398   398     398    35   18    332    1
+## 399   399     399    35   20    361    1
+## 400   400     400    35   21    373    1
+## 401   401     401    36    0     39    1
+## 402   402     402    36    2     48    1
+## 403   403     403    36    4     61    1
+## 404   404     404    36    6     76    1
+## 405   405     405    36    8     98    1
+## 406   406     406    36   10    116    1
+## 407   407     407    36   12    145    1
+## 408   408     408    36   14    166    1
+## 409   409     409    36   16    198    1
+## 410   410     410    36   18    227    1
+## 411   411     411    36   20    225    1
+## 412   412     412    36   21    220    1
+## 413   413     413    37    0     41    1
+## 414   414     414    37    2     48    1
+## 415   415     415    37    4     56    1
+## 416   416     416    37    6     68    1
+## 417   417     417    37    8     80    1
+## 418   418     418    37   10     83    1
+## 419   419     419    37   12    103    1
+## 420   420     420    37   14    112    1
+## 421   421     421    37   16    135    1
+## 422   422     422    37   18    157    1
+## 423   423     423    37   20    169    1
+## 424   424     424    37   21    178    1
+## 425   425     425    38    0     41    1
+## 426   426     426    38    2     49    1
+## 427   427     427    38    4     61    1
+## 428   428     428    38    6     74    1
+## 429   429     429    38    8     98    1
+## 430   430     430    38   10    109    1
+## 431   431     431    38   12    128    1
+## 432   432     432    38   14    154    1
+## 433   433     433    38   16    192    1
+## 434   434     434    38   18    232    1
+## 435   435     435    38   20    280    1
+## 436   436     436    38   21    290    1
+## 437   437     437    39    0     42    1
+## 438   438     438    39    2     50    1
+## 439   439     439    39    4     61    1
+## 440   440     440    39    6     78    1
+## 441   441     441    39    8     89    1
+## 442   442     442    39   10    109    1
+## 443   443     443    39   12    130    1
+## 444   444     444    39   14    146    1
+## 445   445     445    39   16    170    1
+## 446   446     446    39   18    214    1
+## 447   447     447    39   20    250    1
+## 448   448     448    39   21    272    1
+## 449   449     449    40    0     41    1
+## 450   450     450    40    2     55    1
+## 451   451     451    40    4     66    1
+## 452   452     452    40    6     79    1
+## 453   453     453    40    8    101    1
+## 454   454     454    40   10    120    1
+## 455   455     455    40   12    154    1
+## 456   456     456    40   14    182    1
+## 457   457     457    40   16    215    1
+## 458   458     458    40   18    262    1
+## 459   459     459    40   20    295    1
+## 460   460     460    40   21    321    1
+## 461   461     461    41    0     42    1
+## 462   462     462    41    2     51    1
+## 463   463     463    41    4     66    1
+## 464   464     464    41    6     85    1
+## 465   465     465    41    8    103    1
+## 466   466     466    41   10    124    1
+## 467   467     467    41   12    155    1
+## 468   468     468    41   14    153    1
+## 469   469     469    41   16    175    1
+## 470   470     470    41   18    184    1
+## 471   471     471    41   20    199    1
+## 472   472     472    41   21    204    1
+## 473   473     473    42    0     42    1
+## 474   474     474    42    2     49    1
+## 475   475     475    42    4     63    1
+## 476   476     476    42    6     84    1
+## 477   477     477    42    8    103    1
+## 478   478     478    42   10    126    1
+## 479   479     479    42   12    160    1
+## 480   480     480    42   14    174    1
+## 481   481     481    42   16    204    1
+## 482   482     482    42   18    234    1
+## 483   483     483    42   20    269    1
+## 484   484     484    42   21    281    1
+## 485   485     485    43    0     42    1
+## 486   486     486    43    2     55    1
+## 487   487     487    43    4     69    1
+## 488   488     488    43    6     96    1
+## 489   489     489    43    8    131    1
+## 490   490     490    43   10    157    1
+## 491   491     491    43   12    184    1
+## 492   492     492    43   14    188    1
+## 493   493     493    43   16    197    1
+## 494   494     494    43   18    198    1
+## 495   495     495    43   20    199    1
+## 496   496     496    43   21    200    1
+## 497   497     497    44    0     42    1
+## 498   498     498    44    2     51    1
+## 499   499     499    44    4     65    1
+## 500   500     500    44    6     86    1
+## 501   501     501    44    8    103    1
+## 502   502     502    44   10    118    1
+## 503   503     503    44   12    127    1
+## 504   504     504    44   14    138    1
+## 505   505     505    44   16    145    1
+## 506   506     506    44   18    146    1
+## 507   507     507    45    0     41    1
+## 508   508     508    45    2     50    1
+## 509   509     509    45    4     61    1
+## 510   510     510    45    6     78    1
+## 511   511     511    45    8     98    1
+## 512   512     512    45   10    117    1
+## 513   513     513    45   12    135    1
+## 514   514     514    45   14    141    1
+## 515   515     515    45   16    147    1
+## 516   516     516    45   18    174    1
+## 517   517     517    45   20    197    1
+## 518   518     518    45   21    196    1
+## 519   519     519    46    0     40    1
+## 520   520     520    46    2     52    1
+## 521   521     521    46    4     62    1
+## 522   522     522    46    6     82    1
+## 523   523     523    46    8    101    1
+## 524   524     524    46   10    120    1
+## 525   525     525    46   12    144    1
+## 526   526     526    46   14    156    1
+## 527   527     527    46   16    173    1
+## 528   528     528    46   18    210    1
+## 529   529     529    46   20    231    1
+## 530   530     530    46   21    238    1
+## 531   531     531    47    0     41    1
+## 532   532     532    47    2     53    1
+## 533   533     533    47    4     66    1
+## 534   534     534    47    6     79    1
+## 535   535     535    47    8    100    1
+## 536   536     536    47   10    123    1
+## 537   537     537    47   12    148    1
+## 538   538     538    47   14    157    1
+## 539   539     539    47   16    168    1
+## 540   540     540    47   18    185    1
+## 541   541     541    47   20    210    1
+## 542   542     542    47   21    205    1
+## 543   543     543    48    0     39    1
+## 544   544     544    48    2     50    1
+## 545   545     545    48    4     62    1
+## 546   546     546    48    6     80    1
+## 547   547     547    48    8    104    1
+## 548   548     548    48   10    125    1
+## 549   549     549    48   12    154    1
+## 550   550     550    48   14    170    1
+## 551   551     551    48   16    222    1
+## 552   552     552    48   18    261    1
+## 553   553     553    48   20    303    1
+## 554   554     554    48   21    322    1
+## 555   555     555    49    0     40    1
+## 556   556     556    49    2     53    1
+## 557   557     557    49    4     64    1
+## 558   558     558    49    6     85    1
+## 559   559     559    49    8    108    1
+## 560   560     560    49   10    128    1
+## 561   561     561    49   12    152    1
+## 562   562     562    49   14    166    1
+## 563   563     563    49   16    184    1
+## 564   564     564    49   18    203    1
+## 565   565     565    49   20    233    1
+## 566   566     566    49   21    237    1
+## 567   567     567    50    0     41    1
+## 568   568     568    50    2     54    1
+## 569   569     569    50    4     67    1
+## 570   570     570    50    6     84    1
+## 571   571     571    50    8    105    1
+## 572   572     572    50   10    122    1
+## 573   573     573    50   12    155    1
+## 574   574     574    50   14    175    1
+## 575   575     575    50   16    205    1
+## 576   576     576    50   18    234    1
+## 577   577     577    50   20    264    1
+## 578   578     578    50   21    264    1
+```
+]
+
+]
+
+.col-6[
+
+.small[
+
+``` r
+(df_diet2 &lt;- datagrid(model = m_cw, diet = "2", grid_type = "counterfactual"))
+```
+
+```
+##     rowid rowidcf chick time weight diet
+## 1       1       1     1    0     42    2
+## 2       2       2     1    2     51    2
+## 3       3       3     1    4     59    2
+## 4       4       4     1    6     64    2
+## 5       5       5     1    8     76    2
+## 6       6       6     1   10     93    2
+## 7       7       7     1   12    106    2
+## 8       8       8     1   14    125    2
+## 9       9       9     1   16    149    2
+## 10     10      10     1   18    171    2
+## 11     11      11     1   20    199    2
+## 12     12      12     1   21    205    2
+## 13     13      13     2    0     40    2
+## 14     14      14     2    2     49    2
+## 15     15      15     2    4     58    2
+## 16     16      16     2    6     72    2
+## 17     17      17     2    8     84    2
+## 18     18      18     2   10    103    2
+## 19     19      19     2   12    122    2
+## 20     20      20     2   14    138    2
+## 21     21      21     2   16    162    2
+## 22     22      22     2   18    187    2
+## 23     23      23     2   20    209    2
+## 24     24      24     2   21    215    2
+## 25     25      25     3    0     43    2
+## 26     26      26     3    2     39    2
+## 27     27      27     3    4     55    2
+## 28     28      28     3    6     67    2
+## 29     29      29     3    8     84    2
+## 30     30      30     3   10     99    2
+## 31     31      31     3   12    115    2
+## 32     32      32     3   14    138    2
+## 33     33      33     3   16    163    2
+## 34     34      34     3   18    187    2
+## 35     35      35     3   20    198    2
+## 36     36      36     3   21    202    2
+## 37     37      37     4    0     42    2
+## 38     38      38     4    2     49    2
+## 39     39      39     4    4     56    2
+## 40     40      40     4    6     67    2
+## 41     41      41     4    8     74    2
+## 42     42      42     4   10     87    2
+## 43     43      43     4   12    102    2
+## 44     44      44     4   14    108    2
+## 45     45      45     4   16    136    2
+## 46     46      46     4   18    154    2
+## 47     47      47     4   20    160    2
+## 48     48      48     4   21    157    2
+## 49     49      49     5    0     41    2
+## 50     50      50     5    2     42    2
+## 51     51      51     5    4     48    2
+## 52     52      52     5    6     60    2
+## 53     53      53     5    8     79    2
+## 54     54      54     5   10    106    2
+## 55     55      55     5   12    141    2
+## 56     56      56     5   14    164    2
+## 57     57      57     5   16    197    2
+## 58     58      58     5   18    199    2
+## 59     59      59     5   20    220    2
+## 60     60      60     5   21    223    2
+## 61     61      61     6    0     41    2
+## 62     62      62     6    2     49    2
+## 63     63      63     6    4     59    2
+## 64     64      64     6    6     74    2
+## 65     65      65     6    8     97    2
+## 66     66      66     6   10    124    2
+## 67     67      67     6   12    141    2
+## 68     68      68     6   14    148    2
+## 69     69      69     6   16    155    2
+## 70     70      70     6   18    160    2
+## 71     71      71     6   20    160    2
+## 72     72      72     6   21    157    2
+## 73     73      73     7    0     41    2
+## 74     74      74     7    2     49    2
+## 75     75      75     7    4     57    2
+## 76     76      76     7    6     71    2
+## 77     77      77     7    8     89    2
+## 78     78      78     7   10    112    2
+## 79     79      79     7   12    146    2
+## 80     80      80     7   14    174    2
+## 81     81      81     7   16    218    2
+## 82     82      82     7   18    250    2
+## 83     83      83     7   20    288    2
+## 84     84      84     7   21    305    2
+## 85     85      85     8    0     42    2
+## 86     86      86     8    2     50    2
+## 87     87      87     8    4     61    2
+## 88     88      88     8    6     71    2
+## 89     89      89     8    8     84    2
+## 90     90      90     8   10     93    2
+## 91     91      91     8   12    110    2
+## 92     92      92     8   14    116    2
+## 93     93      93     8   16    126    2
+## 94     94      94     8   18    134    2
+## 95     95      95     8   20    125    2
+## 96     96      96     9    0     42    2
+## 97     97      97     9    2     51    2
+## 98     98      98     9    4     59    2
+## 99     99      99     9    6     68    2
+## 100   100     100     9    8     85    2
+## 101   101     101     9   10     96    2
+## 102   102     102     9   12     90    2
+## 103   103     103     9   14     92    2
+## 104   104     104     9   16     93    2
+## 105   105     105     9   18    100    2
+## 106   106     106     9   20    100    2
+## 107   107     107     9   21     98    2
+## 108   108     108    10    0     41    2
+## 109   109     109    10    2     44    2
+## 110   110     110    10    4     52    2
+## 111   111     111    10    6     63    2
+## 112   112     112    10    8     74    2
+## 113   113     113    10   10     81    2
+## 114   114     114    10   12     89    2
+## 115   115     115    10   14     96    2
+## 116   116     116    10   16    101    2
+## 117   117     117    10   18    112    2
+## 118   118     118    10   20    120    2
+## 119   119     119    10   21    124    2
+## 120   120     120    11    0     43    2
+## 121   121     121    11    2     51    2
+## 122   122     122    11    4     63    2
+## 123   123     123    11    6     84    2
+## 124   124     124    11    8    112    2
+## 125   125     125    11   10    139    2
+## 126   126     126    11   12    168    2
+## 127   127     127    11   14    177    2
+## 128   128     128    11   16    182    2
+## 129   129     129    11   18    184    2
+## 130   130     130    11   20    181    2
+## 131   131     131    11   21    175    2
+## 132   132     132    12    0     41    2
+## 133   133     133    12    2     49    2
+## 134   134     134    12    4     56    2
+## 135   135     135    12    6     62    2
+## 136   136     136    12    8     72    2
+## 137   137     137    12   10     88    2
+## 138   138     138    12   12    119    2
+## 139   139     139    12   14    135    2
+## 140   140     140    12   16    162    2
+## 141   141     141    12   18    185    2
+## 142   142     142    12   20    195    2
+## 143   143     143    12   21    205    2
+## 144   144     144    13    0     41    2
+## 145   145     145    13    2     48    2
+## 146   146     146    13    4     53    2
+## 147   147     147    13    6     60    2
+## 148   148     148    13    8     65    2
+## 149   149     149    13   10     67    2
+## 150   150     150    13   12     71    2
+## 151   151     151    13   14     70    2
+## 152   152     152    13   16     71    2
+## 153   153     153    13   18     81    2
+## 154   154     154    13   20     91    2
+## 155   155     155    13   21     96    2
+## 156   156     156    14    0     41    2
+## 157   157     157    14    2     49    2
+## 158   158     158    14    4     62    2
+## 159   159     159    14    6     79    2
+## 160   160     160    14    8    101    2
+## 161   161     161    14   10    128    2
+## 162   162     162    14   12    164    2
+## 163   163     163    14   14    192    2
+## 164   164     164    14   16    227    2
+## 165   165     165    14   18    248    2
+## 166   166     166    14   20    259    2
+## 167   167     167    14   21    266    2
+## 168   168     168    15    0     41    2
+## 169   169     169    15    2     49    2
+## 170   170     170    15    4     56    2
+## 171   171     171    15    6     64    2
+## 172   172     172    15    8     68    2
+## 173   173     173    15   10     68    2
+## 174   174     174    15   12     67    2
+## 175   175     175    15   14     68    2
+## 176   176     176    16    0     41    2
+## 177   177     177    16    2     45    2
+## 178   178     178    16    4     49    2
+## 179   179     179    16    6     51    2
+## 180   180     180    16    8     57    2
+## 181   181     181    16   10     51    2
+## 182   182     182    16   12     54    2
+## 183   183     183    17    0     42    2
+## 184   184     184    17    2     51    2
+## 185   185     185    17    4     61    2
+## 186   186     186    17    6     72    2
+## 187   187     187    17    8     83    2
+## 188   188     188    17   10     89    2
+## 189   189     189    17   12     98    2
+## 190   190     190    17   14    103    2
+## 191   191     191    17   16    113    2
+## 192   192     192    17   18    123    2
+## 193   193     193    17   20    133    2
+## 194   194     194    17   21    142    2
+## 195   195     195    18    0     39    2
+## 196   196     196    18    2     35    2
+## 197   197     197    19    0     43    2
+## 198   198     198    19    2     48    2
+## 199   199     199    19    4     55    2
+## 200   200     200    19    6     62    2
+## 201   201     201    19    8     65    2
+## 202   202     202    19   10     71    2
+## 203   203     203    19   12     82    2
+## 204   204     204    19   14     88    2
+## 205   205     205    19   16    106    2
+## 206   206     206    19   18    120    2
+## 207   207     207    19   20    144    2
+## 208   208     208    19   21    157    2
+## 209   209     209    20    0     41    2
+## 210   210     210    20    2     47    2
+## 211   211     211    20    4     54    2
+## 212   212     212    20    6     58    2
+## 213   213     213    20    8     65    2
+## 214   214     214    20   10     73    2
+## 215   215     215    20   12     77    2
+## 216   216     216    20   14     89    2
+## 217   217     217    20   16     98    2
+## 218   218     218    20   18    107    2
+## 219   219     219    20   20    115    2
+## 220   220     220    20   21    117    2
+## 221   221     221    21    0     40    2
+## 222   222     222    21    2     50    2
+## 223   223     223    21    4     62    2
+## 224   224     224    21    6     86    2
+## 225   225     225    21    8    125    2
+## 226   226     226    21   10    163    2
+## 227   227     227    21   12    217    2
+## 228   228     228    21   14    240    2
+## 229   229     229    21   16    275    2
+## 230   230     230    21   18    307    2
+## 231   231     231    21   20    318    2
+## 232   232     232    21   21    331    2
+## 233   233     233    22    0     41    2
+## 234   234     234    22    2     55    2
+## 235   235     235    22    4     64    2
+## 236   236     236    22    6     77    2
+## 237   237     237    22    8     90    2
+## 238   238     238    22   10     95    2
+## 239   239     239    22   12    108    2
+## 240   240     240    22   14    111    2
+## 241   241     241    22   16    131    2
+## 242   242     242    22   18    148    2
+## 243   243     243    22   20    164    2
+## 244   244     244    22   21    167    2
+## 245   245     245    23    0     43    2
+## 246   246     246    23    2     52    2
+## 247   247     247    23    4     61    2
+## 248   248     248    23    6     73    2
+## 249   249     249    23    8     90    2
+## 250   250     250    23   10    103    2
+## 251   251     251    23   12    127    2
+## 252   252     252    23   14    135    2
+## 253   253     253    23   16    145    2
+## 254   254     254    23   18    163    2
+## 255   255     255    23   20    170    2
+## 256   256     256    23   21    175    2
+## 257   257     257    24    0     42    2
+## 258   258     258    24    2     52    2
+## 259   259     259    24    4     58    2
+## 260   260     260    24    6     74    2
+## 261   261     261    24    8     66    2
+## 262   262     262    24   10     68    2
+## 263   263     263    24   12     70    2
+## 264   264     264    24   14     71    2
+## 265   265     265    24   16     72    2
+## 266   266     266    24   18     72    2
+## 267   267     267    24   20     76    2
+## 268   268     268    24   21     74    2
+## 269   269     269    25    0     40    2
+## 270   270     270    25    2     49    2
+## 271   271     271    25    4     62    2
+## 272   272     272    25    6     78    2
+## 273   273     273    25    8    102    2
+## 274   274     274    25   10    124    2
+## 275   275     275    25   12    146    2
+## 276   276     276    25   14    164    2
+## 277   277     277    25   16    197    2
+## 278   278     278    25   18    231    2
+## 279   279     279    25   20    259    2
+## 280   280     280    25   21    265    2
+## 281   281     281    26    0     42    2
+## 282   282     282    26    2     48    2
+## 283   283     283    26    4     57    2
+## 284   284     284    26    6     74    2
+## 285   285     285    26    8     93    2
+## 286   286     286    26   10    114    2
+## 287   287     287    26   12    136    2
+## 288   288     288    26   14    147    2
+## 289   289     289    26   16    169    2
+## 290   290     290    26   18    205    2
+## 291   291     291    26   20    236    2
+## 292   292     292    26   21    251    2
+## 293   293     293    27    0     39    2
+## 294   294     294    27    2     46    2
+## 295   295     295    27    4     58    2
+## 296   296     296    27    6     73    2
+## 297   297     297    27    8     87    2
+## 298   298     298    27   10    100    2
+## 299   299     299    27   12    115    2
+## 300   300     300    27   14    123    2
+## 301   301     301    27   16    144    2
+## 302   302     302    27   18    163    2
+## 303   303     303    27   20    185    2
+## 304   304     304    27   21    192    2
+## 305   305     305    28    0     39    2
+## 306   306     306    28    2     46    2
+## 307   307     307    28    4     58    2
+## 308   308     308    28    6     73    2
+## 309   309     309    28    8     92    2
+## 310   310     310    28   10    114    2
+## 311   311     311    28   12    145    2
+## 312   312     312    28   14    156    2
+## 313   313     313    28   16    184    2
+## 314   314     314    28   18    207    2
+## 315   315     315    28   20    212    2
+## 316   316     316    28   21    233    2
+## 317   317     317    29    0     39    2
+## 318   318     318    29    2     48    2
+## 319   319     319    29    4     59    2
+## 320   320     320    29    6     74    2
+## 321   321     321    29    8     87    2
+## 322   322     322    29   10    106    2
+## 323   323     323    29   12    134    2
+## 324   324     324    29   14    150    2
+## 325   325     325    29   16    187    2
+## 326   326     326    29   18    230    2
+## 327   327     327    29   20    279    2
+## 328   328     328    29   21    309    2
+## 329   329     329    30    0     42    2
+## 330   330     330    30    2     48    2
+## 331   331     331    30    4     59    2
+## 332   332     332    30    6     72    2
+## 333   333     333    30    8     85    2
+## 334   334     334    30   10     98    2
+## 335   335     335    30   12    115    2
+## 336   336     336    30   14    122    2
+## 337   337     337    30   16    143    2
+## 338   338     338    30   18    151    2
+## 339   339     339    30   20    157    2
+## 340   340     340    30   21    150    2
+## 341   341     341    31    0     42    2
+## 342   342     342    31    2     53    2
+## 343   343     343    31    4     62    2
+## 344   344     344    31    6     73    2
+## 345   345     345    31    8     85    2
+## 346   346     346    31   10    102    2
+## 347   347     347    31   12    123    2
+## 348   348     348    31   14    138    2
+## 349   349     349    31   16    170    2
+## 350   350     350    31   18    204    2
+## 351   351     351    31   20    235    2
+## 352   352     352    31   21    256    2
+## 353   353     353    32    0     41    2
+## 354   354     354    32    2     49    2
+## 355   355     355    32    4     65    2
+## 356   356     356    32    6     82    2
+## 357   357     357    32    8    107    2
+## 358   358     358    32   10    129    2
+## 359   359     359    32   12    159    2
+## 360   360     360    32   14    179    2
+## 361   361     361    32   16    221    2
+## 362   362     362    32   18    263    2
+## 363   363     363    32   20    291    2
+## 364   364     364    32   21    305    2
+## 365   365     365    33    0     39    2
+## 366   366     366    33    2     50    2
+## 367   367     367    33    4     63    2
+## 368   368     368    33    6     77    2
+## 369   369     369    33    8     96    2
+## 370   370     370    33   10    111    2
+## 371   371     371    33   12    137    2
+## 372   372     372    33   14    144    2
+## 373   373     373    33   16    151    2
+## 374   374     374    33   18    146    2
+## 375   375     375    33   20    156    2
+## 376   376     376    33   21    147    2
+## 377   377     377    34    0     41    2
+## 378   378     378    34    2     49    2
+## 379   379     379    34    4     63    2
+## 380   380     380    34    6     85    2
+## 381   381     381    34    8    107    2
+## 382   382     382    34   10    134    2
+## 383   383     383    34   12    164    2
+## 384   384     384    34   14    186    2
+## 385   385     385    34   16    235    2
+## 386   386     386    34   18    294    2
+## 387   387     387    34   20    327    2
+## 388   388     388    34   21    341    2
+## 389   389     389    35    0     41    2
+## 390   390     390    35    2     53    2
+## 391   391     391    35    4     64    2
+## 392   392     392    35    6     87    2
+## 393   393     393    35    8    123    2
+## 394   394     394    35   10    158    2
+## 395   395     395    35   12    201    2
+## 396   396     396    35   14    238    2
+## 397   397     397    35   16    287    2
+## 398   398     398    35   18    332    2
+## 399   399     399    35   20    361    2
+## 400   400     400    35   21    373    2
+## 401   401     401    36    0     39    2
+## 402   402     402    36    2     48    2
+## 403   403     403    36    4     61    2
+## 404   404     404    36    6     76    2
+## 405   405     405    36    8     98    2
+## 406   406     406    36   10    116    2
+## 407   407     407    36   12    145    2
+## 408   408     408    36   14    166    2
+## 409   409     409    36   16    198    2
+## 410   410     410    36   18    227    2
+## 411   411     411    36   20    225    2
+## 412   412     412    36   21    220    2
+## 413   413     413    37    0     41    2
+## 414   414     414    37    2     48    2
+## 415   415     415    37    4     56    2
+## 416   416     416    37    6     68    2
+## 417   417     417    37    8     80    2
+## 418   418     418    37   10     83    2
+## 419   419     419    37   12    103    2
+## 420   420     420    37   14    112    2
+## 421   421     421    37   16    135    2
+## 422   422     422    37   18    157    2
+## 423   423     423    37   20    169    2
+## 424   424     424    37   21    178    2
+## 425   425     425    38    0     41    2
+## 426   426     426    38    2     49    2
+## 427   427     427    38    4     61    2
+## 428   428     428    38    6     74    2
+## 429   429     429    38    8     98    2
+## 430   430     430    38   10    109    2
+## 431   431     431    38   12    128    2
+## 432   432     432    38   14    154    2
+## 433   433     433    38   16    192    2
+## 434   434     434    38   18    232    2
+## 435   435     435    38   20    280    2
+## 436   436     436    38   21    290    2
+## 437   437     437    39    0     42    2
+## 438   438     438    39    2     50    2
+## 439   439     439    39    4     61    2
+## 440   440     440    39    6     78    2
+## 441   441     441    39    8     89    2
+## 442   442     442    39   10    109    2
+## 443   443     443    39   12    130    2
+## 444   444     444    39   14    146    2
+## 445   445     445    39   16    170    2
+## 446   446     446    39   18    214    2
+## 447   447     447    39   20    250    2
+## 448   448     448    39   21    272    2
+## 449   449     449    40    0     41    2
+## 450   450     450    40    2     55    2
+## 451   451     451    40    4     66    2
+## 452   452     452    40    6     79    2
+## 453   453     453    40    8    101    2
+## 454   454     454    40   10    120    2
+## 455   455     455    40   12    154    2
+## 456   456     456    40   14    182    2
+## 457   457     457    40   16    215    2
+## 458   458     458    40   18    262    2
+## 459   459     459    40   20    295    2
+## 460   460     460    40   21    321    2
+## 461   461     461    41    0     42    2
+## 462   462     462    41    2     51    2
+## 463   463     463    41    4     66    2
+## 464   464     464    41    6     85    2
+## 465   465     465    41    8    103    2
+## 466   466     466    41   10    124    2
+## 467   467     467    41   12    155    2
+## 468   468     468    41   14    153    2
+## 469   469     469    41   16    175    2
+## 470   470     470    41   18    184    2
+## 471   471     471    41   20    199    2
+## 472   472     472    41   21    204    2
+## 473   473     473    42    0     42    2
+## 474   474     474    42    2     49    2
+## 475   475     475    42    4     63    2
+## 476   476     476    42    6     84    2
+## 477   477     477    42    8    103    2
+## 478   478     478    42   10    126    2
+## 479   479     479    42   12    160    2
+## 480   480     480    42   14    174    2
+## 481   481     481    42   16    204    2
+## 482   482     482    42   18    234    2
+## 483   483     483    42   20    269    2
+## 484   484     484    42   21    281    2
+## 485   485     485    43    0     42    2
+## 486   486     486    43    2     55    2
+## 487   487     487    43    4     69    2
+## 488   488     488    43    6     96    2
+## 489   489     489    43    8    131    2
+## 490   490     490    43   10    157    2
+## 491   491     491    43   12    184    2
+## 492   492     492    43   14    188    2
+## 493   493     493    43   16    197    2
+## 494   494     494    43   18    198    2
+## 495   495     495    43   20    199    2
+## 496   496     496    43   21    200    2
+## 497   497     497    44    0     42    2
+## 498   498     498    44    2     51    2
+## 499   499     499    44    4     65    2
+## 500   500     500    44    6     86    2
+## 501   501     501    44    8    103    2
+## 502   502     502    44   10    118    2
+## 503   503     503    44   12    127    2
+## 504   504     504    44   14    138    2
+## 505   505     505    44   16    145    2
+## 506   506     506    44   18    146    2
+## 507   507     507    45    0     41    2
+## 508   508     508    45    2     50    2
+## 509   509     509    45    4     61    2
+## 510   510     510    45    6     78    2
+## 511   511     511    45    8     98    2
+## 512   512     512    45   10    117    2
+## 513   513     513    45   12    135    2
+## 514   514     514    45   14    141    2
+## 515   515     515    45   16    147    2
+## 516   516     516    45   18    174    2
+## 517   517     517    45   20    197    2
+## 518   518     518    45   21    196    2
+## 519   519     519    46    0     40    2
+## 520   520     520    46    2     52    2
+## 521   521     521    46    4     62    2
+## 522   522     522    46    6     82    2
+## 523   523     523    46    8    101    2
+## 524   524     524    46   10    120    2
+## 525   525     525    46   12    144    2
+## 526   526     526    46   14    156    2
+## 527   527     527    46   16    173    2
+## 528   528     528    46   18    210    2
+## 529   529     529    46   20    231    2
+## 530   530     530    46   21    238    2
+## 531   531     531    47    0     41    2
+## 532   532     532    47    2     53    2
+## 533   533     533    47    4     66    2
+## 534   534     534    47    6     79    2
+## 535   535     535    47    8    100    2
+## 536   536     536    47   10    123    2
+## 537   537     537    47   12    148    2
+## 538   538     538    47   14    157    2
+## 539   539     539    47   16    168    2
+## 540   540     540    47   18    185    2
+## 541   541     541    47   20    210    2
+## 542   542     542    47   21    205    2
+## 543   543     543    48    0     39    2
+## 544   544     544    48    2     50    2
+## 545   545     545    48    4     62    2
+## 546   546     546    48    6     80    2
+## 547   547     547    48    8    104    2
+## 548   548     548    48   10    125    2
+## 549   549     549    48   12    154    2
+## 550   550     550    48   14    170    2
+## 551   551     551    48   16    222    2
+## 552   552     552    48   18    261    2
+## 553   553     553    48   20    303    2
+## 554   554     554    48   21    322    2
+## 555   555     555    49    0     40    2
+## 556   556     556    49    2     53    2
+## 557   557     557    49    4     64    2
+## 558   558     558    49    6     85    2
+## 559   559     559    49    8    108    2
+## 560   560     560    49   10    128    2
+## 561   561     561    49   12    152    2
+## 562   562     562    49   14    166    2
+## 563   563     563    49   16    184    2
+## 564   564     564    49   18    203    2
+## 565   565     565    49   20    233    2
+## 566   566     566    49   21    237    2
+## 567   567     567    50    0     41    2
+## 568   568     568    50    2     54    2
+## 569   569     569    50    4     67    2
+## 570   570     570    50    6     84    2
+## 571   571     571    50    8    105    2
+## 572   572     572    50   10    122    2
+## 573   573     573    50   12    155    2
+## 574   574     574    50   14    175    2
+## 575   575     575    50   16    205    2
+## 576   576     576    50   18    234    2
+## 577   577     577    50   20    264    2
+## 578   578     578    50   21    264    2
+```
+]
+
+]
+
+]
+
+---
+
+# Averaging: step 2
+
+Predict from the model for both data sets `type = "response"`
+
+
+``` r
+df_diet3 &lt;- datagrid(model = m_cw, diet = "3", grid_type = "counterfactual")
+p_diet1 &lt;- fitted_values(m_cw, data = df_diet1)
+p_diet2 &lt;- fitted_values(m_cw, data = df_diet2)
+p_diet3 &lt;- fitted_values(m_cw, data = df_diet3)
+```
+
+---
+# Averaging: step 2
+
+.row[
+.col-6[
+.small[
+
+
+``` r
+p_diet2
+```
+
+```
+## # A tibble: 578 × 11
+##     .row rowid rowidcf chick  time weight diet  .fitted    .se .lower_ci
+##    &lt;int&gt; &lt;int&gt;   &lt;int&gt; &lt;fct&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;fct&gt;   &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;
+##  1     1     1       1 1         0     42 2        43.6 0.114       34.9
+##  2     2     2       2 1         2     51 2        51.8 0.0998      42.6
+##  3     3     3       3 1         4     59 2        61.3 0.0903      51.4
+##  4     4     4       4 1         6     64 2        75.3 0.0831      64.0
+##  5     5     5       5 1         8     76 2        90.2 0.0781      77.4
+##  6     6     6       6 1        10     93 2       109.  0.0762      93.5
+##  7     7     7       7 1        12    106 2       132.  0.0767     113. 
+##  8     8     8       8 1        14    125 2       153.  0.0798     131. 
+##  9     9     9       9 1        16    149 2       185.  0.0859     157. 
+## 10    10    10      10 1        18    171 2       224.  0.0940     186. 
+## # ℹ 568 more rows
+## # ℹ 1 more variable: .upper_ci &lt;dbl&gt;
+```
+]
+]
+.col-6[
+.small[
+
+``` r
+p_diet2
+```
+
+```
+## # A tibble: 578 × 11
+##     .row rowid rowidcf chick  time weight diet  .fitted    .se .lower_ci
+##    &lt;int&gt; &lt;int&gt;   &lt;int&gt; &lt;fct&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;fct&gt;   &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;
+##  1     1     1       1 1         0     42 2        43.6 0.114       34.9
+##  2     2     2       2 1         2     51 2        51.8 0.0998      42.6
+##  3     3     3       3 1         4     59 2        61.3 0.0903      51.4
+##  4     4     4       4 1         6     64 2        75.3 0.0831      64.0
+##  5     5     5       5 1         8     76 2        90.2 0.0781      77.4
+##  6     6     6       6 1        10     93 2       109.  0.0762      93.5
+##  7     7     7       7 1        12    106 2       132.  0.0767     113. 
+##  8     8     8       8 1        14    125 2       153.  0.0798     131. 
+##  9     9     9       9 1        16    149 2       185.  0.0859     157. 
+## 10    10    10      10 1        18    171 2       224.  0.0940     186. 
+## # ℹ 568 more rows
+## # ℹ 1 more variable: .upper_ci &lt;dbl&gt;
+```
+]
+]
+]
+
+---
+
+# Averaging: step 3
+
+Flick the switch!
+
+Subtracting one set of predictions from the other tells us the effect of moving from `death == "Predation"` to `death == "Other"`
+
+
+``` r
+head(p_diet1 |&gt; pull(.fitted) - p_diet2 |&gt; pull(.fitted))
+```
+
+```
+## [1]  -0.2869801  -2.3324424  -4.8944514  -8.5121949 -12.6951971 -17.6601030
+```
+
+---
+
+# Averaging: step 4
+
+Take the mean (average) of the effects of moving from `diet == "1"` to `diet == "2"`, etc
+
+
+``` r
+mean(p_diet1 |&gt; pull(.fitted) - p_diet2 |&gt; pull(.fitted))
+```
+
+```
+## [1] -22.59133
+```
+
+---
+
+# The heck!
+
+Thankfully the *marginaleffects* package has us covered
+
+
+``` r
+library("marginaleffects")
+m_cw |&gt; avg_slopes(variable = "diet")
+```
+
+```
+## 
+##  Contrast Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %
+##     2 - 1     22.6       8.93 2.53   0.0114  6.5  5.08   40.1
+##     3 - 1     45.9      10.31 4.45   &lt;0.001 16.8 25.67   66.1
+##     4 - 1     40.0       9.91 4.03   &lt;0.001 14.2 20.57   59.4
+## 
+## Term: diet
+## Type: response
+```
+---
+
+# Comparisons
+
+Can also call this a comparison if you prefer
+
+
+``` r
+m_cw |&gt; avg_comparisons(variables = "diet")
+```
+
+```
+## 
+##  Contrast Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %
+##     2 - 1     22.6       8.93 2.53   0.0114  6.5  5.08   40.1
+##     3 - 1     45.9      10.31 4.45   &lt;0.001 16.8 25.67   66.1
+##     4 - 1     40.0       9.91 4.03   &lt;0.001 14.2 20.57   59.4
+## 
+## Term: diet
+## Type: response
+```
+
+---
+
+# Comparisons
+
+.small[
+
+``` r
+m_cw |&gt; comparisons(variable = "diet")
+```
+
+```
+## 
+##  Contrast Estimate Std. Error      z Pr(&gt;|z|)    S  2.5 % 97.5 %
+##     2 - 1    0.287       4.77 0.0601    0.952  0.1 -9.066   9.64
+##     2 - 1    2.332       5.07 0.4601    0.645  0.6 -7.604  12.27
+##     2 - 1    4.894       5.42 0.9035    0.366  1.4 -5.723  15.51
+##     2 - 1    8.512       6.11 1.3927    0.164  2.6 -3.467  20.49
+##     2 - 1   12.695       6.90 1.8386    0.066  3.9 -0.838  26.23
+## --- 1724 rows omitted. See ?print.marginaleffects ---
+##     4 - 1   53.002       9.88 5.3649   &lt;0.001 23.6 33.639  72.36
+##     4 - 1   62.516      12.15 5.1452   &lt;0.001 21.8 38.702  86.33
+##     4 - 1   76.009      15.10 5.0350   &lt;0.001 21.0 46.422 105.60
+##     4 - 1   87.282      18.18 4.8004   &lt;0.001 19.3 51.646 122.92
+##     4 - 1   92.180      20.03 4.6020   &lt;0.001 17.9 52.921 131.44
+## Term: diet
+## Type: response
+```
+]
+
+---
+
+# All variables at once
+
+
+``` r
+m_cw |&gt; avg_slopes()
+```
+
+```
+## 
+##   Term Contrast Estimate Std. Error       z Pr(&gt;|z|)    S  2.5 % 97.5 %
+##  chick  1 - 18     48.18    15.6519   3.078  0.00208  8.9  17.50  78.86
+##  chick  10 - 18    12.76    15.2265   0.838  0.40215  1.3 -17.09  42.60
+##  chick  11 - 18    70.04    15.8471   4.420  &lt; 0.001 16.6  38.98 101.10
+##  chick  12 - 18    51.29    15.7008   3.267  0.00109  9.8  20.52  82.06
+##  chick  13 - 18    -6.16    15.0841  -0.408  0.68316  0.5 -35.72  23.41
+## --- 43 rows omitted. See ?print.marginaleffects ---
+##  chick  9 - 18      9.95    15.1715   0.656  0.51176  1.0 -19.78  39.69
+##  diet   2 - 1      22.59     8.9321   2.529  0.01143  6.5   5.08  40.10
+##  diet   3 - 1      45.88    10.3128   4.449  &lt; 0.001 16.8  25.67  66.09
+##  diet   4 - 1      39.99     9.9115   4.035  &lt; 0.001 14.2  20.57  59.42
+##  time   dY/dX       7.96     0.0789 100.910  &lt; 0.001  Inf   7.81   8.12
+## Type: response
+```
+
+We are **averaging** over the effects of the other variables in the model when we do this
+
+---
+
+# Marginal effect at the mean
+
+Another way to estimate the "effect" of `diet` is to ask
+
+&gt; What is the effect of changing from `"1"` to `"2"` if we hold the other variables at their means?
+
+(For a categorical variable this means at their modal value)
+
+This is what *emmeans* does with `emtrends()`
+
+(`emmeans()` averages predictions as per above)
+
+---
+
+# Marginal effect at the mean
+
+Can obtain what `emtrends()` would give us by setting all variable not mentioned to their mean (mode)
+
+
+``` r
+m_cw |&gt; avg_predictions(newdata = "mean", variable = "diet")
+```
+
+```
+## 
+##  diet Estimate Std. Error    z Pr(&gt;|z|)     S 2.5 % 97.5 %
+##     1     99.2       1.58 63.0   &lt;0.001   Inf  96.1    102
+##     2    119.9       9.13 13.1   &lt;0.001 128.5 102.0    138
+##     3    134.1      10.46 12.8   &lt;0.001 122.5 113.6    155
+##     4    139.9      11.13 12.6   &lt;0.001 118.0 118.1    162
+## 
+## Type: response
+```
+
+---
+
+# Marginal effect at the mean
+
+
+``` r
+m_cw |&gt; avg_comparisons(newdata = "mean", variable = "diet")
+```
+
+```
+## 
+##  Contrast Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %
+##     2 - 1     20.7       8.94 2.31   0.0209  5.6  3.12   38.2
+##     3 - 1     34.9      10.27 3.40   &lt;0.001 10.5 14.74   55.0
+##     4 - 1     40.7      10.94 3.72   &lt;0.001 12.3 19.23   62.1
+## 
+## Term: diet
+## Type: response
+```
+
+That's quite different!
+
+???
+
+The average marginal effect is ~6 but the marginal effect at the mean is 20!
+
+---
+
+# Marginal effect at the mean
+
+The previous marginal effects / comparisons were obtained with
+
+
+``` r
+datagrid(model = m_cw, diet = c("1", "2", "3", "4"))
+```
+
+```
+##   rowid chick time weight diet
+## 1     1     1   11    122    1
+## 2     2     1   11    122    2
+## 3     3     1   11    122    3
+## 4     4     1   11    122    4
+```
+
+---
+
+# Comparisons
+
+We often want to compare one level of a treatment with another
+
+* pairwise comparisons
+* treatment vs reference (control)
+
+With a single categorical variable this is fine, but what do you want when the model includes multiple effects and interactions?
+
+---
+
+# Comparisons
+
+Niavely we could do:
+
+.small[
+
+``` r
+m_cw |&gt; avg_comparisons(variables = list(diet = "pairwise"))
+```
+
+```
+## 
+##  Contrast Estimate Std. Error      z Pr(&gt;|z|)    S   2.5 % 97.5 %
+##     2 - 1    22.59       8.93  2.529   0.0114  6.5   5.085   40.1
+##     3 - 1    45.88      10.31  4.449   &lt;0.001 16.8  25.667   66.1
+##     3 - 2    23.29      12.15  1.917   0.0552  4.2  -0.518   47.1
+##     4 - 1    39.99       9.91  4.035   &lt;0.001 14.2  20.566   59.4
+##     4 - 2    17.40      11.78  1.477   0.1397  2.8  -5.688   40.5
+##     4 - 3    -5.89      12.91 -0.456   0.6484  0.6 -31.187   19.4
+## 
+## Term: diet
+## Type: response
+```
+]
+
+What are we comparing here?
+
+--
+
+We are averaging the comparisons of the levels of `diet` over the other variables in the model (`chick`, `time`)
+---
+
+# Comparisons
+
+We get different answers if we condition on `time` say
+
+.small[
+
+``` r
+m_cw |&gt; avg_comparisons(variables = list(diet = "pairwise"), by = "time")
+```
+
+```
+## 
+##  Contrast time Estimate Std. Error       z Pr(&gt;|z|)    S   2.5 % 97.5 %
+##     2 - 1    0   0.2699       4.48  0.0603   0.9519  0.1   -8.51   9.05
+##     3 - 1    0  -0.0659       4.55 -0.0145   0.9885  0.0   -8.99   8.86
+##     3 - 2    0  -0.3358       5.15 -0.0652   0.9480  0.1  -10.43   9.76
+##     4 - 1    0   1.2406       4.74  0.2620   0.7933  0.3   -8.04  10.52
+##     4 - 2    0   0.9707       5.26  0.1844   0.8537  0.2   -9.34  11.29
+## --- 62 rows omitted. See ?print.marginaleffects ---
+##     3 - 1   21 122.1740      27.67  4.4162   &lt;0.001 16.6   67.95 176.40
+##     3 - 2   21  69.0733      31.95  2.1620   0.0306  5.0    6.45 131.69
+##     4 - 1   21  86.9286      25.54  3.4032   &lt;0.001 10.6   36.87 136.99
+##     4 - 2   21  33.8279      29.76  1.1366   0.2557  2.0  -24.50  92.16
+##     4 - 3   21 -35.2454      34.71 -1.0156   0.3098  1.7 -103.27  32.78
+## Term: diet
+## Type: response
+```
+]
+
+This makes total sense; the model includes interactions
+
+Both are correct
+
+You need to specify what it is that you mean by a comparison
+
+---
+
+# Comparisons
+
+With so many comparisons, we should adjust the `\(p\)` values
+
+.small[
+
+``` r
+m_cw |&gt; avg_comparisons(variables = list(diet = "pairwise"),
+  by = "time") |&gt;
+  hypotheses(multcomp = "fdr")
+```
+
+```
+## 
+##  Estimate Std. Error       z Pr(&gt;|z|)    S  2.5 % 97.5 %
+##    0.2699       4.48  0.0603   0.9653  0.1  -13.2   13.7
+##   -0.0659       4.55 -0.0145   0.9885  0.0  -13.7   13.6
+##   -0.3358       5.15 -0.0652   0.9653  0.1  -15.8   15.1
+##    1.2406       4.74  0.2620   0.8788  0.2  -13.0   15.4
+##    0.9707       5.26  0.1844   0.9174  0.1  -14.8   16.7
+## --- 62 rows omitted. See ?print.marginaleffects ---
+##  122.1740      27.67  4.4162   &lt;0.001 12.4   39.3  205.1
+##   69.0733      31.95  2.1620   0.0817  3.6  -26.7  164.8
+##   86.9286      25.54  3.4032   0.0032  8.3   10.4  163.5
+##   33.8279      29.76  1.1366   0.4091  1.3  -55.4  123.0
+##  -35.2454      34.71 -1.0156   0.4787  1.1 -139.3   68.8
+## Term: diet
+```
+]
+
+--
+
+Adjustment here controls the false discovery rate (FDR)
+
+Other options available, but FDR is a reasonable choice
+
+---
+class: inverse center middle subsection
+
+# Overview
+
+---
+
+# Overview
+
+* We choose to use GAMs when we expect non-linear relationships between covariates and `\(y\)`
+
+* GAMs represent non-linear functions `\(fj(x_{ij})\)` using splines
+
+* Splines are big functions made up of little functions &amp;mdash; *basis function*
+
+* Estimate a coefficient `\(\beta_k\)` for each basis function `\(b_k\)`
+
+* As a user we need to set `k` the upper limit on the wiggliness for each `\(f_j()\)`
+
+* Avoid overfitting through a wiggliness penalty &amp;mdash; curvature or 2nd derivative
+
+---
+
+# Overview
+
+* GAMs are just fancy GLMs &amp;mdash; usual diagnostics apply `gam.check()` or `appraise()`
+
+* Check you have the right distribution `family` using QQ plot, plot of residuls vs `\(\eta_i\)`, DHARMa residuals
+
+* But have to check that the value(s) of `k` were large enough with `k.check()`
+
+* Model selection can be done with `select = TRUE` or `bs = "ts"` or `bs = "cs"`
+
+* Plot your fitted smooths using `plot.gam()` or `draw()`
+
+* Produce hypotheticals using `data_slice()` and `fitted_values()` or `predict()`
+
+---
+
+# Overview
+
+* Avoid fitting multiple models dropping terms in turn
+
+* Can use AIC to select among mondels for prediction
+
+* GAMs should be fitted with `method = "REML"` or `"ML"`
+
+* Then they are an empirical Bayesian model (MAP)
+
+* Can explore uncertainty in estimates by sampling from the posterior of smooths or the model
+
+---
+
+# Overview
+
+* The default basis is the low-rank thin plate regression spline
+
+* Good properties but can be slow to set up &amp;mdash; use `bs = "cr"` with big data
+
+* Other basis types are available &amp;mdash; most aren't needed in general but do have specific uses
+
+* `s()` can be used for multivariate smooths, but assumes isotropy
+
+* Tensor product smooths allow us to add smooth interactions to our models with `te()` or `t2()`
+
+* Use `ti(x) + ti(z) + ti(x,z)` to test for an interaction &amp;mdash; but note different default for `k`!
+
+---
+
+# Overview
+
+* Smoothing temporal or spatial data can be tricky due to autocorrelation
+
+* In some cases we can fit separate smooth trends &amp; autocorrelatation processes
+
+* But they can fail often
+
+* Including smooths of space and time in your model can remove other effects: **confounding**
+
+---
 
 # Next steps
 
@@ -1608,7 +4192,7 @@ Also see my blog: [fromthebottomoftheheap.net](http://fromthebottomoftheheap.net
 
 # Reuse
 
-* HTML Slide deck [bit.ly/physalia-gam-4](https://bit.ly/physalia-gam-4) &amp;copy; Simpson (2020-2022) [![Creative Commons Licence](https://i.creativecommons.org/l/by/4.0/88x31.png)](http://creativecommons.org/licenses/by/4.0/)
+* HTML Slide deck [bit.ly/physalia-gam-5](https://bit.ly/physalia-gam-5) &amp;copy; Simpson (2020-2022) [![Creative Commons Licence](https://i.creativecommons.org/l/by/4.0/88x31.png)](http://creativecommons.org/licenses/by/4.0/)
 * RMarkdown [Source](https://bit.ly/physalia-gam)
 
 ---

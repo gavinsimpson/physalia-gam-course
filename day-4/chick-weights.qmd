@@ -1,0 +1,172 @@
+---
+title: "Weights of chicks"
+format:
+  html:
+    toc: true
+    html-math-method: katex
+    embed-resources: true
+    monobackgroundcolor: white
+knitr:
+  opts_chunk: 
+    echo: true
+    fig.align: center
+highlight-style: github-dark
+---
+
+In this example you will analyse a data set of chick weights using a hierarchical GAM.
+
+Start by loading the packages that you'll need
+
+```{r}
+#| label: packages
+#| message: false
+pkgs <- c(
+  "mgcv", "gratia", "ggplot2", "dplyr", "janitor", "marginaleffects"
+)
+vapply(
+  pkgs, library, logical(1),
+  character.only = TRUE, logical.return = TRUE
+)
+```
+
+and then load the data. The data are an example data set that comes with R, so we load it using `data()` and then make it tidy
+
+```{r}
+data(ChickWeight)
+cw <- ChickWeight |>
+  as_tibble() |>
+  janitor::clean_names()
+cw
+```
+
+::: {.callout-note}
+
+## Task
+
+Fit a factor `by` model to the data in order to model the time-structured treatment mean effects only. We'll ignore the repeated measures aspect of the data for now.
+
+:::
+
+::: {.callout-tip collapse="true"}
+
+## Solution
+
+```{r}
+m_cw_by <- gam(
+  weight ~
+    diet + # parametric effect of treatment means
+    s(time, by = diet), # smooths of time effect per treatment level
+  data = cw, family = tw(), method = "REML"
+)
+```
+
+:::
+
+::: {.callout-note}
+
+## Task
+
+Fit a similar model to the chick weight data, but this time include an average smooth effect of `time` and `diet`-specific deviation smooths using the constrained factor smooth basis.
+
+:::
+
+::: {.callout-tip collapse="true"}
+
+## Solution
+
+```{r}
+m_cw_sz <- gam(
+  weight ~
+    s(time) + # average smooth
+    s(time, diet, bs = "sz"), # smooths of time effect per treatment level
+  data = cw, family = tw(), method = "REML"
+)
+```
+
+:::
+
+::: {.callout-note}
+
+## Task
+
+We realise we should account for the repeated measures nature of the data. How would you modify the last model to include a random intercept (effect) for `chick`?
+
+:::
+
+::: {.callout-tip collapse="true"}
+
+## Solution
+
+```{r}
+m_cw_sz <- gam(
+  weight ~
+    s(time) + # average smooth
+    s(time, diet, bs = "sz") + # smooths of time effect per treatment level
+    s(chick, bs = "re"), # random intercept per chick
+  data = cw, family = tw(), method = "REML"
+)
+```
+
+:::
+
+::: {.callout-note}
+
+## Task
+
+You think that it would be better to include in the model terms for the growth curve of each chick, instead of using a random intercept to induce a correlation among the observations of individual chicks. How would you achieve this?
+
+Note: You'll likely want to use `bam()` to fit this model, with `method = "fREML"` and `discrete = TRUE` to speed things up, so fitting doesn't take a few minutes.
+
+:::
+
+::: {.callout-tip collapse="true"}
+
+## Solution
+```{r}
+m_cw_fs <- bam(
+  weight ~
+    s(time) + # average smooth
+    s(time, diet, bs = "sz") + # smooths of time effect per treatment level
+    s(time, chick, bs = "fs"), # random smooths per chick
+  data = cw, family = tw(), method = "fREML", discrete = TRUE
+)
+```
+
+:::
+
+::: {.callout-note}
+
+## Task
+
+Using this final model, prepare a plot of the estimated treatment (`diet`) effects.
+
+:::
+
+::: {.callout-tip collapse="true"}
+
+## Solution
+
+We can do this with `conditional_values()`
+
+```{r}
+m_cw_fs |>
+  conditional_values(
+    condition = c("time", "diet"),
+    exclude = "s(time,chick)"
+  ) |>
+  draw()
+```
+
+Or with `marginaleffects::plot_predictions()`
+
+```{r}
+m_cw_fs |>
+  plot_predictions(
+    condition = c("time", "diet"),
+    exclude = "s(time,chick)"
+  )
+```
+
+Note that in both cases we are setting the random terms to 0 using the `exclude` mechanism. As these models are conditional models, what we get here are estimates of treatment effects for the average subject, *not* population level effects. This is the same as with any GLMM. To get a marginal interpretation, we would need to integrate (average over) the random effect terms.
+
+:::

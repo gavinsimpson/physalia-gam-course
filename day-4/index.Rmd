@@ -73,19 +73,23 @@ Slidedeck: [bit.ly/physalia-gam-4](https://bit.ly/physalia-gam-4)
 
 Sources: [bit.ly/physalia-gam](https://bit.ly/physalia-gam)
 
-Direct download a ZIP of everything: [bit.ly/physalia-gam-zip](https://bit.ly/physalia-gam-zip)
-
-Unpack the zip & remember where you put it
-
 ---
 
-# Matters arising
+# Today's topics
 
-1. Credible intervals for smooths
+* A bit more in inference
 
-2. *p* values for smooths
+    * Credible intervals for smooths
 
-3. AIC
+    * *p* values for smooths
+
+    * AIC
+
+* Hierarchical GAMs (HGAMs)
+
+    Introducing random smooths and how to model data with both group and individual smooth effects.
+
+* Doing more with your models; introducing posterior simulation.
 
 ---
 class: inverse center middle subsection
@@ -415,16 +419,6 @@ When there is *no difference* in compared models, accepts larger model ~16% of t
 ```{r aic-chisq, echo = TRUE}
 pchisq(2, 1, lower.tail = FALSE)
 ```
-
----
-
-# Today's topics
-
-* Hierarchical GAMs (HGAMs)
-
-    Introducing random smooths and how to model data with both group and individual smooth effects.
-
-* Doing more with your models; introducing posterior simulation.
 
 ---
 
@@ -1374,6 +1368,1083 @@ See `?mgcv::gam.mh` for an example where Gaussian approximation fails badly
 `fitted_samples()`, `smooth_samples()` etc default to Gaussian approximation, but the Metropolis Hastings sampler is now an option in the released version
 
 ---
+class: inverse center middle subsection
+
+# Temporally ordered data
+
+---
+
+# Smoothing autocorrelated data
+
+Smoothing temporally autocorrelated data can `-->` over fitting
+
+.row[
+
+.col-6[
+
+$y$ is contaminated with AR(1) noise
+
+.smaller[
+```{r correlated-data-eg, fig.show = "hide"}
+set.seed(321)
+n <- 100
+time <- 1:n
+xt <- time/n
+Y <- (1280 * xt^4) * (1- xt)^4
+y <- as.numeric(Y + arima.sim(list(ar = 0.3713),
+                              n = n))
+df <- tibble(y = y, time = time, f = Y)
+
+# plot
+plt <- ggplot(df, aes(x = time, y = y)) +
+  geom_point() +
+  geom_line(aes(y = f),
+            col = "steelblue", lwd = 2)
+plt
+```
+]
+]
+
+.col-6[
+```{r correlated-data-eg, echo = FALSE, fig.width = 6, fig.height = 6}
+```
+]
+]
+
+---
+
+# Smoothing autocorrelated data
+
+.row[
+
+.col-6[
+.smaller[
+```{r fit-correlated-data-eg, fig.show = "hide"}
+# standard fit
+m_reml <- gam(y ~ s(time, k = 20), data = df,
+              method = "REML")
+# use GCV
+m_gcv <- gam(y ~ s(time, k = 20), data = df)
+
+# fitted values
+fv_reml <- fitted_values(m_reml)
+fv_gcv <- fitted_values(m_gcv)
+
+# plot
+plt + geom_line(data = fv_reml,
+               aes(x = time, y = .fitted),
+               col = "red") +
+  geom_line(data = fv_gcv,
+            aes(x = time, y = .fitted),
+            col = "darkgreen")
+```
+]
+]
+
+.col-6[
+
+```{r fit-correlated-data-eg, echo = FALSE, fig.width = 6, fig.height = 6}
+```
+]
+]
+
+---
+
+# Smoothing autocorrelated data
+
+What about smoothing where $x$ is time? Is this still a problem?
+
+--
+
+Yes *and* No
+
+--
+
+Depends on how you want to decompose *time* again
+
+---
+
+# Temporal dependence
+
+Temporal dependence really means that observations that are close together in time tend to be similar to one another than observations well separated in time
+
+How similar depends on the memory length of the system
+
+--
+
+Strong dependence &mdash; high autocorrelatation &,dash; long memory
+
+Weak dependence &mdash; low autocorrelatation &,dash; short memory
+
+---
+
+# Temporal dependence
+
+What does a GAM say about our data?
+
+--
+
+It says that observations near to one another (in covariate space) are more similar than observations further apart
+
+---
+
+# Temporal dependence & GAMs
+
+From this perspective then
+
+Wiggly smooths = Strong dependence
+
+Smooth (!) smooths = Weak dependence
+
+---
+
+# Temporal dependence & GAMs
+
+If you don't like your trend to be that wiggly, what to do?
+
+--
+
+You could decompose the temporal effect into a smooth trend *plus* an autocorrelated process in the $\varepsilon$
+
+--
+
+That process could be ARMA(*p*, *q*) or a continuous time AR(1)
+
+--
+
+Fit with `gamm()` using `correlation` argument, or `bam()` (AR(1) only)
+
+---
+
+# Smoothing autocorrelated data &mdash; `gamm()`
+
+.row[
+
+.col-6[
+.smaller[
+```{r fit-correlated-data-gamm, fig.show = "hide"}
+# standard fit
+m_ar1 <- gamm(y ~ s(time, k = 20), data = df,
+              correlation = corAR1(form = ~ 1), #<--
+              method = "REML")
+
+# fitted values
+fv_ar1 <- fitted_values(m_ar1$gam)
+
+# plot
+gamm_plt <- plt +
+  geom_ribbon(data = fv_ar1,
+    aes(ymin = .lower_ci, ymax = .upper_ci,
+      y = NULL),
+    alpha = 0.2, fill = "hotpink") +
+  geom_line(data = fv_ar1,
+    aes(x = time, y = .fitted),
+    col = "hotpink", lwd = 1.5)
+gamm_plt
+```
+]
+]
+
+.col-6[
+
+```{r fit-correlated-data-gamm, echo = FALSE, fig.width = 6, fig.height = 6}
+```
+]
+]
+
+---
+
+# Smoothing autocorrelated data &mdash; `bam()`
+
+Estimate an AR(1) term in the covariance with `bam()`
+
+Provide a value of $\rho$ (`rho`) &mdash; use (P)ACF
+
+```{r fit-correlated-data-bam-0}
+m <- bam(y ~ s(time, k = 10), data = df, method = "fREML")
+```
+.row[
+
+.col-6[
+
+ACF
+
+```{r bam-acf}
+acf(resid(m))
+```
+]
+
+.col-6[
+
+Partial ACF
+
+```{r bam-pacf}
+pacf(resid(m))
+```
+]
+
+]
+
+---
+
+# Smoothing autocorrelated data &mdash; `bam()`
+
+Use estimate of $\rho$, say `rho = 0.35`
+
+```{r fit-correlated-data-bam-1, fig.show = "hide"}
+# standard fit
+b_ar1 <- bam(
+  y ~ s(time, k = 20), data = df,
+  rho = 0.35, #<--
+  method = "fREML"
+)
+
+```
+
+---
+
+# Smoothing autocorrelated data &mdash; `bam()`
+
+.row[
+
+.col-6[
+```{r fit-correlated-data-bam-plot, fig.show = "hide"}
+# fitted values
+fv_bar1 <- fitted_values(b_ar1)
+
+# plot
+bar1_plt <- plt +
+  geom_ribbon(data = fv_bar1,
+    aes(ymin = .lower_ci, ymax = .upper_ci,
+      y = NULL),
+    alpha = 0.2, fill = "hotpink") +
+  geom_line(data = fv_bar1,
+    aes(x = time, y = .fitted),
+    col = "hotpink", lwd = 1.5)
+bar1_plt
+```
+]
+.col-6[
+
+```{r fit-correlated-data-bam-plot, echo = FALSE, fig.width = 6, fig.height = 6}
+```
+]
+]
+
+---
+
+# Compare the fits
+
+```{r autocorrel-compare-fits-plots, fig.align = "center", echo = FALSE}
+(gamm_plt + ggtitle("GAMM")) + (bar1_plt + ggtitle("BAM"))
+```
+
+---
+
+# Compare fits
+
+```{r}
+model_edf(m_ar1, b_ar1)
+
+## GAMM AR(1) rho
+nlme::intervals(m_ar1$lme, which = "var-cov")$corStruct
+```
+
+---
+
+# Irregularly spaced data
+
+Intervals between observation are irregular? Things get much harder
+
+Two main options
+
+1. Fit a continuous time AR(1) (CAR(1)) using `gamm()` &mdash; `correlation = corCAR1(form ~ 1)`
+
+2. Fit a 1-D spatial correlation function using `gamm()` &mdash; `correlation = corExp(form ~ time)`
+
+3. Or use *brms* or *glmmTMB*
+
+4. Consider *mvgam* &mdash; but the trend is a stochastic process, not a smooth
+
+---
+
+# But&hellip;
+
+This can only work if the trend and the autocorrelation process are separately identifiable from the data
+
+Or you are willing to impose constraints on one of
+
+* the smooth of time (using a low `k`), or
+
+* specify the parameters of the autocorrelation process
+
+See [Simpson (2018)](https://doi.org/10.3389/fevo.2018.00149) for a brief discussion on this plus examples & the cited references therein
+
+---
+
+# Non-normal data?
+
+What if you have non-Gaussian data?
+
+* `bam()` & AR(1) &mdash; GEE-like approach, working correlation matrix
+
+* `gamm()` & `correlation` &mdash; fits via `MASS::glmmPQL()`, works it **hard** --> fitting problems are common, plus PQL is bad for count data with low means
+
+* `brms::brm()` &mdash; Bayesian so you have to work harder, no CAR(1), but has spatial correlation functions
+
+* `mvgam` &mdash; Bayesian so *ditto*, the trend is a stochastic process, not a smooth
+
+---
+
+# Or use Neighbourhood CV
+
+.row[
+
+.col-9[
+
+New smoothness selection method
+
+`method = "NCV"`
+
+Not super user friendly
+
+Basically, for _each_ observation in the data, we specify
+
+1. the neighbourhood of samples to use for estimating $\lambda_j$, and
+2. the neighbourhood of samples to use for out-of-sample prediction
+
+This gets tricky to do easily for complex settings
+
+]
+
+.col-3[
+
+```{r danger-will-robinson, fig.align = "center", echo = FALSE}
+knitr::include_graphics("resources/dangerwillrobinson-1.png")
+```
+
+.smaller[
+([Linda Essig](https://creativeinfrastructure.org/2013/01/19/danger-will-robinson/))
+]
+
+]
+
+] 
+
+---
+
+# NCV
+
+We need to define two things: `a`, the indices of observations to drop for each neighbourhood, and `ma`, the end points of each neighbourhood
+
+Plus their counterparts for prediction neighbourhoods: `d` and `md`
+
+.row[
+
+.col-6[
+```{r setup-nei}
+nei <- list()
+start <- pmax(1, (1:100) - 5)
+end <- pmin(100, (0:99) + 5)
+nt <- lapply(1:100, \(x) start[x]:end[x])
+nei$a <- unlist(nt)
+nei$ma <- cumsum(lapply(nt, length))
+nei$d <- nei$a
+nei$md <- nei$ma
+```
+
+]
+
+.col-6[
+
+```{r ncv-vis-nei, fig.align = "center"}
+mgcvUtils::vis_nei(nei)
+```
+]
+]
+
+.smaller[
+  Code modified from https://calgary.converged.yt/articles/ncv_timeseries.html
+]
+
+---
+
+# NCV model fitting
+
+
+.row[
+
+.col-6[
+```{r ncv-fitted-plot, fig.show = "hide"}
+m_ncv <- gam(y ~ s(time, k = 20),
+  data = df, method = "NCV",
+  nei = nei)
+
+fv_ncv <- fitted_values(m_ncv)
+ncv_plt <- plt +
+  geom_ribbon(data = fv_ncv,
+    aes(ymin = .lower_ci, ymax = .upper_ci,
+      y = NULL),
+    alpha = 0.2, fill = "hotpink") +
+  geom_line(data = fv_ncv,
+    aes(x = time, y = .fitted),
+    col = "hotpink", lwd = 1.5)
+ncv_plt
+```
+]
+
+.col-6[
+```{r ncv-fitted-plot, fig.align = "center", echo = FALSE}
+```
+]
+]
+
+---
+
+# Compare
+
+```{r compare-all-methods, fig.align = "center", echo = FALSE, fig.height = 4, out.width = "98%"}
+(gamm_plt + ggtitle("GAMM")) +
+  (bar1_plt + ggtitle("BAM")) +
+  (ncv_plt + ggtitle("NCV")) + plot_layout(ncol = 3, nrow = 1)
+```
+
+---
+
+# NCV
+
+NCV shows huge promise
+
+Pain in the butt to setup
+
+No R tooling to do the setup for you
+
+Read more about it in Simon's preprint [Wood (2024)](https://doi.org/10.48550/arXiv.2404.16490) and Dave Miller's Yes! [You can do that in mgcv](https://calgary.converged.yt/) site
+
+Focus with NCV is in estimating the smooths in the presence of local dependence
+
+I have no idea what it does to the interpretation of credible intervals or *p* values as the data aren't conditionally independent
+
+---
+class: inverse center middle subsection
+
+# Big additive models
+
+---
+
+# Big additive models
+
+Fitting GAMs involves turning individual covariates into multiple new variables &mdash; basis functions
+
+If you have many covariates whose effects are smooth, then model matrix can get big
+
+Esp. if you have many data
+
+--
+
+Modelling fit can grind to a halt, esp. if you don't have much RAM
+
+--
+
+Enter `bam()`
+
+---
+
+# `bam()`
+
+`bam()` includes algorithms that can fit big models using much less RAM than `gam()`
+
+Main restriction currently is that it can't fit distributional GAMs
+
+With `bam()` we can do
+
+1. `method = "fREML"`, and
+2. `discrete = TRUE`
+
+We can also parallelise the fitting over mutliple CPUs or a cluster (only bullet 1.)
+
+This also means you can speed up model fitting, often massively so, if you have a multi-core machine and a bit of RAM
+
+---
+
+# `bam()` &mdash; fast REML
+
+The first optimization is `method = "fREML"`; don't use `bam()` without it
+
+Uses theory from [Wood *et al* (2015)](https://academic.oup.com/jrsssc/article/64/1/139/7067572)
+
+1. Setup smooths using representative sample of the data
+2. Model matrix, $\mathbf{X}$, is formed in blocks
+3. Uses updates to do the QR decomposition block-wise
+4. Once blocks are processed, fitting takes place without ever forming full $\mathbf{X}$
+
+Can use a `cluster` built using the *parallel* package, but this uses more RAM
+
+---
+
+# `bam()` &mdash; discretizing covariates
+
+You can fit models to even larger data if you are willing to discretize the covariates
+
+Use `discrete = TRUE`
+
+For each (marginal) smooth in turn covariates are discretized
+
+Discretization involves reducing the precision of the covariate values, thus multiple unique $x_i$ will now have the same $x_i$
+
+This is often OK as in big data many data are not unique
+
+This approximation often results in only small differences in estimated effect
+
+---
+
+# `bam()` &mdash; discretizing covariates
+
+With `discrete = TRUE` can no longer use a cluster
+
+Instead we can fit in parallel using `nthreads` (but MacOS / Linux)
+
+Can also use `samfrac`; for *very* big data, take a random sample of `samfrac`*100% of the data fit model to the sample with sloppy convergence tolerances
+
+This gives rough starting values of all the parameters, which can be optimized by then fitting with all of the data
+---
+class: inverse middle center subsection
+
+# Marginal effects
+
+---
+
+# Regression coefficients
+
+```{r, echo = FALSE}
+knitr::include_graphics("resources/slider-switch-annotated-80.jpg")
+```
+
+Terms in models are like sliders and switches
+
+* *sliders* represent continuous variables
+* *switches* represent categorical variables
+
+---
+
+# Regression coefficients
+
+```{r}
+# install.packages("palmerpenguins")
+library("palmerpenguins")
+library("tidyr")
+penguins <- penguins |> drop_na()
+
+model_slider <- lm(body_mass_g ~ flipper_length_mm, data = penguins)
+model_switch <- lm(body_mass_g ~ species, data = penguins)
+```
+
+1. `model_slider` includes the effect of a continuous variable
+2. `model_switch` includes the effect of a categorical variable
+
+---
+
+# Regression coefficients
+
+```{r}
+library("broom")
+tidy(model_slider)
+tidy(model_switch)
+```
+
+---
+
+# Regression coefficients
+
+```{r}
+tidy(model_slider)
+```
+
+`flipper_length_mm` is a continuous variable, so it's a slider
+
+As `flipper_length_mm` increases by 1 mm, penguin `body_mass_g` increases by `r round(coef(model_slider)[2], 1)` grams
+
+---
+
+# Regression coefficients
+
+```{r}
+tidy(model_switch)
+```
+
+`Species` is a categorical variable, so it's a switch
+
+There are three possible values: `Adelie`, `Chinstrap`, `Gentoo`
+
+`Adelie` is the reference category
+
+`Chinstrap` penguins are `r round(coef(model_switch)[2], 1)` grams heavier than `Adelie`
+
+`Gentoo` penguins are `r round(coef(model_switch)[3], 1)` grams heavier than `Adelie`!
+
+---
+
+# What about GLM?
+
+```{r glm-penguins, cache = TRUE}
+glm_slider <- glm(body_mass_g ~ flipper_length_mm, data = penguins, family = Gamma("log"))
+glm_switch <- glm(body_mass_g ~ species, data = penguins, family = Gamma("log"))
+```
+
+---
+
+# What about GLM?
+
+Coefficients are on the *link* scale! &mdash; here that's the log scale
+
+```{r, dependson = "glm-penguins"}
+tidy(glm_slider)
+```
+
+`flipper_length_mm` is a continuous variable, so it's a slider
+
+As `flipper_length_mm` increases by 1 mm, penguin `body_mass_g` is multiplied by `r round(exp(coef(glm_slider)[2]), 3)` grams
+
+```{r}
+exp(0.0115)
+```
+
+---
+
+# Mixers
+
+```{r, echo = FALSE}
+knitr::include_graphics("resources/mixer-board-annotated-80.jpg")
+```
+
+Most models aren't so simple
+
+We're often working with multiple variables combining switches and sliders
+
+---
+
+# Mixers
+
+.small[
+```{r, cache = TRUE}
+model_mixer <- lm(body_mass_g ~ flipper_length_mm + bill_depth_mm + species + sex,
+                  data = penguins)
+tidy(model_mixer)
+```
+]
+
+The values in `estimate` are partial effects showing what happens when we change the value of the variable
+
+* for continuous variables the change is 1 unit; 1mm
+* for categorical variables the change is moving *from* the reference category by flicking the switch
+
+As these are partial effects (changes), we need to add "holding all other variables constant"
+
+---
+
+# Damned terminology
+
+A *marginal effect* is a partial derivative from a regression equation
+
+* the change in $y$ for a unit change in one of the model terms
+
+This also applies to categorical terms as formally (with treatment coding) we're changing 1 unit (0 to 1) when we flick the switch
+
+Others use the *conditional effect* or *group constrast* for the effects concerning categorical variables
+
+---
+
+# Load marginaleffects
+
+```{r}
+library("marginaleffects")
+```
+
+---
+
+# Chick weight example
+
+Weights of chicks and effect of diet
+
+```{r chick-load-data}
+data(ChickWeight)
+cw <- ChickWeight |>
+  as_tibble() |>
+  janitor::clean_names() |>
+  mutate(
+    chick = factor(chick, ordered = FALSE)
+  )
+cw
+```
+
+# Chick weight example
+
+```{r fit-sz-gam-to-chicks, cache = TRUE}
+ctrl <- gam.control(nthreads = 6)
+m_cw <- gam(
+  weight ~ s(time) +
+    s(time, diet, bs = "sz") +
+    s(time, chick, bs = "fs", k = 5),
+  data = cw, family = tw(), method = "REML", control = ctrl)
+```
+
+# Chick weight example
+
+```{r}
+broom::tidy(m_cw)
+```
+
+What is the effect of `diet`?
+
+---
+
+# Averaging
+
+We could average the partial derivatives (slopes) for the observed data where for each observation we compare the predicted value with the `diet` switch flicked into different positions
+
+.row[
+
+.col-6[
+
+.small[
+```{r}
+cw
+```
+]
+
+]
+
+.col-6[
+
+.small[
+```{r}
+m_cw |> slopes(variable = "diet")
+```
+]
+]
+]
+
+---
+
+# Averaging: step 1
+
+Create the data we need; three copies of the observed data, with `diet` set to 1, 2, 3 respectively
+
+.row[
+
+.col-6[
+
+.small[
+```{r}
+(df_diet1 <- datagrid(model = m_cw, diet = "1", grid_type = "counterfactual"))
+```
+]
+
+]
+
+.col-6[
+
+.small[
+```{r}
+(df_diet2 <- datagrid(model = m_cw, diet = "2", grid_type = "counterfactual"))
+```
+]
+
+]
+
+]
+
+---
+
+# Averaging: step 2
+
+Predict from the model for both data sets `type = "response"`
+
+```{r predict-diets}
+df_diet3 <- datagrid(model = m_cw, diet = "3", grid_type = "counterfactual")
+p_diet1 <- fitted_values(m_cw, data = df_diet1)
+p_diet2 <- fitted_values(m_cw, data = df_diet2)
+p_diet3 <- fitted_values(m_cw, data = df_diet3)
+
+```
+
+---
+# Averaging: step 2
+
+.row[
+.col-6[
+.small[
+
+```{r show-p-diet-1}
+p_diet2
+```
+]
+]
+.col-6[
+.small[
+```{r show-p-diet-2}
+p_diet2
+```
+]
+]
+]
+
+---
+
+# Averaging: step 3
+
+Flick the switch!
+
+Subtracting one set of predictions from the other tells us the effect of moving from `death == "Predation"` to `death == "Other"`
+
+```{r}
+head(p_diet1 |> pull(.fitted) - p_diet2 |> pull(.fitted))
+```
+
+---
+
+# Averaging: step 4
+
+Take the mean (average) of the effects of moving from `diet == "1"` to `diet == "2"`, etc
+
+```{r}
+mean(p_diet1 |> pull(.fitted) - p_diet2 |> pull(.fitted))
+```
+
+---
+
+# The heck!
+
+Thankfully the *marginaleffects* package has us covered
+
+```{r}
+library("marginaleffects")
+m_cw |> avg_slopes(variable = "diet")
+```
+---
+
+# Comparisons
+
+Can also call this a comparison if you prefer
+
+```{r}
+m_cw |> avg_comparisons(variables = "diet")
+```
+
+---
+
+# Comparisons
+
+.small[
+```{r}
+m_cw |> comparisons(variable = "diet")
+```
+]
+
+---
+
+# All variables at once
+
+```{r}
+m_cw |> avg_slopes()
+```
+
+We are **averaging** over the effects of the other variables in the model when we do this
+
+---
+
+# Marginal effect at the mean
+
+Another way to estimate the "effect" of `diet` is to ask
+
+> What is the effect of changing from `"1"` to `"2"` if we hold the other variables at their means?
+
+(For a categorical variable this means at their modal value)
+
+This is what *emmeans* does with `emtrends()`
+
+(`emmeans()` averages predictions as per above)
+
+---
+
+# Marginal effect at the mean
+
+Can obtain what `emtrends()` would give us by setting all variable not mentioned to their mean (mode)
+
+```{r}
+m_cw |> avg_predictions(newdata = "mean", variable = "diet")
+```
+
+---
+
+# Marginal effect at the mean
+
+```{r}
+m_cw |> avg_comparisons(newdata = "mean", variable = "diet")
+```
+
+That's quite different!
+
+???
+
+The average marginal effect is ~6 but the marginal effect at the mean is 20!
+
+---
+
+# Marginal effect at the mean
+
+The previous marginal effects / comparisons were obtained with
+
+```{r}
+datagrid(model = m_cw, diet = c("1", "2", "3", "4"))
+```
+
+---
+
+# Comparisons
+
+We often want to compare one level of a treatment with another
+
+* pairwise comparisons
+* treatment vs reference (control)
+
+With a single categorical variable this is fine, but what do you want when the model includes multiple effects and interactions?
+
+---
+
+# Comparisons
+
+Niavely we could do:
+
+.small[
+```{r}
+m_cw |> avg_comparisons(variables = list(diet = "pairwise"))
+```
+]
+
+What are we comparing here?
+
+--
+
+We are averaging the comparisons of the levels of `diet` over the other variables in the model (`chick`, `time`)
+---
+
+# Comparisons
+
+We get different answers if we condition on `time` say
+
+.small[
+```{r}
+m_cw |> avg_comparisons(variables = list(diet = "pairwise"), by = "time")
+```
+]
+
+This makes total sense; the model includes interactions
+
+Both are correct
+
+You need to specify what it is that you mean by a comparison
+
+---
+
+# Comparisons
+
+With so many comparisons, we should adjust the $p$ values
+
+.small[
+```{r}
+m_cw |> avg_comparisons(variables = list(diet = "pairwise"),
+  by = "time") |>
+  hypotheses(multcomp = "fdr")
+```
+]
+
+--
+
+Adjustment here controls the false discovery rate (FDR)
+
+Other options available, but FDR is a reasonable choice
+
+---
+class: inverse center middle subsection
+
+# Overview
+
+---
+
+# Overview
+
+* We choose to use GAMs when we expect non-linear relationships between covariates and $y$
+
+* GAMs represent non-linear functions $fj(x_{ij})$ using splines
+
+* Splines are big functions made up of little functions &mdash; *basis function*
+
+* Estimate a coefficient $\beta_k$ for each basis function $b_k$
+
+* As a user we need to set `k` the upper limit on the wiggliness for each $f_j()$
+
+* Avoid overfitting through a wiggliness penalty &mdash; curvature or 2nd derivative
+
+---
+
+# Overview
+
+* GAMs are just fancy GLMs &mdash; usual diagnostics apply `gam.check()` or `appraise()`
+
+* Check you have the right distribution `family` using QQ plot, plot of residuls vs $\eta_i$, DHARMa residuals
+
+* But have to check that the value(s) of `k` were large enough with `k.check()`
+
+* Model selection can be done with `select = TRUE` or `bs = "ts"` or `bs = "cs"`
+
+* Plot your fitted smooths using `plot.gam()` or `draw()`
+
+* Produce hypotheticals using `data_slice()` and `fitted_values()` or `predict()`
+
+---
+
+# Overview
+
+* Avoid fitting multiple models dropping terms in turn
+
+* Can use AIC to select among mondels for prediction
+
+* GAMs should be fitted with `method = "REML"` or `"ML"`
+
+* Then they are an empirical Bayesian model (MAP)
+
+* Can explore uncertainty in estimates by sampling from the posterior of smooths or the model
+
+---
+
+# Overview
+
+* The default basis is the low-rank thin plate regression spline
+
+* Good properties but can be slow to set up &mdash; use `bs = "cr"` with big data
+
+* Other basis types are available &mdash; most aren't needed in general but do have specific uses
+
+* `s()` can be used for multivariate smooths, but assumes isotropy
+
+* Tensor product smooths allow us to add smooth interactions to our models with `te()` or `t2()`
+
+* Use `ti(x) + ti(z) + ti(x,z)` to test for an interaction &mdash; but note different default for `k`!
+
+---
+
+# Overview
+
+* Smoothing temporal or spatial data can be tricky due to autocorrelation
+
+* In some cases we can fit separate smooth trends & autocorrelatation processes
+
+* But they can fail often
+
+* Including smooths of space and time in your model can remove other effects: **confounding**
+
+---
 
 # Next steps
 
@@ -1400,7 +2471,7 @@ Also see my blog: [fromthebottomoftheheap.net](http://fromthebottomoftheheap.net
 
 # Reuse
 
-* HTML Slide deck [bit.ly/physalia-gam-4](https://bit.ly/physalia-gam-4) &copy; Simpson (2020-2022) [![Creative Commons Licence](https://i.creativecommons.org/l/by/4.0/88x31.png)](http://creativecommons.org/licenses/by/4.0/)
+* HTML Slide deck [bit.ly/physalia-gam-5](https://bit.ly/physalia-gam-5) &copy; Simpson (2020-2022) [![Creative Commons Licence](https://i.creativecommons.org/l/by/4.0/88x31.png)](http://creativecommons.org/licenses/by/4.0/)
 * RMarkdown [Source](https://bit.ly/physalia-gam)
 
 ---

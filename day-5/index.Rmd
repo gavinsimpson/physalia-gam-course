@@ -700,7 +700,7 @@ p_int
 ```
 ---
 
-# Prediction intervals &mdash plot it
+# Prediction intervals &mdash; plot it
 
 ```{r pint-example-plot, fig.show = "hide"}
 fv |>
