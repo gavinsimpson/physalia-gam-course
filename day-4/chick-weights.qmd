@@ -123,12 +123,12 @@ Note: You'll likely want to use `bam()` to fit this model, with `method = "fREML
 
 ## Solution
 ```{r}
-m_cw_fs <- bam(
+m_cw_fs <- gam(
   weight ~
     s(time) + # average smooth
     s(time, diet, bs = "sz") + # smooths of time effect per treatment level
     s(time, chick, bs = "fs"), # random smooths per chick
-  data = cw, family = tw(), method = "fREML", discrete = TRUE
+  data = cw, family = tw(), method = "REML"
 )
 ```
 
