@@ -6,14 +6,15 @@ https://www.physalia-courses.org/
 
 ### Gavin Simpson
 
-#### 8&ndash;11th December, 2025
+#### Next running: 7&ndash;10th December, 2026
 
 ## Overview
 
 Most of the statistical methods you are likely to have encountered will have specified fixed functional forms for the relationships between covariates and the response, either implicitly or explicitly. These might be linear effects or involve polynomials, such as x + x<sup>2</sup> + x<sup>3</sup>. Generalized additive models (GAMs) are different; they build upon the generalized linear model (GLM) by allowing the shapes of the relationships between response and covariates to be learned from the data using splines. Modern GAMs, it turns out, are a very general framework for data analysis, encompassing many models as special cases, including GLMs and GLMMs, and the variety of types of splines available to users allows GAMs to be used in a surprisingly large number of situations. In this course we’ll show you how to leverage the power and flexibility of splines to go beyond parametric modelling techniques like GLMs.
 
 ## Target audience and assumed background
-The course is aimed at at graduate students and researchers with limited statistical knowledge; ideally you’d know something about generalized linear models, but we’ll recap what GLMs are, so if you’re a little rusty or not everything mentioned in a GLM course made sense, we have you covered.
+
+The course is aimed at at graduate students and researchers with limited statistical knowledge; ideally you’d know something about generalized linear models, but we’ll recap what GLMs are, so if you’re a little rusty or not everything mentioned in a GLM course made sense, we have you covered. The examples used on the course are largely drawn from the life sciences (particularly ecology and environmental science) as reflecting my research interests.
 
 Participants should be familiar with RStudio and have some fluency in programming R code, including being able to import, manipulate (e.g. modify variables) and visualise data. There will be a mix of lectures, in-class discussion, and hands-on practical exercises along the course. From running the course previously, knowing the difference between "fixed" and "random" effects, and what the terms "random intercepts" and "random slopes" are, will be helpful for the Hierarchical GAM topic, but we don't expect you to be an expert in mixed effects or hierarchical models to take this course.
 
@@ -154,7 +155,6 @@ Sessions from 14:00 to 20:00 (Monday to Thursday), Berlin time. Sessions will in
 
 [Slides](https://gavinsimpson.github.io/physalia-gam-course/day-1/index.html)
 
-* Brief overview of R and the Tidyverse packages we’ll encounter throughout the course
 * Recap generalised linear models
 * Fitting your first GAM
 
